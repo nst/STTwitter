@@ -30,7 +30,7 @@ STTwitter demo project let you choose how to get the OAuth tokens (see below).
 
 Once you got the OAuth tokens, you can get your timeline and post a new status.
 
-![SSTTwitter](https://github.com/nst/SSTTwitter/raw/master/Art/STTwitter.png "STTwitter Demo Project")
+![SSTTwitter](https://github.com/nst/STTwitter/raw/master/Art/STTwitter.png "STTwitter Demo Project")
 
 ##### OAuth Connection
 
