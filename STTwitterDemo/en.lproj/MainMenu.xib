@@ -2903,7 +2903,7 @@
 						</object>
 						<object class="NSButton" id="980676352">
 							<reference key="NSNextResponder" ref="439893737"/>
-							<int key="NSvFlags">289</int>
+							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{644, 38}, {92, 32}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
@@ -2928,7 +2928,7 @@
 						</object>
 						<object class="NSTextField" id="65586808">
 							<reference key="NSNextResponder" ref="439893737"/>
-							<int key="NSvFlags">268</int>
+							<int key="NSvFlags">290</int>
 							<string key="NSFrame">{{735, 48}, {280, 17}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
