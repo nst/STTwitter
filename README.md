@@ -1,18 +1,20 @@
-### STTwitter
+## STTwitter
 
 _A lightweight Objective-C wrapper for Twitter REST API 1.1_
 
-##### Typical Usage
+### Typical Usage
 
-1 - Copy the `STTwitter` directory into your project.
+##### 1. Copy the `STTwitter` directory into your project.
 
-2 - Import `STTwitterAPIWrapper.h`
+##### 2. Import STTwitterAPIWrapper
 
-3 - Instantiate `STTwitterAPIWrapper`
+    #import "STTwitterAPIWrapper.h"
+
+##### 3. Instantiate `STTwitterAPIWrapper`
 
     STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIWithOAuthOSX];
 
-4 - Verify the credentials
+##### 4. Verify the credentials
 
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         // ...
@@ -20,7 +22,7 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
         // ...
     }];
 
-5 - Get the timeline statuses
+##### 5. Get the timeline statuses
 
     [twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
         // ...
@@ -28,7 +30,7 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
         // ...
     }];
     
-##### Demo Project
+### Demo Project
 
 STTwitter demo project let you choose how to get the OAuth tokens (see below).
 
@@ -36,7 +38,7 @@ Once you got the OAuth tokens, you can get your timeline and post a new status.
 
 ![SSTTwitter](https://github.com/nst/STTwitter/raw/master/Art/STTwitter.png "STTwitter Demo Project")
 
-##### OAuth Connection
+### OAuth Connection
 
 You can instantiate `STTwitterAPIWrapper` in two ways:
 
@@ -63,13 +65,13 @@ So there are four cases altogether, hence the four methods:
                                                  oauthToken:(NSString *)oauthToken
                                            oauthTokenSecret:(NSString *)oauthTokenSecret;
                                            
-##### OAuth Consumer Key / Consumer Secret
+### OAuth Consumer Key / Consumer Secret
 
 In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. With STTwitter you can provide the tokens you want. You can request consumer tokens for your app on Twitter website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
 
 STTwitter demo project comes with `TwitterClients.plist` where you can enter your own consumer tokens.
 
-##### Architecture
+### Architecture
 
 Your code only interacts with `STTwitterAPIWrapper`.
 
@@ -104,7 +106,7 @@ Your code only interacts with `STTwitterAPIWrapper`.
     |                | STHTTPRequest  |
     +----------------+----------------+
 
-##### BSD 3-Clause License
+### License - BSD 3-Clause
 
 Copyright (c) 2012, Nicolas Seriot
 All rights reserved.
