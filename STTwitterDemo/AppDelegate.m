@@ -7,8 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "STHTTPRequest.h"
-#import "STTwitterOAuth.h"
 #import "STTwitterAPIWrapper.h"
 #import "STTwitterHTML.h"
 
