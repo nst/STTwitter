@@ -32,7 +32,7 @@
 + (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret oauthToken:(NSString *)oauthToken oauthTokenSecret:(NSString *)oauthTokenSecret {
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
     twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerKey:consumerKey consumerSecret:consumerSecret oauthToken:oauthToken oauthTokenSecret:oauthTokenSecret];
-    return [twitter autorelease];    
+    return [twitter autorelease];
 }
 
 + (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
@@ -69,7 +69,7 @@
 /**/
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     if([_oauth canVerifyCredentials]) {
         [_oauth verifyCredentialsWithSuccessBlock:successBlock errorBlock:errorBlock];
     } else {
@@ -114,10 +114,26 @@
     }];
 }
 
+- (void)postStatusUpdate:(NSString *)status
+                mediaURL:(NSURL *)mediaURL
+            successBlock:(void(^)(NSString *response))successBlock
+              errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSData *data = [NSData dataWithContentsOfURL:mediaURL];
+    
+    NSDictionary *d = @{ @"status":status, @"media[]":data };
+    
+    [_oauth postResource:@"statuses/update_with_media.json" parameters:d successBlock:^(NSString *response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 - (void)postStatusRetweetWithID:(NSString *)statusID
                    successBlock:(void(^)(NSString *response))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
     
     [_oauth postResource:resource parameters:nil successBlock:^(NSString *response) {

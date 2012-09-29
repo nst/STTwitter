@@ -101,6 +101,10 @@
 
 
 // POST statuses/update_with_media
+- (void)postStatusUpdate:(NSString *)status
+                mediaURL:(NSURL *)mediaURL
+            successBlock:(void(^)(NSString *response))successBlock
+              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET statuses/oembed
 

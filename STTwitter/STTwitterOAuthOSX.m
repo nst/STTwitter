@@ -60,11 +60,20 @@
 
 - (void)fetchAPIResource:(NSString *)resource httpMethod:(int)httpMethod parameters:(NSDictionary *)params completionBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
 
+    NSData *mediaData = [params valueForKey:@"media[]"];
+    
+    NSMutableDictionary *paramsWithoutMedia = [[params mutableCopy] autorelease];
+    [paramsWithoutMedia removeObjectForKey:@"media[]"];
+    
     [self requestAccessWithCompletionBlock:^(ACAccount *twitterAccount) {
         NSString *urlString = [@"https://api.twitter.com/1.1/" stringByAppendingString:resource];
         NSURL *url = [NSURL URLWithString:urlString];
-        SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:params];
+        SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
         request.account = twitterAccount;
+        
+        if(mediaData) {
+            [request addMultipartData:mediaData withName:@"media[]" type:@"image/jpeg" filename:@"media.jpg"];
+        }
         
         [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
             NSString *output = [NSString stringWithFormat:@"HTTP response status: %ld", [urlResponse statusCode]];
