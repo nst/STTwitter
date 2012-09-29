@@ -413,9 +413,7 @@
           parameters:(NSDictionary *)params
         successBlock:(void(^)(id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
-    
-#warning FIXME: "a s" appears as "a%20s" when posting a media
-    
+        
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
     STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
@@ -436,7 +434,8 @@
 
     NSDictionary *d = mutableParams ? mutableParams : @{};
     
-    r.POSTDictionary = [[self class] encodedDictionaryWithDictionary:d];
+    // POST parameters must not be encoded while posting media, or spaces will appear as %20 in the status
+    r.POSTDictionary = mediaData ? d : [[self class] encodedDictionaryWithDictionary:d];
 
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         successBlock(body);
