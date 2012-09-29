@@ -72,7 +72,7 @@
         request.account = twitterAccount;
         
         if(mediaData) {
-            [request addMultipartData:mediaData withName:@"media[]" type:@"image/jpeg" filename:@"media.jpg"];
+            [request addMultipartData:mediaData withName:@"media[]" type:@"application/octet-stream" filename:@"media.jpg"];
         }
         
         [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
