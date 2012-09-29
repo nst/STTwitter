@@ -49,6 +49,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) IBOutlet NSTextField *twitterGetTimelineStatusTextField;
 @property (nonatomic, retain) IBOutlet NSTextField *twitterPostTweetTextField;
 @property (nonatomic, retain) IBOutlet NSTextField *twitterPostTweetStatusTextField;
+@property (nonatomic, retain) NSURL *twitterPostMediaURL;
 
 @property (nonatomic, retain) NSArray *timelineStatuses;
 
@@ -71,6 +72,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 // Twitter
 - (IBAction)getTimeline:(id)sender;
+- (IBAction)chooseMedia:(id)sender;
 - (IBAction)postTweet:(id)sender;
 
 @end

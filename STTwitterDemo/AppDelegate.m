@@ -39,6 +39,7 @@
     [_twitterPostTweetTextField release];
     [_twitterPostTweetStatusTextField release];
     [_timelineStatuses release];
+    [_twitterPostMediaURL release];
     [super dealloc];
 }
 
@@ -266,6 +267,40 @@
         _twitterGetTimelineStatusTextField.stringValue = @"OK";
     } errorBlock:^(NSError *error) {
         _twitterGetTimelineStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
+    }];
+}
+
+- (IBAction)chooseMedia:(id)sender {
+    self.twitterPostMediaURL = nil;
+    
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+
+    [panel setCanChooseDirectories:NO];
+    [panel setCanChooseFiles:YES];
+    [panel setAllowedFileTypes:@[ @"png", @"PNG", @"jpg", @"JPG", @"jpeg", @"JPEG", @"gif", @"GIF"] ];
+    
+    [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
+
+        if (result != NSFileHandlingPanelOKButton) return;
+
+        NSArray *urls = [panel URLs];
+        
+        NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            if([evaluatedObject isKindOfClass:[NSURL class]] == NO) return NO;
+            
+            NSURL *url = (NSURL *)evaluatedObject;
+            
+            return [url isFileURL];
+        }];
+        
+        NSArray *fileURLS = [urls filteredArrayUsingPredicate:p];
+        
+        NSURL *fileURL = [fileURLS lastObject];
+        
+        BOOL isDir = NO;
+        if ([[NSFileManager defaultManager] fileExistsAtPath: fileURL.path isDirectory: &isDir] == NO) return;
+        
+        self.twitterPostMediaURL = fileURL;
     }];
 }
 
