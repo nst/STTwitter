@@ -414,24 +414,29 @@
         successBlock:(void(^)(id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
+#warning FIXME: "a s" appears as "a%20s" when posting a media
+    
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
     STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
 
-    r.POSTDictionary = params ? params : @{};
+    r.POSTDictionary = params;
     
     NSData *mediaData = [params valueForKey:@"media[]"];
     
+    NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
+    
     if(mediaData) {
-        NSMutableDictionary *paramsWithoutMedia = [[params mutableCopy] autorelease];
-        [paramsWithoutMedia removeObjectForKey:@"media[]"];
+        [mutableParams removeObjectForKey:@"media[]"];
 
         [r setDataToUpload:mediaData parameterName:@"media[]" mimeType:@"application/octet-stream" fileName:@"media.jpg"];
-
-        r.POSTDictionary = paramsWithoutMedia ? paramsWithoutMedia : @{};
     }
     
     [self signRequest:r isMediaUpload:(mediaData != nil)];
+
+    NSDictionary *d = mutableParams ? mutableParams : @{};
+    
+    r.POSTDictionary = [[self class] encodedDictionaryWithDictionary:d];
 
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         successBlock(body);
