@@ -12,12 +12,6 @@
 		030ECC591616B6A50057C236 /* STHTTPRequest+UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC541616B6A50057C236 /* STHTTPRequest+UnitTests.m */; };
 		030ECC5A1616B6A50057C236 /* STHTTPRequestTestResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC561616B6A50057C236 /* STHTTPRequestTestResponse.m */; };
 		030ECC5B1616B6A50057C236 /* STHTTPRequestTestResponseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC581616B6A50057C236 /* STHTTPRequestTestResponseQueue.m */; };
-		030ECC801616B7410057C236 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC751616B7410057C236 /* AppDelegate.m */; };
-		030ECC811616B7410057C236 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 030ECC761616B7410057C236 /* Credits.rtf */; };
-		030ECC821616B7410057C236 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 030ECC781616B7410057C236 /* InfoPlist.strings */; };
-		030ECC831616B7410057C236 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 030ECC7A1616B7410057C236 /* MainMenu.xib */; };
-		030ECC841616B7410057C236 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC7C1616B7410057C236 /* main.m */; };
-		030ECC861616B7410057C236 /* TwitterClients.plist in Resources */ = {isa = PBXBuildFile; fileRef = 030ECC7F1616B7410057C236 /* TwitterClients.plist */; };
 		030ECC9D1616B7E30057C236 /* STTwitterAPIWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC921616B7E30057C236 /* STTwitterAPIWrapper.m */; };
 		030ECC9E1616B7E30057C236 /* STTwitterAPIWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC921616B7E30057C236 /* STTwitterAPIWrapper.m */; };
 		030ECC9F1616B7E30057C236 /* STTwitterHTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC941616B7E30057C236 /* STTwitterHTML.m */; };
@@ -28,6 +22,12 @@
 		030ECCA41616B7E30057C236 /* STTwitterOAuthOSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC981616B7E30057C236 /* STTwitterOAuthOSX.m */; };
 		030ECCA51616B7E30057C236 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC9C1616B7E30057C236 /* STHTTPRequest.m */; };
 		030ECCA61616B7E30057C236 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC9C1616B7E30057C236 /* STHTTPRequest.m */; };
+		030ECCB41616B98B0057C236 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECCA91616B98B0057C236 /* AppDelegate.m */; };
+		030ECCB51616B98B0057C236 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 030ECCAA1616B98B0057C236 /* Credits.rtf */; };
+		030ECCB61616B98B0057C236 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 030ECCAC1616B98B0057C236 /* InfoPlist.strings */; };
+		030ECCB71616B98B0057C236 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 030ECCAE1616B98B0057C236 /* MainMenu.xib */; };
+		030ECCB81616B98B0057C236 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECCB01616B98B0057C236 /* main.m */; };
+		030ECCBA1616B98B0057C236 /* TwitterClients.plist in Resources */ = {isa = PBXBuildFile; fileRef = 030ECCB31616B98B0057C236 /* TwitterClients.plist */; };
 		0327C968160E7B0B003EF769 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0327C967160E7B0B003EF769 /* Social.framework */; };
 		0327C96A160E7B16003EF769 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0327C969160E7B16003EF769 /* Accounts.framework */; };
 		037F30EB1611EA9B003D874D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0327C969160E7B16003EF769 /* Accounts.framework */; };
@@ -61,15 +61,6 @@
 		030ECC561616B6A50057C236 /* STHTTPRequestTestResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STHTTPRequestTestResponse.m; path = UnitTests/STHTTPRequestUnitTestAdditions/STHTTPRequestTestResponse.m; sourceTree = SOURCE_ROOT; };
 		030ECC571616B6A50057C236 /* STHTTPRequestTestResponseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STHTTPRequestTestResponseQueue.h; path = UnitTests/STHTTPRequestUnitTestAdditions/STHTTPRequestTestResponseQueue.h; sourceTree = SOURCE_ROOT; };
 		030ECC581616B6A50057C236 /* STHTTPRequestTestResponseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STHTTPRequestTestResponseQueue.m; path = UnitTests/STHTTPRequestUnitTestAdditions/STHTTPRequestTestResponseQueue.m; sourceTree = SOURCE_ROOT; };
-		030ECC741616B7410057C236 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		030ECC751616B7410057C236 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		030ECC771616B7410057C236 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		030ECC791616B7410057C236 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		030ECC7B1616B7410057C236 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		030ECC7C1616B7410057C236 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		030ECC7D1616B7410057C236 /* STTwitter-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "STTwitter-Info.plist"; sourceTree = "<group>"; };
-		030ECC7E1616B7410057C236 /* STTwitter-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitter-Prefix.pch"; sourceTree = "<group>"; };
-		030ECC7F1616B7410057C236 /* TwitterClients.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TwitterClients.plist; sourceTree = "<group>"; };
 		030ECC911616B7E30057C236 /* STTwitterAPIWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterAPIWrapper.h; sourceTree = "<group>"; };
 		030ECC921616B7E30057C236 /* STTwitterAPIWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterAPIWrapper.m; sourceTree = "<group>"; };
 		030ECC931616B7E30057C236 /* STTwitterHTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterHTML.h; sourceTree = "<group>"; };
@@ -81,6 +72,15 @@
 		030ECC991616B7E30057C236 /* STTwitterOAuthProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterOAuthProtocol.h; sourceTree = "<group>"; };
 		030ECC9B1616B7E30057C236 /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		030ECC9C1616B7E30057C236 /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
+		030ECCA81616B98B0057C236 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		030ECCA91616B98B0057C236 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		030ECCAB1616B98B0057C236 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		030ECCAD1616B98B0057C236 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		030ECCAF1616B98B0057C236 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		030ECCB01616B98B0057C236 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		030ECCB11616B98B0057C236 /* STTwitter-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "STTwitter-Info.plist"; sourceTree = "<group>"; };
+		030ECCB21616B98B0057C236 /* STTwitter-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitter-Prefix.pch"; sourceTree = "<group>"; };
+		030ECCB31616B98B0057C236 /* TwitterClients.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TwitterClients.plist; sourceTree = "<group>"; };
 		0327C967160E7B0B003EF769 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		0327C969160E7B16003EF769 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		03C7AA9715F76C8A0092A5E6 /* STTwitter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STTwitter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,22 +156,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		030ECC731616B7410057C236 /* Application */ = {
-			isa = PBXGroup;
-			children = (
-				030ECC741616B7410057C236 /* AppDelegate.h */,
-				030ECC751616B7410057C236 /* AppDelegate.m */,
-				030ECC761616B7410057C236 /* Credits.rtf */,
-				030ECC781616B7410057C236 /* InfoPlist.strings */,
-				030ECC7A1616B7410057C236 /* MainMenu.xib */,
-				030ECC7C1616B7410057C236 /* main.m */,
-				030ECC7D1616B7410057C236 /* STTwitter-Info.plist */,
-				030ECC7E1616B7410057C236 /* STTwitter-Prefix.pch */,
-				030ECC7F1616B7410057C236 /* TwitterClients.plist */,
-			);
-			path = Application;
-			sourceTree = "<group>";
-		};
 		030ECC901616B7E30057C236 /* STTwitter */ = {
 			isa = PBXGroup;
 			children = (
@@ -198,11 +182,27 @@
 			path = Vendor;
 			sourceTree = "<group>";
 		};
+		030ECCA71616B98B0057C236 /* STTwitterDemo */ = {
+			isa = PBXGroup;
+			children = (
+				030ECCA81616B98B0057C236 /* AppDelegate.h */,
+				030ECCA91616B98B0057C236 /* AppDelegate.m */,
+				030ECCAA1616B98B0057C236 /* Credits.rtf */,
+				030ECCAC1616B98B0057C236 /* InfoPlist.strings */,
+				030ECCAE1616B98B0057C236 /* MainMenu.xib */,
+				030ECCB01616B98B0057C236 /* main.m */,
+				030ECCB11616B98B0057C236 /* STTwitter-Info.plist */,
+				030ECCB21616B98B0057C236 /* STTwitter-Prefix.pch */,
+				030ECCB31616B98B0057C236 /* TwitterClients.plist */,
+			);
+			path = STTwitterDemo;
+			sourceTree = "<group>";
+		};
 		03C7AA8C15F76C8A0092A5E6 = {
 			isa = PBXGroup;
 			children = (
 				030ECC901616B7E30057C236 /* STTwitter */,
-				030ECC731616B7410057C236 /* Application */,
+				030ECCA71616B98B0057C236 /* STTwitterDemo */,
 				030181881602C9DD006B91AB /* UnitTests */,
 				03C7AA9A15F76C8A0092A5E6 /* Frameworks */,
 				03C7AA9815F76C8A0092A5E6 /* Products */,
@@ -313,10 +313,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				030ECC811616B7410057C236 /* Credits.rtf in Resources */,
-				030ECC821616B7410057C236 /* InfoPlist.strings in Resources */,
-				030ECC831616B7410057C236 /* MainMenu.xib in Resources */,
-				030ECC861616B7410057C236 /* TwitterClients.plist in Resources */,
+				030ECCB51616B98B0057C236 /* Credits.rtf in Resources */,
+				030ECCB61616B98B0057C236 /* InfoPlist.strings in Resources */,
+				030ECCB71616B98B0057C236 /* MainMenu.xib in Resources */,
+				030ECCBA1616B98B0057C236 /* TwitterClients.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,13 +351,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				030ECC801616B7410057C236 /* AppDelegate.m in Sources */,
-				030ECC841616B7410057C236 /* main.m in Sources */,
 				030ECC9D1616B7E30057C236 /* STTwitterAPIWrapper.m in Sources */,
 				030ECC9F1616B7E30057C236 /* STTwitterHTML.m in Sources */,
 				030ECCA11616B7E30057C236 /* STTwitterOAuth.m in Sources */,
 				030ECCA31616B7E30057C236 /* STTwitterOAuthOSX.m in Sources */,
 				030ECCA51616B7E30057C236 /* STHTTPRequest.m in Sources */,
+				030ECCB41616B98B0057C236 /* AppDelegate.m in Sources */,
+				030ECCB81616B98B0057C236 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,26 +396,26 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		030ECC761616B7410057C236 /* Credits.rtf */ = {
+		030ECCAA1616B98B0057C236 /* Credits.rtf */ = {
 			isa = PBXVariantGroup;
 			children = (
-				030ECC771616B7410057C236 /* en */,
+				030ECCAB1616B98B0057C236 /* en */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		030ECC781616B7410057C236 /* InfoPlist.strings */ = {
+		030ECCAC1616B98B0057C236 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				030ECC791616B7410057C236 /* en */,
+				030ECCAD1616B98B0057C236 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		030ECC7A1616B7410057C236 /* MainMenu.xib */ = {
+		030ECCAE1616B98B0057C236 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				030ECC7B1616B7410057C236 /* en */,
+				030ECCAF1616B98B0057C236 /* en */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -475,8 +475,8 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Application/STTwitter-Prefix.pch";
-				INFOPLIST_FILE = "Application/STTwitter-Info.plist";
+				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
+				INFOPLIST_FILE = "STTwitterDemo/STTwitter-Info.plist";
 				PRODUCT_NAME = STTwitter;
 				WRAPPER_EXTENSION = app;
 			};
@@ -487,8 +487,8 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Application/STTwitter-Prefix.pch";
-				INFOPLIST_FILE = "Application/STTwitter-Info.plist";
+				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
+				INFOPLIST_FILE = "STTwitterDemo/STTwitter-Info.plist";
 				PRODUCT_NAME = STTwitter;
 				WRAPPER_EXTENSION = app;
 			};
@@ -501,7 +501,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Application/STTwitter-Prefix.pch";
+				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
 				INFOPLIST_FILE = "UnitTests/STTwitterTests-Info.plist";
 				PRODUCT_NAME = STTwitterTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -516,7 +516,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Application/STTwitter-Prefix.pch";
+				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
 				INFOPLIST_FILE = "UnitTests/STTwitterTests-Info.plist";
 				PRODUCT_NAME = STTwitterTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
