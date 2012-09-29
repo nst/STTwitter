@@ -4,11 +4,15 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
 
 ##### Typical Usage
 
-Instantiate `STTwitterAPIWrapper`
+1 - Copy the `STTwitter` directory into your project.
+
+2 - Import `STTwitterAPIWrapper.h`
+
+3 - Instantiate `STTwitterAPIWrapper`
 
     STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIWithOAuthOSX];
 
-Verify the credentials
+4 - Verify the credentials
 
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         // ...
@@ -16,7 +20,7 @@ Verify the credentials
         // ...
     }];
 
-Get the timeline statuses
+5 - Get the timeline statuses
 
     [twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
         // ...
@@ -71,21 +75,22 @@ Your code only interacts with `STTwitterAPIWrapper`.
 
 `STTwitterAPIWrapper` maps Objective-C methods with the Twitter API resource and parameters.
 
-`STTwitterAPIWrapper` implements the most common Twitter API methods.
+`STTwitterAPIWrapper` implements the most common Twitter API methods, add more if you need to.
 
 `STTwitterAPIWrapper` uses `STAuthOSX` or `STTwitterOAuth` to actually connect to Twitter.
 
-`STTwitterOSX` uses Mac OS X 10.8 `Accounts.framework` and `Social.framework`.
+`STTwitterOSX` uses OS X 10.8 `Accounts.framework` and `Social.framework`.
 
-`STTwitterOAuth` is an implementation of the OAuth procotol, specifically for Twitter.
+`STTwitterOAuth` implements the OAuth procotol, specifically for Twitter.
 
-`STTwitterOAuth` relies on `STHTTPRequest` to GET and POST asynchronous HTTP requests.
+`STTwitterOAuth` relies on `STHTTPRequest` to POST and GET asynchronous HTTP requests.
 
               Twitter Client
     +---------------------------------+
     |      STTwitterAPIWrapper        |
-    | + twitterAPIWithOAuth...        |
+    | + twitterAPIWith...             |
     | - getHomeTimeline               |
+    | - postStatus                    |
     +---------------------------------+
     +---------------------------------+
     |     STTwitterOAuthProtocol      |
