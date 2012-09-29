@@ -420,6 +420,7 @@
 
     r.POSTDictionary = params;
     
+    // https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
     NSData *mediaData = [params valueForKey:@"media[]"];
     
     NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
