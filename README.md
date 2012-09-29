@@ -4,7 +4,7 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
 
 ### Typical Usage
 
-##### 1. Copy the `STTwitter` directory into your project.
+##### 1. Copy the `STTwitter` directory into your project
 
 ##### 2. Import STTwitterAPIWrapper
 
@@ -106,7 +106,7 @@ Your code only interacts with `STTwitterAPIWrapper`.
     |                | STHTTPRequest  |
     +----------------+----------------+
 
-### License - BSD 3-Clause
+### BSD 3-Clause License
 
 Copyright (c) 2012, Nicolas Seriot
 All rights reserved.
