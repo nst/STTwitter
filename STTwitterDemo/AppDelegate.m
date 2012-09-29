@@ -310,12 +310,21 @@
 
     NSString *s = _twitterPostTweetTextField.stringValue;
     
-    [_twitter postStatusUpdate:s inReplyToStatusID:nil successBlock:^(NSString *response) {
-        _twitterPostTweetTextField.stringValue = @"";
-        _twitterPostTweetStatusTextField.stringValue = @"OK";
-    } errorBlock:^(NSError *error) {
-        _twitterPostTweetStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
-    }];
+    if(_twitterPostMediaURL) {
+        [_twitter postStatusUpdate:s mediaURL:_twitterPostMediaURL successBlock:^(NSString *response) {
+            _twitterPostTweetTextField.stringValue = @"";
+            _twitterPostTweetStatusTextField.stringValue = @"OK";
+        } errorBlock:^(NSError *error) {
+            _twitterPostTweetStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
+        }];
+    } else {
+        [_twitter postStatusUpdate:s inReplyToStatusID:nil successBlock:^(NSString *response) {
+            _twitterPostTweetTextField.stringValue = @"";
+            _twitterPostTweetStatusTextField.stringValue = @"OK";
+        } errorBlock:^(NSError *error) {
+            _twitterPostTweetStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
+        }];
+    }
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
