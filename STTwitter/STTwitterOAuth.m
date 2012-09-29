@@ -313,8 +313,7 @@
     }];
 }
 
-- (void)signRequest:(STHTTPRequest *)r {
-    
+- (void)signRequest:(STHTTPRequest *)r isMediaUpload:(BOOL)isMediaUpload {
     NSParameterAssert(_oauthConsumerKey);
     NSParameterAssert(_oauthConsumerSecret);
     
@@ -332,7 +331,7 @@
     NSString *httpMethod = r.POSTDictionary ? @"POST" : @"GET";
     
     NSMutableArray *oauthAndPOSTParameters = [oauthParameters mutableCopy];
-
+    
     if(r.POSTDictionary) {
         [r.POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             [oauthAndPOSTParameters addObject:@{ key : obj }];
@@ -344,17 +343,21 @@
     
     NSString *signature = [[self class] oauthSignatureWithHTTPMethod:httpMethod
                                                                  url:r.url
-                                                          parameters:oauthAndPOSTandGETParameters
+                                                          parameters:isMediaUpload ? oauthParameters : oauthAndPOSTandGETParameters
                                                       consumerSecret:_oauthConsumerSecret
                                                          tokenSecret:_oauthTokenSecret];
     
     [oauthAndPOSTParameters release];
     
     [oauthParameters addObject:@{@"oauth_signature" : signature}];
-
+    
     NSString *s = [[self class] oauthHeaderValueWithParameters:oauthParameters];
     
     [r setHeaderWithName:@"Authorization" value:s];
+}
+
+- (void)signRequest:(STHTTPRequest *)r {
+    [self signRequest:r isMediaUpload:NO];
 }
 
 - (void)getResource:(NSString *)resource
@@ -414,13 +417,22 @@
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
     STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
-    
+
     r.POSTDictionary = params ? params : @{};
     
-    [self signRequest:r];
+    NSData *mediaData = [params valueForKey:@"media[]"];
     
-    r.POSTDictionary = [[self class] encodedDictionaryWithDictionary:r.POSTDictionary];
+    if(mediaData) {
+        NSMutableDictionary *paramsWithoutMedia = [[params mutableCopy] autorelease];
+        [paramsWithoutMedia removeObjectForKey:@"media[]"];
+
+        [r setDataToUpload:mediaData parameterName:@"media[]" mimeType:@"application/octet-stream" fileName:@"media.jpg"];
+
+        r.POSTDictionary = paramsWithoutMedia ? paramsWithoutMedia : @{};
+    }
     
+    [self signRequest:r isMediaUpload:(mediaData != nil)];
+
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         successBlock(body);
     };
