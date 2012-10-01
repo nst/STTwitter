@@ -32,7 +32,7 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
     
 ### Demo Project
 
-STTwitter demo project let you choose how to get the OAuth tokens (see below).
+STTwitter demo project lets you choose how to get the OAuth tokens (see below).
 
 Once you got the OAuth tokens, you can get your timeline and post a new status.
 
@@ -75,7 +75,7 @@ STTwitter demo project comes with `TwitterClients.plist` where you can enter you
 
 Your code only interacts with `STTwitterAPIWrapper`.
 
-`STTwitterAPIWrapper` maps Objective-C methods with the Twitter API resource and parameters.
+`STTwitterAPIWrapper` maps Objective-C methods with the Twitter API resources and parameters.
 
 `STTwitterAPIWrapper` implements the most common Twitter API methods, add more if you need to.
 
