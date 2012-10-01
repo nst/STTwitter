@@ -75,7 +75,7 @@ STTwitter demo project comes with `TwitterClients.plist` where you can enter you
 
 Your code only interacts with `STTwitterAPIWrapper`.
 
-`STTwitterAPIWrapper` maps Objective-C methods with the Twitter API resource and parameters.
+`STTwitterAPIWrapper` maps Objective-C methods with the Twitter API resources and parameters.
 
 `STTwitterAPIWrapper` implements the most common Twitter API methods, add more if you need to.
 
