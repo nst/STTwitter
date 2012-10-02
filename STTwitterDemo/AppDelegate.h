@@ -50,6 +50,8 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) IBOutlet NSTextField *twitterPostTweetTextField;
 @property (nonatomic, retain) IBOutlet NSTextField *twitterPostTweetStatusTextField;
 @property (nonatomic, retain) NSURL *twitterPostMediaURL;
+@property (nonatomic, retain) NSString *twitterPostLatitude;
+@property (nonatomic, retain) NSString *twitterPostLongitude;
 
 @property (nonatomic, retain) NSArray *timelineStatuses;
 

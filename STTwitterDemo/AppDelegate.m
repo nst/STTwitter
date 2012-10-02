@@ -263,7 +263,6 @@
 
     [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {        
         self.timelineStatuses = statuses;
-        
         _twitterGetTimelineStatusTextField.stringValue = @"OK";
     } errorBlock:^(NSError *error) {
         _twitterGetTimelineStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
@@ -311,16 +310,20 @@
     NSString *s = _twitterPostTweetTextField.stringValue;
     
     if(_twitterPostMediaURL) {
-        [_twitter postStatusUpdate:s mediaURL:_twitterPostMediaURL successBlock:^(NSString *response) {
+        [_twitter postStatusUpdate:s inReplyToStatusID:nil mediaURL:_twitterPostMediaURL lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
             _twitterPostTweetTextField.stringValue = @"";
             _twitterPostTweetStatusTextField.stringValue = @"OK";
+            self.twitterPostLatitude = nil;
+            self.twitterPostLongitude = nil;
         } errorBlock:^(NSError *error) {
             _twitterPostTweetStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
         }];
     } else {
-        [_twitter postStatusUpdate:s inReplyToStatusID:nil successBlock:^(NSString *response) {
+        [_twitter postStatusUpdate:s inReplyToStatusID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
             _twitterPostTweetTextField.stringValue = @"";
             _twitterPostTweetStatusTextField.stringValue = @"OK";
+            self.twitterPostLatitude = nil;
+            self.twitterPostLongitude = nil;
         } errorBlock:^(NSError *error) {
             _twitterPostTweetStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
         }];

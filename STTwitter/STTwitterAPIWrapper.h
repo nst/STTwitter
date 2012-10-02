@@ -91,6 +91,8 @@
 // POST statuses/update
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
+                     lat:(NSString *)optionalLat
+                     lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -102,7 +104,10 @@
 
 // POST statuses/update_with_media
 - (void)postStatusUpdate:(NSString *)status
+       inReplyToStatusID:(NSString *)optionalExistingStatusID
                 mediaURL:(NSURL *)mediaURL
+                     lat:(NSString *)optionalLat
+                     lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 

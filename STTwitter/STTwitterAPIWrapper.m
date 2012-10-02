@@ -98,13 +98,21 @@
 
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
+                     lat:(NSString *)optionalLat
+                     lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"status"];
     
     if(optionalExistingStatusID) {
-        [md setObject:optionalExistingStatusID forKey:@"in_reply_to_status_id"];
+        md[@"in_reply_to_status_id"] = optionalExistingStatusID;
+    }
+    
+    if(optionalLat && optionalLon) {
+        md[@"lat"] = optionalLat;
+        md[@"lon"] = optionalLon;
+        md[@"display_coordinates"] = @"true";
     }
     
     [_oauth postResource:@"statuses/update.json" parameters:md successBlock:^(NSString *response) {
@@ -115,15 +123,28 @@
 }
 
 - (void)postStatusUpdate:(NSString *)status
+       inReplyToStatusID:(NSString *)optionalExistingStatusID
                 mediaURL:(NSURL *)mediaURL
+                     lat:(NSString *)optionalLat
+                     lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
+
+    NSMutableDictionary *md = [[ @{ @"status":status, @"media[]":data } mutableCopy] autorelease];
     
-    NSDictionary *d = @{ @"status":status, @"media[]":data };
+    if(optionalExistingStatusID) {
+        md[@"in_reply_to_status_id"] = optionalExistingStatusID;
+    }
     
-    [_oauth postResource:@"statuses/update_with_media.json" parameters:d successBlock:^(NSString *response) {
+    if(optionalLat && optionalLon) {
+        md[@"lat"] = optionalLat;
+        md[@"lon"] = optionalLon;
+        md[@"display_coordinates"] = @"true";
+    }
+    
+    [_oauth postResource:@"statuses/update_with_media.json" parameters:md successBlock:^(NSString *response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
