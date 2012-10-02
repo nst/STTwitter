@@ -348,6 +348,7 @@
                                                          tokenSecret:_oauthTokenSecret];
     
     [oauthAndPOSTParameters release];
+    [oauthAndPOSTandGETParameters release];
     
     [oauthParameters addObject:@{@"oauth_signature" : signature}];
     
