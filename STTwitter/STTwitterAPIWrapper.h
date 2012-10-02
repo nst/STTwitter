@@ -271,6 +271,20 @@
 
 #pragma mark Places & Geo
 
+// GET geo/id/:place_id
+
+// GET geo/reverse_geocode
+- (void)getReverseGeocodeWithLatitude:(NSString *)latitude
+                            longitude:(NSString *)longitude
+                         successBlock:(void(^)(NSArray *places))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET geo/search
+
+// GET geo/similar_places
+
+// POST geo/place
+
 #pragma mark Trends
 
 #pragma mark Spam Reporting
