@@ -78,6 +78,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
     [_credential release];
     [_proxyCredential release];
     [_POSTDictionary release];
+    [_POSTData release];
     [_POSTFilePath release];
     [_POSTFileData release];
     [_POSTFileMimeType release];
@@ -314,6 +315,9 @@ static NSMutableDictionary *sharedCredentialsStorage;
         
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:data];
+    } else if (_POSTData != nil) {
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:_POSTData];
     }
     
     [_requestHeaders enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {

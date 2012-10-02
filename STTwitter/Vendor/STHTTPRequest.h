@@ -30,6 +30,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic, retain) NSURLCredential *credential;
 @property (nonatomic, retain) NSURLCredential *proxyCredential;
 @property (nonatomic, retain) NSDictionary *POSTDictionary;
+@property (nonatomic, retain) NSData *POSTData;
 @property (nonatomic, retain) NSMutableDictionary *requestHeaders;
 @property (nonatomic, readonly) NSInteger responseStatus;
 @property (nonatomic, retain, readonly) NSString *responseStringEncodingName;
