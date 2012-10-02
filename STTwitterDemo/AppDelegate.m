@@ -40,6 +40,8 @@
     [_twitterPostTweetStatusTextField release];
     [_timelineStatuses release];
     [_twitterPostMediaURL release];
+    [_twitterPostLatitude release];
+    [_twitterPostLongitude release];
     [super dealloc];
 }
 
