@@ -36,6 +36,10 @@
  https://api.twitter.com/1/apps/configuration.json
  https://api.twitter.com/1/users/show.json
  https://api.twitter.com/1/account/verify_credentials.json
+ 
+ Tweet fields contents
+ https://dev.twitter.com/docs/platform-objects/tweets
+ https://dev.twitter.com/blog/new-withheld-content-fields-api-responses
  */
 
 @interface STTwitterAPIWrapper : NSObject
