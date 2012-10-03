@@ -152,6 +152,9 @@
 
 - (IBAction)guessPIN:(id)sender {
     
+    _pinTextField.stringValue = @"";
+    _pinStatus2TextField.stringValue = @"";
+    
     STTwitterHTML *twitterHTML = [[[STTwitterHTML alloc] init] autorelease];
     
     [_twitter postTokenRequest:^(NSURL *pinURL, NSString *oauthToken) {
@@ -195,6 +198,10 @@
 }
 
 - (IBAction)loginPIN:(id)sender {
+    
+    _pinStatus2TextField.stringValue = @"";
+    _pinOAuthTokenTextField.stringValue = @"";
+    _pinOAuthTokenSecretTextField.stringValue = @"";
     
     [_twitter postAccessTokenRequestWithPIN:_pinTextField.stringValue
                                  oauthToken:_pinOAuthToken
