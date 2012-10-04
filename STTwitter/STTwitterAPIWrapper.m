@@ -51,12 +51,12 @@
                                errorBlock:errorBlock];
 }
 
-- (NSString *)oauthTokenSecret {
-    return [_oauth oauthTokenSecret];
+- (NSString *)oauthAccessTokenSecret {
+    return [_oauth oauthAccessTokenSecret];
 }
 
-- (NSString *)oauthToken {
-    return [_oauth oauthToken];
+- (NSString *)oauthAccessToken {
+    return [_oauth oauthAccessToken];
 }
 
 - (void)dealloc {

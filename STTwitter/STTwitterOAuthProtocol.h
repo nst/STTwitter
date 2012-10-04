@@ -32,7 +32,7 @@
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (NSString *)oauthToken;
-- (NSString *)oauthTokenSecret;
+- (NSString *)oauthAccessToken;
+- (NSString *)oauthAccessTokenSecret;
 
 @end

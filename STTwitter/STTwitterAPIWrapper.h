@@ -65,8 +65,8 @@
                            errorBlock:(void(^)(NSError *error))errorBlock;
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
 
-@property (nonatomic, readonly) NSString *oauthToken;
-@property (nonatomic, readonly) NSString *oauthTokenSecret;
+@property (nonatomic, readonly) NSString *oauthAccessToken;
+@property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 
 #pragma mark Timelines
 
