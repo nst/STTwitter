@@ -24,11 +24,11 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) IBOutlet NSTextField *consumerKeyTextField;
 @property (nonatomic, retain) IBOutlet NSTextField *consumerSecretTextField;
 
-@property (nonatomic, retain) IBOutlet NSTextField *osxStatusTextField;
-
 @property (nonatomic, retain) NSURL *pinURL;
 
 @property (nonatomic, copy) UsernamePasswordBlock_t pinGuessLoginCompletionBlock;
+
+@property (nonatomic, retain) NSString *osxStatus;
 
 @property (nonatomic, retain) NSString *pin;
 @property (nonatomic, retain) NSString *pinStatus1;
@@ -36,19 +36,20 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) NSString *pinOAuthToken;
 @property (nonatomic, retain) NSString *pinOAuthTokenSecret;
 
-@property (nonatomic, retain) IBOutlet NSTextField *xAuthUsernameTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *xAuthPasswordTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *xAuthStatusTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *xAuthOAuthTokenTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *xAuthOAuthTokenSecretTextField;
+@property (nonatomic, retain) NSString *xAuthUsername;
+@property (nonatomic, retain) NSString *xAuthPassword;
+@property (nonatomic, retain) NSString *xAuthStatus;
+@property (nonatomic, retain) NSString *xAuthOAuthToken;
+@property (nonatomic, retain) NSString *xAuthOAuthTokenSecret;
 
-@property (nonatomic, retain) IBOutlet NSTextField *oauthTokenTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *oauthTokenSecretTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *oauthTokensStatusTextField;
+@property (nonatomic, retain) NSString *oauthToken;
+@property (nonatomic, retain) NSString *oauthTokenSecret;
+@property (nonatomic, retain) NSString *oauthTokensStatus;
 
-@property (nonatomic, retain) IBOutlet NSTextField *twitterGetTimelineStatusTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *twitterPostTweetTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *twitterPostTweetStatusTextField;
+@property (nonatomic, retain) NSString *twitterGetTimelineStatus;
+@property (nonatomic, retain) NSString *twitterPostTweetText;
+@property (nonatomic, retain) NSString *twitterPostTweetStatus;
+
 @property (nonatomic, retain) NSURL *twitterPostMediaURL;
 @property (nonatomic, retain) NSString *twitterPostLatitude;
 @property (nonatomic, retain) NSString *twitterPostLongitude;

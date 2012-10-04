@@ -18,25 +18,25 @@
     [_twitterClientsController release];
     [_consumerKeyTextField release];
     [_consumerSecretTextField release];
-    [_osxStatusTextField release];
+    [_osxStatus release];
     [_pinURL release];
     [_pin release];
     [_pinStatus1 release];
     [_pinStatus2 release];
     [_pinOAuthToken release];
     [_pinOAuthTokenSecret release];
-    [_xAuthUsernameTextField release];
-    [_xAuthPasswordTextField release];
-    [_xAuthStatusTextField release];
-    [_xAuthOAuthTokenTextField release];
-    [_xAuthOAuthTokenSecretTextField release];
-    [_oauthTokenTextField release];
-    [_oauthTokenSecretTextField release];
-    [_oauthTokensStatusTextField release];
+    [_xAuthUsername release];
+    [_xAuthPassword release];
+    [_xAuthStatus release];
+    [_xAuthOAuthToken release];
+    [_xAuthOAuthTokenSecret release];
+    [_oauthToken release];
+    [_oauthTokenSecret release];
+    [_oauthTokensStatus release];
     [_pinGuessLoginCompletionBlock release];
-    [_twitterGetTimelineStatusTextField release];
-    [_twitterPostTweetTextField release];
-    [_twitterPostTweetStatusTextField release];
+    [_twitterGetTimelineStatus release];
+    [_twitterPostTweetText release];
+    [_twitterPostTweetStatus release];
     [_timelineStatuses release];
     [_twitterPostMediaURL release];
     [_twitterPostLatitude release];
@@ -110,12 +110,12 @@
 - (IBAction)loginOSX:(id)sender {
     self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthOSX];
     
-    self.osxStatusTextField.stringValue = @"-";
+    self.osxStatus = @"-";
 
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
-        _osxStatusTextField.stringValue = [NSString stringWithFormat:@"Access granted for %@", username];
+        self.osxStatus = [NSString stringWithFormat:@"Access granted for %@", username];
     } errorBlock:^(NSError *error) {
-        _osxStatusTextField.stringValue = [error localizedDescription];
+        self.osxStatus = [error localizedDescription];
     }];
 }
 
@@ -211,57 +211,64 @@
                                }];
 }
 
+//- (void)setXAuthPassword:(NSString *)s {
+//    _xAuthPassword = s;
+//}
+
 // OAuth - XAuth
 - (IBAction)loginXAuth:(id)sender {
     
-    self.xAuthStatusTextField.stringValue = @"-";
-    self.xAuthOAuthTokenTextField.stringValue = @"";
-    self.xAuthOAuthTokenSecretTextField.stringValue = @"";
+    self.xAuthStatus = @"-";
+    self.xAuthOAuthToken = @"";
+    self.xAuthOAuthTokenSecret = @"";
 
+    NSAssert(_xAuthUsername, @"");
+    NSAssert(_xAuthPassword, @"");
+    
     self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerKey:_consumerKeyTextField.stringValue
                                                         consumerSecret:_consumerSecretTextField.stringValue
-                                                              username:_xAuthUsernameTextField.stringValue
-                                                              password:_xAuthPasswordTextField.stringValue];
+                                                              username:_xAuthUsername
+                                                              password:_xAuthPassword];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         
-        _xAuthStatusTextField.stringValue = [NSString stringWithFormat:@"Access granted for %@", username];
+        self.xAuthStatus = [NSString stringWithFormat:@"Access granted for %@", username];
         
-        _xAuthOAuthTokenTextField.stringValue = _twitter.oauthToken;
-        _xAuthOAuthTokenSecretTextField.stringValue = _twitter.oauthTokenSecret;
+        self.xAuthOAuthToken = _twitter.oauthAccessToken;
+        self.xAuthOAuthTokenSecret = _twitter.oauthAccessTokenSecret;
         
     } errorBlock:^(NSError *error) {
         
-        _xAuthStatusTextField.stringValue = [error localizedDescription];
+        self.xAuthStatus = [error localizedDescription];
     }];
 }
 
 // OAuth - Tokens
 - (IBAction)loginTokens:(id)sender {
     
-    self.oauthTokensStatusTextField.stringValue = @"-";
+    self.oauthTokensStatus = @"-";
     
     self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerKey:_consumerKeyTextField.stringValue
                                                         consumerSecret:_consumerSecretTextField.stringValue
-                                                            oauthToken:_oauthTokenTextField.stringValue
-                                                      oauthTokenSecret:_oauthTokenSecretTextField.stringValue];
+                                                            oauthToken:_oauthToken
+                                                      oauthTokenSecret:_oauthTokenSecret];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         
-        _oauthTokensStatusTextField.stringValue = [NSString stringWithFormat:@"Access granted for %@", username];
+        self.oauthTokensStatus = [NSString stringWithFormat:@"Access granted for %@", username];
         
-        _oauthTokenTextField.stringValue = _twitter.oauthToken;
-        _oauthTokenSecretTextField.stringValue = _twitter.oauthTokenSecret;
+        self.oauthToken = _twitter.oauthAccessToken;
+        self.oauthTokenSecret = _twitter.oauthAccessTokenSecret;
         
     } errorBlock:^(NSError *error) {
         
-        _oauthTokensStatusTextField.stringValue = [error localizedDescription];
+        self.oauthTokensStatus = [error localizedDescription];
     }];
 }
 
 - (IBAction)getTimeline:(id)sender {
     
-    self.twitterGetTimelineStatusTextField.stringValue = @"-";
+    self.twitterGetTimelineStatus = @"-";
     self.timelineStatuses = [NSArray array];
 
     [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {        
@@ -269,9 +276,9 @@
         
         //NSLog(@"-- %@", statuses);
         
-        _twitterGetTimelineStatusTextField.stringValue = @"OK";
+        self.twitterGetTimelineStatus = @"OK";
     } errorBlock:^(NSError *error) {
-        _twitterGetTimelineStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
+        self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
     }];
 }
 
@@ -311,27 +318,25 @@
 
 - (IBAction)postTweet:(id)sender {
 
-    self.twitterPostTweetStatusTextField.stringValue = @"-";
+    self.twitterPostTweetStatus = @"-";
 
-    NSString *s = _twitterPostTweetTextField.stringValue;
-    
     if(_twitterPostMediaURL) {
-        [_twitter postStatusUpdate:s inReplyToStatusID:nil mediaURL:_twitterPostMediaURL lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
-            _twitterPostTweetTextField.stringValue = @"";
-            _twitterPostTweetStatusTextField.stringValue = @"OK";
+        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil mediaURL:_twitterPostMediaURL lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
+            self.twitterPostTweetText = @"";
+            self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;
             self.twitterPostLongitude = nil;
         } errorBlock:^(NSError *error) {
-            _twitterPostTweetStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
+            self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
     } else {
-        [_twitter postStatusUpdate:s inReplyToStatusID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
-            _twitterPostTweetTextField.stringValue = @"";
-            _twitterPostTweetStatusTextField.stringValue = @"OK";
+        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
+            self.twitterPostTweetText = @"";
+            self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;
             self.twitterPostLongitude = nil;
         } errorBlock:^(NSError *error) {
-            _twitterPostTweetStatusTextField.stringValue = error ? [error localizedDescription] : @"Unknown error";
+            self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
     }
 }

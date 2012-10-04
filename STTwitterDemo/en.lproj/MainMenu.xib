@@ -3809,14 +3809,6 @@
 					<int key="connectionID">853</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">osxStatusTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="707981396"/>
-					</object>
-					<int key="connectionID">867</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">fetchPIN:</string>
 						<reference key="source" ref="976324537"/>
@@ -3857,76 +3849,12 @@
 					<int key="connectionID">858</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">xAuthUsernameTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="176431918"/>
-					</object>
-					<int key="connectionID">924</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">xAuthStatusTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="427753804"/>
-					</object>
-					<int key="connectionID">870</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">xAuthOAuthTokenTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="796311803"/>
-					</object>
-					<int key="connectionID">926</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">xAuthOAuthTokenSecretTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="370947697"/>
-					</object>
-					<int key="connectionID">927</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">xAuthPasswordTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="563446341"/>
-					</object>
-					<int key="connectionID">1063</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">loginTokens:</string>
 						<reference key="source" ref="976324537"/>
 						<reference key="destination" ref="882018039"/>
 					</object>
 					<int key="connectionID">859</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">oauthTokenTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="1052435702"/>
-					</object>
-					<int key="connectionID">865</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">oauthTokenSecretTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="648514390"/>
-					</object>
-					<int key="connectionID">866</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">oauthTokensStatusTextField</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="810450079"/>
-					</object>
-					<int key="connectionID">923</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -4017,6 +3945,26 @@
 					<int key="connectionID">1339</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: xAuthUsername</string>
+						<reference key="source" ref="176431918"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="176431918"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: xAuthUsername</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">xAuthUsername</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1380</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">nextKeyView</string>
 						<reference key="source" ref="1052435702"/>
@@ -4025,12 +3973,52 @@
 					<int key="connectionID">1341</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: oauthToken</string>
+						<reference key="source" ref="1052435702"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1052435702"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: oauthToken</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">oauthToken</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1403</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">nextKeyView</string>
 						<reference key="source" ref="648514390"/>
 						<reference key="destination" ref="847248310"/>
 					</object>
 					<int key="connectionID">1342</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: oauthTokenSecret</string>
+						<reference key="source" ref="648514390"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="648514390"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: oauthTokenSecret</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">oauthTokenSecret</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1404</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -4051,10 +4039,30 @@
 							<string key="NSLabel">value: pin</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">pin</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">1349</int>
+					<int key="connectionID">1382</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: osxStatus</string>
+						<reference key="source" ref="707981396"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="707981396"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: osxStatus</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">osxStatus</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1402</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -4106,6 +4114,70 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: xAuthStatus</string>
+						<reference key="source" ref="427753804"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="427753804"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: xAuthStatus</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">xAuthStatus</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1365</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: xAuthOAuthToken</string>
+						<reference key="source" ref="796311803"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="796311803"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: xAuthOAuthToken</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">xAuthOAuthToken</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1390</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: xAuthOAuthTokenSecret</string>
+						<reference key="source" ref="370947697"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="370947697"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: xAuthOAuthTokenSecret</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">xAuthOAuthTokenSecret</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1385</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: oauthTokensStatus</string>
+						<reference key="source" ref="810450079"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="810450079"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: oauthTokensStatus</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">oauthTokensStatus</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1400</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: pinStatus1</string>
 						<reference key="source" ref="411821586"/>
 						<reference key="destination" ref="976324537"/>
@@ -4127,6 +4199,26 @@
 						<reference key="destination" ref="1052435702"/>
 					</object>
 					<int key="connectionID">1340</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: xAuthPassword</string>
+						<reference key="source" ref="563446341"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="563446341"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: xAuthPassword</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">xAuthPassword</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1378</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -4193,6 +4285,42 @@
 						</object>
 					</object>
 					<int key="connectionID">1223</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: twitterPostTweetText</string>
+						<reference key="source" ref="20417979"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="20417979"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: twitterPostTweetText</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">twitterPostTweetText</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1408</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: twitterPostTweetStatus</string>
+						<reference key="source" ref="860156708"/>
+						<reference key="destination" ref="976324537"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="860156708"/>
+							<reference key="NSDestination" ref="976324537"/>
+							<string key="NSLabel">value: twitterPostTweetStatus</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">twitterPostTweetStatus</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1416</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -4275,6 +4403,14 @@
 					<int key="connectionID">1319</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">nextKeyView</string>
+						<reference key="source" ref="847248310"/>
+						<reference key="destination" ref="413824550"/>
+					</object>
+					<int key="connectionID">1343</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: twitterPostLatitude</string>
 						<reference key="source" ref="847248310"/>
@@ -4285,18 +4421,22 @@
 							<string key="NSLabel">value: twitterPostLatitude</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">twitterPostLatitude</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">1331</int>
+					<int key="connectionID">1411</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">nextKeyView</string>
-						<reference key="source" ref="847248310"/>
-						<reference key="destination" ref="413824550"/>
+						<reference key="source" ref="413824550"/>
+						<reference key="destination" ref="20417979"/>
 					</object>
-					<int key="connectionID">1343</int>
+					<int key="connectionID">1344</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -4309,18 +4449,14 @@
 							<string key="NSLabel">value: twitterPostLongitude</string>
 							<string key="NSBinding">value</string>
 							<string key="NSKeyPath">twitterPostLongitude</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSContinuouslyUpdatesValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">1335</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">nextKeyView</string>
-						<reference key="source" ref="413824550"/>
-						<reference key="destination" ref="20417979"/>
-					</object>
-					<int key="connectionID">1344</int>
+					<int key="connectionID">1412</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -6539,7 +6675,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1354</int>
+			<int key="maxID">1416</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6608,25 +6744,8 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="consumerKeyTextField">NSTextField</string>
 						<string key="consumerSecretTextField">NSTextField</string>
-						<string key="oauthTokenSecretTextField">NSTextField</string>
-						<string key="oauthTokenTextField">NSTextField</string>
-						<string key="oauthTokensStatusTextField">NSTextField</string>
-						<string key="osxStatusTextField">NSTextField</string>
-						<string key="pin">NSString</string>
-						<string key="pinOAuthToken">NSString</string>
-						<string key="pinOAuthTokenSecret">NSString</string>
-						<string key="pinStatus1">NSString</string>
-						<string key="pinStatus2">NSString</string>
 						<string key="twitterClientsController">NSArrayController</string>
-						<string key="twitterGetTimelineStatusTextField">NSTextField</string>
-						<string key="twitterPostTweetStatusTextField">NSTextField</string>
-						<string key="twitterPostTweetTextField">NSTextField</string>
 						<string key="window">NSWindow</string>
-						<string key="xAuthOAuthTokenSecretTextField">NSTextField</string>
-						<string key="xAuthOAuthTokenTextField">NSTextField</string>
-						<string key="xAuthPasswordTextField">NSTextField</string>
-						<string key="xAuthStatusTextField">NSTextField</string>
-						<string key="xAuthUsernameTextField">NSTextField</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="consumerKeyTextField">
@@ -6637,127 +6756,18 @@
 							<string key="name">consumerSecretTextField</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="oauthTokenSecretTextField">
-							<string key="name">oauthTokenSecretTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="oauthTokenTextField">
-							<string key="name">oauthTokenTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="oauthTokensStatusTextField">
-							<string key="name">oauthTokensStatusTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="osxStatusTextField">
-							<string key="name">osxStatusTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="pin">
-							<string key="name">pin</string>
-							<string key="candidateClassName">NSString</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="pinOAuthToken">
-							<string key="name">pinOAuthToken</string>
-							<string key="candidateClassName">NSString</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="pinOAuthTokenSecret">
-							<string key="name">pinOAuthTokenSecret</string>
-							<string key="candidateClassName">NSString</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="pinStatus1">
-							<string key="name">pinStatus1</string>
-							<string key="candidateClassName">NSString</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="pinStatus2">
-							<string key="name">pinStatus2</string>
-							<string key="candidateClassName">NSString</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="twitterClientsController">
 							<string key="name">twitterClientsController</string>
 							<string key="candidateClassName">NSArrayController</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="twitterGetTimelineStatusTextField">
-							<string key="name">twitterGetTimelineStatusTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="twitterPostTweetStatusTextField">
-							<string key="name">twitterPostTweetStatusTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="twitterPostTweetTextField">
-							<string key="name">twitterPostTweetTextField</string>
-							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="window">
 							<string key="name">window</string>
 							<string key="candidateClassName">NSWindow</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="xAuthOAuthTokenSecretTextField">
-							<string key="name">xAuthOAuthTokenSecretTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="xAuthOAuthTokenTextField">
-							<string key="name">xAuthOAuthTokenTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="xAuthPasswordTextField">
-							<string key="name">xAuthPasswordTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="xAuthStatusTextField">
-							<string key="name">xAuthStatusTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="xAuthUsernameTextField">
-							<string key="name">xAuthUsernameTextField</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/AppDelegate.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSDocument</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="printDocument:">id</string>
-						<string key="revertDocumentToSaved:">id</string>
-						<string key="runPageLayout:">id</string>
-						<string key="saveDocument:">id</string>
-						<string key="saveDocumentAs:">id</string>
-						<string key="saveDocumentTo:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="printDocument:">
-							<string key="name">printDocument:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="revertDocumentToSaved:">
-							<string key="name">revertDocumentToSaved:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="runPageLayout:">
-							<string key="name">runPageLayout:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="saveDocument:">
-							<string key="name">saveDocument:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="saveDocumentAs:">
-							<string key="name">saveDocumentAs:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="saveDocumentTo:">
-							<string key="name">saveDocumentTo:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/NSDocument.h</string>
 					</object>
 				</object>
 			</array>
