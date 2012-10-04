@@ -30,11 +30,11 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 @property (nonatomic, copy) UsernamePasswordBlock_t pinGuessLoginCompletionBlock;
 
-@property (nonatomic, retain) IBOutlet NSTextField *pinTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *pinStatus1TextField;
-@property (nonatomic, retain) IBOutlet NSTextField *pinStatus2TextField;
-@property (nonatomic, retain) IBOutlet NSTextField *pinOAuthTokenTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *pinOAuthTokenSecretTextField;
+@property (nonatomic, retain) NSString *pin;
+@property (nonatomic, retain) NSString *pinStatus1;
+@property (nonatomic, retain) NSString *pinStatus2;
+@property (nonatomic, retain) NSString *pinOAuthToken;
+@property (nonatomic, retain) NSString *pinOAuthTokenSecret;
 
 @property (nonatomic, retain) IBOutlet NSTextField *xAuthUsernameTextField;
 @property (nonatomic, retain) IBOutlet NSTextField *xAuthPasswordTextField;

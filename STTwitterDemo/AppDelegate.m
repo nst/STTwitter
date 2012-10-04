@@ -20,11 +20,11 @@
     [_consumerSecretTextField release];
     [_osxStatusTextField release];
     [_pinURL release];
-    [_pinTextField release];
-    [_pinStatus1TextField release];
-    [_pinStatus2TextField release];
-    [_pinOAuthTokenTextField release];
-    [_pinOAuthTokenSecretTextField release];
+    [_pin release];
+    [_pinStatus1 release];
+    [_pinStatus2 release];
+    [_pinOAuthToken release];
+    [_pinOAuthTokenSecret release];
     [_xAuthUsernameTextField release];
     [_xAuthPasswordTextField release];
     [_xAuthStatusTextField release];
@@ -125,8 +125,8 @@
     self.pinURL = nil;
     self.pinGuessLoginCompletionBlock = nil;
     
-    self.pinStatus1TextField.stringValue = @"-";
-    self.pinStatus2TextField.stringValue = @"-";
+    self.pinStatus1 = @"-";
+    self.pinStatus2 = @"-";
     
     self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerKey:_consumerKeyTextField.stringValue
                                                         consumerSecret:_consumerSecretTextField.stringValue];
@@ -134,11 +134,11 @@
     [_twitter postTokenRequest:^(NSURL *url, NSString *oauthToken) {
         self.pinURL = url;
         
-        _pinStatus1TextField.stringValue = [url description];
+        self.pinStatus1 = [url description];
         
     } errorBlock:^(NSError *error) {
         
-        _pinStatus1TextField.stringValue = [error localizedDescription];
+        self.pinStatus1 = [error localizedDescription];
     }];
     
 }
@@ -149,8 +149,8 @@
 
 - (IBAction)guessPIN:(id)sender {
     
-    _pinTextField.stringValue = @"";
-    _pinStatus2TextField.stringValue = @"";
+    self.pin = @"";
+    self.pinStatus2 = @"";
     
     STTwitterHTML *twitterHTML = [[[STTwitterHTML alloc] init] autorelease];
     
@@ -166,48 +166,48 @@
                         
                         [twitterHTML postAuthorizeFormResultsAtURL:pinURL authenticityToken:authenticityToken oauthToken:oauthToken successBlock:^(NSString *PIN) {
                             
-                            _pinTextField.stringValue = PIN;
+                            self.pin = PIN;
                             
                         } errorBlock:^(NSError *error) {
-                            _pinStatus2TextField.stringValue = [error localizedDescription];
+                            self.pinStatus2 = [error localizedDescription];
                         }];
                         
                     } errorBlock:^(NSError *error) {
-                        _pinStatus2TextField.stringValue = [error localizedDescription];
+                        self.pinStatus2 = [error localizedDescription];
                     }];
                     
                 } errorBlock:^(NSError *error) {
-                    _pinStatus2TextField.stringValue = [error localizedDescription];
+                    self.pinStatus2 = [error localizedDescription];
                 }];
                 
             }];
             
         } errorBlock:^(NSError *error) {
-            _pinStatus2TextField.stringValue = [error localizedDescription];
+            self.pinStatus2 = [error localizedDescription];
         }];
         
     } errorBlock:^(NSError *error) {
-        _pinStatus2TextField.stringValue = [error localizedDescription];
+        self.pinStatus2 = [error localizedDescription];
     }];
     
 }
 
 - (IBAction)loginPIN:(id)sender {
     
-    _pinStatus2TextField.stringValue = @"";
-    _pinOAuthTokenTextField.stringValue = @"";
-    _pinOAuthTokenSecretTextField.stringValue = @"";
+    self.pinStatus2 = @"";
+    self.pinOAuthToken = @"";
+    self.pinOAuthTokenSecret = @"";
     
-    [_twitter postAccessTokenRequestWithPIN:_pinTextField.stringValue
+    [_twitter postAccessTokenRequestWithPIN:_pin
                                successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
                                    
-                                   _pinStatus2TextField.stringValue = [NSString stringWithFormat:@"Access granted for %@", screenName];
+                                   self.pinStatus2 = [NSString stringWithFormat:@"Access granted for %@", screenName];
                                    
-                                   _pinOAuthTokenTextField.stringValue = oauthToken;
-                                   _pinOAuthTokenSecretTextField.stringValue = oauthTokenSecret;
+                                   self.pinOAuthToken = oauthToken;
+                                   self.pinOAuthTokenSecret = oauthTokenSecret;
                                    
                                } errorBlock:^(NSError *error) {
-                                   _pinStatus2TextField.stringValue = [error localizedDescription];
+                                   self.pinStatus2 = [error localizedDescription];
                                }];
 }
 
