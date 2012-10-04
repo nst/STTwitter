@@ -18,8 +18,12 @@
 
 @property (nonatomic, retain) NSString *oauthConsumerKey;
 @property (nonatomic, retain) NSString *oauthConsumerSecret;
-@property (nonatomic, retain) NSString *oauthToken;
-@property (nonatomic, retain) NSString *oauthTokenSecret;
+
+@property (nonatomic, retain) NSString *oauthRequestToken;
+@property (nonatomic, retain) NSString *oauthRequestTokenSecret;
+
+@property (nonatomic, retain) NSString *oauthAccessToken;
+@property (nonatomic, retain) NSString *oauthAccessTokenSecret;
 
 @property (nonatomic, retain) NSString *testOauthNonce;
 @property (nonatomic, retain) NSString *testOauthTimestamp;
@@ -42,8 +46,8 @@
     
     STTwitterOAuth *to = [self twitterServiceWithConsumerKey:consumerKey consumerSecret:consumerSecret];
     
-    to.oauthToken = oauthToken;
-    to.oauthTokenSecret = oauthTokenSecret;
+    to.oauthAccessToken = oauthToken;
+    to.oauthAccessTokenSecret = oauthTokenSecret;
     
     return to;
 }
@@ -256,7 +260,10 @@
         
         NSURL *url = [NSURL URLWithString:s];
         
-        successBlock(url, d[@"oauth_token"]);
+        self.oauthRequestToken = d[@"oauth_token"];
+        self.oauthRequestTokenSecret = d[@"oauth_token_secret"]; // unused
+        
+        successBlock(url, _oauthRequestToken);
         
     } errorBlock:^(NSError *error) {
         NSLog(@"-- error: %@", [error localizedDescription]);
@@ -278,23 +285,20 @@
         
         // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
         
-        self.oauthToken = d[@"oauth_token"];
-        self.oauthTokenSecret = d[@"oauth_token_secret"];
+        self.oauthAccessToken = d[@"oauth_token"];
+        self.oauthAccessTokenSecret = d[@"oauth_token_secret"];
         
-        successBlock(_oauthToken, _oauthTokenSecret, d[@"user_id"], d[@"screen_name"]);
+        successBlock(_oauthAccessToken, _oauthAccessTokenSecret, d[@"user_id"], d[@"screen_name"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
 }
 
 - (void)postAccessTokenRequestWithPIN:(NSString *)pin
-                           oauthToken:(NSString *)oauthToken
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
 
     NSParameterAssert(pin);
-
-    self.oauthToken = oauthToken;
     
     NSDictionary *d = @{@"oauth_verifier" : pin};
     
@@ -303,10 +307,10 @@
         
         // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
         
-        self.oauthToken = d[@"oauth_token"];
-        self.oauthTokenSecret = d[@"oauth_token_secret"];
+        self.oauthAccessToken = d[@"oauth_token"];
+        self.oauthAccessTokenSecret = d[@"oauth_token_secret"];
                 
-        successBlock(_oauthToken, _oauthTokenSecret, d[@"user_id"], d[@"screen_name"]);
+        successBlock(_oauthAccessToken, _oauthAccessTokenSecret, d[@"user_id"], d[@"screen_name"]);
 
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -324,8 +328,10 @@
                                        @{@"oauth_timestamp"        : [self oauthTimestamp]},
                                        @{@"oauth_version"          : [self oauthVersion]}, nil];
     
-    if(_oauthToken) { // missing while authenticating with XAuth
-        [oauthParameters addObject:@{@"oauth_token" : [self oauthToken]}];
+    if(_oauthAccessToken) { // missing while authenticating with XAuth
+        [oauthParameters addObject:@{@"oauth_token" : [self oauthAccessToken]}];
+    } else if(_oauthRequestToken) {
+        [oauthParameters addObject:@{@"oauth_token" : [self oauthRequestToken]}];
     }
     
     NSString *httpMethod = r.POSTDictionary ? @"POST" : @"GET";
@@ -345,7 +351,7 @@
                                                                  url:r.url
                                                           parameters:isMediaUpload ? oauthParameters : oauthAndPOSTandGETParameters
                                                       consumerSecret:_oauthConsumerSecret
-                                                         tokenSecret:_oauthTokenSecret];
+                                                         tokenSecret:_oauthAccessTokenSecret];
     
     [oauthAndPOSTParameters release];
     [oauthAndPOSTandGETParameters release];

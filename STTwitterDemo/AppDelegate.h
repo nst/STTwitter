@@ -27,7 +27,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) IBOutlet NSTextField *osxStatusTextField;
 
 @property (nonatomic, retain) NSURL *pinURL;
-@property (nonatomic, retain) NSString *pinOAuthToken;
+
 @property (nonatomic, copy) UsernamePasswordBlock_t pinGuessLoginCompletionBlock;
 
 @property (nonatomic, retain) IBOutlet NSTextField *pinTextField;

@@ -38,7 +38,6 @@
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postAccessTokenRequestWithPIN:(NSString *)pin
-                           oauthToken:(NSString *)oauthToken
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 

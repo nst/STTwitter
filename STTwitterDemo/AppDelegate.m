@@ -20,7 +20,6 @@
     [_consumerSecretTextField release];
     [_osxStatusTextField release];
     [_pinURL release];
-    [_pinOAuthToken release];
     [_pinTextField release];
     [_pinStatus1TextField release];
     [_pinStatus2TextField release];
@@ -124,7 +123,6 @@
 - (IBAction)fetchPIN:(id)sender {
     
     self.pinURL = nil;
-    self.pinOAuthToken = nil;
     self.pinGuessLoginCompletionBlock = nil;
     
     self.pinStatus1TextField.stringValue = @"-";
@@ -135,7 +133,6 @@
     
     [_twitter postTokenRequest:^(NSURL *url, NSString *oauthToken) {
         self.pinURL = url;
-        self.pinOAuthToken = oauthToken;
         
         _pinStatus1TextField.stringValue = [url description];
         
@@ -171,8 +168,6 @@
                             
                             _pinTextField.stringValue = PIN;
                             
-                            self.pinOAuthToken = oauthToken;
-                            
                         } errorBlock:^(NSError *error) {
                             _pinStatus2TextField.stringValue = [error localizedDescription];
                         }];
@@ -204,7 +199,6 @@
     _pinOAuthTokenSecretTextField.stringValue = @"";
     
     [_twitter postAccessTokenRequestWithPIN:_pinTextField.stringValue
-                                 oauthToken:_pinOAuthToken
                                successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
                                    
                                    _pinStatus2TextField.stringValue = [NSString stringWithFormat:@"Access granted for %@", screenName];
