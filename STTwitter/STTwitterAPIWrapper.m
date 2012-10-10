@@ -265,7 +265,7 @@
 
 #pragma mark Places & Geo
 
-- (void)getReverseGeocodeWithLatitude:(NSString *)latitude
+- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
                             longitude:(NSString *)longitude
                          successBlock:(void(^)(NSArray *places))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
@@ -276,6 +276,67 @@
     NSDictionary *d = @{ @"lat":latitude, @"lon":longitude };
     
     [_oauth getResource:@"geo/reverse_geocode.json" parameters:d successBlock:^(id response) {
+        
+        NSArray *places = [response valueForKeyPath:@"result.places"];
+        
+        NSLog(@"-- %@", [places valueForKey:@"full_name"]);
+        
+        successBlock(places);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getGeoSearchWithLatitude:(NSString *)latitude
+                       longitude:(NSString *)longitude
+                    successBlock:(void(^)(NSArray *places))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    NSParameterAssert(latitude);
+    NSParameterAssert(longitude);
+    
+    NSDictionary *d = @{ @"lat":latitude, @"lon":longitude };
+    
+    [_oauth getResource:@"geo/search.json" parameters:d successBlock:^(id response) {
+        
+        NSArray *places = [response valueForKeyPath:@"result.places"];
+        
+        NSLog(@"-- %@", [places valueForKey:@"full_name"]);
+        
+        successBlock(places);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getGeoSearchWithIPAddress:(NSString *)ipAddress
+                    successBlock:(void(^)(NSArray *places))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(ipAddress);
+    
+    NSDictionary *d = @{ @"ip":ipAddress };
+    
+    [_oauth getResource:@"geo/search.json" parameters:d successBlock:^(id response) {
+        
+        NSArray *places = [response valueForKeyPath:@"result.places"];
+        
+        NSLog(@"-- %@", [places valueForKey:@"full_name"]);
+        
+        successBlock(places);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getGeoSearchWithQuery:(NSString *)query
+                     successBlock:(void(^)(NSArray *places))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(query);
+    
+    NSDictionary *d = @{ @"query":query };
+    
+    [_oauth getResource:@"geo/search.json" parameters:d successBlock:^(id response) {
         
         NSArray *places = [response valueForKeyPath:@"result.places"];
         

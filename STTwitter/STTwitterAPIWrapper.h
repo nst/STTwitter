@@ -278,12 +278,24 @@
 // GET geo/id/:place_id
 
 // GET geo/reverse_geocode
-- (void)getReverseGeocodeWithLatitude:(NSString *)latitude
-                            longitude:(NSString *)longitude
-                         successBlock:(void(^)(NSArray *places))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
+                               longitude:(NSString *)longitude
+                            successBlock:(void(^)(NSArray *places))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET geo/search
+- (void)getGeoSearchWithLatitude:(NSString *)latitude
+                       longitude:(NSString *)longitude
+                    successBlock:(void(^)(NSArray *places))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getGeoSearchWithIPAddress:(NSString *)ipAddress
+                     successBlock:(void(^)(NSArray *places))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getGeoSearchWithQuery:(NSString *)query
+                 successBlock:(void(^)(NSArray *places))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET geo/similar_places
 
