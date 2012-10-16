@@ -40,6 +40,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic, retain, readonly) NSError *error;
 @property (nonatomic, retain) NSString *responseString;
 @property (nonatomic) NSStringEncoding forcedResponseEncoding;
+@property (nonatomic) BOOL encodePOSTDictionary; // default YES
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString;
@@ -81,4 +82,8 @@ typedef void (^errorBlock_t)(NSError *error);
 @interface NSError (STHTTPRequest)
 - (BOOL)st_isAuthenticationError;
 - (BOOL)st_isCancellationError;
+@end
+
+@interface NSString (RFC3875)
+- (NSString *)stringByAddingRFC3875PercentEscapesUsingEncoding:(NSStringEncoding)encoding;
 @end

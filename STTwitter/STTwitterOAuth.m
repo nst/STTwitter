@@ -62,18 +62,18 @@
     return to;
 }
 
-+ (NSDictionary *)encodedDictionaryWithDictionary:(NSDictionary *)d {
-    NSMutableDictionary *md = [NSMutableDictionary dictionaryWithCapacity:[d count]];
-    
-    [d enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *encodedKey = [(NSString *)key urlEncodedString];
-        NSString *encodedValue = [(NSString *)obj urlEncodedString];
-
-        md[encodedKey] = encodedValue;
-    }];
-    
-    return md;
-}
+//+ (NSDictionary *)encodedDictionaryWithDictionary:(NSDictionary *)d {
+//    NSMutableDictionary *md = [NSMutableDictionary dictionaryWithCapacity:[d count]];
+//    
+//    [d enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+//        NSString *encodedKey = [(NSString *)key urlEncodedString];
+//        NSString *encodedValue = [(NSString *)obj urlEncodedString];
+//
+//        md[encodedKey] = encodedValue;
+//    }];
+//    
+//    return md;
+//}
 
 + (NSArray *)encodedParametersDictionaries:(NSArray *)parameters {
     
@@ -440,10 +440,10 @@
     
     [self signRequest:r isMediaUpload:(mediaData != nil)];
 
-    NSDictionary *d = mutableParams ? mutableParams : @{};
-    
     // POST parameters must not be encoded while posting media, or spaces will appear as %20 in the status
-    r.POSTDictionary = mediaData ? d : [[self class] encodedDictionaryWithDictionary:d];
+    r.encodePOSTDictionary = (mediaData == nil);
+    
+    r.POSTDictionary = mutableParams ? mutableParams : @{};
 
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         successBlock(body);
