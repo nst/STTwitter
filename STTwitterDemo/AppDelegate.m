@@ -326,6 +326,7 @@
             self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;
             self.twitterPostLongitude = nil;
+            self.twitterPostMediaURL = nil;
         } errorBlock:^(NSError *error) {
             self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
@@ -335,6 +336,7 @@
             self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;
             self.twitterPostLongitude = nil;
+            self.twitterPostMediaURL = nil;
         } errorBlock:^(NSError *error) {
             self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
