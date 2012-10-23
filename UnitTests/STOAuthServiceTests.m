@@ -45,6 +45,9 @@
     
     NSString *s2 = @"☃";
     STAssertEqualObjects([s2 urlEncodedString], @"%E2%98%83", @"s2 was not encoded properly.");
+    
+    NSString *s3 = @"!*'();:@&=+$,/?%#[];/?:@&=$+{}<>,";
+    STAssertEqualObjects([s3 urlEncodedString], @"%21%2A%27%28%29%3B%3A%40%26%3D%2B%24%2C%2F%3F%25%23%5B%5D%3B%2F%3F%3A%40%26%3D%24%2B%7B%7D%3C%3E%2C", @"s3 was not encoded properly.");
 }
 
 - (void)testAuthorizationHeader {

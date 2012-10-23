@@ -541,12 +541,14 @@
 - (NSString *)urlEncodedString {
     // https://dev.twitter.com/docs/auth/percent-encoding-parameters
     
-    NSString *s = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                      (CFStringRef)self,
-                                                                      NULL,
-                                                                      CFSTR("!*'();:@&=+$,/?%#[]"),
-                                                                      kCFStringEncodingUTF8);
-    return [s autorelease];
+    return [self stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+//    NSString *s = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+//                                                                      (CFStringRef)self,
+//                                                                      NULL,
+//                                                                      CFSTR("!*'();:@&=+$,/?%#[]"),
+//                                                                      kCFStringEncodingUTF8);
+//    return [s autorelease];
 }
 
 @end

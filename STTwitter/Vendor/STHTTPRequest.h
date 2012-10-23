@@ -84,6 +84,6 @@ typedef void (^errorBlock_t)(NSError *error);
 - (BOOL)st_isCancellationError;
 @end
 
-@interface NSString (RFC3875)
-- (NSString *)stringByAddingRFC3875PercentEscapesUsingEncoding:(NSStringEncoding)encoding;
+@interface NSString (URLPercentEscape)
+- (NSString *)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding;
 @end
