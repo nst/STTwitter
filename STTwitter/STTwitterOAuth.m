@@ -62,19 +62,6 @@
     return to;
 }
 
-//+ (NSDictionary *)encodedDictionaryWithDictionary:(NSDictionary *)d {
-//    NSMutableDictionary *md = [NSMutableDictionary dictionaryWithCapacity:[d count]];
-//    
-//    [d enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-//        NSString *encodedKey = [(NSString *)key urlEncodedString];
-//        NSString *encodedValue = [(NSString *)obj urlEncodedString];
-//
-//        md[encodedKey] = encodedValue;
-//    }];
-//    
-//    return md;
-//}
-
 + (NSArray *)encodedParametersDictionaries:(NSArray *)parameters {
     
     NSMutableArray *encodedParameters = [NSMutableArray array];
@@ -86,8 +73,6 @@
         
         NSString *encodedKey = [key urlEncodedString];
         NSString *encodedValue = [value urlEncodedString];
-        
-        //NSString *s = [NSString stringWithFormat:@"%@=\"%@\"", encodedKey, encodedValue];
         
         [encodedParameters addObject:@{encodedKey : encodedValue}];
     }
@@ -250,9 +235,13 @@
     return @"1.0";
 }
 
-- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
 
-    [self postResource:@"oauth/request_token" baseURLString:@"https://api.twitter.com" parameters:@{} successBlock:^(id body) {
+    [self postResource:@"oauth/request_token"
+         baseURLString:@"https://api.twitter.com"
+            parameters:@{}
+         oauthCallback:oauthCallback
+          successBlock:^(id body) {
         
         NSDictionary *d = [body parametersDictionary];
         
@@ -280,7 +269,10 @@
                         @"x_auth_password" : [password urlEncodedString],
                         @"x_auth_mode"     : @"client_auth"};
     
-    [self postResource:@"oauth/access_token" baseURLString:@"https://api.twitter.com" parameters:d successBlock:^(NSString *body) {
+    [self postResource:@"oauth/access_token"
+         baseURLString:@"https://api.twitter.com"
+            parameters:d
+          successBlock:^(NSString *body) {
         NSDictionary *d = [body parametersDictionary];
         
         // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
@@ -302,7 +294,10 @@
     
     NSDictionary *d = @{@"oauth_verifier" : pin};
     
-    [self postResource:@"oauth/access_token" baseURLString:@"https://api.twitter.com" parameters:d successBlock:^(NSString *body) {
+    [self postResource:@"oauth/access_token"
+         baseURLString:@"https://api.twitter.com"
+            parameters:d
+          successBlock:^(NSString *body) {
         NSDictionary *d = [body parametersDictionary];
         
         // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
@@ -317,7 +312,7 @@
     }];
 }
 
-- (void)signRequest:(STHTTPRequest *)r isMediaUpload:(BOOL)isMediaUpload {
+- (void)signRequest:(STHTTPRequest *)r isMediaUpload:(BOOL)isMediaUpload oauthCallback:(NSString *)oauthCallback {
     NSParameterAssert(_oauthConsumerKey);
     NSParameterAssert(_oauthConsumerSecret);
     
@@ -327,6 +322,8 @@
                                        @{@"oauth_signature_method" : [self oauthSignatureMethod]},
                                        @{@"oauth_timestamp"        : [self oauthTimestamp]},
                                        @{@"oauth_version"          : [self oauthVersion]}, nil];
+    
+    if([oauthCallback length]) [oauthParameters addObject:@{@"oauth_callback" : oauthCallback}];
     
     if(_oauthAccessToken) { // missing while authenticating with XAuth
         [oauthParameters addObject:@{@"oauth_token" : [self oauthAccessToken]}];
@@ -361,6 +358,10 @@
     NSString *s = [[self class] oauthHeaderValueWithParameters:oauthParameters];
     
     [r setHeaderWithName:@"Authorization" value:s];
+}
+
+- (void)signRequest:(STHTTPRequest *)r isMediaUpload:(BOOL)isMediaUpload {
+    [self signRequest:r isMediaUpload:isMediaUpload oauthCallback:nil];
 }
 
 - (void)signRequest:(STHTTPRequest *)r {
@@ -418,6 +419,7 @@
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString // no trailing slash
           parameters:(NSDictionary *)params
+       oauthCallback:(NSString *)oauthCallback
         successBlock:(void(^)(id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
         
@@ -438,7 +440,7 @@
         [r setDataToUpload:mediaData parameterName:@"media[]" mimeType:@"application/octet-stream" fileName:@"media.jpg"];
     }
     
-    [self signRequest:r isMediaUpload:(mediaData != nil)];
+    [self signRequest:r isMediaUpload:(mediaData != nil) oauthCallback:oauthCallback];
 
     // POST parameters must not be encoded while posting media, or spaces will appear as %20 in the status
     r.encodePOSTDictionary = (mediaData == nil);
@@ -458,11 +460,34 @@
 }
 
 - (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString // no trailing slash
+          parameters:(NSDictionary *)params
+        successBlock:(void(^)(id json))successBlock
+          errorBlock:(void(^)(NSError *error))errorBlock {
+
+    [self postResource:resource
+         baseURLString:baseURLString
+            parameters:params
+         oauthCallback:nil
+          successBlock:successBlock
+            errorBlock:errorBlock];
+}
+
+- (void)postResource:(NSString *)resource
+          parameters:(NSDictionary *)params
+       oauthCallback:(NSString *)oauthCallback
+        successBlock:(void(^)(id json))successBlock
+          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:resource baseURLString:@"https://api.twitter.com/1.1" parameters:params oauthCallback:oauthCallback successBlock:successBlock errorBlock:errorBlock];
+}
+
+- (void)postResource:(NSString *)resource
           parameters:(NSDictionary *)params
         successBlock:(void(^)(id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self postResource:resource baseURLString:@"https://api.twitter.com/1.1" parameters:params successBlock:successBlock errorBlock:errorBlock];
+    [self postResource:resource parameters:params oauthCallback:nil successBlock:successBlock errorBlock:errorBlock];
 }
 
 @end
@@ -542,13 +567,6 @@
     // https://dev.twitter.com/docs/auth/percent-encoding-parameters
     
     return [self stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-//    NSString *s = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-//                                                                      (CFStringRef)self,
-//                                                                      NULL,
-//                                                                      CFSTR("!*'();:@&=+$,/?%#[]"),
-//                                                                      kCFStringEncodingUTF8);
-//    return [s autorelease];
 }
 
 @end

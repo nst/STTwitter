@@ -35,7 +35,9 @@
                                        oauthToken:(NSString *)oauthToken
                                  oauthTokenSecret:(NSString *)oauthTokenSecret;
 
-- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+           oauthCallback:(NSString *)oauthCallback
+              errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postAccessTokenRequestWithPIN:(NSString *)pin
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock

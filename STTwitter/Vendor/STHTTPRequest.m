@@ -66,16 +66,17 @@ static NSMutableDictionary *sharedCredentialsStorage;
 }
 
 - (void)dealloc {
+    if(_completionBlock) [_completionBlock release];
+    if(_errorBlock) [_errorBlock release];
     if(_uploadProgressBlock) [_uploadProgressBlock release];
-    
+
+    [_connection release];
     [_responseStringEncodingName release];
     [_requestHeaders release];
     [_url release];
     [_responseData release];
     [_responseHeaders release];
     [_responseString release];
-    [_completionBlock release];
-    [_errorBlock release];
     [_credential release];
     [_proxyCredential release];
     [_POSTDictionary release];
@@ -305,7 +306,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%ld", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:body];
         
     } else if(_POSTDictionary != nil) { // may be empty (POST request without body)
@@ -327,11 +328,11 @@ static NSMutableDictionary *sharedCredentialsStorage;
         NSData *data = [s dataUsingEncoding:_postDataEncoding allowLossyConversion:YES];
         
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%ld", [data length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%ul", [data length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:data];
     } else if (_POSTData != nil) {
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%ld", [_POSTData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%ul", [_POSTData length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:_POSTData];
     }
     
@@ -441,10 +442,10 @@ static NSMutableDictionary *sharedCredentialsStorage;
         NSLog(@"\t %@ = %@", _POSTFileParameter, _POSTFilePath);
     } else if (_POSTFileParameter && _POSTFileData) {
         NSLog(@"UPLOAD DATA");
-        NSLog(@"\t %@ = [%lul bytes]", _POSTFileParameter, [_POSTFileData length]);
+        NSLog(@"\t %@ = [%ul bytes]", _POSTFileParameter, [_POSTFileData length]);
     } else if (_POSTData) {
         NSLog(@"UPLOAD DATA");
-        NSLog(@"\t [%lul bytes]", [_POSTData length]);
+        NSLog(@"\t [%ul bytes]", [_POSTData length]);
     }
     
     NSLog(@"--------------------------------------");

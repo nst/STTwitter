@@ -30,6 +30,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 @property (nonatomic, retain) NSString *osxStatus;
 
+@property (nonatomic, retain) NSString *oauthCallback;
 @property (nonatomic, retain) NSString *pin;
 @property (nonatomic, retain) NSString *pinStatus1;
 @property (nonatomic, retain) NSString *pinStatus2;

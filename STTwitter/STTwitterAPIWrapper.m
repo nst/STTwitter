@@ -39,8 +39,8 @@
     return [self twitterAPIWithOAuthConsumerKey:consumerKey consumerSecret:consumerSecret username:nil password:nil];
 }
 
-- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
-    [_oauth postTokenRequest:successBlock errorBlock:errorBlock];
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
+    [_oauth postTokenRequest:successBlock oauthCallback:oauthCallback errorBlock:errorBlock];
 }
 
 - (void)postAccessTokenRequestWithPIN:(NSString *)pin

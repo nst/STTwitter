@@ -111,7 +111,7 @@
     self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthOSX];
     
     self.osxStatus = @"-";
-
+    
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         self.osxStatus = [NSString stringWithFormat:@"Access granted for %@", username];
     } errorBlock:^(NSError *error) {
@@ -136,10 +136,11 @@
         
         self.pinStatus1 = [url description];
         
-    } errorBlock:^(NSError *error) {
-        
-        self.pinStatus1 = [error localizedDescription];
-    }];
+    } oauthCallback:_oauthCallback
+                    errorBlock:^(NSError *error) {
+                        
+                        self.pinStatus1 = [error localizedDescription];
+                    }];
     
 }
 
@@ -153,7 +154,7 @@
     self.pinStatus2 = @"";
     
     STTwitterHTML *twitterHTML = [[[STTwitterHTML alloc] init] autorelease];
-    
+         
     [_twitter postTokenRequest:^(NSURL *pinURL, NSString *oauthToken) {
         
         [twitterHTML getLoginForm:^(NSString *authenticityToken) {
@@ -186,9 +187,10 @@
             self.pinStatus2 = [error localizedDescription];
         }];
         
-    } errorBlock:^(NSError *error) {
-        self.pinStatus2 = [error localizedDescription];
-    }];
+    } oauthCallback:nil
+                    errorBlock:^(NSError *error) {
+                        self.pinStatus2 = [error localizedDescription];
+                    }];
     
 }
 
@@ -221,7 +223,7 @@
     self.xAuthStatus = @"-";
     self.xAuthOAuthToken = @"";
     self.xAuthOAuthTokenSecret = @"";
-
+    
     NSAssert(_xAuthUsername, @"");
     NSAssert(_xAuthPassword, @"");
     
@@ -270,8 +272,8 @@
     
     self.twitterGetTimelineStatus = @"-";
     self.timelineStatuses = [NSArray array];
-
-    [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {        
+    
+    [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
         self.timelineStatuses = statuses;
         
         //NSLog(@"-- %@", statuses);
@@ -286,15 +288,15 @@
     self.twitterPostMediaURL = nil;
     
     NSOpenPanel *panel = [NSOpenPanel openPanel];
-
+    
     [panel setCanChooseDirectories:NO];
     [panel setCanChooseFiles:YES];
     [panel setAllowedFileTypes:@[ @"png", @"PNG", @"jpg", @"JPG", @"jpeg", @"JPEG", @"gif", @"GIF"] ];
     
     [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
-
+        
         if (result != NSFileHandlingPanelOKButton) return;
-
+        
         NSArray *urls = [panel URLs];
         
         NSPredicate *p = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
@@ -317,9 +319,9 @@
 }
 
 - (IBAction)postTweet:(id)sender {
-
+    
     self.twitterPostTweetStatus = @"-";
-
+    
     if(_twitterPostMediaURL) {
         [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil mediaURL:_twitterPostMediaURL lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
             self.twitterPostTweetText = @"";
