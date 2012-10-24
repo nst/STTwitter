@@ -98,6 +98,7 @@
 // POST statuses/update
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
+                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock
@@ -113,6 +114,7 @@
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
                 mediaURL:(NSURL *)mediaURL
+                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock

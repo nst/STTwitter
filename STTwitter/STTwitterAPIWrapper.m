@@ -116,6 +116,7 @@
 
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
+                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock
@@ -127,7 +128,10 @@
         md[@"in_reply_to_status_id"] = optionalExistingStatusID;
     }
     
-    if(optionalLat && optionalLon) {
+    if(optionalPlaceID) {
+        md[@"place_id"] = optionalPlaceID;
+        md[@"display_coordinates"] = @"true";
+    } else if(optionalLat && optionalLon) {
         md[@"lat"] = optionalLat;
         md[@"lon"] = optionalLon;
         md[@"display_coordinates"] = @"true";
@@ -143,6 +147,7 @@
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
                 mediaURL:(NSURL *)mediaURL
+                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
             successBlock:(void(^)(NSString *response))successBlock
@@ -156,7 +161,10 @@
         md[@"in_reply_to_status_id"] = optionalExistingStatusID;
     }
     
-    if(optionalLat && optionalLon) {
+    if(optionalPlaceID) {
+        md[@"place_id"] = optionalPlaceID;
+        md[@"display_coordinates"] = @"true";
+    } else if(optionalLat && optionalLon) {
         md[@"lat"] = optionalLat;
         md[@"lon"] = optionalLon;
         md[@"display_coordinates"] = @"true";
