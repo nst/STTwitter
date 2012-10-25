@@ -1883,7 +1883,7 @@
 												<int key="NSCellFlags2">272630784</int>
 												<string key="NSContents"/>
 												<reference key="NSSupport" ref="81888276"/>
-												<string key="NSPlaceholderString">optional</string>
+												<string key="NSPlaceholderString">default to "oob" if empty</string>
 												<string key="NSCellIdentifier">_NS:9</string>
 												<reference key="NSControlView" ref="96304030"/>
 												<bool key="NSDrawsBackground">YES</bool>
