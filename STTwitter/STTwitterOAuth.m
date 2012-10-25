@@ -237,10 +237,12 @@
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
 
+    NSString *theOAuthCallback = [oauthCallback length] ? oauthCallback : @"oob"; // out of band, ie PIN instead of redirect
+    
     [self postResource:@"oauth/request_token"
          baseURLString:@"https://api.twitter.com"
             parameters:@{}
-         oauthCallback:oauthCallback
+         oauthCallback:theOAuthCallback
           successBlock:^(id body) {
         
         NSDictionary *d = [body parametersDictionary];
