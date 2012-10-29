@@ -16,6 +16,7 @@
 @property (nonatomic, retain) NSString *username;
 @property (nonatomic, retain) NSString *password;
 
+@property (nonatomic, retain) NSString *oauthConsumerName;
 @property (nonatomic, retain) NSString *oauthConsumerKey;
 @property (nonatomic, retain) NSString *oauthConsumerSecret;
 
@@ -32,19 +33,46 @@
 
 @implementation STTwitterOAuth
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
+- (void)dealloc {
+    [_username release];
+    [_password release];
+    
+    [_oauthConsumerName release];
+    [_oauthConsumerKey release];
+    [_oauthConsumerSecret release];
+    
+    [_oauthRequestToken release];
+    [_oauthRequestTokenSecret release];
+    
+    [_oauthAccessToken release];
+    [_oauthAccessTokenSecret release];
+    
+    [_testOauthNonce release];
+    [_testOauthTimestamp release];
+    
+    [super dealloc];
+}
+
++ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
+                                       consumerKey:(NSString *)consumerKey
+                                    consumerSecret:(NSString *)consumerSecret {
     
     STTwitterOAuth *to = [[STTwitterOAuth alloc] init];
     
+    to.oauthConsumerName = consumerName;
     to.oauthConsumerKey = consumerKey;
     to.oauthConsumerSecret = consumerSecret;
     
     return [to autorelease];
 }
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret oauthToken:(NSString *)oauthToken oauthTokenSecret:(NSString *)oauthTokenSecret {
++ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
+                                       consumerKey:(NSString *)consumerKey
+                                    consumerSecret:(NSString *)consumerSecret
+                                        oauthToken:(NSString *)oauthToken
+                                  oauthTokenSecret:(NSString *)oauthTokenSecret {
     
-    STTwitterOAuth *to = [self twitterServiceWithConsumerKey:consumerKey consumerSecret:consumerSecret];
+    STTwitterOAuth *to = [self twitterServiceWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     to.oauthAccessToken = oauthToken;
     to.oauthAccessTokenSecret = oauthTokenSecret;
@@ -52,9 +80,13 @@
     return to;
 }
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret username:(NSString *)username password:(NSString *)password {
++ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
+                                       consumerKey:(NSString *)consumerKey
+                                    consumerSecret:(NSString *)consumerSecret
+                                          username:(NSString *)username
+                                          password:(NSString *)password {
     
-    STTwitterOAuth *to = [self twitterServiceWithConsumerKey:consumerKey consumerSecret:consumerSecret];
+    STTwitterOAuth *to = [self twitterServiceWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     to.username = username;
     to.password = password;

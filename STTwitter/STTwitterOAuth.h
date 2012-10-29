@@ -22,18 +22,21 @@
 
 @interface STTwitterOAuth : NSObject <STTwitterOAuthProtocol>
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerKey:(NSString *)consumerKey
-                                   consumerSecret:(NSString *)consumerSecret;
++ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
+                                       consumerKey:(NSString *)consumerKey
+                                    consumerSecret:(NSString *)consumerSecret;
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerKey:(NSString *)consumerKey
-                                   consumerSecret:(NSString *)consumerSecret
-                                         username:(NSString *)username
-                                         password:(NSString *)password;
++ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
+                                       consumerKey:(NSString *)consumerKey
+                                    consumerSecret:(NSString *)consumerSecret
+                                        oauthToken:(NSString *)oauthToken
+                                  oauthTokenSecret:(NSString *)oauthTokenSecret;
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerKey:(NSString *)consumerKey
-                                   consumerSecret:(NSString *)consumerSecret
-                                       oauthToken:(NSString *)oauthToken
-                                 oauthTokenSecret:(NSString *)oauthTokenSecret;
++ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
+                                       consumerKey:(NSString *)consumerKey
+                                    consumerSecret:(NSString *)consumerSecret
+                                          username:(NSString *)username
+                                          password:(NSString *)password;
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
            oauthCallback:(NSString *)oauthCallback
