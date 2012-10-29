@@ -23,20 +23,47 @@
     return [twitter autorelease];
 }
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret username:(NSString *)username password:(NSString *)password {
++ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
+                                             consumerKey:(NSString *)consumerKey
+                                          consumerSecret:(NSString *)consumerSecret
+                                                username:(NSString *)username
+                                                password:(NSString *)password {
+    
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
-    twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerKey:consumerKey consumerSecret:consumerSecret username:username password:password];
+
+    twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerName:consumerName
+                                                       consumerKey:consumerKey
+                                                    consumerSecret:consumerSecret
+                                                          username:username
+                                                          password:password];
     return [twitter autorelease];
 }
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret oauthToken:(NSString *)oauthToken oauthTokenSecret:(NSString *)oauthTokenSecret {
++ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
+                                             consumerKey:(NSString *)consumerKey
+                                          consumerSecret:(NSString *)consumerSecret
+                                              oauthToken:(NSString *)oauthToken
+                                        oauthTokenSecret:(NSString *)oauthTokenSecret {
+    
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
-    twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerKey:consumerKey consumerSecret:consumerSecret oauthToken:oauthToken oauthTokenSecret:oauthTokenSecret];
+
+    twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerName:consumerName
+                                                       consumerKey:consumerKey
+                                                    consumerSecret:consumerSecret
+                                                        oauthToken:oauthToken
+                                                  oauthTokenSecret:oauthTokenSecret];
     return [twitter autorelease];
 }
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
-    return [self twitterAPIWithOAuthConsumerKey:consumerKey consumerSecret:consumerSecret username:nil password:nil];
++ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
+                                             consumerKey:(NSString *)consumerKey
+                                          consumerSecret:(NSString *)consumerSecret {
+
+    return [self twitterAPIWithOAuthConsumerName:consumerName
+                                     consumerKey:consumerKey
+                                  consumerSecret:consumerSecret
+                                        username:nil
+                                        password:nil];
 }
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
@@ -54,10 +81,16 @@
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
     if([_oauth canVerifyCredentials]) {
-        [_oauth verifyCredentialsWithSuccessBlock:successBlock errorBlock:errorBlock];
+        [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username) {
+            self.userName = username;
+            successBlock(_userName);
+        } errorBlock:^(NSError *error) {
+            errorBlock(error);
+        }];
     } else {
         [self getAccountVerifyCredentialsSkipStatus:YES successBlock:^(NSString *jsonString) {
-            successBlock([jsonString valueForKey:@"screen_name"]);
+            self.userName = [jsonString valueForKey:@"screen_name"];
+            successBlock(_userName);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
@@ -73,6 +106,8 @@
 }
 
 - (void)dealloc {
+    [_userName release];
+    [_consumerName release];
     [_oauth release];
     [super dealloc];
 }

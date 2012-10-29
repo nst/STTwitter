@@ -46,18 +46,21 @@
 
 + (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX;
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                         consumerSecret:(NSString *)consumerSecret;
++ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
+                                             consumerKey:(NSString *)consumerKey
+                                          consumerSecret:(NSString *)consumerSecret;
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                         consumerSecret:(NSString *)consumerSecret
-                                               username:(NSString *)username
-                                               password:(NSString *)password;
++ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
+                                             consumerKey:(NSString *)consumerKey
+                                          consumerSecret:(NSString *)consumerSecret
+                                                username:(NSString *)username
+                                                password:(NSString *)password;
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                         consumerSecret:(NSString *)consumerSecret
-                                             oauthToken:(NSString *)oauthToken
-                                       oauthTokenSecret:(NSString *)oauthTokenSecret;
++ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
+                                             consumerKey:(NSString *)consumerKey
+                                          consumerSecret:(NSString *)consumerSecret
+                                              oauthToken:(NSString *)oauthToken
+                                        oauthTokenSecret:(NSString *)oauthTokenSecret;
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
            oauthCallback:(NSString *)oauthCallback
@@ -68,6 +71,9 @@
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
+
+@property (nonatomic, retain) NSString *consumerName;
+@property (nonatomic, retain) NSString *userName; // set after successful connection
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
