@@ -73,7 +73,7 @@
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
 
 @property (nonatomic, retain) NSString *consumerName;
-@property (nonatomic, retain) NSString *userName; // set after successful connection
+@property (nonatomic, retain) NSString *userName; // available for osx, set after successful connection for STTwitterOAuth
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;

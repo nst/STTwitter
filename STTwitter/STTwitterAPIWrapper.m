@@ -105,6 +105,16 @@
     return [_oauth oauthAccessToken];
 }
 
+- (NSString *)userName {
+    
+    if([_oauth isKindOfClass:[STTwitterOAuthOSX class]]) {
+        STTwitterOAuthOSX *oAuthOSX = (STTwitterOAuthOSX *)_oauth;
+        return oAuthOSX.username;
+    }
+    
+    return _userName;
+}
+
 - (void)dealloc {
     [_userName release];
     [_consumerName release];
