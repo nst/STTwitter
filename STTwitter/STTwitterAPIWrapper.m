@@ -142,6 +142,20 @@
 
 #pragma mark Timelines
 
+- (void)getUserTimelineWithScreenName:(NSString *)screenName
+                         successBlock:(void(^)(NSArray *statuses))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    [md setObject:screenName forKey:@"screen_name"];
+    
+    [_oauth getResource:@"statuses/user_timeline.json" parameters:md successBlock:^(NSArray *statuses) {
+        successBlock(statuses);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
                          count:(NSString *)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock

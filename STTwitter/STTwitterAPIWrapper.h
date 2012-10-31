@@ -83,6 +83,9 @@
 // GET statuses/mentions_timeline
 
 // GET statuses/user_timeline
+- (void)getUserTimelineWithScreenName:(NSString *)screenName
+                         successBlock:(void(^)(NSArray *statuses))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET statuses/home_timeline
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
