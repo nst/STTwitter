@@ -10,12 +10,28 @@
 #import "STTwitterOAuthOSX.h"
 #import "STTwitterOAuth.h"
 #import "STTwitterHTML.h"
+#import <Accounts/Accounts.h>
 
 @interface STTwitterAPIWrapper ()
 @property (nonatomic, retain) NSObject <STTwitterOAuthProtocol> *oauth;
 @end
 
 @implementation STTwitterAPIWrapper
+
+- (id)init {
+    self = [super init];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        // OS X account must be considered invalid
+        
+        if([self.oauth isKindOfClass:[STTwitterOAuthOSX class]]) {
+            NSLog(@"-- RESET OAUTH OSX");
+            self.oauth = nil;//[[[STTwitterOAuthOSX alloc] init] autorelease];
+        }
+    }];
+    
+    return self;
+}
 
 + (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX {
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
