@@ -18,7 +18,7 @@
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
 
         NSError *error = nil;
-        NSString *token = [body extractFirstMatchWithRegex:@"<input name=\"authenticity_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error];
+        NSString *token = [body firstMatchWithRegex:@"<input name=\"authenticity_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error];
         
         if(token == nil) {
             errorBlock(error);
@@ -81,7 +81,7 @@
         */
         
         NSError *error1 = nil;
-        NSString *authenticityToken = [body extractFirstMatchWithRegex:@"<input name=\"authenticity_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error1];
+        NSString *authenticityToken = [body firstMatchWithRegex:@"<input name=\"authenticity_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error1];
         
         if(authenticityToken == nil) {
             errorBlock(error1);
@@ -92,7 +92,7 @@
         
         NSError *error2 = nil;
         
-        NSString *oauthToken = [body extractFirstMatchWithRegex:@"<input id=\"oauth_token\" name=\"oauth_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error2];
+        NSString *oauthToken = [body firstMatchWithRegex:@"<input id=\"oauth_token\" name=\"oauth_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error2];
         
         if(oauthToken == nil) {
             errorBlock(error2);
@@ -123,7 +123,7 @@
         //NSLog(@"-- body: %@", body);
         
         NSError *error = nil;
-        NSString *pin = [body extractFirstMatchWithRegex:@"<code>(\\d+)</code>" error:&error];
+        NSString *pin = [body firstMatchWithRegex:@"<code>(\\d+)</code>" error:&error];
         
         if(pin == nil) {
             errorBlock(error);
@@ -142,31 +142,3 @@
 
 @end
 
-@implementation NSString (STTwitterHTML)
-
-- (NSString *)extractFirstMatchWithRegex:(NSString *)regex error:(NSError **)e {
-    NSError *error = nil;
-    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionSearch error:&error];
-    
-    if(re == nil) {
-        if(e) *e = error;
-        return nil;
-    }
-    
-    NSArray *matches = [re matchesInString:self options:0 range:NSMakeRange(0, [self length])];
-    
-    if([matches count] == 0) {
-        //NSLog(@"-- %@", self);
-        
-        NSString *errorDescription = [NSString stringWithFormat:@"Can't find a match for regex: %@", regex];
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
-        if(e) *e = error;
-        return nil;
-    }
-    
-    NSTextCheckingResult *match = [matches lastObject];
-    NSRange matchRange = [match rangeAtIndex:1];
-    return [self substringWithRange:matchRange];
-}
-
-@end

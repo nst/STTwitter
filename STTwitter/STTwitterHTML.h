@@ -35,5 +35,5 @@
 @end
 
 @interface NSString (STTwitterHTML)
-- (NSString *)extractFirstMatchWithRegex:(NSString *)regex error:(NSError **)e;
+- (NSString *)firstMatchWithRegex:(NSString *)regex error:(NSError **)e;
 @end

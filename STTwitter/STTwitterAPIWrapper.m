@@ -444,7 +444,7 @@
 @implementation NSString (STTwitterAPIWrapper)
 
 - (NSString *)htmlLinkName {
-    NSString *ahref = [self extractFirstMatchWithRegex:@"<a href=\".*\">(.*)</a>" error:nil];
+    NSString *ahref = [self firstMatchWithRegex:@"<a href=\".*\">(.*)</a>" error:nil];
     
     return ahref ? ahref : self;
 }

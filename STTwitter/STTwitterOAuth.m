@@ -8,6 +8,7 @@
 
 #import "STTwitterOAuth.h"
 #import "STHTTPRequest.h"
+#import "NSString+STTwitter.h"
 
 #include <CommonCrypto/CommonHMAC.h>
 
@@ -459,7 +460,7 @@
         
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
-    STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
+    __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
 
     r.POSTDictionary = params;
     
@@ -486,6 +487,21 @@
     };
     
     r.errorBlock = ^(NSError *error) {
+
+        // do our best to extract Twitter error message from responseString
+        
+        NSError *regexError = nil;
+        NSString *errorString = [r.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
+        if(errorString == nil) {
+            NSLog(@"-- regexError: %@", [regexError localizedDescription]);
+        }
+        
+        if(errorString) {
+            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
+            errorBlock(error);
+            return;
+        }
+        
         NSLog(@"-- body: %@", r.responseString);
         errorBlock(error);
     };
