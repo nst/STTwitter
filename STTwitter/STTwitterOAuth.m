@@ -498,8 +498,8 @@
         
         if(errorString) {
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-            errorBlock(error);
-            return;
+        } else if([r.responseString length] < 64) {
+            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
         }
         
         NSLog(@"-- body: %@", r.responseString);
