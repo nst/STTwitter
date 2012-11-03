@@ -103,6 +103,54 @@
     STAssertEqualObjects(@"tR3+Ty81lMeYAr/Fid0kMTYa/WM=", signature, @"bad signature");
 }
 
+- (void)testGeoSearchBaseString {
+
+    NSArray *allParamsUnsorted = [NSArray arrayWithObjects:
+                                  @{@"query" : @"Toronto"},
+                                  @{@"oauth_consumer_key" : @"30d7ECqcJDGx8pBEMqxCxg"},
+                                  @{@"oauth_token" : @"15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8"},
+                                  @{@"oauth_signature_method" : @"HMAC-SHA1"},
+                                  @{@"oauth_timestamp" : @"1351964056"},
+                                  @{@"oauth_nonce" : @"ea95faa8097f4aeca24f77be0b6923a1"},
+                                  @{@"oauth_version" : @"1.0"}, nil];
+    
+    NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/geo/search.json?query=Toronto"];
+    
+    NSString *baseString = [STTwitterOAuth signatureBaseStringWithHTTPMethod:@"GET" url:url allParametersUnsorted:allParamsUnsorted];
+    
+    NSLog(@"-- baseString: %@", baseString);
+    
+    NSString *expectedBaseString = @"GET&https%3A%2F%2Fapi.twitter.com%2F1.1%2Fgeo%2Fsearch.json&oauth_consumer_key%3D30d7ECqcJDGx8pBEMqxCxg%26oauth_nonce%3Dea95faa8097f4aeca24f77be0b6923a1%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1351964056%26oauth_token%3D15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8%26oauth_version%3D1.0%26query%3DToronto";
+    
+    STAssertEqualObjects(baseString, expectedBaseString, @"bad signature");
+}
+
+- (void)testGeoSearchSignature {
+    
+    NSString *baseString = @"GET&https%3A%2F%2Fapi.twitter.com%2F1.1%2Fgeo%2Fsearch.json&oauth_consumer_key%3D30d7ECqcJDGx8pBEMqxCxg%26oauth_nonce%3Dea95faa8097f4aeca24f77be0b6923a1%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1351964056%26oauth_token%3D15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8%26oauth_version%3D1.0%26query%3DToronto";
+    
+    NSString *signature = [baseString signHmacSHA1WithKey:@"N5YupBKlcE75i7HbeqkocCKiNk418bjQTIHCRKaX4&iwKhgvXo3AJ6O61OqvEwgZJzw8jte0kwl09Twe3ik8"];
+    
+    STAssertEqualObjects(@"eMPFYN/QqvrbQISuKOiq2I9vQpk=", signature, @"bad signature");
+}
+
+- (void)testGeoSearchAuthorizationHeader {
+    
+    NSArray *parameters = @[@{@"oauth_consumer_key"     : @"30d7ECqcJDGx8pBEMqxCxg"},
+    @{@"oauth_nonce"            : @"ea95faa8097f4aeca24f77be0b6923a1"},
+    @{@"oauth_signature"        : @"eMPFYN/QqvrbQISuKOiq2I9vQpk="},
+    @{@"oauth_signature_method" : @"HMAC-SHA1"},
+    @{@"oauth_timestamp"        : @"1351964056"},
+    @{@"oauth_token"            : @"15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8"},
+    @{@"oauth_version"          : @"1.0"}];
+    
+    NSString *s1 = [STTwitterOAuth oauthHeaderValueWithParameters:parameters];
+    
+    NSString *s2 = @"OAuth oauth_consumer_key=\"30d7ECqcJDGx8pBEMqxCxg\", oauth_nonce=\"ea95faa8097f4aeca24f77be0b6923a1\", oauth_signature=\"eMPFYN%2FQqvrbQISuKOiq2I9vQpk%3D\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"1351964056\", oauth_token=\"15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8\", oauth_version=\"1.0\"";
+    
+    STAssertEqualObjects(s1, s2, @"");
+}
+
 //- (void)testSignatureValue2 {
 //
 //    // http://code.google.com/p/twitter-api/issues/detail?id=433
@@ -139,7 +187,7 @@
     
     // https://dev.twitter.com/docs/oauth/xauth
     
-    STTwitterOAuth *os = [STTwitterOAuth twitterServiceWithConsumerKey:@"JvyS7DO2qd6NNTsXJ4E7zA" consumerSecret:@"9z6157pUbOBqtbm0A0q4r29Y2EYzIHlUwbF4Cl9c" username:@"oauth_test_exec" password:@"twitter-xauth"];
+    STTwitterOAuth *os = [STTwitterOAuth twitterServiceWithConsumerName:@"test" consumerKey:@"JvyS7DO2qd6NNTsXJ4E7zA" consumerSecret:@"9z6157pUbOBqtbm0A0q4r29Y2EYzIHlUwbF4Cl9c" username:@"oauth_test_exec" password:@"twitter-xauth"];
     
     os.testOauthNonce = @"6AN2dKRzxyGhmIXUKSmp1JcB4pckM8rD3frKMTmVAo";
     os.testOauthTimestamp = @"1284565601";
