@@ -89,24 +89,7 @@ Your code only interacts with `STTwitterAPIWrapper`.
 
 `STTwitterOAuth` relies on `STHTTPRequest` to POST and GET asynchronous HTTP requests.
 
-              Twitter Client
-    +---------------------------------+
-    |      STTwitterAPIWrapper        |
-    | + twitterAPIWith...             |
-    | - getHomeTimeline               |
-    | - postStatus                    |
-    +---------------------------------+
-    +---------------------------------+
-    |     STTwitterOAuthProtocol      |
-    | - verifyCredentials             |
-    | - getResource                   |
-    | - postResource                  |
-    +---------------------------------+    
-    +----------------+----------------+
-    |   STAuthOSX    | STTwitterOAuth |
-    |                +----------------+
-    |                | STHTTPRequest  |
-    +----------------+----------------+
+![STTwitter](https://github.com/nst/STTwitter/raw/master/Art/architecture.png "STTwitter Architecture")
 
 ### BSD 3-Clause License
 
