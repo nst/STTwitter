@@ -69,7 +69,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
     if(_completionBlock) [_completionBlock release];
     if(_errorBlock) [_errorBlock release];
     if(_uploadProgressBlock) [_uploadProgressBlock release];
-
+    
     [_connection release];
     [_responseStringEncodingName release];
     [_requestHeaders release];
@@ -248,8 +248,8 @@ static NSMutableDictionary *sharedCredentialsStorage;
     if(_encodePOSTDictionary) {
         NSMutableDictionary *escapedPOSTDictionary = _POSTDictionary ? [NSMutableDictionary dictionary] : nil;
         [_POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            NSString *k = [key stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSString *v = [[obj description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *k = [key stringByAddingPercentEscapesUsingEncoding:_postDataEncoding];
+            NSString *v = [[obj description] stringByAddingPercentEscapesUsingEncoding:_postDataEncoding];
             escapedPOSTDictionary[k] = v;
         }];
         self.POSTDictionary = escapedPOSTDictionary;
@@ -310,6 +310,17 @@ static NSMutableDictionary *sharedCredentialsStorage;
         [request setHTTPBody:body];
         
     } else if(_POSTDictionary != nil) { // may be empty (POST request without body)
+        
+        if(_encodePOSTDictionary) {
+            
+            CFStringEncoding cfStringEncoding = CFStringConvertNSStringEncodingToEncoding(_postDataEncoding);
+            NSString *encodingName = (NSString *)CFStringConvertEncodingToIANACharSetName(cfStringEncoding);
+            
+            if(encodingName) {
+                NSString *contentTypeValue = [NSString stringWithFormat:@"application/x-www-form-urlencoded ; charset=%@", encodingName];
+                [self setHeaderWithName:@"Content-Type" value:contentTypeValue];
+            }
+        }
         
         NSMutableArray *ma = [NSMutableArray arrayWithCapacity:[_POSTDictionary count]];
         
@@ -605,7 +616,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
 
 @implementation NSString (URLPercentEscape)
 - (NSString *)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
-
+    
     NSString *s = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                       (CFStringRef)self,
                                                                       NULL,
