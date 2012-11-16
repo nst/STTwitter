@@ -251,7 +251,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
         [_POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             NSString *k = [key stringByAddingPercentEscapesUsingEncoding:_postDataEncoding];
             NSString *v = [[obj description] stringByAddingPercentEscapesUsingEncoding:_postDataEncoding];
-            escapedPOSTDictionary[k] = v;
+            [escapedPOSTDictionary setValue:v forKey:k];
         }];
         self.POSTDictionary = escapedPOSTDictionary;
     }
