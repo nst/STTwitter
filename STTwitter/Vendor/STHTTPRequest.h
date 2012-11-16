@@ -41,6 +41,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic, retain) NSString *responseString;
 @property (nonatomic) NSStringEncoding forcedResponseEncoding;
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
+@property (nonatomic) BOOL addCredentialsToURL; // default YES
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString;

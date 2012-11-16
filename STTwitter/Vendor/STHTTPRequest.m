@@ -55,6 +55,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
         _requestHeaders = [[NSMutableDictionary dictionary] retain];
         _postDataEncoding = NSUTF8StringEncoding;
         _encodePOSTDictionary = YES;
+        _addCredentialsToURL = YES;
     }
     
     return self;
@@ -238,9 +239,9 @@ static NSMutableDictionary *sharedCredentialsStorage;
     return [NSURL URLWithString:urlString];
 }
 
-- (NSURLRequest *)requestByAddingCredentialsToURL:(BOOL)credentialsInRequest sendBasicAuthenticationHeaders:(BOOL)sendBasicAuthenticationHeaders {
+- (NSURLRequest *)requestByAddingCredentialsToURL:(BOOL)useCredentialsInURL sendBasicAuthenticationHeaders:(BOOL)sendBasicAuthenticationHeaders {
     
-    NSURL *theURL = credentialsInRequest ? [self urlWithCredentials] : _url;
+    NSURL *theURL = useCredentialsInURL ? [self urlWithCredentials] : _url;
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:theURL];
     
@@ -353,7 +354,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
     
     NSURLCredential *credentialForHost = [self credential];
     
-    if(sendBasicAuthenticationHeaders && credentialsInRequest && credentialForHost) {
+    if(sendBasicAuthenticationHeaders && credentialForHost) {
         NSString *authString = [NSString stringWithFormat:@"%@:%@", credentialForHost.user, credentialForHost.password];
         NSData *authData = [authString dataUsingEncoding:NSASCIIStringEncoding];
         NSString *authValue = [NSString stringWithFormat:@"Basic %@", [authData base64Encoding]];
@@ -465,7 +466,8 @@ static NSMutableDictionary *sharedCredentialsStorage;
 #pragma mark Start Request
 
 - (void)startAsynchronous {
-    NSURLRequest *request = [self requestByAddingCredentialsToURL];
+    
+    NSURLRequest *request = [self requestByAddingCredentialsToURL:_addCredentialsToURL sendBasicAuthenticationHeaders:YES];
     
 #if DEBUG
     [self logRequest:request];
@@ -492,7 +494,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
     self.responseHeaders = nil;
     self.responseStatus = 0;
     
-    NSURLRequest *request = [self requestByAddingCredentialsToURL];
+    NSURLRequest *request = [self requestByAddingCredentialsToURL:_addCredentialsToURL sendBasicAuthenticationHeaders:YES];
     
     NSURLResponse *urlResponse = nil;
     
