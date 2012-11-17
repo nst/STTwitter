@@ -615,8 +615,9 @@
 
 - (NSString *)urlEncodedString {
     // https://dev.twitter.com/docs/auth/percent-encoding-parameters
+    // http://tools.ietf.org/html/rfc3986#section-2.1
     
-    return [self stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return [self st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end

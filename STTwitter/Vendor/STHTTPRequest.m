@@ -616,8 +616,8 @@ static NSMutableDictionary *sharedCredentialsStorage;
 
 @end
 
-@implementation NSString (URLPercentEscape)
-- (NSString *)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
+@implementation NSString (RFC3986)
+- (NSString *)st_stringByAddingRFC3986PercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     
     NSString *s = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                       (CFStringRef)self,
