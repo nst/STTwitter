@@ -249,8 +249,8 @@ static NSMutableDictionary *sharedCredentialsStorage;
     if(_encodePOSTDictionary) {
         NSMutableDictionary *escapedPOSTDictionary = _POSTDictionary ? [NSMutableDictionary dictionary] : nil;
         [_POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            NSString *k = [key stringByAddingPercentEscapesUsingEncoding:_postDataEncoding];
-            NSString *v = [[obj description] stringByAddingPercentEscapesUsingEncoding:_postDataEncoding];
+            NSString *k = [key st_stringByAddingRFC3986PercentEscapesUsingEncoding:_postDataEncoding];
+            NSString *v = [[obj description] st_stringByAddingRFC3986PercentEscapesUsingEncoding:_postDataEncoding];
             [escapedPOSTDictionary setValue:v forKey:k];
         }];
         self.POSTDictionary = escapedPOSTDictionary;
