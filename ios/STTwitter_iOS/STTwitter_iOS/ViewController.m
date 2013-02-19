@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "STTwitterAPIWrapper.h"
 
 @interface ViewController ()
 
@@ -18,6 +19,28 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+
+    // see http://rndc.or.id/wiki/index.php/(Ab)Using_Twitter_Client
+    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:@"Tweetdeck"
+                                                                            consumerKey:@"yT577ApRtZw51q4NPMPPOQ"
+                                                                         consumerSecret:@"xxxxxxxx"
+                                                                               username:@"username"
+                                                                               password:@"password"];
+    
+    [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+        
+        NSLog(@"Access granted for %@", username);
+
+        [twitter getUserTimelineWithScreenName:@"barackobama" successBlock:^(NSArray *statuses) {
+            NSLog(@"-- statuses: %@", statuses);
+        } errorBlock:^(NSError *error) {
+            NSLog(@"-- error: %@", error);
+        }];
+
+    } errorBlock:^(NSError *error) {
+        NSLog(@"-- error %@", error);
+    }];
+    
 }
 
 - (void)didReceiveMemoryWarning

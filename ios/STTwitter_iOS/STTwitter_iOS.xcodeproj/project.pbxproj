@@ -24,7 +24,7 @@
 		037F884016D3A8FB00FE36C8 /* STTwitterOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 037F883616D3A8FB00FE36C8 /* STTwitterOAuth.m */; };
 		037F884116D3A8FB00FE36C8 /* STTwitterOAuthOSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 037F883816D3A8FB00FE36C8 /* STTwitterOAuthOSX.m */; };
 		037F884216D3A8FB00FE36C8 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 037F883C16D3A8FB00FE36C8 /* STHTTPRequest.m */; };
-		03B37AF216D3AB0500428550 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 03B37AF116D3AB0500428550 /* NSData+Base64.m */; };
+		03B37AFF16D3B41E00428550 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 03B37AFE16D3B41E00428550 /* NSData+Base64.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,8 +57,8 @@
 		037F883B16D3A8FB00FE36C8 /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		037F883C16D3A8FB00FE36C8 /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
 		037F884616D3A93A00FE36C8 /* STTwitterOAuthProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterOAuthProtocol.h; sourceTree = "<group>"; };
-		03B37AF016D3AB0500428550 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		03B37AF116D3AB0500428550 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		03B37AFD16D3B41E00428550 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		03B37AFE16D3B41E00428550 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,8 +78,8 @@
 		037F87FF16D3A8ED00FE36C8 = {
 			isa = PBXGroup;
 			children = (
-				03B37AF016D3AB0500428550 /* NSData+Base64.h */,
-				03B37AF116D3AB0500428550 /* NSData+Base64.m */,
+				03B37AFD16D3B41E00428550 /* NSData+Base64.h */,
+				03B37AFE16D3B41E00428550 /* NSData+Base64.m */,
 				037F882E16D3A8FB00FE36C8 /* STTwitter */,
 				037F881116D3A8ED00FE36C8 /* STTwitter_iOS */,
 				037F880A16D3A8ED00FE36C8 /* Frameworks */,
@@ -236,7 +236,7 @@
 				037F884016D3A8FB00FE36C8 /* STTwitterOAuth.m in Sources */,
 				037F884116D3A8FB00FE36C8 /* STTwitterOAuthOSX.m in Sources */,
 				037F884216D3A8FB00FE36C8 /* STHTTPRequest.m in Sources */,
-				03B37AF216D3AB0500428550 /* NSData+Base64.m in Sources */,
+				03B37AFF16D3B41E00428550 /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
