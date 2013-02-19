@@ -623,6 +623,7 @@
 @end
 
 #if TARGET_OS_IPHONE
+// use NSData+Base64
 #else
 
 @implementation NSData (STTwitterOAuth)
