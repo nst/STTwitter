@@ -12,7 +12,7 @@
 
 - (NSString *)firstMatchWithRegex:(NSString *)regex error:(NSError **)e {
     NSError *error = nil;
-    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex options:NSRegularExpressionSearch error:&error];
+    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex options:0 error:&error];
     
     if(re == nil) {
         if(e) *e = error;

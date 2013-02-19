@@ -10,6 +10,9 @@
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
+#if TARGET_OS_IPHONE
+#else
+
 @implementation STTwitterOAuthOSX
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
@@ -178,3 +181,5 @@
 }
 
 @end
+
+#endif

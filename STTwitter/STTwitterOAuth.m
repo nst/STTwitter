@@ -622,6 +622,9 @@
 
 @end
 
+#if TARGET_OS_IPHONE
+#else
+
 @implementation NSData (STTwitterOAuth)
 
 - (NSString *)base64EncodedString {
@@ -645,3 +648,5 @@
 }
 
 @end
+
+#endif

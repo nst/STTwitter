@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterOAuthProtocol.h"
 
+#if TARGET_OS_IPHONE
+#else
+
 typedef void (^STTE_completionBlock_t)(NSArray *statuses);
 typedef void (^STTE_errorBlock_t)(NSError *error);
 
@@ -17,6 +20,7 @@ typedef void (^STTE_errorBlock_t)(NSError *error);
 @interface STTwitterOAuthOSX : NSObject <STTwitterOAuthProtocol> {
 
 }
+
 
 - (BOOL)canVerifyCredentials;
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
@@ -27,3 +31,5 @@ typedef void (^STTE_errorBlock_t)(NSError *error);
 - (NSString *)username;
 
 @end
+
+#endif

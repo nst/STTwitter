@@ -18,6 +18,9 @@
 
 @implementation STTwitterAPIWrapper
 
+#if TARGET_OS_IPHONE
+#else
+
 - (id)init {
     self = [super init];
     
@@ -38,6 +41,8 @@
     twitter.oauth = [[[STTwitterOAuthOSX alloc] init] autorelease];
     return [twitter autorelease];
 }
+
+#endif
 
 + (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
@@ -123,10 +128,13 @@
 
 - (NSString *)userName {
     
+#if TARGET_OS_IPHONE
+#else
     if([_oauth isKindOfClass:[STTwitterOAuthOSX class]]) {
         STTwitterOAuthOSX *oAuthOSX = (STTwitterOAuthOSX *)_oauth;
         return oAuthOSX.username;
     }
+#endif
     
     return _userName;
 }
