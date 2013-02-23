@@ -28,7 +28,6 @@
         // OS X account must be considered invalid
         
         if([self.oauth isKindOfClass:[STTwitterOAuthOSX class]]) {
-            NSLog(@"-- RESET OAUTH OSX");
             self.oauth = nil;//[[[STTwitterOAuthOSX alloc] init] autorelease];
         }
     }];
@@ -370,8 +369,6 @@
         
         NSArray *places = [response valueForKeyPath:@"result.places"];
         
-        NSLog(@"-- %@", [places valueForKey:@"full_name"]);
-        
         successBlock(places);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -391,8 +388,6 @@
         
         NSArray *places = [response valueForKeyPath:@"result.places"];
         
-        NSLog(@"-- %@", [places valueForKey:@"full_name"]);
-        
         successBlock(places);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -411,8 +406,6 @@
         
         NSArray *places = [response valueForKeyPath:@"result.places"];
         
-        NSLog(@"-- %@", [places valueForKey:@"full_name"]);
-        
         successBlock(places);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -430,8 +423,6 @@
     [_oauth getResource:@"geo/search.json" parameters:d successBlock:^(id response) {
         
         NSArray *places = [response valueForKeyPath:@"result.places"];
-        
-        NSLog(@"-- %@", [places valueForKey:@"full_name"]);
         
         successBlock(places);
     } errorBlock:^(NSError *error) {

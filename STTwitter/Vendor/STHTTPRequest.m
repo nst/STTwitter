@@ -268,7 +268,6 @@ static NSMutableDictionary *sharedCredentialsStorage;
             NSError *readingError = nil;
             fileData = [NSData dataWithContentsOfFile:_POSTFilePath options:0 error:&readingError];
             if(fileData == nil ) {
-                NSLog(@"-- %@", [readingError localizedDescription]);
                 return nil;
             }
             

@@ -72,8 +72,6 @@
     STHTTPRequest *r = [STHTTPRequest requestWithURL:url];
         
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        //NSLog(@"-- body: %@", body);
-
         /*
         <form action="https://api.twitter.com/oauth/authorize" id="oauth_form" method="post"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="dacd811cf06655518633ad93e950132614eab7f4" /></div>
         
@@ -119,8 +117,6 @@
                          @"oauth_token" : oauthToken};
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        
-        //NSLog(@"-- body: %@", body);
         
         NSError *error = nil;
         NSString *pin = [body firstMatchWithRegex:@"<code>(\\d+)</code>" error:&error];

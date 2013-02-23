@@ -138,8 +138,6 @@
     
     NSString *headerValue = [NSString stringWithFormat:@"OAuth %@", encodedParametersString];
     
-    NSLog(@"-- %@", headerValue);
-    
     return headerValue;
 }
 
@@ -189,16 +187,10 @@
     
     NSString *encodedParametersString = [encodedParameters componentsJoinedByString:@"&"];
     
-    NSLog(@"-- encodedParametersString: %@", encodedParametersString);
-    
-    NSLog(@"-- normalizedURL: %@", [url normalizedForOauthSignatureString]);
-    
     NSString *signatureBaseString = [NSString stringWithFormat:@"%@&%@&%@",
                                      [httpMethod uppercaseString],
                                      [[url normalizedForOauthSignatureString] urlEncodedString],
                                      [encodedParametersString urlEncodedString]];
-    
-    NSLog(@"-- signatureBaseString: %@", signatureBaseString);
     
     return signatureBaseString;
 }
@@ -211,8 +203,6 @@
 
     NSString *signatureBaseString = [[self class] signatureBaseStringWithHTTPMethod:httpMethod url:url allParametersUnsorted:parameters];
     
-    NSLog(@"-- signatureBaseString: %@", signatureBaseString);
-    
     /*
      Note that there are some flows, such as when obtaining a request token, where the token secret is not yet known. In this case, the signing key should consist of the percent encoded consumer secret followed by an ampersand character '&'.
      */
@@ -221,8 +211,6 @@
     NSString *encodedTokenSecret = [tokenSecret urlEncodedString];
     
     NSString *signingKey = [NSString stringWithFormat:@"%@&", encodedConsumerSecret];
-    
-    NSLog(@"-- signing key: %@", signingKey);
     
     if(encodedTokenSecret) {
         signingKey = [signingKey stringByAppendingString:encodedTokenSecret];
@@ -290,7 +278,6 @@
         successBlock(url, _oauthRequestToken);
         
     } errorBlock:^(NSError *error) {
-        NSLog(@"-- error: %@", [error localizedDescription]);
         errorBlock(error);
     }];
 }
@@ -431,20 +418,16 @@
         
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-        NSLog(@"-- jsonError: %@", [jsonError localizedDescription]);
         
         if(json == nil) {
             errorBlock(jsonError);
             return;
         }
         
-        NSLog(@"** %@", json);
-        
         successBlock(json);
     };
     
     r.errorBlock = ^(NSError *error) {
-        NSLog(@"-- body: %@", r.responseString);
         errorBlock(error);
     };
     
@@ -492,9 +475,6 @@
         
         NSError *regexError = nil;
         NSString *errorString = [r.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
-        if(errorString == nil) {
-            NSLog(@"-- regexError: %@", [regexError localizedDescription]);
-        }
         
         if(errorString) {
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
@@ -502,7 +482,6 @@
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
         }
         
-        NSLog(@"-- body: %@", r.responseString);
         errorBlock(error);
     };
     
@@ -603,7 +582,6 @@
     for(NSString *parameter in parameters) {
         NSArray *keyValue = [parameter componentsSeparatedByString:@"="];
         if([keyValue count] != 2) {
-            NSLog(@"-- bad parameter: %@", parameter);
             continue;
         }
         

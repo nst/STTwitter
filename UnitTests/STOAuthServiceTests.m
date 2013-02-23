@@ -118,8 +118,6 @@
     
     NSString *baseString = [STTwitterOAuth signatureBaseStringWithHTTPMethod:@"GET" url:url allParametersUnsorted:allParamsUnsorted];
     
-    NSLog(@"-- baseString: %@", baseString);
-    
     NSString *expectedBaseString = @"GET&https%3A%2F%2Fapi.twitter.com%2F1.1%2Fgeo%2Fsearch.json&oauth_consumer_key%3D30d7ECqcJDGx8pBEMqxCxg%26oauth_nonce%3Dea95faa8097f4aeca24f77be0b6923a1%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1351964056%26oauth_token%3D15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8%26oauth_version%3D1.0%26query%3DToronto";
     
     STAssertEqualObjects(baseString, expectedBaseString, @"bad signature");
