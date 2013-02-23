@@ -307,7 +307,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%d", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", [body length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:body];
         
     } else if(_POSTDictionary != nil) { // may be empty (POST request without body)
@@ -340,11 +340,11 @@ static NSMutableDictionary *sharedCredentialsStorage;
         NSData *data = [s dataUsingEncoding:_postDataEncoding allowLossyConversion:YES];
         
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%ul", [data length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", [data length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:data];
     } else if (_POSTData != nil) {
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%ul", [_POSTData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", [_POSTData length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:_POSTData];
     }
     
@@ -454,10 +454,10 @@ static NSMutableDictionary *sharedCredentialsStorage;
         NSLog(@"\t %@ = %@", _POSTFileParameter, _POSTFilePath);
     } else if (_POSTFileParameter && _POSTFileData) {
         NSLog(@"UPLOAD DATA");
-        NSLog(@"\t %@ = [%ul bytes]", _POSTFileParameter, [_POSTFileData length]);
+        NSLog(@"\t %@ = [%lu bytes]", _POSTFileParameter, [_POSTFileData length]);
     } else if (_POSTData) {
         NSLog(@"UPLOAD DATA");
-        NSLog(@"\t [%ul bytes]", [_POSTData length]);
+        NSLog(@"\t [%lu bytes]", [_POSTData length]);
     }
     
     NSLog(@"--------------------------------------");
