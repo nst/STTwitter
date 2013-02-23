@@ -9,7 +9,7 @@
 #import "STTwitterAPIWrapper.h"
 #import "STTwitterOAuthOSX.h"
 #import "STTwitterOAuth.h"
-#import "STTwitterHTML.h"
+#import "NSString+STTwitter.h"
 #import <Accounts/Accounts.h>
 
 @interface STTwitterAPIWrapper ()

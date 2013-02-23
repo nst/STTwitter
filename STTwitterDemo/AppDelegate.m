@@ -278,8 +278,6 @@
     [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
         self.timelineStatuses = statuses;
         
-        //NSLog(@"-- %@", statuses);
-        
         self.twitterGetTimelineStatus = @"OK";
     } errorBlock:^(NSError *error) {
         self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
