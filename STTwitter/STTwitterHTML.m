@@ -8,6 +8,7 @@
 
 #import "STTwitterHTML.h"
 #import "STHTTPRequest.h"
+#import "NSString+STTwitter.h"
 
 @implementation STTwitterHTML
 
