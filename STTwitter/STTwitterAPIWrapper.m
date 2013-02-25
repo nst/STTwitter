@@ -237,7 +237,7 @@
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
     
-    NSMutableDictionary *md = [[ @{ @"status":status, @"media[]":data } mutableCopy] autorelease];
+    NSMutableDictionary *md = [[ @{ @"status":status, @"media[]":data, @"postDataKey":@"media[]" } mutableCopy] autorelease];
     
     if(optionalExistingStatusID) {
         md[@"in_reply_to_status_id"] = optionalExistingStatusID;

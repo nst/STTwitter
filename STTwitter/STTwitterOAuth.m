@@ -447,21 +447,22 @@
 
     r.POSTDictionary = params;
     
+	NSString *postKey = [params valueForKey:@"postDataKey"];
     // https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
-    NSData *mediaData = [params valueForKey:@"media[]"];
+    NSData *postData = [params valueForKey:postKey];
     
     NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
-    
-    if(mediaData) {
-        [mutableParams removeObjectForKey:@"media[]"];
+    [mutableParams removeObjectForKey:@"postDataKey"];
+    if(postData) {
+        [mutableParams removeObjectForKey:postKey];
 
-        [r setDataToUpload:mediaData parameterName:@"media[]" mimeType:@"application/octet-stream" fileName:@"media.jpg"];
+        [r setDataToUpload:postData parameterName:postKey mimeType:@"application/octet-stream" fileName:@"media.jpg"];
     }
     
-    [self signRequest:r isMediaUpload:(mediaData != nil) oauthCallback:oauthCallback];
+    [self signRequest:r isMediaUpload:(postData != nil) oauthCallback:oauthCallback];
 
     // POST parameters must not be encoded while posting media, or spaces will appear as %20 in the status
-    r.encodePOSTDictionary = (mediaData == nil);
+    r.encodePOSTDictionary = (postData == nil);
     
     r.POSTDictionary = mutableParams ? mutableParams : @{};
 
