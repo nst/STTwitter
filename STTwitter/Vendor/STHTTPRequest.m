@@ -8,6 +8,8 @@
 
 #import "STHTTPRequest.h"
 
+#define DEBUG 0
+
 NSUInteger const kSTHTTPRequestCancellationError = 1;
 
 static NSMutableDictionary *sharedCredentialsStorage;
@@ -39,7 +41,7 @@ static NSMutableDictionary *sharedCredentialsStorage;
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url {
     if(url == nil) return nil;
-    return [[[self alloc] initWithURL:url] autorelease];
+    return [[(STHTTPRequest *)[self alloc] initWithURL:url] autorelease];
 }
 
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString {
