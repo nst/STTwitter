@@ -23,8 +23,7 @@
     
     if([matches count] == 0) {
         NSString *errorDescription = [NSString stringWithFormat:@"Can't find a match for regex: %@", regex];
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
-        if(e) *e = error;
+        if(e) *e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
         return nil;
     }
     

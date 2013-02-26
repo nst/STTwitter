@@ -163,9 +163,9 @@
                 
                 [twitterHTML postLoginFormWithUsername:username password:password authenticityToken:authenticityToken successBlock:^{
                     
-                    [twitterHTML getAuthorizeFormAtURL:pinURL successBlock:^(NSString *authenticityToken, NSString *oauthToken) {
+                    [twitterHTML getAuthorizeFormAtURL:pinURL successBlock:^(NSString *newAuthenticityToken, NSString *newOauthToken) {
                         
-                        [twitterHTML postAuthorizeFormResultsAtURL:pinURL authenticityToken:authenticityToken oauthToken:oauthToken successBlock:^(NSString *PIN) {
+                        [twitterHTML postAuthorizeFormResultsAtURL:pinURL authenticityToken:newAuthenticityToken oauthToken:newOauthToken successBlock:^(NSString *PIN) {
                             
                             self.pin = PIN;
                             

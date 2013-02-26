@@ -295,14 +295,14 @@
          baseURLString:@"https://api.twitter.com"
             parameters:d
           successBlock:^(NSString *body) {
-        NSDictionary *d = [body parametersDictionary];
+        NSDictionary *dict = [body parametersDictionary];
         
         // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
         
-        self.oauthAccessToken = d[@"oauth_token"];
-        self.oauthAccessTokenSecret = d[@"oauth_token_secret"];
+        self.oauthAccessToken = dict[@"oauth_token"];
+        self.oauthAccessTokenSecret = dict[@"oauth_token_secret"];
         
-        successBlock(_oauthAccessToken, _oauthAccessTokenSecret, d[@"user_id"], d[@"screen_name"]);
+        successBlock(_oauthAccessToken, _oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -320,14 +320,14 @@
          baseURLString:@"https://api.twitter.com"
             parameters:d
           successBlock:^(NSString *body) {
-        NSDictionary *d = [body parametersDictionary];
+        NSDictionary *dict = [body parametersDictionary];
         
         // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
         
-        self.oauthAccessToken = d[@"oauth_token"];
-        self.oauthAccessTokenSecret = d[@"oauth_token_secret"];
+        self.oauthAccessToken = dict[@"oauth_token"];
+        self.oauthAccessTokenSecret = dict[@"oauth_token_secret"];
                 
-        successBlock(_oauthAccessToken, _oauthAccessTokenSecret, d[@"user_id"], d[@"screen_name"]);
+        successBlock(_oauthAccessToken, _oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
 
     } errorBlock:^(NSError *error) {
         errorBlock(error);
