@@ -96,6 +96,10 @@
 		03C7AAB915F76C8B0092A5E6 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		03DD4F1A15F88ECE00B7B69A /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		03DD4F1D15F88ED300B7B69A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		5A8D197D16DC59480082DD10 /* STTwitter.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = STTwitter.xcconfig; path = xcconfigs/STTwitter.xcconfig; sourceTree = "<group>"; };
+		5A8D197E16DC59480082DD10 /* STTwitter-Tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "STTwitter-Tests.xcconfig"; path = "xcconfigs/STTwitter-Tests.xcconfig"; sourceTree = "<group>"; };
+		5A8D197F16DC59480082DD10 /* STTwitter-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "STTwitter-Release.xcconfig"; path = "xcconfigs/STTwitter-Release.xcconfig"; sourceTree = "<group>"; };
+		5A8D198016DC59480082DD10 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = xcconfigs/Base.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +216,7 @@
 				030181881602C9DD006B91AB /* UnitTests */,
 				03C7AA9A15F76C8A0092A5E6 /* Frameworks */,
 				03C7AA9815F76C8A0092A5E6 /* Products */,
+				5A8D197C16DC57010082DD10 /* xcconfigs */,
 			);
 			sourceTree = "<group>";
 		};
@@ -246,6 +251,17 @@
 				03C7AAA015F76C8A0092A5E6 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5A8D197C16DC57010082DD10 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				5A8D197D16DC59480082DD10 /* STTwitter.xcconfig */,
+				5A8D197E16DC59480082DD10 /* STTwitter-Tests.xcconfig */,
+				5A8D197F16DC59480082DD10 /* STTwitter-Release.xcconfig */,
+				5A8D198016DC59480082DD10 /* Base.xcconfig */,
+			);
+			name = xcconfigs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -433,104 +449,43 @@
 /* Begin XCBuildConfiguration section */
 		03C7AAC715F76C8B0092A5E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A8D198016DC59480082DD10 /* Base.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		03C7AAC815F76C8B0092A5E6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A8D198016DC59480082DD10 /* Base.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		03C7AACA15F76C8B0092A5E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A8D197D16DC59480082DD10 /* STTwitter.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
-				INFOPLIST_FILE = "STTwitterDemo/STTwitter-Info.plist";
-				PRODUCT_NAME = STTwitter;
-				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		03C7AACB15F76C8B0092A5E6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A8D197F16DC59480082DD10 /* STTwitter-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
-				INFOPLIST_FILE = "STTwitterDemo/STTwitter-Info.plist";
-				PRODUCT_NAME = STTwitter;
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
 		03C7AACD15F76C8B0092A5E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A8D197E16DC59480082DD10 /* STTwitter-Tests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/STTwitter.app/Contents/MacOS/STTwitter";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
-				INFOPLIST_FILE = "UnitTests/STTwitterTests-Info.plist";
-				PRODUCT_NAME = STTwitterTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
 		03C7AACE15F76C8B0092A5E6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A8D197E16DC59480082DD10 /* STTwitter-Tests.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/STTwitter.app/Contents/MacOS/STTwitter";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "STTwitterDemo/STTwitter-Prefix.pch";
-				INFOPLIST_FILE = "UnitTests/STTwitterTests-Info.plist";
-				PRODUCT_NAME = STTwitterTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
