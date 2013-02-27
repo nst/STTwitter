@@ -392,7 +392,7 @@
 
 - (void)getResource:(NSString *)resource
          parameters:(NSDictionary *)params
-       successBlock:(void(^)(id json))successBlock
+       successBlock:(void(^)(id response))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableString *urlString = [NSMutableString stringWithFormat:@"https://api.twitter.com/1.1/%@", resource];
@@ -438,7 +438,7 @@
        baseURLString:(NSString *)baseURLString // no trailing slash
           parameters:(NSDictionary *)params
        oauthCallback:(NSString *)oauthCallback
-        successBlock:(void(^)(id json))successBlock
+        successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
         
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
@@ -492,7 +492,7 @@
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString // no trailing slash
           parameters:(NSDictionary *)params
-        successBlock:(void(^)(id json))successBlock
+        successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
 
     [self postResource:resource
@@ -506,7 +506,7 @@
 - (void)postResource:(NSString *)resource
           parameters:(NSDictionary *)params
        oauthCallback:(NSString *)oauthCallback
-        successBlock:(void(^)(id json))successBlock
+        successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:resource baseURLString:@"https://api.twitter.com/1.1" parameters:params oauthCallback:oauthCallback successBlock:successBlock errorBlock:errorBlock];
@@ -514,7 +514,7 @@
 
 - (void)postResource:(NSString *)resource
           parameters:(NSDictionary *)params
-        successBlock:(void(^)(id json))successBlock
+        successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:resource parameters:params oauthCallback:nil successBlock:successBlock errorBlock:errorBlock];

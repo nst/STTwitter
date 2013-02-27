@@ -156,7 +156,7 @@
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     [md setObject:screenName forKey:@"screen_name"];
     
-    [_oauth getResource:@"statuses/user_timeline.json" parameters:md successBlock:^(NSArray *statuses) {
+    [_oauth getResource:@"statuses/user_timeline.json" parameters:md successBlock:^(id statuses) {
         successBlock(statuses);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -172,7 +172,7 @@
     if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
     if(optionalCount) [md setObject:optionalCount forKey:@"count"];
     
-    [_oauth getResource:@"statuses/home_timeline.json" parameters:md successBlock:^(NSArray *statuses) {
+    [_oauth getResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id statuses) {
         successBlock(statuses);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -189,7 +189,7 @@
     
     NSString *resource = [NSString stringWithFormat:@"statuses/destroy/%@.json", statusID];
     
-    [_oauth postResource:resource parameters:nil successBlock:^(NSString *response) {
+    [_oauth postResource:resource parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -219,7 +219,7 @@
         md[@"display_coordinates"] = @"true";
     }
     
-    [_oauth postResource:@"statuses/update.json" parameters:md successBlock:^(NSString *response) {
+    [_oauth postResource:@"statuses/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -252,7 +252,7 @@
         md[@"display_coordinates"] = @"true";
     }
     
-    [_oauth postResource:@"statuses/update_with_media.json" parameters:md successBlock:^(NSString *response) {
+    [_oauth postResource:@"statuses/update_with_media.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -265,7 +265,7 @@
     
     NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
     
-    [_oauth postResource:resource parameters:nil successBlock:^(NSString *response) {
+    [_oauth postResource:resource parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -278,7 +278,7 @@
     
     NSDictionary *d = @{@"q" : q};
     
-    [_oauth getResource:@"search/tweets.json" parameters:d successBlock:^(NSString *response) {
+    [_oauth getResource:@"search/tweets.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -297,7 +297,7 @@
     
     NSDictionary *d = @{@"screen_name" : screenName};
     
-    [_oauth getResource:@"followers/ids.json" parameters:d successBlock:^(NSString *response) {
+    [_oauth getResource:@"followers/ids.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -310,7 +310,7 @@
     
     NSDictionary *d = @{@"skip_status" : (skipStatus ? @"true" : @"false")};
     
-    [_oauth getResource:@"account/verify_credentials.json" parameters:d successBlock:^(NSString *response) {
+    [_oauth getResource:@"account/verify_credentials.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -342,7 +342,7 @@
     
     NSDictionary *d = @{@"id" : statusID};
     
-    [_oauth postResource:resource parameters:d successBlock:^(NSString *response) {
+    [_oauth postResource:resource parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
