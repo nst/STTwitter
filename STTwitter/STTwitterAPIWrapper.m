@@ -108,8 +108,8 @@
             errorBlock(error);
         }];
     } else {
-        [self getAccountVerifyCredentialsSkipStatus:YES successBlock:^(NSString *jsonString) {
-            self.userName = [jsonString valueForKey:@"screen_name"];
+        [self getAccountVerifyCredentialsSkipStatus:YES successBlock:^(NSDictionary *myInfo) {
+            self.userName = [myInfo valueForKey:@"screen_name"];
             successBlock(_userName);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
@@ -182,7 +182,7 @@
 #pragma mark Tweets
 
 - (void)postDestroyStatusWithID:(NSString *)statusID
-                   successBlock:(void(^)(NSString *jsonString))successBlock
+                   successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     // set trim_user to true?
@@ -201,7 +201,7 @@
                  placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
-            successBlock:(void(^)(NSString *response))successBlock
+            successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"status"];
@@ -232,7 +232,7 @@
                  placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
-            successBlock:(void(^)(NSString *response))successBlock
+            successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
@@ -260,7 +260,7 @@
 }
 
 - (void)postStatusRetweetWithID:(NSString *)statusID
-                   successBlock:(void(^)(NSString *response))successBlock
+                   successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
@@ -274,7 +274,7 @@
 
 #pragma mark Search
 
-- (void)getSearchTweetsWithQuery:(NSString *)q successBlock:(void(^)(NSString *jsonString))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getSearchTweetsWithQuery:(NSString *)q successBlock:(void(^)(NSArray *statuses))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{@"q" : q};
     
@@ -306,7 +306,9 @@
 
 #pragma mark Users
 
-- (void)getAccountVerifyCredentialsSkipStatus:(BOOL)skipStatus successBlock:(void(^)(NSString *jsonString))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getAccountVerifyCredentialsSkipStatus:(BOOL)skipStatus
+								 successBlock:(void(^)(NSDictionary *myInfo))successBlock
+								   errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{@"skip_status" : (skipStatus ? @"true" : @"false")};
     
@@ -333,7 +335,7 @@
 
 - (void)postFavoriteState:(BOOL)favoriteState
               forStatusID:(NSString *)statusID
-             successBlock:(void(^)(NSString *jsonString))successBlock
+             successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *action = favoriteState ? @"create" : @"destroy";
