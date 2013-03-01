@@ -95,7 +95,7 @@
 //	GET		statuses/home_timeline
 //	Returns Tweets (*: tweets from people the user follows)
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
-                         count:(NSString *)optionalCount
+                         count:(NSUInteger)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 

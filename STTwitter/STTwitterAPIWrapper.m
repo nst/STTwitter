@@ -164,13 +164,13 @@
 }
 
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
-                         count:(NSString *)optionalCount
+                         count:(NSUInteger)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
-    if(optionalCount) [md setObject:optionalCount forKey:@"count"];
+	if (optionalCount != NSNotFound) [md setObject:[@(optionalCount) stringValue] forKey:@"count"];
     
     [_oauth getResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id statuses) {
         successBlock(statuses);
