@@ -198,7 +198,8 @@
     
     NSString *resource = [NSString stringWithFormat:@"statuses/destroy/%@.json", statusID];
     
-    [_oauth postResource:resource parameters:nil successBlock:^(id response) {
+	//Twitter returns an unauthenticated error if parameters is nil.
+    [_oauth postResource:resource parameters:@{ @"id" : statusID } successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
