@@ -467,7 +467,16 @@
     r.POSTDictionary = mutableParams ? mutableParams : @{};
 
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        successBlock(body);
+        
+        NSError *jsonError = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+        
+        if(json == nil) {
+            errorBlock(jsonError);
+            return;
+        }
+        
+        successBlock(json);
     };
     
     r.errorBlock = ^(NSError *error) {
