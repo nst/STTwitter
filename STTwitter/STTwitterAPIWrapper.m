@@ -147,7 +147,37 @@
 
 /**/
 
+- (void)profileImageFor:(NSString *)screenName
+				successBlock:(void(^)(NSImage *image))successBlock
+				  errorBlock:(void(^)(NSError *error))errorBlock;{
+	[self getUserInformationFor:screenName
+				   successBlock:^(NSDictionary *response) {
+					   NSString *imageURL = [response objectForKey:@"profile_image_url"];
+				   
+					   NSURLRequest *imageRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:imageURL]];
+					   
+					   NSData *imageData = [NSURLConnection sendSynchronousRequest:imageRequest returningResponse:nil error:nil];
+					   successBlock([[NSImage alloc] initWithData:imageData]);
+				   } errorBlock:^(NSError *error) {
+					   errorBlock(error);
+				   }];
+}
+
 #pragma mark Timelines
+- (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
+							 count:(NSUInteger)optionalCount
+					  successBlock:(void(^)(NSArray *statuses))successBlock
+						errorBlock:(void(^)(NSError *error))errorBlock {
+	NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
+	if (optionalCount != NSNotFound) [md setObject:[@(optionalCount) stringValue] forKey:@"count"];
+    
+    [_oauth getResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(NSArray *statuses) {
+        successBlock(statuses);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
 								count:(NSUInteger)optionalCount
@@ -284,7 +314,9 @@
 
 #pragma mark Search
 
-- (void)getSearchTweetsWithQuery:(NSString *)q successBlock:(void(^)(NSArray *statuses))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getSearchTweetsWithQuery:(NSString *)q
+					successBlock:(void(^)(NSArray *statuses))successBlock
+					  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{@"q" : q};
     
@@ -298,16 +330,106 @@
 #pragma mark Streaming
 
 #pragma mark Direct Messages
+- (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
+						   count:(NSUInteger)optionalCount
+					successBlock:(void(^)(NSArray *statuses))successBlock
+					  errorBlock:(void(^)(NSError *error))errorBlock {
+	NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
+	if (optionalCount != NSNotFound) [md setObject:[@(optionalCount) stringValue] forKey:@"count"];
+    
+    [_oauth getResource:@"direct_messages.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postDestroyDirectMessageWithID:(NSString *)dmID
+						  successBlock:(void(^)(NSDictionary *dm))successBlock
+							errorBlock:(void(^)(NSError *error))errorBlock {
+	NSDictionary *d = @{@"id" : dmID};
+    
+    [_oauth postResource:@"direct_messages/destroy.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postDirectMessage:(NSString *)status
+					   to:(NSString *)screenName
+             successBlock:(void(^)(NSDictionary *dm))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock {
+	NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"text"];
+    [md setObject:screenName forKey:@"screen_name"];
+    
+    [_oauth postResource:@"direct_messages/new.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 #pragma mark Friends & Followers
 
-- (void)getFollowersWithScreenName:(NSString *)screenName
-                      successBlock:(void(^)(NSString *response))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getFriendsForScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSArray *friends))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+	NSDictionary *d = @{@"screen_name" : screenName};
+    
+    [_oauth getResource:@"friends/list.json" parameters:d successBlock:^(id response) {
+		successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getFollowersForScreenName:(NSString *)screenName
+					 successBlock:(void(^)(NSArray *followers))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{@"screen_name" : screenName};
     
     [_oauth getResource:@"followers/ids.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postFollow:(NSString *)screenName
+	  successBlock:(void(^)(NSDictionary *user))successBlock
+		errorBlock:(void(^)(NSError *error))errorBlock {
+	NSDictionary *d = @{@"screen_name" : screenName};
+    
+    [_oauth getResource:@"friendships/create.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postUnfollow:(NSString *)screenName
+		successBlock:(void(^)(NSDictionary *user))successBlock
+		  errorBlock:(void(^)(NSError *error))errorBlock {
+	NSDictionary *d = @{@"screen_name" : screenName};
+    
+    [_oauth getResource:@"friendships/destroy.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postUpdateNotifications:(BOOL)notify
+				  forScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSDictionary *relationship))successBlock
+					 errorBlock:(void(^)(NSError *error))errorBlock {
+	NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:screenName forKey:@"screen_name"];
+	d[@"device"] = notify ? @"true" : @"false";
+    
+    [_oauth getResource:@"friendships/update.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -323,6 +445,41 @@
     NSDictionary *d = @{@"skip_status" : (skipStatus ? @"true" : @"false")};
     
     [_oauth getResource:@"account/verify_credentials.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postUpdateProfile:(NSDictionary *)profileData
+			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
+			   errorBlock:(void(^)(NSError *error))errorBlock {
+	[_oauth postResource:@"account/update_profile.json" parameters:profileData successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postUpdateProfileImage:(NSImage *)newImage
+				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
+					errorBlock:(void(^)(NSError *error))errorBlock;{
+	NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:newImage forKey:@"image"];
+	[md setObject:@"image" forKey:@"postDataKey"];
+    
+    [_oauth postResource:@"account/update_profile_image.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getUserInformationFor:(NSString *)screenName
+				 successBlock:(void(^)(NSDictionary *user))successBlock
+				   errorBlock:(void(^)(NSError *error))errorBlock {
+	NSDictionary *d = @{@"screen_name" : screenName};
+    
+    [_oauth getResource:@"users/show.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -449,6 +606,18 @@
 #pragma mark OAuth
 
 #pragma mark Help
+- (void)getRateLimitsForResources:(NSArray *)resources
+					 successBlock:(void(^)(NSDictionary *rateLimits))successBlock
+					   errorBlock:(void(^)(NSError *error))errorBlock {
+	NSDictionary *d = nil;
+	if (resources)
+		d = @{ @"resources" : [resources componentsJoinedByString:@","] };
+	[_oauth getResource:@"application/rate_limit_status.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 @end
 

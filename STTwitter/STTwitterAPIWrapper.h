@@ -81,9 +81,18 @@
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 
+- (void)profileImageFor:(NSString *)screenName
+				successBlock:(void(^)(NSImage *image))successBlock
+				  errorBlock:(void(^)(NSError *error))errorBlock;;
+
 #pragma mark Timelines
 
 //	GET		statuses/mentions_timeline
+//	Returns Tweets (*: mentions for the user)
+- (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
+							 count:(NSUInteger)optionalCount
+					  successBlock:(void(^)(NSArray *statuses))successBlock
+						errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		statuses/user_timeline
 //	Returns Tweets (*: tweets for the user)
@@ -168,24 +177,42 @@
 #pragma mark Direct Messages
 
 //	GET		direct_messages
+//	Returns Tweets (*: direct messages to the user)
+- (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
+						   count:(NSUInteger)optionalCount
+					successBlock:(void(^)(NSArray *statuses))successBlock
+					  errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		direct_messages/sent
 
 //	GET		direct_messages/show
 
 //	POST	direct_messages/destroy
+//	Returns Tweets (1: the destroyed DM)
+- (void)postDestroyDirectMessageWithID:(NSString *)dmID
+						  successBlock:(void(^)(NSDictionary *dm))successBlock
+							errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	direct_messages/new
+//	Returns Tweets (1: the sent DM)
+- (void)postDirectMessage:(NSString *)status
+					   to:(NSString *)screenName
+             successBlock:(void(^)(NSDictionary *dm))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Friends & Followers
 
 //	GET		friends/ids
+//	Returns Users (*: user IDs for followees)
+- (void)getFriendsForScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSArray *friends))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getFollowersWithScreenName:(NSString *)screenName
-                      successBlock:(void(^)(NSString *jsonString))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
 //	GET		followers/ids
 //	Returns Users (*: user IDs for followers)
+- (void)getFollowersForScreenName:(NSString *)screenName
+                     successBlock:(void(^)(NSArray *followers))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		friendships/lookup
 
@@ -194,10 +221,23 @@
 //	GET		friendships/outgoing
 
 //	POST	friendships/create
+//	Returns Users (1: the followed user)
+- (void)postFollow:(NSString *)screenName
+	  successBlock:(void(^)(NSDictionary *user))successBlock
+		errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	friendships/destroy
+//	Returns Users (1: the unfollowed user)
+- (void)postUnfollow:(NSString *)screenName
+		successBlock:(void(^)(NSDictionary *user))successBlock
+		  errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	friendships/update
+//	Returns ?
+- (void)postUpdateNotifications:(BOOL)notify
+				  forScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSDictionary *relationship))successBlock
+					 errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		friendships/show
 
@@ -216,12 +256,20 @@
 //	POST	account/update_delivery_device
 
 //	POST	account/update_profile
+//	Returns Users (1: the user)
+- (void)postUpdateProfile:(NSDictionary *)profileData
+			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
+			   errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	account/update_profile_background_image
 
 //	POST	account/update_profile_colors
 
 //	POST	account/update_profile_image
+//	Returns Users (1: the user)
+- (void)postUpdateProfileImage:(NSImage *)newImage
+				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
+					errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		blocks/list
 
@@ -234,6 +282,10 @@
 //	GET		users/lookup
 
 //	GET		users/show
+//	Returns Users (1: detailed information for the user)
+- (void)getUserInformationFor:(NSString *)screenName
+				 successBlock:(void(^)(NSDictionary *user))successBlock
+				   errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		users/search
 
@@ -341,5 +393,10 @@
 #pragma mark OAuth
 
 #pragma mark Help
+//	GET		application/rate_limit_status
+//	Returns ?
+- (void)getRateLimitsForResources:(NSArray *)resources
+					 successBlock:(void(^)(NSDictionary *rateLimits))successBlock
+					   errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end
