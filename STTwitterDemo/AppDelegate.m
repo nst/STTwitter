@@ -275,7 +275,7 @@
     self.twitterGetTimelineStatus = @"-";
     self.timelineStatuses = [NSArray array];
     
-    [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
+    [_twitter getHomeTimelineSinceID:nil count:20 successBlock:^(NSArray *statuses) {
         self.timelineStatuses = statuses;
         
         self.twitterGetTimelineStatus = @"OK";
