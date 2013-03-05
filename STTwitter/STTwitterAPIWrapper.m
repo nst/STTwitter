@@ -13,6 +13,7 @@
 #import <Accounts/Accounts.h>
 
 @interface STTwitterAPIWrapper ()
+id removeNull(id rootObject);
 @property (nonatomic, retain) NSObject <STTwitterOAuthProtocol> *oauth;
 @end
 
@@ -164,35 +165,71 @@
 }
 
 #pragma mark Timelines
+- (void)getTimeline:(NSString *)timeline
+	 withParameters:(NSDictionary *)params
+			sinceID:(NSString *)optionalSinceID
+			  count:(NSUInteger)optionalCount
+	   successBlock:(void(^)(NSArray *statuses))successBlock
+		 errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *mparams = [params mutableCopy];
+	if (!mparams)
+		mparams = [NSMutableDictionary new];
+	
+    if (optionalSinceID) mparams[@"since_id"] = optionalSinceID;
+	if (optionalCount != NSNotFound) mparams[@"count"] = [@(optionalCount) stringValue];
+	
+	__block NSMutableArray *statuses = [NSMutableArray new];
+	__block void (^requestHandler)(id response) = nil;
+	__block int count = 0;
+	requestHandler = [[^(id response) {
+		if ([response isKindOfClass:[NSArray class]] && [response count] > 0)
+			[statuses addObjectsFromArray:response];
+		
+		//Only send another request if we got close to the requested limit, up to a maximum of 4 api calls
+		if (count++ == 0 || (count <= 4 && [response count] >= (optionalCount - 5))) {
+			//Set the max_id so that we don't get statuses we've already received
+			NSString *lastID = [[statuses lastObject] objectForKey:@"id_str"];
+			if (lastID) {
+				NSUInteger maxID = [[NSDecimalNumber decimalNumberWithString:lastID] unsignedIntegerValue];
+				if (maxID != NSNotFound)
+					mparams[@"max_id"] = [@(--maxID) stringValue];
+			}
+			
+			[_oauth getResource:timeline parameters:mparams
+				   successBlock:requestHandler
+					 errorBlock:errorBlock];
+		} else {
+			successBlock(removeNull(statuses));
+		}
+	} copy] autorelease];
+	
+	//Send the first request
+    requestHandler(nil);
+}
+
 - (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
 							 count:(NSUInteger)optionalCount
 					  successBlock:(void(^)(NSArray *statuses))successBlock
 						errorBlock:(void(^)(NSError *error))errorBlock {
-	NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
-	if (optionalCount != NSNotFound) [md setObject:[@(optionalCount) stringValue] forKey:@"count"];
-    
-    [_oauth getResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(NSArray *statuses) {
-        successBlock(statuses);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+	[self getTimeline:@"statuses/mentions_timeline.json"
+	   withParameters:nil
+			  sinceID:optionalSinceID
+				count:optionalCount
+		 successBlock:successBlock
+		   errorBlock:errorBlock];
 }
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
 								count:(NSUInteger)optionalCount
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
-	
-    NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    [md setObject:screenName forKey:@"screen_name"];
-	if (optionalCount != NSNotFound) [md setObject:[@(optionalCount) stringValue] forKey:@"count"];
-    
-    [_oauth getResource:@"statuses/user_timeline.json" parameters:md successBlock:^(id statuses) {
-        successBlock(statuses);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+	[self getTimeline:@"statuses/user_timeline.json"
+	   withParameters:@{ @"screen_name" : screenName }
+			  sinceID:nil
+				count:optionalCount
+		 successBlock:successBlock
+		   errorBlock:errorBlock];
 }
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
@@ -206,16 +243,12 @@
                          count:(NSUInteger)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
-	if (optionalCount != NSNotFound) [md setObject:[@(optionalCount) stringValue] forKey:@"count"];
-    
-    [_oauth getResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id statuses) {
-        successBlock(statuses);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [self getTimeline:@"statuses/home_timeline.json"
+	   withParameters:nil
+			  sinceID:optionalSinceID
+				count:optionalCount
+		 successBlock:successBlock
+		   errorBlock:errorBlock];
 }
 
 #pragma mark Tweets
@@ -372,30 +405,44 @@
 }
 
 #pragma mark Friends & Followers
-
-- (void)getFriendsForScreenName:(NSString *)screenName
-				   successBlock:(void(^)(NSArray *friends))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock {
-	NSDictionary *d = @{@"screen_name" : screenName};
-    
-    [_oauth getResource:@"friends/list.json" parameters:d successBlock:^(id response) {
-		successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+- (void)getUsersAtResource:(NSString *)resource
+			 forScreenName:(NSString *)screenName
+			  successBlock:(void(^)(NSArray *friends))successBlock
+				errorBlock:(void(^)(NSError *error))errorBlock {
+	NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:screenName forKey:@"screen_name"];
+	
+	__block NSMutableArray *ids = [NSMutableArray new];
+	__block void (^requestHandler)(id response) = nil;
+	__block NSString *cursor = @"-1";
+	requestHandler = [[^(id response) {
+		if (response) {
+			[ids addObjectsFromArray:[response objectForKey:@"users"]];
+			cursor = [[response objectForKey:@"next_cursor_str"] copy];
+			d[@"cursor"] = cursor;
+		}
+		
+		if ([cursor isEqualToString:@"0"]) {
+			successBlock(ids);
+		} else {
+			[_oauth getResource:resource parameters:d successBlock:requestHandler
+					 errorBlock:errorBlock];
+		}
+	} copy] autorelease];
+	
+	//Send the first request
+	requestHandler(nil);
 }
 
-- (void)getFollowersForScreenName:(NSString *)screenName
-					 successBlock:(void(^)(NSArray *followers))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    NSDictionary *d = @{@"screen_name" : screenName};
-    
-    [_oauth getResource:@"followers/ids.json" parameters:d successBlock:^(id response) {
-        successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+- (void)getFriendsIDsForScreenName:(NSString *)screenName
+				      successBlock:(void(^)(NSArray *friends))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
+	[self getUsersAtResource:@"friends/ids.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
+}
+
+- (void)getFollowersIDsForScreenName:(NSString *)screenName
+					    successBlock:(void(^)(NSArray *followers))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+	[self getUsersAtResource:@"followers/ids.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
 }
 
 - (void)postFollow:(NSString *)screenName
@@ -434,6 +481,18 @@
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
+}
+
+- (void)getFriendsForScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSArray *friends))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+	[self getUsersAtResource:@"friends/list.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
+}
+
+- (void)getFollowersForScreenName:(NSString *)screenName
+					 successBlock:(void(^)(NSArray *followers))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
+	[self getUsersAtResource:@"followers/list.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
 }
 
 #pragma mark Users
@@ -617,6 +676,40 @@
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
+}
+
+id removeNull(id rootObject) {
+    if ([rootObject isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *sanitizedDictionary = [NSMutableDictionary dictionaryWithDictionary:rootObject];
+        [rootObject enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            id sanitized = removeNull(obj);
+            if (!sanitized) {
+                [sanitizedDictionary setObject:@"" forKey:key];
+            } else {
+                [sanitizedDictionary setObject:sanitized forKey:key];
+            }
+        }];
+        return [NSDictionary dictionaryWithDictionary:sanitizedDictionary];
+    }
+    
+    if ([rootObject isKindOfClass:[NSArray class]]) {
+        NSMutableArray *sanitizedArray = [NSMutableArray arrayWithArray:rootObject];
+        [rootObject enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            id sanitized = removeNull(obj);
+            if (!sanitized) {
+                [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:@""];
+            } else {
+                [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:sanitized];
+            }
+        }];
+        return [NSArray arrayWithArray:sanitizedArray];
+    }
+	
+    if ([rootObject isKindOfClass:[NSNull class]]) {
+        return (id)nil;
+    } else {
+        return rootObject;
+    }
 }
 
 @end

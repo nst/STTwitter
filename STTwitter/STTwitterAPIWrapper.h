@@ -204,15 +204,15 @@
 
 //	GET		friends/ids
 //	Returns Users (*: user IDs for followees)
-- (void)getFriendsForScreenName:(NSString *)screenName
-				   successBlock:(void(^)(NSArray *friends))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getFriendsIDsForScreenName:(NSString *)screenName
+				      successBlock:(void(^)(NSArray *friends))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		followers/ids
 //	Returns Users (*: user IDs for followers)
-- (void)getFollowersForScreenName:(NSString *)screenName
-                     successBlock:(void(^)(NSArray *followers))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getFollowersIDsForScreenName:(NSString *)screenName
+                        successBlock:(void(^)(NSArray *followers))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		friendships/lookup
 
@@ -240,6 +240,16 @@
 					 errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		friendships/show
+
+//	GET		friends/list
+- (void)getFriendsForScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSArray *friends))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+//	GET		followers/list
+- (void)getFollowersForScreenName:(NSString *)screenName
+					 successBlock:(void(^)(NSArray *followers))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Users
 
