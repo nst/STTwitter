@@ -150,7 +150,7 @@ id removeNull(id rootObject);
 
 - (void)profileImageFor:(NSString *)screenName
 				successBlock:(void(^)(NSImage *image))successBlock
-				  errorBlock:(void(^)(NSError *error))errorBlock;{
+				  errorBlock:(void(^)(NSError *error))errorBlock {
 	[self getUserInformationFor:screenName
 				   successBlock:^(NSDictionary *response) {
 					   NSString *imageURL = [response objectForKey:@"profile_image_url"];
@@ -522,7 +522,7 @@ id removeNull(id rootObject);
 
 - (void)postUpdateProfileImage:(NSImage *)newImage
 				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
-					errorBlock:(void(^)(NSError *error))errorBlock;{
+					errorBlock:(void(^)(NSError *error))errorBlock {
 	NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:newImage forKey:@"image"];
 	[md setObject:@"image" forKey:@"postDataKey"];
     
