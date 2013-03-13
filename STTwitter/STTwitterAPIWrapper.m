@@ -132,6 +132,15 @@
     }
 }
 
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+    if([self.oauth respondsToSelector:@selector(invalidateBearerTokenWithSuccessBlock:errorBlock:)]) {
+        [self.oauth invalidateBearerTokenWithSuccessBlock:successBlock errorBlock:errorBlock];
+    } else {
+        NSLog(@"-- self.oauth does not support tokens invalidation");
+    }
+}
+
 - (NSString *)oauthAccessTokenSecret {
     return [_oauth oauthAccessTokenSecret];
 }

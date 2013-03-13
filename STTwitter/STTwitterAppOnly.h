@@ -19,4 +19,7 @@
 
 + (NSString *)base64EncodedBearerTokenCredentialsWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end

@@ -34,6 +34,9 @@
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
 - (NSString *)oauthAccessToken;
 - (NSString *)oauthAccessTokenSecret;
 

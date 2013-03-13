@@ -68,15 +68,13 @@
                   return;
               }
               
-              NSString *tokenType = [json valueForKey:@"token_type"];
-              if([tokenType isEqualToString:@"bearer"] == NO) {
-                  errorBlock(nil);
-                  return;
-              }
-              
               self.bearerToken = [json valueForKey:@"access_token"];
               
-              successBlock(_bearerToken);
+              NSString *oldToken = self.bearerToken;
+              
+              self.bearerToken = nil;
+              
+              successBlock(oldToken);
               
           } errorBlock:^(NSError *error) {
               errorBlock(error);
@@ -115,14 +113,6 @@
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock {
     
-    /*
-     GET /1.1/statuses/user_timeline.json?count=100&screen_name=twitterapi HTTP/1.1
-     Host: api.twitter.com
-     User-Agent: My Twitter App v1.0.23
-     Authorization: Bearer AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA%2FAAAAAAAAAAAA
-     AAAAAAAA%3DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-     Accept-Encoding: gzip
-     */
     
     [self postResource:@"oauth2/token"
          baseURLString:@"https://api.twitter.com"
@@ -159,6 +149,15 @@
          parameters:(NSDictionary *)params
        successBlock:(void(^)(id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    /*
+     GET /1.1/statuses/user_timeline.json?count=100&screen_name=twitterapi HTTP/1.1
+     Host: api.twitter.com
+     User-Agent: My Twitter App v1.0.23
+     Authorization: Bearer AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA%2FAAAAAAAAAAAA
+     AAAAAAAA%3DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+     Accept-Encoding: gzip
+     */
     
     NSMutableString *urlString = [NSMutableString stringWithFormat:@"https://api.twitter.com/1.1/%@", resource];
     
@@ -220,7 +219,7 @@
     
     NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
     
-    r.encodePOSTDictionary = YES;
+    r.encodePOSTDictionary = NO;
     
     r.POSTDictionary = mutableParams ? mutableParams : @{};
     
@@ -253,6 +252,7 @@
         [r setHeaderWithName:@"Authorization" value:[NSString stringWithFormat:@"Basic %@", base64EncodedTokens]];
     } else if(_bearerToken) {
         [r setHeaderWithName:@"Authorization" value:[NSString stringWithFormat:@"Bearer %@", _bearerToken]];
+        r.encodePOSTDictionary = YES;
     }
     
     [r startAsynchronous];

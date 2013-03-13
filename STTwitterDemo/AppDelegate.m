@@ -41,6 +41,8 @@
     [_twitterPostMediaURL release];
     [_twitterPostLatitude release];
     [_twitterPostLongitude release];
+    [_bearerToken release];
+    [_bearerStatus release];
     [super dealloc];
 }
 
@@ -260,6 +262,31 @@
     } errorBlock:^(NSError *error) {
         
         self.xAuthStatus = [error localizedDescription];
+    }];
+}
+
+// Application Only
+- (IBAction)fetchBearer:(id)sender {
+
+    self.bearerStatus = @"-";
+
+    self.twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
+    
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+        self.bearerToken = bearerToken;
+    } errorBlock:^(NSError *error) {
+        self.bearerStatus = [error localizedDescription];
+    }];
+}
+
+- (IBAction)invalidateBearer:(id)sender {
+
+    self.bearerStatus = @"-";
+    
+    [_twitter invalidateBearerTokenWithSuccessBlock:^() {
+        self.bearerStatus = @"ok";
+    } errorBlock:^(NSError *error) {
+        self.bearerStatus = [error localizedDescription];
     }];
 }
 
