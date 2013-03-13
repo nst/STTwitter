@@ -38,6 +38,14 @@
     [super dealloc];
 }
 
+- (id)init {
+    self = [super init];
+    
+    [STHTTPRequest clearSession]; // former cookies may result in mixed-up kind of authentication
+    
+    return self;
+}
+
 #pragma mark STTwitterOAuthProtocol
 
 - (BOOL)canVerifyCredentials {
