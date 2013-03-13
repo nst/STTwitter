@@ -239,7 +239,7 @@
         
         if(errorString) {
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-        } else if([r.responseString length] < 64) {
+        } else if ([r.responseString length] > 0 && [r.responseString length] < 64) {
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
         }
         
@@ -254,7 +254,7 @@
         [r setHeaderWithName:@"Authorization" value:[NSString stringWithFormat:@"Bearer %@", _bearerToken]];
         r.encodePOSTDictionary = YES;
     }
-    
+        
     [r startAsynchronous];
 }
 

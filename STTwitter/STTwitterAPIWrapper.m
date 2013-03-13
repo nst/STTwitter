@@ -236,6 +236,12 @@
             successBlock:(void(^)(NSString *response))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
+    if(status == nil) {
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"cannot post empty status"}];
+        errorBlock(error);
+        return;
+    }
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"status"];
     
     if(optionalExistingStatusID) {
