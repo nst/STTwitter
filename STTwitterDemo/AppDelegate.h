@@ -50,6 +50,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) NSString *oauthTokenSecret;
 @property (nonatomic, retain) NSString *oauthTokensStatus;
 
+@property (nonatomic, retain) NSString *twitterTimelineUsername;
 @property (nonatomic, retain) NSString *twitterGetTimelineStatus;
 @property (nonatomic, retain) NSString *twitterPostTweetText;
 @property (nonatomic, retain) NSString *twitterPostTweetStatus;

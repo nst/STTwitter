@@ -34,6 +34,7 @@
     [_oauthTokenSecret release];
     [_oauthTokensStatus release];
     [_pinGuessLoginCompletionBlock release];
+    [_twitterTimelineUsername release];
     [_twitterGetTimelineStatus release];
     [_twitterPostTweetText release];
     [_twitterPostTweetStatus release];
@@ -322,15 +323,22 @@
     self.twitterGetTimelineStatus = @"-";
     self.timelineStatuses = [NSArray array];
     
-    [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
-        self.timelineStatuses = statuses;
-        
-        //NSLog(@"-- %@", statuses);
-        
-        self.twitterGetTimelineStatus = @"OK";
-    } errorBlock:^(NSError *error) {
-        self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
-    }];
+    if([_twitterTimelineUsername length] > 0) {
+        [_twitter getUserTimelineWithScreenName:_twitterTimelineUsername successBlock:^(NSArray *statuses) {
+            self.timelineStatuses = statuses;
+            self.twitterGetTimelineStatus = @"OK";
+        } errorBlock:^(NSError *error) {
+            self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
+        }];
+    } else {
+        [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
+            self.timelineStatuses = statuses;
+            self.twitterGetTimelineStatus = @"OK";
+        } errorBlock:^(NSError *error) {
+            self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
+        }];
+    }
+    
 }
 
 - (IBAction)chooseMedia:(id)sender {
