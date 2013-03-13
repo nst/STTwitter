@@ -273,8 +273,9 @@
     self.twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
-        self.bearerToken = bearerToken;
+        self.bearerToken = [_twitter bearerToken];
     } errorBlock:^(NSError *error) {
+        self.bearerToken = [_twitter bearerToken];
         self.bearerStatus = [error localizedDescription];
     }];
 }
@@ -284,8 +285,10 @@
     self.bearerStatus = @"-";
     
     [_twitter invalidateBearerTokenWithSuccessBlock:^() {
+        self.bearerToken = [_twitter bearerToken];
         self.bearerStatus = @"ok";
     } errorBlock:^(NSError *error) {
+        self.bearerToken = [_twitter bearerToken];
         self.bearerStatus = [error localizedDescription];
     }];
 }

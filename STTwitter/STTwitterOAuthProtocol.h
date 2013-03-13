@@ -40,4 +40,6 @@
 - (NSString *)oauthAccessToken;
 - (NSString *)oauthAccessTokenSecret;
 
+- (NSString *)bearerToken;
+
 @end

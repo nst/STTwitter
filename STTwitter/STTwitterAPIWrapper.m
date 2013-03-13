@@ -149,6 +149,14 @@
     return [_oauth oauthAccessToken];
 }
 
+- (NSString *)bearerToken {
+    if([_oauth respondsToSelector:@selector(bearerToken)]) {
+        return [_oauth bearerToken];
+    }
+    
+    return nil;
+}
+
 - (NSString *)userName {
     
 #if TARGET_OS_IPHONE
