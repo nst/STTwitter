@@ -56,6 +56,23 @@
     self.twitterClients = ma;
     
     [_twitterClientsController setSelectedObjects:@[customClient]];
+    
+    /**/
+    
+//    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"" consumerSecret:@""];
+//    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+//        
+//        NSLog(@"-- bearer: %@", bearerToken);
+//        
+//        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
+//            NSLog(@"***** %@", statuses);
+//        } errorBlock:^(NSError *error) {
+//            NSLog(@"***** %@", error);
+//        }];
+//        
+//    } errorBlock:^(NSError *error) {
+//        NSLog(@"-- error: %@", error);
+//    }];
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {

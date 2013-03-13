@@ -65,6 +65,10 @@
                                               oauthToken:(NSString *)oauthToken
                                         oauthTokenSecret:(NSString *)oauthTokenSecret;
 
+// https://dev.twitter.com/docs/auth/application-only-auth
++ (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
+                                                   consumerSecret:(NSString *)consumerSecret;
+
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
            oauthCallback:(NSString *)oauthCallback
               errorBlock:(void(^)(NSError *error))errorBlock;

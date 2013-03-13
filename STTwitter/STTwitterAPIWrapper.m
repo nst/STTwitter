@@ -10,6 +10,7 @@
 #import "STTwitterOAuthOSX.h"
 #import "STTwitterOAuth.h"
 #import "STTwitterHTML.h"
+#import "STTwitterAppOnly.h"
 #import <Accounts/Accounts.h>
 
 @interface STTwitterAPIWrapper ()
@@ -85,6 +86,19 @@
                                   consumerSecret:consumerSecret
                                         username:nil
                                         password:nil];
+}
+
++ (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
+                                                   consumerSecret:(NSString *)consumerSecret {
+    
+    STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
+    
+    STTwitterAppOnly *appOnly = [[[STTwitterAppOnly alloc] init] autorelease];
+    appOnly.consumerKey = consumerKey;
+    appOnly.consumerSecret = consumerSecret;
+
+    twitter.oauth = appOnly;
+    return twitter;
 }
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
