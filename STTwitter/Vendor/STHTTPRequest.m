@@ -588,12 +588,6 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
 }
 
-
-
-//- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection {
-//    return NO;
-//}
-
 - (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     if (_uploadProgressBlock) {
         _uploadProgressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);

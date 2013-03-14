@@ -12,6 +12,10 @@
 
 #include <CommonCrypto/CommonHMAC.h>
 
+@interface NSData (Base64)
+- (NSString *)base64Encoding; // private API
+@end
+
 @interface STTwitterOAuth ()
 
 @property (nonatomic, retain) NSString *username;
@@ -590,7 +594,7 @@
     unsigned char buf[CC_SHA1_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA1, [key UTF8String], [key length], [self UTF8String], [self length], buf);
     NSData *data = [NSData dataWithBytes:buf length:CC_SHA1_DIGEST_LENGTH];
-    return [data base64EncodedString];
+    return [data base64Encoding];
 }
 
 - (NSDictionary *)parametersDictionary {
@@ -626,36 +630,7 @@
 - (NSString *)base64EncodedString {
 
 #if TARGET_OS_IPHONE
-
-    const uint8_t* input = (const uint8_t*)[self bytes];
-    NSInteger length = [self length];
-    
-    static char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    
-    NSMutableData* data = [NSMutableData dataWithLength:((length + 2) / 3) * 4];
-    uint8_t* output = (uint8_t*)data.mutableBytes;
-    
-    NSInteger i;
-    for (i=0; i < length; i += 3) {
-        NSInteger value = 0;
-        NSInteger j;
-        for (j = i; j < (i + 3); j++) {
-            value <<= 8;
-            
-            if (j < length) {
-                value |= (0xFF & input[j]);
-            }
-        }
-        
-        NSInteger theIndex = (i / 3) * 4;
-        output[theIndex + 0] =                    table[(value >> 18) & 0x3F];
-        output[theIndex + 1] =                    table[(value >> 12) & 0x3F];
-        output[theIndex + 2] = (i + 1) < length ? table[(value >> 6)  & 0x3F] : '=';
-        output[theIndex + 3] = (i + 2) < length ? table[(value >> 0)  & 0x3F] : '=';
-    }
-    
-    return [[[NSString alloc] initWithData:self encoding:NSASCIIStringEncoding] autorelease];
-
+    return [self base64Encoding]; // private API
 #else
 
     CFDataRef retval = NULL;

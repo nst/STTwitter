@@ -10,24 +10,11 @@
 #import "STHTTPRequest.h"
 #import "NSString+STTwitter.h"
 
-@interface NSString (STTwitterAppOnly)
-+ (NSString *)random32Characters;
-- (NSString *)signHmacSHA1WithKey:(NSString *)key;
-- (NSDictionary *)parametersDictionary;
-- (NSString *)urlEncodedString;
-@end
-
-@interface NSURL (STTwitterAppOnly)
-- (NSString *)normalizedForOauthSignatureString;
-- (NSArray *)getParametersDictionaries;
-@end
-
-@interface NSData (STTwitterAppOnly)
-- (NSString *)base64EncodedString;
+@interface NSData (Base64)
+- (NSString *)base64Encoding; // private API
 @end
 
 @implementation STTwitterAppOnly
-
 
 - (void)dealloc {
     [_consumerKey release];
@@ -111,7 +98,7 @@
     NSString *encodedConsumerSecret = [consumerSecret st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSString *bearerTokenCredentials = [NSString stringWithFormat:@"%@:%@", encodedConsumerToken, encodedConsumerSecret];
     NSData *data = [bearerTokenCredentials dataUsingEncoding:NSUTF8StringEncoding];
-    return [data base64EncodedString];
+    return [data base64Encoding];
 }
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
@@ -253,12 +240,13 @@
     
     if(useBasicAuth) {
         NSString *base64EncodedTokens = [[self class] base64EncodedBearerTokenCredentialsWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];
+        
         [r setHeaderWithName:@"Authorization" value:[NSString stringWithFormat:@"Basic %@", base64EncodedTokens]];
     } else if(_bearerToken) {
         [r setHeaderWithName:@"Authorization" value:[NSString stringWithFormat:@"Bearer %@", _bearerToken]];
         r.encodePOSTDictionary = YES;
     }
-        
+    
     [r startAsynchronous];
 }
 

@@ -68,7 +68,3 @@
 - (NSString *)normalizedForOauthSignatureString;
 - (NSArray *)getParametersDictionaries;
 @end
-
-@interface NSData (STTwitterOAuth)
-- (NSString *)base64EncodedString;
-@end
