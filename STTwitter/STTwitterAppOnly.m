@@ -22,14 +22,12 @@
 - (NSArray *)getParametersDictionaries;
 @end
 
-#if TARGET_OS_IPHONE
-#else
 @interface NSData (STTwitterAppOnly)
 - (NSString *)base64EncodedString;
 @end
-#endif
 
 @implementation STTwitterAppOnly
+
 
 - (void)dealloc {
     [_consumerKey release];
@@ -106,8 +104,6 @@
     // ...
     //
     // {"access_token":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA%2FAAAAAAAAAAAAAAAAAAAA%3DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"}
-    
-    
 }
 
 + (NSString *)base64EncodedBearerTokenCredentialsWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
