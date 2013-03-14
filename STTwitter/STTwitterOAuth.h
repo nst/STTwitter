@@ -9,11 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterOAuthProtocol.h"
 
-#if TARGET_OS_IPHONE
-#include "NSData+Base64.h"
-#else
-#endif
-
 /*
  Based on the following documentation
  http://oauth.net/core/1.0/
@@ -74,9 +69,6 @@
 - (NSArray *)getParametersDictionaries;
 @end
 
-#if TARGET_OS_IPHONE
-#else
 @interface NSData (STTwitterOAuth)
 - (NSString *)base64EncodedString;
 @end
-#endif
