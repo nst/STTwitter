@@ -8,6 +8,7 @@
 
 #import "STOAuthServiceTests.h"
 #import "STTwitterOAuth.h"
+#import "STTwitterAppOnly.h"
 
 #import "STHTTPRequestTestResponse.h"
 #import "STHTTPRequestTestResponseQueue.h"
@@ -195,6 +196,15 @@
     } errorBlock:^(NSError *error) {
         STAssertTrue(NO, @"-- error: %@", [error localizedDescription]);
     }];
+}
+
+- (void)testAppOnlyCredentialsEncoding {
+    
+    // https://dev.twitter.com/docs/auth/application-only-auth
+    
+    NSString *base64EncodedCredentials = [STTwitterAppOnly base64EncodedBearerTokenCredentialsWithConsumerKey:@"xvz1evFS4wEEPTGEFPHBog" consumerSecret:@"L8qq9PZyRg6ieKGEKhZolGC0vJWLw8iEJ88DRdyOg"];
+
+    STAssertEqualObjects(base64EncodedCredentials, @"eHZ6MWV2RlM0d0VFUFRHRUZQSEJvZzpMOHFxOVBaeVJnNmllS0dFS2hab2xHQzB2SldMdzhpRUo4OERSZHlPZw==", nil);
 }
 
 @end

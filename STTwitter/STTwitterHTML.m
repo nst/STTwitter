@@ -14,12 +14,12 @@
 
 - (void)getLoginForm:(void(^)(NSString *authenticityToken))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
-    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://api.twitter.com/intent/session"];
+    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://twitter.com/login"];
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
 
         NSError *error = nil;
-        NSString *token = [body firstMatchWithRegex:@"<input name=\"authenticity_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error];
+        NSString *token = [body firstMatchWithRegex:@"<input type=\"hidden\" name=\"authenticity_token\" value=\"(\\S+)\">" error:&error];
         
         if(token == nil) {
             errorBlock(error);
@@ -49,7 +49,7 @@
         return;
     }
     
-    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://api.twitter.com/intent/session"];
+    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://twitter.com/sessions"];
     
     r.POSTDictionary = @{@"authenticity_token" : authenticityToken,
                          @"session[username_or_email]" : username,

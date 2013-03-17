@@ -65,6 +65,10 @@
                                               oauthToken:(NSString *)oauthToken
                                         oauthTokenSecret:(NSString *)oauthTokenSecret;
 
+// https://dev.twitter.com/docs/auth/application-only-auth
++ (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
+                                                   consumerSecret:(NSString *)consumerSecret;
+
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
            oauthCallback:(NSString *)oauthCallback
               errorBlock:(void(^)(NSError *error))errorBlock;
@@ -75,11 +79,15 @@
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
 
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
 @property (nonatomic, retain) NSString *consumerName;
 @property (nonatomic, retain) NSString *userName; // available for osx, set after successful connection for STTwitterOAuth
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
+@property (nonatomic, readonly) NSString *bearerToken;
 
 - (void)profileImageFor:(NSString *)screenName
 				successBlock:(void(^)(NSImage *image))successBlock
@@ -399,6 +407,11 @@
 #pragma mark Trends
 
 #pragma mark Spam Reporting
+
+- (void)postReportSpamWithScreenName:(NSString *)screenName
+                            orUserID:(NSString *)userID
+                        successBlock:(void(^)(id userProfile))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark OAuth
 

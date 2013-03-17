@@ -42,15 +42,16 @@ Once you got the OAuth tokens, you can get your timeline and post a new status.
 
 ### OAuth Connection
 
-You can instantiate `STTwitterAPIWrapper` in two ways:
+You can instantiate `STTwitterAPIWrapper` in three ways:
 
 - use the Twitter account set in OS X Preferences
 - use a custom `consumer key` and `consumer secret` (three flavors)
   - get an URL, fetch a PIN, enter it in your app, get oauth access tokens  
   - set `username` and `password`, get oauth access tokens with XAuth, if the app is entitled to
   - set `oauth token` and `oauth token secret` directly
+- use the new [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication and get / use a "bearer token"
 
-So there are four cases altogether, hence the four methods:
+So there are five cases altogether, hence the four methods:
 
     + (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX;
 
@@ -66,6 +67,10 @@ So there are four cases altogether, hence the four methods:
                                              consumerSecret:(NSString *)consumerSecret
                                                  oauthToken:(NSString *)oauthToken
                                            oauthTokenSecret:(NSString *)oauthTokenSecret;
+                   
+    + (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
+                                                       consumerSecret:(NSString *)consumerSecret;
+                   
                                            
 ### OAuth Consumer Key / Consumer Secret
 
@@ -87,13 +92,15 @@ Your code only interacts with `STTwitterAPIWrapper`.
 
 `STTwitterOAuth` implements the OAuth procotol, specifically for Twitter.
 
-`STTwitterOAuth` relies on `STHTTPRequest` to POST and GET asynchronous HTTP requests.
+`STTwitterAppOnly` implements the [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) OAuth 2.0 authentication for Twitter.
+
+`STTwitterOAuth` and `STTwitterAppOnly` both relies on `STHTTPRequest` to POST and GET asynchronous HTTP requests.
 
 ![STTwitter](Art/architecture.png "STTwitter Architecture")
 
 ### BSD 3-Clause License
 
-Copyright (c) 2012, Nicolas Seriot
+Copyright (c) 2012-2013, Nicolas Seriot
 All rights reserved.
     
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

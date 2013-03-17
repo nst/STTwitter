@@ -30,6 +30,9 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 @property (nonatomic, retain) NSString *osxStatus;
 
+@property (nonatomic, retain) NSString *bearerToken;
+@property (nonatomic, retain) NSString *bearerStatus;
+
 @property (nonatomic, retain) NSString *oauthCallback;
 @property (nonatomic, retain) NSString *pin;
 @property (nonatomic, retain) NSString *pinStatus1;
@@ -47,6 +50,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) NSString *oauthTokenSecret;
 @property (nonatomic, retain) NSString *oauthTokensStatus;
 
+@property (nonatomic, retain) NSString *twitterTimelineUsername;
 @property (nonatomic, retain) NSString *twitterGetTimelineStatus;
 @property (nonatomic, retain) NSString *twitterPostTweetText;
 @property (nonatomic, retain) NSString *twitterPostTweetStatus;
@@ -73,6 +77,10 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 // OS X Twitter account
 - (IBAction)loginOSX:(id)sender;
+
+// Application Only
+- (IBAction)fetchBearer:(id)sender;
+- (IBAction)invalidateBearer:(id)sender;
 
 // Twitter
 - (IBAction)getTimeline:(id)sender;

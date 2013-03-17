@@ -12,6 +12,10 @@
 
 #include <CommonCrypto/CommonHMAC.h>
 
+@interface NSData (Base64)
+- (NSString *)base64Encoding; // private API
+@end
+
 @interface STTwitterOAuth ()
 
 @property (nonatomic, retain) NSString *username;
@@ -312,7 +316,12 @@
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
 
-    NSParameterAssert(pin);
+    if([pin length] == 0) {
+        errorBlock([NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"PIN needed"}]);
+        return;
+    }
+    
+    //NSParameterAssert(pin);
     
     NSDictionary *d = @{@"oauth_verifier" : pin};
     
@@ -488,7 +497,7 @@
         
         if(errorString) {
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-        } else if([r.responseString length] < 64) {
+        } else if(r.responseString && [r.responseString length] < 64) {
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
         }
         
@@ -579,8 +588,7 @@
     unsigned char buf[CC_SHA1_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA1, [key UTF8String], [key length], [self UTF8String], [self length], buf);
     NSData *data = [NSData dataWithBytes:buf length:CC_SHA1_DIGEST_LENGTH];
-    
-    return [data base64EncodedString];
+    return [data base64Encoding];
 }
 
 - (NSDictionary *)parametersDictionary {
@@ -610,14 +618,14 @@
 
 @end
 
-#if TARGET_OS_IPHONE
-// use NSData+Base64
-#else
-
 @implementation NSData (STTwitterOAuth)
 
 - (NSString *)base64EncodedString {
-    
+
+#if TARGET_OS_IPHONE
+    return [self base64Encoding]; // private API
+#else
+
     CFDataRef retval = NULL;
     SecTransformRef encodeTrans = SecEncodeTransformCreate(kSecBase64Encoding, NULL);
     if (encodeTrans == NULL) return nil;
@@ -634,8 +642,9 @@
     }
     
     return [s autorelease];
-}
+    
+#endif
 
+}
 @end
 
-#endif

@@ -34,6 +34,7 @@
     [_oauthTokenSecret release];
     [_oauthTokensStatus release];
     [_pinGuessLoginCompletionBlock release];
+    [_twitterTimelineUsername release];
     [_twitterGetTimelineStatus release];
     [_twitterPostTweetText release];
     [_twitterPostTweetStatus release];
@@ -41,6 +42,8 @@
     [_twitterPostMediaURL release];
     [_twitterPostLatitude release];
     [_twitterPostLongitude release];
+    [_bearerToken release];
+    [_bearerStatus release];
     [super dealloc];
 }
 
@@ -56,6 +59,23 @@
     self.twitterClients = ma;
     
     [_twitterClientsController setSelectedObjects:@[customClient]];
+    
+    /**/
+    
+//    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"" consumerSecret:@""];
+//    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+//        
+//        NSLog(@"-- bearer: %@", bearerToken);
+//        
+//        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
+//            NSLog(@"***** %@", statuses);
+//        } errorBlock:^(NSError *error) {
+//            NSLog(@"***** %@", error);
+//        }];
+//        
+//    } errorBlock:^(NSError *error) {
+//        NSLog(@"-- error: %@", error);
+//    }];
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
@@ -246,6 +266,34 @@
     }];
 }
 
+// Application Only
+- (IBAction)fetchBearer:(id)sender {
+
+    self.bearerStatus = @"-";
+
+    self.twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
+    
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+        self.bearerToken = [_twitter bearerToken];
+    } errorBlock:^(NSError *error) {
+        self.bearerToken = [_twitter bearerToken];
+        self.bearerStatus = [error localizedDescription];
+    }];
+}
+
+- (IBAction)invalidateBearer:(id)sender {
+
+    self.bearerStatus = @"-";
+    
+    [_twitter invalidateBearerTokenWithSuccessBlock:^() {
+        self.bearerToken = [_twitter bearerToken];
+        self.bearerStatus = @"ok";
+    } errorBlock:^(NSError *error) {
+        self.bearerToken = [_twitter bearerToken];
+        self.bearerStatus = [error localizedDescription];
+    }];
+}
+
 // OAuth - Tokens
 - (IBAction)loginTokens:(id)sender {
     
@@ -275,13 +323,21 @@
     self.twitterGetTimelineStatus = @"-";
     self.timelineStatuses = [NSArray array];
     
-    [_twitter getHomeTimelineSinceID:nil count:20 successBlock:^(NSArray *statuses) {
-        self.timelineStatuses = statuses;
-        
-        self.twitterGetTimelineStatus = @"OK";
-    } errorBlock:^(NSError *error) {
-        self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
-    }];
+    if([_twitterTimelineUsername length] > 0) {
+        [_twitter getUserTimelineWithScreenName:_twitterTimelineUsername successBlock:^(NSArray *statuses) {
+            self.timelineStatuses = statuses;
+            self.twitterGetTimelineStatus = @"OK";
+        } errorBlock:^(NSError *error) {
+            self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
+        }];
+    } else {
+        [_twitter getHomeTimelineSinceID:nil count:20 successBlock:^(NSArray *statuses) {
+            self.timelineStatuses = statuses;
+            self.twitterGetTimelineStatus = @"OK";
+        } errorBlock:^(NSError *error) {
+            self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
+        }];
+    }
 }
 
 - (IBAction)chooseMedia:(id)sender {

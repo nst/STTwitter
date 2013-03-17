@@ -10,6 +10,7 @@
 #import "STTwitterOAuthOSX.h"
 #import "STTwitterOAuth.h"
 #import "NSString+STTwitter.h"
+#import "STTwitterAppOnly.h"
 #import <Accounts/Accounts.h>
 
 @interface STTwitterAPIWrapper ()
@@ -87,6 +88,19 @@ id removeNull(id rootObject);
                                         password:nil];
 }
 
++ (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
+                                                   consumerSecret:(NSString *)consumerSecret {
+    
+    STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
+    
+    STTwitterAppOnly *appOnly = [[[STTwitterAppOnly alloc] init] autorelease];
+    appOnly.consumerKey = consumerKey;
+    appOnly.consumerSecret = consumerSecret;
+
+    twitter.oauth = appOnly;
+    return twitter;
+}
+
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
     [_oauth postTokenRequest:successBlock oauthCallback:oauthCallback errorBlock:errorBlock];
 }
@@ -118,12 +132,29 @@ id removeNull(id rootObject);
     }
 }
 
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+    if([self.oauth respondsToSelector:@selector(invalidateBearerTokenWithSuccessBlock:errorBlock:)]) {
+        [self.oauth invalidateBearerTokenWithSuccessBlock:successBlock errorBlock:errorBlock];
+    } else {
+        NSLog(@"-- self.oauth does not support tokens invalidation");
+    }
+}
+
 - (NSString *)oauthAccessTokenSecret {
     return [_oauth oauthAccessTokenSecret];
 }
 
 - (NSString *)oauthAccessToken {
     return [_oauth oauthAccessToken];
+}
+
+- (NSString *)bearerToken {
+    if([_oauth respondsToSelector:@selector(bearerToken)]) {
+        return [_oauth bearerToken];
+    }
+    
+    return nil;
 }
 
 - (NSString *)userName {
@@ -276,6 +307,12 @@ id removeNull(id rootObject);
                      lon:(NSString *)optionalLon
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    if(status == nil) {
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"cannot post empty status"}];
+        errorBlock(error);
+        return;
+    }
     
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"status"];
     
@@ -661,6 +698,28 @@ id removeNull(id rootObject);
 #pragma mark Trends
 
 #pragma mark Spam Reporting
+
+- (void)postReportSpamWithScreenName:(NSString *)screenName
+                            orUserID:(NSString *)userID
+                        successBlock:(void(^)(id userProfile))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(screenName || userID);
+    
+    NSDictionary *d = nil;
+    
+    if(screenName) {
+        d = @{ @"screen_name" : screenName };
+    } else {
+        d = @{ @"user_id" : userID };    
+    }
+        
+    [_oauth getResource:@"users/report_spam.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];    
+}
 
 #pragma mark OAuth
 
