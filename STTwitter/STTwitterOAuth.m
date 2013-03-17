@@ -329,7 +329,12 @@
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
 
-    NSParameterAssert(pin);
+    if([pin length] == 0) {
+        errorBlock([NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"PIN needed"}]);
+        return;
+    }
+    
+    //NSParameterAssert(pin);
     
     NSDictionary *d = @{@"oauth_verifier" : pin};
     

@@ -248,6 +248,7 @@
 #pragma mark Favorites
 
 // GET favorites/list
+// Returns the 20 most recent Tweets favorited by the authenticating or specified user.
 - (void)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -329,6 +330,11 @@
 #pragma mark Trends
 
 #pragma mark Spam Reporting
+
+- (void)postReportSpamWithScreenName:(NSString *)screenName
+                            orUserID:(NSString *)userID
+                        successBlock:(void(^)(id userProfile))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark OAuth
 

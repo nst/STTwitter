@@ -480,6 +480,28 @@
 
 #pragma mark Spam Reporting
 
+- (void)postReportSpamWithScreenName:(NSString *)screenName
+                            orUserID:(NSString *)userID
+                        successBlock:(void(^)(id userProfile))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(screenName || userID);
+    
+    NSDictionary *d = nil;
+    
+    if(screenName) {
+        d = @{ @"screen_name" : screenName };
+    } else {
+        d = @{ @"user_id" : userID };    
+    }
+        
+    [_oauth getResource:@"users/report_spam.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];    
+}
+
 #pragma mark OAuth
 
 #pragma mark Help
