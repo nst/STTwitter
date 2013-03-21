@@ -183,9 +183,9 @@
                 
                 [twitterHTML postLoginFormWithUsername:username password:password authenticityToken:authenticityToken successBlock:^{
                     
-                    [twitterHTML getAuthorizeFormAtURL:pinURL successBlock:^(NSString *authenticityToken, NSString *oauthToken) {
+                    [twitterHTML getAuthorizeFormAtURL:pinURL successBlock:^(NSString *newAuthenticityToken, NSString *newOauthToken) {
                         
-                        [twitterHTML postAuthorizeFormResultsAtURL:pinURL authenticityToken:authenticityToken oauthToken:oauthToken successBlock:^(NSString *PIN) {
+                        [twitterHTML postAuthorizeFormResultsAtURL:pinURL authenticityToken:newAuthenticityToken oauthToken:newOauthToken successBlock:^(NSString *PIN) {
                             
                             self.pin = PIN;
                             
@@ -331,14 +331,13 @@
             self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
     } else {
-        [_twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
+        [_twitter getHomeTimelineSinceID:nil count:20 successBlock:^(NSArray *statuses) {
             self.timelineStatuses = statuses;
             self.twitterGetTimelineStatus = @"OK";
         } errorBlock:^(NSError *error) {
             self.twitterGetTimelineStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
     }
-    
 }
 
 - (IBAction)chooseMedia:(id)sender {
@@ -380,7 +379,7 @@
     self.twitterPostTweetStatus = @"-";
     
     if(_twitterPostMediaURL) {
-        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil mediaURL:_twitterPostMediaURL placeID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
+        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil mediaURL:_twitterPostMediaURL placeID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSDictionary *status) {
             self.twitterPostTweetText = @"";
             self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;
@@ -390,7 +389,7 @@
             self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
     } else {
-        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil placeID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSString *response) {
+        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil placeID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSDictionary *response) {
             self.twitterPostTweetText = @"";
             self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;

@@ -87,229 +87,306 @@
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
-
 @property (nonatomic, readonly) NSString *bearerToken;
+
+- (void)profileImageFor:(NSString *)screenName
+				successBlock:(void(^)(NSImage *image))successBlock
+				  errorBlock:(void(^)(NSError *error))errorBlock;;
 
 #pragma mark Timelines
 
-// GET statuses/mentions_timeline
+//	GET		statuses/mentions_timeline
+//	Returns Tweets (*: mentions for the user)
+- (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
+							 count:(NSUInteger)optionalCount
+					  successBlock:(void(^)(NSArray *statuses))successBlock
+						errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET statuses/user_timeline
+//	GET		statuses/user_timeline
+//	Returns Tweets (*: tweets for the user)
+- (void)getUserTimelineWithScreenName:(NSString *)screenName
+								count:(NSUInteger)optionalCount
+                         successBlock:(void(^)(NSArray *statuses))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET statuses/home_timeline
+//	GET		statuses/home_timeline
+//	Returns Tweets (*: tweets from people the user follows)
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
-                         count:(NSString *)optionalCount
+                         count:(NSUInteger)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Tweets
 
-// GET statuses/retweets/:id
+//	GET		statuses/retweets/:id
 
-// GET statuses/show/:id
+//	GET		statuses/show/:id
 
-// POST statuses/destroy/:id
+//	POST	statuses/destroy/:id
+//	Returns Tweets (1: the destroyed tweet)
 - (void)postDestroyStatusWithID:(NSString *)statusID
-                   successBlock:(void(^)(NSString *response))successBlock
+                   successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-// POST statuses/update
+//	POST	statuses/update
+//	Returns Tweets (1: the new tweet)
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
                  placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
-            successBlock:(void(^)(NSString *response))successBlock
+            successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
-// POST statuses/retweet/:id
+//	POST	statuses/retweet/:id
+//	Returns Tweets (1: the retweeted tweet)
 - (void)postStatusRetweetWithID:(NSString *)statusID
-                   successBlock:(void(^)(NSString *response))successBlock
+                   successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 
-// POST statuses/update_with_media
+//	POST	statuses/update_with_media
+//	Returns Tweets (1: the new tweet)
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
                 mediaURL:(NSURL *)mediaURL
                  placeID:(NSString *)optionalPlaceID // wins over lat/lon
                      lat:(NSString *)optionalLat
                      lon:(NSString *)optionalLon
-            successBlock:(void(^)(NSString *response))successBlock
+            successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET statuses/oembed
+//	GET		statuses/oembed
 
 #pragma mark Search
 
-// GET search/tweets
+//	GET		search/tweets
+//	Returns Tweets (*: tweets matching the query)
 - (void)getSearchTweetsWithQuery:(NSString *)q
-                    successBlock:(void(^)(NSString *jsonString))successBlock
+                    successBlock:(void(^)(NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Streaming
 
-// POST statuses/filter
+//	POST	statuses/filter
 
-// GET statuses/sample
+//	GET		statuses/sample
 
-// GET statuses/firehose
+//	GET		statuses/firehose
 
-// GET user
+//	GET		user
 
-// GET site
+//	GET		site
 
 #pragma mark Direct Messages
 
-// GET direct_messages
+//	GET		direct_messages
+//	Returns Tweets (*: direct messages to the user)
+- (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
+						   count:(NSUInteger)optionalCount
+					successBlock:(void(^)(NSArray *statuses))successBlock
+					  errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET direct_messages/sent
+//	GET		direct_messages/sent
 
-// GET direct_messages/show
+//	GET		direct_messages/show
 
-// POST direct_messages/destroy
+//	POST	direct_messages/destroy
+//	Returns Tweets (1: the destroyed DM)
+- (void)postDestroyDirectMessageWithID:(NSString *)dmID
+						  successBlock:(void(^)(NSDictionary *dm))successBlock
+							errorBlock:(void(^)(NSError *error))errorBlock;
 
-// POST direct_messages/new
+//	POST	direct_messages/new
+//	Returns Tweets (1: the sent DM)
+- (void)postDirectMessage:(NSString *)status
+					   to:(NSString *)screenName
+             successBlock:(void(^)(NSDictionary *dm))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Friends & Followers
 
-// GET friends/ids
-
-// GET followers/ids
-- (void)getFollowersWithScreenName:(NSString *)screenName
-                      successBlock:(void(^)(NSString *jsonString))successBlock
+//	GET		friends/ids
+//	Returns Users (*: user IDs for followees)
+- (void)getFriendsIDsForScreenName:(NSString *)screenName
+				      successBlock:(void(^)(NSArray *friends))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET friendships/lookup
+//	GET		followers/ids
+//	Returns Users (*: user IDs for followers)
+- (void)getFollowersIDsForScreenName:(NSString *)screenName
+                        successBlock:(void(^)(NSArray *followers))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET friendships/incoming
+//	GET		friendships/lookup
 
-// GET friendships/outgoing
+//	GET		friendships/incoming
 
-// POST friendships/create
+//	GET		friendships/outgoing
 
-// POST friendships/destroy
+//	POST	friendships/create
+//	Returns Users (1: the followed user)
+- (void)postFollow:(NSString *)screenName
+	  successBlock:(void(^)(NSDictionary *user))successBlock
+		errorBlock:(void(^)(NSError *error))errorBlock;
 
-// POST friendships/update
+//	POST	friendships/destroy
+//	Returns Users (1: the unfollowed user)
+- (void)postUnfollow:(NSString *)screenName
+		successBlock:(void(^)(NSDictionary *user))successBlock
+		  errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET friendships/show
+//	POST	friendships/update
+//	Returns ?
+- (void)postUpdateNotifications:(BOOL)notify
+				  forScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSDictionary *relationship))successBlock
+					 errorBlock:(void(^)(NSError *error))errorBlock;
+
+//	GET		friendships/show
+
+//	GET		friends/list
+- (void)getFriendsForScreenName:(NSString *)screenName
+				   successBlock:(void(^)(NSArray *friends))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+//	GET		followers/list
+- (void)getFollowersForScreenName:(NSString *)screenName
+					 successBlock:(void(^)(NSArray *followers))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Users
 
-// GET account/settings
+//	GET		account/settings
 
-// GET account/verify_credentials
-
+//	GET		account/verify_credentials
+//	Returns Users (1: the user)
 - (void)getAccountVerifyCredentialsSkipStatus:(BOOL)skipStatus
-                                 successBlock:(void(^)(NSString *jsonString))successBlock
+                                 successBlock:(void(^)(NSDictionary *myInfo))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
-// POST account/settings
+//	POST	account/settings
 
-// POST account/update_delivery_device
+//	POST	account/update_delivery_device
 
-// POST account/update_profile
+//	POST	account/update_profile
+//	Returns Users (1: the user)
+- (void)postUpdateProfile:(NSDictionary *)profileData
+			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
+			   errorBlock:(void(^)(NSError *error))errorBlock;
 
-// POST account/update_profile_background_image
+//	POST	account/update_profile_background_image
 
-// POST account/update_profile_colors
+//	POST	account/update_profile_colors
 
-// POST account/update_profile_image
+//	POST	account/update_profile_image
+//	Returns Users (1: the user)
+- (void)postUpdateProfileImage:(NSImage *)newImage
+				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
+					errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET blocks/list
+//	GET		blocks/list
 
-// GET blocks/ids
+//	GET		blocks/ids
 
-// POST blocks/create
+//	POST	blocks/create
 
-// POST blocks/destroy
+//	POST	blocks/destroy
 
-// GET users/lookup
+//	GET		users/lookup
 
-// GET users/show
+//	GET		users/show
+//	Returns Users (1: detailed information for the user)
+- (void)getUserInformationFor:(NSString *)screenName
+				 successBlock:(void(^)(NSDictionary *user))successBlock
+				   errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET users/search
+//	GET		users/search
 
-// GET users/contributees
+//	GET		users/contributees
 
-// GET users/contributors
+//	GET		users/contributors
 
 #pragma mark Suggested Users
 
-// GET users/suggestions/:slug
+//	GET		users/suggestions/:slug
 
-// GET users/suggestions
+//	GET		users/suggestions
 
-// GET users/suggestions/:slug/members
+//	GET		users/suggestions/:slug/members
 
 #pragma mark Favorites
 
-// GET favorites/list
-// Returns the 20 most recent Tweets favorited by the authenticating or specified user.
+//	GET		favorites/list
+//	Returns Tweets (20: last 20 favorited tweets)
 - (void)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
-// POST favorites/destroy
-// POST favorites/create
+//	POST	favorites/destroy
+//	POST	favorites/create
+//	Returns Tweets (1: the (un)favorited tweet)
 - (void)postFavoriteState:(BOOL)favoriteState
               forStatusID:(NSString *)statusID
-             successBlock:(void(^)(NSString *jsonString))successBlock
+             successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Lists
 
-// GET lists/list
+//	GET		lists/list
 
-// GET lists/statuses
+//	GET		lists/statuses
 
-// POST lists/members/destroy
+//	POST	lists/members/destroy
 
-// GET lists/memberships
+//	GET		lists/memberships
 
-// GET lists/subscribers
+//	GET		lists/subscribers
 
-// POST lists/subscribers/create
+//	POST	lists/subscribers/create
 
-// GET lists/subscribers/show
+//	GET		lists/subscribers/show
 
-// POST lists/subscribers/destroy
+//	POST	lists/subscribers/destroy
 
-// POST lists/members/create_all
+//	POST	lists/members/create_all
 
-// GET lists/members/show
+//	GET		lists/members/show
 
-// GET lists/members
+//	GET		lists/members
 
-// POST lists/members/create
+//	POST	lists/members/create
 
-// POST lists/destroy
+//	POST	lists/destroy
 
-// POST lists/update
+//	POST	lists/update
 
-// POST lists/create
+//	POST	lists/create
 
-// GET lists/show
+//	GET		lists/show
 
-// GET lists/subscriptions
+//	GET		lists/subscriptions
 
-// POST lists/members/destroy_all
+//	POST	lists/members/destroy_all
 
 #pragma mark Saved Searches
 
 #pragma mark Places & Geo
 
-// GET geo/id/:place_id
+//	GET		geo/id/:place_id
 
-// GET geo/reverse_geocode
+//	GET		geo/reverse_geocode
+//	Returns Places (*: up to 20 places that match the lat/lon)
 - (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
                                longitude:(NSString *)longitude
                             successBlock:(void(^)(NSArray *places))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET geo/search
+//	GET		geo/search
+//	Returns Places (*: places that match the lat/lon)
 - (void)getGeoSearchWithLatitude:(NSString *)latitude
                        longitude:(NSString *)longitude
                     successBlock:(void(^)(NSArray *places))successBlock
@@ -323,9 +400,9 @@
                  successBlock:(void(^)(NSArray *places))successBlock
                    errorBlock:(void(^)(NSError *error))errorBlock;
 
-// GET geo/similar_places
+//	GET		geo/similar_places
 
-// POST geo/place
+//	POST	geo/place
 
 #pragma mark Trends
 
@@ -339,5 +416,10 @@
 #pragma mark OAuth
 
 #pragma mark Help
+//	GET		application/rate_limit_status
+//	Returns ?
+- (void)getRateLimitsForResources:(NSArray *)resources
+					 successBlock:(void(^)(NSDictionary *rateLimits))successBlock
+					   errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end
