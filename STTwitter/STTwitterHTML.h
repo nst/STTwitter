@@ -33,7 +33,3 @@
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end
-
-@interface NSString (STTwitterHTML)
-- (NSString *)firstMatchWithRegex:(NSString *)regex error:(NSError **)e;
-@end

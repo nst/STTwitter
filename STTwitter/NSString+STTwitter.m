@@ -22,11 +22,8 @@
     NSArray *matches = [re matchesInString:self options:0 range:NSMakeRange(0, [self length])];
     
     if([matches count] == 0) {
-        //NSLog(@"-- %@", self);
-        
         NSString *errorDescription = [NSString stringWithFormat:@"Can't find a match for regex: %@", regex];
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
-        if(e) *e = error;
+        if(e) *e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
         return nil;
     }
     

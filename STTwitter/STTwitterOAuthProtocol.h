@@ -16,12 +16,12 @@
 
 - (void)getResource:(NSString *)resource
          parameters:(NSDictionary *)params
-       successBlock:(void(^)(id json))successBlock
+       successBlock:(void(^)(id response))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postResource:(NSString *)resource
           parameters:(NSDictionary *)params
-        successBlock:(void(^)(id json))successBlock
+        successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock;
 
 @optional
