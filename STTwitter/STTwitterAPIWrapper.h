@@ -91,7 +91,7 @@
 
 - (void)profileImageFor:(NSString *)screenName
 				successBlock:(void(^)(NSImage *image))successBlock
-				  errorBlock:(void(^)(NSError *error))errorBlock;;
+				  errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Timelines
 

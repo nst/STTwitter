@@ -487,7 +487,7 @@ id removeNull(id rootObject);
 		errorBlock:(void(^)(NSError *error))errorBlock {
 	NSDictionary *d = @{@"screen_name" : screenName};
     
-    [_oauth getResource:@"friendships/create.json" parameters:d successBlock:^(id response) {
+    [_oauth postResource:@"friendships/create.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -499,7 +499,7 @@ id removeNull(id rootObject);
 		  errorBlock:(void(^)(NSError *error))errorBlock {
 	NSDictionary *d = @{@"screen_name" : screenName};
     
-    [_oauth getResource:@"friendships/destroy.json" parameters:d successBlock:^(id response) {
+    [_oauth postResource:@"friendships/destroy.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -513,7 +513,7 @@ id removeNull(id rootObject);
 	NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:screenName forKey:@"screen_name"];
 	d[@"device"] = notify ? @"true" : @"false";
     
-    [_oauth getResource:@"friendships/update.json" parameters:d successBlock:^(id response) {
+    [_oauth postResource:@"friendships/update.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
