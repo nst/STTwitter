@@ -481,7 +481,7 @@
         id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
-            errorBlock(jsonError);
+            successBlock(body); // response is not necessarily json, eg. https://api.twitter.com/oauth/request_token
             return;
         }
         
