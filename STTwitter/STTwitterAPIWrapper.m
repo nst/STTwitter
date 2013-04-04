@@ -52,7 +52,7 @@ id removeNull(id rootObject);
                                                 password:(NSString *)password {
     
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
-
+    
     twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerName:consumerName
                                                        consumerKey:consumerKey
                                                     consumerSecret:consumerSecret
@@ -68,7 +68,7 @@ id removeNull(id rootObject);
                                         oauthTokenSecret:(NSString *)oauthTokenSecret {
     
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
-
+    
     twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerName:consumerName
                                                        consumerKey:consumerKey
                                                     consumerSecret:consumerSecret
@@ -80,7 +80,7 @@ id removeNull(id rootObject);
 + (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
                                           consumerSecret:(NSString *)consumerSecret {
-
+    
     return [self twitterAPIWithOAuthConsumerName:consumerName
                                      consumerKey:consumerKey
                                   consumerSecret:consumerSecret
@@ -96,7 +96,7 @@ id removeNull(id rootObject);
     STTwitterAppOnly *appOnly = [[[STTwitterAppOnly alloc] init] autorelease];
     appOnly.consumerKey = consumerKey;
     appOnly.consumerSecret = consumerSecret;
-
+    
     twitter.oauth = appOnly;
     return twitter;
 }
@@ -180,16 +180,28 @@ id removeNull(id rootObject);
 /**/
 
 - (void)profileImageFor:(NSString *)screenName
-				successBlock:(void(^)(NSImage *image))successBlock
-				  errorBlock:(void(^)(NSError *error))errorBlock {
+
+#if TARGET_OS_IPHONE
+           successBlock:(void(^)(UIImage *image))successBlock
+#else
+           successBlock:(void(^)(NSImage *image))successBlock
+#endif
+
+             errorBlock:(void(^)(NSError *error))errorBlock {
 	[self getUserInformationFor:screenName
 				   successBlock:^(NSDictionary *response) {
 					   NSString *imageURL = [response objectForKey:@"profile_image_url"];
-				   
+                       
 					   NSURLRequest *imageRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:imageURL]];
 					   
 					   NSData *imageData = [NSURLConnection sendSynchronousRequest:imageRequest returningResponse:nil error:nil];
-					   successBlock([[NSImage alloc] initWithData:imageData]);
+                       
+#if TARGET_OS_IPHONE
+					   successBlock([[[UIImage alloc] initWithData:imageData] autorelease]);
+#else
+					   successBlock([[[NSImage alloc] initWithData:imageData] autorelease]);
+#endif
+                       
 				   } errorBlock:^(NSError *error) {
 					   errorBlock(error);
 				   }];
@@ -202,7 +214,7 @@ id removeNull(id rootObject);
 			  count:(NSUInteger)optionalCount
 	   successBlock:(void(^)(NSArray *statuses))successBlock
 		 errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSMutableDictionary *mparams = [params mutableCopy];
 	if (!mparams)
 		mparams = [NSMutableDictionary new];
@@ -266,7 +278,7 @@ id removeNull(id rootObject);
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     [self getUserTimelineWithScreenName:screenName count:NSNotFound successBlock:successBlock errorBlock:errorBlock];
 }
 
@@ -557,7 +569,11 @@ id removeNull(id rootObject);
     }];
 }
 
+#if TARGET_OS_IPHONE
+- (void)postUpdateProfileImage:(UIImage *)newImage
+#else
 - (void)postUpdateProfileImage:(NSImage *)newImage
+#endif
 				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
 					errorBlock:(void(^)(NSError *error))errorBlock {
 	NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:newImage forKey:@"image"];
@@ -621,10 +637,10 @@ id removeNull(id rootObject);
 #pragma mark Places & Geo
 
 - (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
-                            longitude:(NSString *)longitude
-                         successBlock:(void(^)(NSArray *places))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock {
-
+                               longitude:(NSString *)longitude
+                            successBlock:(void(^)(NSArray *places))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+    
     NSParameterAssert(latitude);
     NSParameterAssert(longitude);
     
@@ -660,8 +676,8 @@ id removeNull(id rootObject);
 }
 
 - (void)getGeoSearchWithIPAddress:(NSString *)ipAddress
-                    successBlock:(void(^)(NSArray *places))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock {
+                     successBlock:(void(^)(NSArray *places))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(ipAddress);
     
@@ -678,9 +694,9 @@ id removeNull(id rootObject);
 }
 
 - (void)getGeoSearchWithQuery:(NSString *)query
-                     successBlock:(void(^)(NSArray *places))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock {
-
+                 successBlock:(void(^)(NSArray *places))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock {
+    
     NSParameterAssert(query);
     
     NSDictionary *d = @{ @"query":query };
@@ -703,7 +719,7 @@ id removeNull(id rootObject);
                             orUserID:(NSString *)userID
                         successBlock:(void(^)(id userProfile))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(screenName || userID);
     
     NSDictionary *d = nil;
@@ -711,14 +727,14 @@ id removeNull(id rootObject);
     if(screenName) {
         d = @{ @"screen_name" : screenName };
     } else {
-        d = @{ @"user_id" : userID };    
+        d = @{ @"user_id" : userID };
     }
-        
+    
     [_oauth getResource:@"users/report_spam.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
-    }];    
+    }];
 }
 
 #pragma mark OAuth
