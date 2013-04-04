@@ -246,8 +246,8 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     // Set properties
     request.timeoutInterval = self.timeoutSeconds;
-//    if (self.requestMethod)
-//        request.HTTPMethod = self.requestMethod;
+    //    if (self.requestMethod)
+    //        request.HTTPMethod = self.requestMethod;
     
     // escape POST dictionary keys and values if needed
     if(_encodePOSTDictionary) {
@@ -420,6 +420,80 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     return [[[NSString alloc] initWithData:data encoding:encoding] autorelease];
 }
 
+#if DEBUG
+- (NSString *)curlDescription {
+    
+    NSMutableArray *ma = [NSMutableArray array];
+    [ma addObject:@"$ curl -i"];
+    
+    // -u usernane:password
+    
+    NSURLCredential *credential = [[self class] sessionAuthenticationCredentialsForURL:[self url]];
+    if(credential) {
+        NSString *s = [NSString stringWithFormat:@"-u \"%@:%@\"", credential.user, credential.password];
+        [ma addObject:s];
+    }
+    
+    // -d "k1=v1&k2=v2"                                             // POST, url encoded params
+    
+    if(_POSTDictionary) {
+        NSMutableArray *postParameters = [NSMutableArray array];
+        [_POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
+            [postParameters addObject:s];
+        }];
+        NSString *ss = [postParameters componentsJoinedByString:@"&"];
+        [ma addObject:ss];
+    }
+    
+    // -F "coolfiles=@fil1.gif;type=image/gif,fil2.txt,fil3.html"   // file upload
+    
+    if(_POSTFileParameter && _POSTFilePath) {
+        
+        NSString *s = [NSString stringWithFormat:@"%@@%@", _POSTFileParameter, _POSTFilePath];
+        
+        if(_POSTFileMimeType) {
+            s = [s stringByAppendingFormat:@";type=%@", _POSTFileMimeType];
+        }
+        
+        [ma addObject:[NSString stringWithFormat:@"-F \"%@\"", s]];
+    }
+    
+    // -b "name=Daniel;age=35"                                      // cookies
+    
+    NSArray *cookies = [self requestCookies];
+    
+    NSMutableArray *cookiesStrings = [NSMutableArray array];
+    for(NSHTTPCookie *cookie in cookies) {
+        NSString *s = [NSString stringWithFormat:@"%@=%@", [cookie name], [cookie value]];
+        [cookiesStrings addObject:s];
+    }
+    
+    if([cookiesStrings count] > 0) {
+        [ma addObject:[NSString stringWithFormat:@"-b \"%@\"", [cookiesStrings componentsJoinedByString:@";"]]];
+    }
+    
+    // -H "X-you-and-me: yes"                                       // extra headers
+    
+    NSMutableDictionary *headers = [[[self requestHeaders] mutableCopy] autorelease];
+    
+    [headers addEntriesFromDictionary:[self.request allHTTPHeaderFields]];
+    
+    NSMutableArray *headersStrings = [NSMutableArray array];
+    [headers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSString *s = [NSString stringWithFormat:@"-H \"%@: %@\"", key, obj];
+        [headersStrings addObject:s];
+    }];
+    
+    [ma addObject:[headersStrings componentsJoinedByString:@" \\\n"]];
+    
+    // url
+    
+    [ma addObject:[NSString stringWithFormat:@"\"%@\"", _url]];
+    
+    return [ma componentsJoinedByString:@" \\\n"];
+}
+
 - (void)logRequest:(NSURLRequest *)request {
     
     NSLog(@"--------------------------------------");
@@ -465,8 +539,11 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         NSLog(@"\t [%lu bytes]", [_POSTData length]);
     }
     
+    NSLog(@"--");
+    NSLog(@"%@", [self curlDescription]);
     NSLog(@"--------------------------------------");
 }
+#endif
 
 #pragma mark Start Request
 
