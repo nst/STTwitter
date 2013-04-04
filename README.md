@@ -2,6 +2,10 @@
 
 _A lightweight Objective-C wrapper for Twitter REST API 1.1_
 
+### Project News
+
+[2013-03] [Adium](http://adium.im/) developers have [chosen](http://permalink.gmane.org/gmane.network.instant-messaging.adium.devel/2332) to use STTwitter to handle Twitter connectivity in Adium, starting from version 1.5.7.
+
 ### Typical Usage
 
 ##### 1. Copy the `STTwitter` directory into your project
