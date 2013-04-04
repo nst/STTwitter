@@ -485,7 +485,9 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         [headersStrings addObject:s];
     }];
     
-    [ma addObject:[headersStrings componentsJoinedByString:@" \\\n"]];
+    if([headersStrings count] > 0) {
+        [ma addObject:[headersStrings componentsJoinedByString:@" \\\n"]];
+    }
     
     // url
     
