@@ -310,7 +310,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%lu", [body length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[body length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:body];
         
     } else if(_POSTDictionary != nil) { // may be empty (POST request without body)
@@ -343,11 +343,11 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         NSData *data = [s dataUsingEncoding:_postDataEncoding allowLossyConversion:YES];
         
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%lu", [data length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[data length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:data];
     } else if (_POSTData != nil) {
         [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%lu", [_POSTData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[_POSTData length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:_POSTData];
     }
     
@@ -443,7 +443,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
             [postParameters addObject:s];
         }];
         NSString *ss = [postParameters componentsJoinedByString:@"&"];
-        [ma addObject:ss];
+        [ma addObject:[NSString stringWithFormat:@"-d \"%@\"", ss]];
     }
     
     // -F "coolfiles=@fil1.gif;type=image/gif,fil2.txt,fil3.html"   // file upload
@@ -535,10 +535,10 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         NSLog(@"\t %@ = %@", _POSTFileParameter, _POSTFilePath);
     } else if (_POSTFileParameter && _POSTFileData) {
         NSLog(@"UPLOAD DATA");
-        NSLog(@"\t %@ = [%lu bytes]", _POSTFileParameter, [_POSTFileData length]);
+        NSLog(@"\t %@ = [%u bytes]", _POSTFileParameter, (unsigned int)[_POSTFileData length]);
     } else if (_POSTData) {
         NSLog(@"UPLOAD DATA");
-        NSLog(@"\t [%lu bytes]", [_POSTData length]);
+        NSLog(@"\t [%u bytes]", (unsigned int)[_POSTData length]);
     }
     
     NSLog(@"--");
