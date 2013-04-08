@@ -23,7 +23,7 @@
 //    // see http://rndc.or.id/wiki/index.php/(Ab)Using_Twitter_Client
 //    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:@"Tweetdeck"
 //                                                                            consumerKey:@"yT577ApRtZw51q4NPMPPOQ"
-//                                                                         consumerSecret:@"3neq3XqN5fO3obqwZoajavGFCUrC42ZfbrLXy5sCv8"
+//                                                                         consumerSecret:@""
 //                                                                               username:@"username"
 //                                                                               password:@"password"];
 //    
