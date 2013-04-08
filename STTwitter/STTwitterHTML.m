@@ -19,7 +19,8 @@
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
 
         NSError *error = nil;
-        NSString *token = [body firstMatchWithRegex:@"<input type=\"hidden\" value=\"(\\S+)\" name=\"authenticity_token\"/>" error:&error];        
+//        NSString *token = [body firstMatchWithRegex:@"<input type=\"hidden\" value=\"(\\S+)\" name=\"authenticity_token\"/>" error:&error];        
+        NSString *token = [body firstMatchWithRegex:@"formAuthenticityToken&quot;:&quot;(\\S+?)&quot" error:&error];
 
         if(token == nil) {
             errorBlock(error);
