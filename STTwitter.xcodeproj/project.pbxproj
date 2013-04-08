@@ -487,6 +487,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5A8D197E16DC59480082DD10 /* STTwitter-Tests.xcconfig */;
 			buildSettings = {
+				BUNDLE_LOADER = "";
+				MACH_O_TYPE = mh_bundle;
 			};
 			name = Debug;
 		};
@@ -494,6 +496,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5A8D197E16DC59480082DD10 /* STTwitter-Tests.xcconfig */;
 			buildSettings = {
+				BUNDLE_LOADER = "";
+				MACH_O_TYPE = mh_bundle;
 			};
 			name = Release;
 		};
