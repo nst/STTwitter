@@ -90,8 +90,12 @@
 @property (nonatomic, readonly) NSString *bearerToken;
 
 - (void)profileImageFor:(NSString *)screenName
-				successBlock:(void(^)(NSImage *image))successBlock
-				  errorBlock:(void(^)(NSError *error))errorBlock;;
+#if TARGET_OS_IPHONE
+           successBlock:(void(^)(UIImage *image))successBlock
+#else
+           successBlock:(void(^)(NSImage *image))successBlock
+#endif
+             errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Timelines
 
@@ -285,7 +289,11 @@
 
 //	POST	account/update_profile_image
 //	Returns Users (1: the user)
+#if TARGET_OS_IPHONE
+- (void)postUpdateProfileImage:(UIImage *)newImage
+#else
 - (void)postUpdateProfileImage:(NSImage *)newImage
+#endif
 				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
 					errorBlock:(void(^)(NSError *error))errorBlock;
 
