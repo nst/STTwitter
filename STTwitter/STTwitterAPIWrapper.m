@@ -456,13 +456,14 @@ id removeNull(id rootObject);
 	requestHandler = [[^(id response) {
 		if (response) {
 			[ids addObjectsFromArray:[response objectForKey:@"users"]];
-			cursor = [[response objectForKey:@"next_cursor_str"] copy];
+			[cursor release]; cursor = [[response objectForKey:@"next_cursor_str"] copy];
 			d[@"cursor"] = cursor;
 		}
 		
 		if ([cursor isEqualToString:@"0"]) {
 			successBlock(ids);
 			[ids release]; ids = nil;
+			[cursor release]; cursor = nil;
 		} else {
 			[_oauth getResource:resource parameters:d successBlock:requestHandler
 					 errorBlock:errorBlock];
