@@ -9,7 +9,11 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
 
 ### Typical Usage
 
-##### 1. Copy the `STTwitter` directory into your project
+##### 1a. Copy the `STTwitter` directory into your project OR
+##### 1b. If you're using CocoaPods, simply include the `STTwitter` pod in your project's podfile:
+	pod 'STTwitter'
+#####and then
+	pod install
 
 ##### 2. Import STTwitterAPIWrapper
 
@@ -34,6 +38,8 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
     } errorBlock:^(NSError *error) {
         // ...
     }];
+   
+	    
     
 ### Demo Project
 
