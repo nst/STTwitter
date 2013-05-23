@@ -62,7 +62,7 @@ You can instantiate `STTwitterAPIWrapper` in three ways:
   - set `oauth token` and `oauth token secret` directly
 - use the new [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication and get / use a "bearer token"
 
-So there are five cases altogether, hence the four methods:
+So there are five cases altogether, hence the five methods:
 
     + (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX;
 
