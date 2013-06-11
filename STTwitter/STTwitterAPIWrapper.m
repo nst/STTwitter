@@ -399,13 +399,17 @@ id removeNull(id rootObject);
 #pragma mark Search
 
 - (void)getSearchTweetsWithQuery:(NSString *)q
-					successBlock:(void(^)(NSArray *statuses))successBlock
+					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{@"q" : q};
     
     [_oauth getResource:@"search/tweets.json" parameters:d successBlock:^(id response) {
-        successBlock(response);
+        
+        NSDictionary *searchMetadata = [response valueForKey:@"search_metadata"];
+        NSArray *statuses = [response valueForKey:@"statuses"];
+        
+        successBlock(searchMetadata, statuses);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];

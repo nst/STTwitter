@@ -171,7 +171,7 @@
 //	GET		search/tweets
 //	Returns Tweets (*: tweets matching the query)
 - (void)getSearchTweetsWithQuery:(NSString *)q
-                    successBlock:(void(^)(NSArray *statuses))successBlock
+					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Streaming
