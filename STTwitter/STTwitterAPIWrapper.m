@@ -640,6 +640,181 @@ id removeNull(id rootObject);
 
 #pragma mark Lists
 
+//	GET		lists/list
+
+- (void)getListsSubscribedByUsername:(NSString *)username
+                            orUserID:(NSString *)userID
+                             reverse:(BOOL)reverse
+                        successBlock:(void(^)(NSArray *lists))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((username || userID), @"missing username or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(username) {
+        md[@"screen_name"] = username;
+    } else if (userID) {
+        md[@"user_id"] = userID;
+    }
+    
+    md[@"reverse"] = reverse ? @"true" : @"false";
+    
+    [_oauth getResource:@"lists/list.json" parameters:md successBlock:^(id response) {
+        
+        NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
+        
+        NSArray *lists = (NSArray *)response;
+        
+        successBlock(lists);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+//	GET		lists/statuses
+
+- (void)getListStatusesForListID:(NSString *)listID
+                 optionalSinceID:(NSString *)sinceID
+                   optionalMaxID:(NSString *)maxID
+                   optionalCount:(NSString *)count
+                 includeEntities:(BOOL)includeEntities
+                 includeRetweets:(BOOL)includeRetweets
+                    successBlock:(void(^)(NSArray *statuses))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(listID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
+    if(count) md[@"count"] = count;
+    
+    md[@"inclued_entities"] = includeEntities ? @"true" : @"false";
+    md[@"inclued_rts"] = includeRetweets ? @"true" : @"false";
+    
+    [_oauth getResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
+        
+        NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
+        
+        NSArray *statuses = (NSArray *)response;
+        
+        successBlock(statuses);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getListStatusesForSlug:(NSString *)slug
+               ownerScreenName:(NSString *)ownerScreenName
+                     orOwnerID:(NSString *)ownerID
+               optionalSinceID:(NSString *)sinceID
+                 optionalMaxID:(NSString *)maxID
+                 optionalCount:(NSString *)count
+               includeEntities:(BOOL)includeEntities
+               includeRetweets:(BOOL)includeRetweets
+                  successBlock:(void(^)(NSArray *statuses))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
+    if(count) md[@"count"] = count;
+    
+    md[@"inclued_entities"] = includeEntities ? @"true" : @"false";
+    md[@"inclued_rts"] = includeRetweets ? @"true" : @"false";
+    
+    [_oauth getResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
+        
+        NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
+        
+        NSArray *statuses = (NSArray *)response;
+        
+        successBlock(statuses);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+//	POST	lists/members/destroy
+
+- (void)postListMembersDestroyForListID:(NSString *)listID
+                           successBlock:(void(^)())successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSDictionary *d = @{ @"list_id" : listID };
+    
+    [_oauth postResource:@"lists/members/destroy" parameters:d successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postListMembersDestroyForSlug:(NSString *)slug
+                       optionalUserID:(NSString *)userID
+                   optionalScreenName:(NSString *)screenName
+              optionalOwnerScreenName:(NSString *)ownerScreenName
+                      optionalOwnerID:(NSString *)ownerID
+                         successBlock:(void(^)())successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    md[@"slug"] = slug;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerScreenName) md[@"owner_id"] = ownerID;
+
+    [_oauth postResource:@"lists/members/destroy" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+//	GET		lists/memberships
+
+//	GET		lists/subscribers
+
+//	POST	lists/subscribers/create
+
+//	GET		lists/subscribers/show
+
+//	POST	lists/subscribers/destroy
+
+//	POST	lists/members/create_all
+
+//	GET		lists/members/show
+
+//	GET		lists/members
+
+//	POST	lists/members/create
+
+//	POST	lists/destroy
+
+//	POST	lists/update
+
+//	POST	lists/create
+
+//	GET		lists/show
+
+//	GET		lists/subscriptions
+
+//	POST	lists/members/destroy_all
+
+//  GET     lists/ownerships
+
 #pragma mark Saved Searches
 
 #pragma mark Places & Geo
@@ -668,6 +843,7 @@ id removeNull(id rootObject);
                        longitude:(NSString *)longitude
                     successBlock:(void(^)(NSArray *places))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
+    
     NSParameterAssert(latitude);
     NSParameterAssert(longitude);
     

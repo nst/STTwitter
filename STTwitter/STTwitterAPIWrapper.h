@@ -346,9 +346,47 @@
 
 //	GET		lists/list
 
+- (void)getListsSubscribedByUsername:(NSString *)username
+                            orUserID:(NSString *)userID
+                             reverse:(BOOL)reverse
+                        successBlock:(void(^)(NSArray *lists))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	GET		lists/statuses
 
+- (void)getListStatusesForListID:(NSString *)listID
+                 optionalSinceID:(NSString *)sinceID
+                   optionalMaxID:(NSString *)maxID
+                   optionalCount:(NSString *)count
+                 includeEntities:(BOOL)includeEntities
+                 includeRetweets:(BOOL)includeRetweets
+                    successBlock:(void(^)(NSArray *statuses))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getListStatusesForSlug:(NSString *)slug
+               ownerScreenName:(NSString *)ownerScreenName
+                     orOwnerID:(NSString *)ownerID
+               optionalSinceID:(NSString *)sinceID
+                 optionalMaxID:(NSString *)maxID
+                 optionalCount:(NSString *)count
+               includeEntities:(BOOL)includeEntities
+               includeRetweets:(BOOL)includeRetweets
+                  successBlock:(void(^)(NSArray *statuses))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	POST	lists/members/destroy
+
+- (void)postListMembersDestroyForListID:(NSString *)listID
+                           successBlock:(void(^)())successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postListMembersDestroyForSlug:(NSString *)slug
+                       optionalUserID:(NSString *)userID
+                   optionalScreenName:(NSString *)screenName
+              optionalOwnerScreenName:(NSString *)ownerScreenName
+                      optionalOwnerID:(NSString *)ownerID
+                         successBlock:(void(^)())successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		lists/memberships
 
@@ -379,6 +417,8 @@
 //	GET		lists/subscriptions
 
 //	POST	lists/members/destroy_all
+
+//  GET     lists/ownerships
 
 #pragma mark Saved Searches
 
