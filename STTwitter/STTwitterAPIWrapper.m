@@ -799,6 +799,62 @@ id removeNull(id rootObject);
 
 //	GET		lists/members
 
+- (void)getListMembersForListID:(NSString *)listID
+                 optionalCursor:(NSString *)cursor
+                includeEntities:(BOOL)includeEntities
+                     skipStatus:(BOOL)skipStatus
+                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert(listID, @"listID is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"listID"] = listID;
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(skipStatus) md[@"skip_status"] = @"true";
+    
+    [_oauth getResource:@"lists/members.json" parameters:md successBlock:^(id response) {
+        NSArray *users = [response valueForKey:@"users"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getListMembersForSlug:(NSString *)slug
+              ownerScreenName:(NSString *)ownerScreenName
+                    orOwnerID:(NSString *)ownerID
+               optionalCursor:(NSString *)cursor
+              includeEntities:(BOOL)includeEntities
+                   skipStatus:(BOOL)skipStatus
+                 successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(slug != nil);
+    
+    NSAssert((ownerScreenName || ownerID), @"missing screenName or ownerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(skipStatus) md[@"skip_status"] = @"true";
+    
+    [_oauth getResource:@"lists/members.json" parameters:md successBlock:^(id response) {
+        NSArray *users = [response valueForKey:@"users"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 //	POST	lists/members/create
 
 //	POST	lists/destroy

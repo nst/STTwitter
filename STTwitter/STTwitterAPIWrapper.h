@@ -404,6 +404,22 @@
 
 //	GET		lists/members
 
+- (void)getListMembersForListID:(NSString *)listID
+                 optionalCursor:(NSString *)cursor
+                includeEntities:(BOOL)includeEntities
+                     skipStatus:(BOOL)skipStatus
+                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getListMembersForSlug:(NSString *)slug
+              ownerScreenName:(NSString *)screenName
+                    orOwnerID:(NSString *)ownerID
+               optionalCursor:(NSString *)cursor
+              includeEntities:(BOOL)includeEntities
+                   skipStatus:(BOOL)skipStatus
+                 successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	POST	lists/members/create
 
 //	POST	lists/destroy
