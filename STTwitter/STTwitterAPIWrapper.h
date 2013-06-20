@@ -109,6 +109,13 @@
 //	GET		statuses/user_timeline
 //	Returns Tweets (*: tweets for the user)
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
+                              sinceID:(NSString *)optionalSinceID
+                                maxID:(NSString *)optionalMaxID
+								count:(NSUInteger)optionalCount
+                         successBlock:(void(^)(NSArray *statuses))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getUserTimelineWithScreenName:(NSString *)screenName
 								count:(NSUInteger)optionalCount
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
