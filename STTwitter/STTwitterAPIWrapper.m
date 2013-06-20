@@ -242,10 +242,10 @@ id removeNull(id rootObject);
 			//Set the max_id so that we don't get statuses we've already received
 			NSString *lastID = [[statuses lastObject] objectForKey:@"id_str"];
 			if (lastID) {
-                NSDecimalNumber* maxID = [NSDecimalNumber decimalNumberWithString:lastID];
+                NSDecimalNumber* lastIDNumber = [NSDecimalNumber decimalNumberWithString:lastID];
                 
-				if ([maxID longLongValue] > 0) {
-					mparams[@"max_id"] = [@([maxID longLongValue] - 1) stringValue];
+				if ([lastIDNumber longLongValue] > 0) {
+					mparams[@"max_id"] = [@([lastIDNumber longLongValue] - 1) stringValue];
                 }
 			}
 			
