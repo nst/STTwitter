@@ -211,6 +211,7 @@ id removeNull(id rootObject);
 - (void)getTimeline:(NSString *)timeline
 	 withParameters:(NSDictionary *)params
 			sinceID:(NSString *)optionalSinceID
+              maxID:(NSString *)optionalMaxID
 			  count:(NSUInteger)optionalCount
 	   successBlock:(void(^)(NSArray *statuses))successBlock
 		 errorBlock:(void(^)(NSError *error))errorBlock {
@@ -221,6 +222,13 @@ id removeNull(id rootObject);
 	
     if (optionalSinceID) mparams[@"since_id"] = optionalSinceID;
 	if (optionalCount != NSNotFound) mparams[@"count"] = [@(optionalCount) stringValue];
+    if (optionalMaxID) {
+        NSDecimalNumber* maxID = [NSDecimalNumber decimalNumberWithString:optionalMaxID];
+        
+        if ( [maxID longLongValue] > 0 ) {
+            mparams[@"max_id"] = optionalMaxID;
+        }
+    }
 	
 	__block NSMutableArray *statuses = [NSMutableArray new];
 	__block void (^requestHandler)(id response) = nil;
@@ -234,9 +242,11 @@ id removeNull(id rootObject);
 			//Set the max_id so that we don't get statuses we've already received
 			NSString *lastID = [[statuses lastObject] objectForKey:@"id_str"];
 			if (lastID) {
-				NSUInteger maxID = [[NSDecimalNumber decimalNumberWithString:lastID] unsignedIntegerValue];
-				if (maxID != NSNotFound)
-					mparams[@"max_id"] = [@(--maxID) stringValue];
+                NSDecimalNumber* maxID = [NSDecimalNumber decimalNumberWithString:lastID];
+                
+				if ([maxID longLongValue] > 0) {
+					mparams[@"max_id"] = [@([maxID longLongValue] - 1) stringValue];
+                }
 			}
 			
 			[_oauth getResource:timeline parameters:mparams
@@ -260,21 +270,38 @@ id removeNull(id rootObject);
 	[self getTimeline:@"statuses/mentions_timeline.json"
 	   withParameters:nil
 			  sinceID:optionalSinceID
+                maxID:nil
 				count:optionalCount
 		 successBlock:successBlock
 		   errorBlock:errorBlock];
 }
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
+                              sinceID:(NSString *)optionalSinceID
+                                maxID:(NSString *)optionalMaxID
 								count:(NSUInteger)optionalCount
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
-	[self getTimeline:@"statuses/user_timeline.json"
+    [self getTimeline:@"statuses/user_timeline.json"
 	   withParameters:@{ @"screen_name" : screenName }
-			  sinceID:nil
+			  sinceID:optionalSinceID
+                maxID:optionalMaxID
 				count:optionalCount
 		 successBlock:successBlock
 		   errorBlock:errorBlock];
+}
+
+
+- (void)getUserTimelineWithScreenName:(NSString *)screenName
+								count:(NSUInteger)optionalCount
+                         successBlock:(void(^)(NSArray *statuses))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock {
+	[self getUserTimelineWithScreenName:screenName
+                                sinceID:nil
+                                  maxID:nil
+                                  count:optionalCount
+                           successBlock:successBlock
+                             errorBlock:errorBlock];
 }
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
@@ -291,6 +318,7 @@ id removeNull(id rootObject);
     [self getTimeline:@"statuses/home_timeline.json"
 	   withParameters:nil
 			  sinceID:optionalSinceID
+                maxID:nil
 				count:optionalCount
 		 successBlock:successBlock
 		   errorBlock:errorBlock];
