@@ -171,20 +171,20 @@
         
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-        NSLog(@"-- jsonError: %@", [jsonError localizedDescription]);
+        STLog(@"-- jsonError: %@", [jsonError localizedDescription]);
         
         if(json == nil) {
             errorBlock(jsonError);
             return;
         }
         
-        NSLog(@"** %@", json);
+        STLog(@"** %@", json);
         
         successBlock(json);
     };
     
     r.errorBlock = ^(NSError *error) {
-        NSLog(@"-- body: %@", r.responseString);
+        STLog(@"-- body: %@", r.responseString);
         errorBlock(error);
     };
     
@@ -225,7 +225,7 @@
         NSError *regexError = nil;
         NSString *errorString = [r.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
         if(errorString == nil) {
-            NSLog(@"-- regexError: %@", [regexError localizedDescription]);
+            STLog(@"-- regexError: %@", [regexError localizedDescription]);
         }
         
         if(errorString) {
@@ -234,7 +234,7 @@
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
         }
         
-        NSLog(@"-- body: %@", r.responseString);
+        STLog(@"-- body: %@", r.responseString);
         errorBlock(error);
     };
     
