@@ -372,7 +372,10 @@
         }];
     }
     
-    NSMutableArray *oauthAndPOSTandGETParameters = [[r.url getParametersDictionaries] mutableCopy];
+    // "In the HTTP request the parameters are URL encoded, but you should collect the raw values."
+    // https://dev.twitter.com/docs/auth/creating-signature
+    
+    NSMutableArray *oauthAndPOSTandGETParameters = [[r.url rawGetParametersDictionaries] mutableCopy];
     [oauthAndPOSTandGETParameters addObjectsFromArray:oauthAndPOSTParameters];
     
     NSString *signature = [[self class] oauthSignatureWithHTTPMethod:httpMethod
@@ -409,7 +412,7 @@
     NSMutableArray *parameters = [NSMutableArray array];
     
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
+        NSString *s = [NSString stringWithFormat:@"%@=%@", key, [obj st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         [parameters addObject:s];
     }];
     
@@ -542,7 +545,7 @@
 
 @implementation NSURL (STTwitterOAuth)
 
-- (NSArray *)getParametersDictionaries {
+- (NSArray *)rawGetParametersDictionaries {
     
     NSString *q = [self query];
     
@@ -554,7 +557,8 @@
         NSArray *kv = [s componentsSeparatedByString:@"="];
         NSAssert([kv count] == 2, @"-- bad length");
         if([kv count] != 2) continue;
-        [ma addObject:@{kv[0] : kv[1]}];
+        NSString *value = [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]; // use raw parameters for signing
+        [ma addObject:@{kv[0] : value}];
     }
     
     return ma;

@@ -66,5 +66,5 @@
 
 @interface NSURL (STTwitterOAuth)
 - (NSString *)normalizedForOauthSignatureString;
-- (NSArray *)getParametersDictionaries;
+- (NSArray *)rawGetParametersDictionaries;
 @end
