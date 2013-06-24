@@ -5,9 +5,3 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 #endif
-
-#ifdef DEBUG
-#   define STLog(...) NSLog(__VA_ARGS__)
-#else
-#   define STLog(...)
-#endif
