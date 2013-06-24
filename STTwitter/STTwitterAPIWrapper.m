@@ -12,6 +12,7 @@
 #import "NSString+STTwitter.h"
 #import "STTwitterAppOnly.h"
 #import <Accounts/Accounts.h>
+#import "STHTTPRequest.h"
 
 @interface STTwitterAPIWrapper ()
 id removeNull(id rootObject);
@@ -430,7 +431,7 @@ id removeNull(id rootObject);
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSDictionary *d = @{@"q" : q};
+    NSDictionary *d = @{@"q" : [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding]};
     
     [_oauth getResource:@"search/tweets.json" parameters:d successBlock:^(id response) {
         
