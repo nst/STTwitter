@@ -429,6 +429,16 @@
 
 //	POST	lists/members/create
 
+- (void)postListMemberCreateForListID:(NSString *)listID
+                               userID:(NSString *)userID
+                           screenName:(NSString *)screenName;
+
+- (void)postListMemberCreateForSlug:(NSString *)slug
+                    ownerScreenName:(NSString *)ownerScreenName
+                          orOwnerID:(NSString *)ownerID
+                             userID:(NSString *)userID
+                         screenName:(NSString *)screenName;
+
 //	POST	lists/destroy
 
 //	POST	lists/update
