@@ -412,7 +412,7 @@
     NSMutableArray *parameters = [NSMutableArray array];
     
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *s = [NSString stringWithFormat:@"%@=%@", key, [obj st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
         [parameters addObject:s];
     }];
     
