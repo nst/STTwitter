@@ -431,13 +431,17 @@
 
 - (void)postListMemberCreateForListID:(NSString *)listID
                                userID:(NSString *)userID
-                           screenName:(NSString *)screenName;
+                           screenName:(NSString *)screenName
+                         successBlock:(void(^)())successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListMemberCreateForSlug:(NSString *)slug
                     ownerScreenName:(NSString *)ownerScreenName
                           orOwnerID:(NSString *)ownerID
                              userID:(NSString *)userID
-                         screenName:(NSString *)screenName;
+                         screenName:(NSString *)screenName
+                       successBlock:(void(^)())successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/destroy
 
