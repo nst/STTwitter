@@ -218,8 +218,9 @@ id removeNull(id rootObject);
 		 errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *mparams = [params mutableCopy];
-	if (!mparams)
+	if (!mparams) {
 		mparams = [NSMutableDictionary new];
+    }
 	
     if (optionalSinceID) mparams[@"since_id"] = optionalSinceID;
 	if (optionalCount != NSNotFound) mparams[@"count"] = [@(optionalCount) stringValue];
@@ -231,37 +232,23 @@ id removeNull(id rootObject);
         }
     }
 	
-	__block NSMutableArray *statuses = [NSMutableArray new];
-	__block void (^requestHandler)(id response) = nil;
-	__block int count = 0;
-	requestHandler = [[^(id response) {
-		if ([response isKindOfClass:[NSArray class]] && [response count] > 0)
-			[statuses addObjectsFromArray:response];
-		
-		//Only send another request if we got close to the requested limit, up to a maximum of 4 api calls
-		if (count++ == 0 || (count <= 4 && [response count] >= (optionalCount - 5))) {
-			//Set the max_id so that we don't get statuses we've already received
-			NSString *lastID = [[statuses lastObject] objectForKey:@"id_str"];
-			if (lastID) {
-                NSDecimalNumber* lastIDNumber = [NSDecimalNumber decimalNumberWithString:lastID];
-                
-				if ([lastIDNumber longLongValue] > 0) {
-					mparams[@"max_id"] = [@([lastIDNumber longLongValue] - 1) stringValue];
-                }
-			}
-			
-			[_oauth getResource:timeline parameters:mparams
-				   successBlock:requestHandler
-					 errorBlock:errorBlock];
-		} else {
-			successBlock(removeNull(statuses));
-			[mparams release];
-			[statuses release];
-		}
-	} copy] autorelease];
-	
-	//Send the first request
-    requestHandler(nil);
+    [_oauth getResource:timeline
+             parameters:mparams
+           successBlock:^(id response) {
+               NSMutableArray *statuses = [NSMutableArray new];
+               if ([response isKindOfClass:[NSArray class]] && [response count] > 0) {
+                   [statuses addObjectsFromArray:response];
+               }
+              
+               if ( successBlock ) successBlock(removeNull(statuses));
+               [mparams release];
+               [statuses release];
+           }
+             errorBlock:^(NSError* error) {
+                 [mparams release];
+                 
+                 if ( errorBlock ) errorBlock(error);
+             }];
 }
 
 - (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
