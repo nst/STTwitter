@@ -9,6 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterOAuthProtocol.h"
 
+#if DEBUG
+#   define STLog(...) NSLog(__VA_ARGS__)
+#else
+#   define STLog(...)
+#endif
+
 @interface STTwitterAppOnly : NSObject <STTwitterOAuthProtocol> {
     
 }
