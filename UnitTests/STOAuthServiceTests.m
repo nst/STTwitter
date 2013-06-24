@@ -9,6 +9,7 @@
 #import "STOAuthServiceTests.h"
 #import "STTwitterOAuth.h"
 #import "STTwitterAppOnly.h"
+#import "STHTTPRequest.h"
 
 #import "STHTTPRequestTestResponse.h"
 #import "STHTTPRequestTestResponseQueue.h"
@@ -21,6 +22,7 @@
 + (NSString *)oauthHeaderValueWithParameters:(NSArray *)parameters;
 + (NSString *)signatureBaseStringWithHTTPMethod:(NSString *)httpMethod url:(NSURL *)url allParametersUnsorted:(NSArray *)parameters;
 + (NSString *)oauthSignatureWithHTTPMethod:(NSString *)httpMethod url:(NSURL *)url parameters:(NSArray *)parameters consumerSecret:(NSString *)consumerSecret tokenSecret:(NSString *)tokenSecret;
+- (void)signRequest:(STHTTPRequest *)r;
 
 @end
 
@@ -38,6 +40,33 @@
     // Tear-down code here.
     
     [super tearDown];
+}
+
+- (void)testSignatureWithEscapedGETParameters {
+    
+    STTwitterOAuth *os = [STTwitterOAuth twitterServiceWithConsumerName:@"test"
+                                                            consumerKey:@"6YBPrScvh1RIThrWYveGg"
+                                                         consumerSecret:@"SMO1vDYJGA0xfOe5RyWNjhTUS2sNqsa7ae15gOZnw" // fake
+                                                             oauthToken:@"1294332967-UsaIUBcsC4JcHv9TIYxk5ektsVIsAtClNV8KghP"
+                                                       oauthTokenSecret:@"PnfTbKJ59jjwmq9xzt2FmKhWP5tH1yGqnnikLVSOs"]; // fake
+    
+    os.testOauthNonce = @"0175D70F-85D7-4B5E-BAB1-F849229B";
+    os.testOauthTimestamp = @"1372078509";
+    
+    /**/
+    
+    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://api.twitter.com/1.1/search/tweets.json?q=New%20York"];
+    STAssertNotNil(r, nil);
+    
+    [os signRequest:r];
+    STAssertNotNil(r.requestHeaders, nil);
+    
+    NSString *expectedAuthorizationHeader = @"OAuth oauth_consumer_key=\"6YBPrScvh1RIThrWYveGg\", oauth_nonce=\"0175D70F-85D7-4B5E-BAB1-F849229B\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"1372078509\", oauth_version=\"1.0\", oauth_token=\"1294332967-UsaIUBcsC4JcHv9TIYxk5ektsVIsAtClNV8KghP\", oauth_signature=\"A7c8SqW4XudyG%2BDbC5mKlsG4%2FMs%3D\"";
+    
+    NSLog(@"-- expectedAuthorizationHeader: %@", expectedAuthorizationHeader);
+    NSLog(@"-- r.requestHeaders[\"Authorization\"]: %@", r.requestHeaders[@"Authorization"]);
+    
+    STAssertEqualObjects(r.requestHeaders[@"Authorization"], expectedAuthorizationHeader, nil);
 }
 
 - (void)testURLEncodedString {
@@ -149,28 +178,6 @@
     
     STAssertEqualObjects(s1, s2, @"");
 }
-
-//- (void)testSignatureValue2 {
-//
-//    // http://code.google.com/p/twitter-api/issues/detail?id=433
-//
-//    NSString *baseString = @"POST&http%3A%2F%2Ftwitter.com%2Fstatuses%2Fupdate.json&oauth_consumer_key%3DrNc2JuVC6NxELft2jXUQ%26oauth_nonce%3DEA158DE861F264FDBA6C796F21B4F3AA80%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1239637280%26oauth_token%3D6631-AHu8rT9oznR3uUwHF7J99yU14s17D0vxR0OyKdRX54%26oauth_version%3D1.0%26source%3D23%26status%3Danother%2520test%252C%2520sorry";
-//
-//    NSString *signature = [baseString signHmacSHA1WithKey:@"kd94hf93k423kf44&pfkkdhi9sl3r4s00"];
-//
-//    STAssertEqualObjects(@"wkSFmqWRwBreCjgzLJFEew", signature, @"bad signature");
-//}
-//
-//- (void)testSignatureValue3 {
-//
-//    // http://code.google.com/p/twitter-api/issues/detail?id=433
-//
-//    NSString *baseString = @"POST&http%3A%2F%2Ftwitter.com%2Fstatuses%2Fupdate.xml&oauth_consumer_key%3DwkSFmqWRwBreCjgzLJFEew%26oauth_nonce%3DH8hGlJfY9c9emMYQ%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1239641507%26oauth_token%3D16290455-6aGM6TIkG8wfb19twWPQn97M0VvFG4ZhMV9UOfkBk%26oauth_version%3D1.0%26status%3Dtest%2520status";
-//
-//    NSString *signature = [baseString signHmacSHA1WithKey:@"wkSFmqWRwBreCjgzLJFEew"];
-//
-//    STAssertEqualObjects(@"Aggf4qH9CiHV8O%2FogPZZ0TvtTMw%3D", signature, @"bad signature");
-//}
 
 - (void)testXauth {
     
