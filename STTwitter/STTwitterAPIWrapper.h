@@ -159,7 +159,6 @@
                    successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-
 //	POST	statuses/update_with_media
 //	Returns Tweets (1: the new tweet)
 - (void)postStatusUpdate:(NSString *)status
@@ -172,6 +171,13 @@
               errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		statuses/oembed
+
+//  GET     statuses/retweeters/ids
+- (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
+                             optionalCursor:(NSString *)cursor
+                         returnIDsAsStrings:(BOOL)returnIDsAsStrings
+                               successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Search
 

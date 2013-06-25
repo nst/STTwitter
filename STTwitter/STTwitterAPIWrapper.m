@@ -470,6 +470,39 @@ id removeNull(id rootObject);
     }];
 }
 
+- (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
+                             optionalCursor:(NSString *)cursor
+                         returnIDsAsStrings:(BOOL)returnIDsAsStrings
+                               successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(statusID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    md[@"id"] = statusID;
+    if(cursor) md[@"cursor"] = cursor;
+    if(returnIDsAsStrings) md[@"stringify_ids"] = @"true";
+    
+    [_oauth getResource:@"statuses/retweeters/ids.json" parameters:md successBlock:^(id response) {
+        
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        NSArray *ids = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            previousCursor = response[@"previous_cursor_str"];
+            nextCursor = response[@"next_cursor_str"];
+            ids = response[@"ids"];
+        }
+        
+        successBlock(ids, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+    
+}
+
 #pragma mark Search
 
 - (void)getSearchTweetsWithQuery:(NSString *)q
