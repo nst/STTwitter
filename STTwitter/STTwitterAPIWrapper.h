@@ -26,17 +26,6 @@
  */
 
 /*
- FWIW Twitter.app for iOS 5 implements this:
- https://api.twitter.com/1/statuses/update.json
- https://upload.twitter.com/1/statuses/update_with_media.json
- https://api.twitter.com/1/geo/nearby_places.json
- https://api.twitter.com/1/friendships/show.json
- https://api.twitter.com/1/statuses/friends.json
- https://api.twitter.com/1/help/configuration.json
- https://api.twitter.com/1/apps/configuration.json
- https://api.twitter.com/1/users/show.json
- https://api.twitter.com/1/account/verify_credentials.json
- 
  Tweet fields contents
  https://dev.twitter.com/docs/platform-objects/tweets
  https://dev.twitter.com/blog/new-withheld-content-fields-api-responses
@@ -134,8 +123,19 @@
 #pragma mark Tweets
 
 //	GET		statuses/retweets/:id
+- (void)getStatusesRetweetsForID:(NSString *)statusID
+                   optionalCount:(NSString *)count
+                        trimUser:(BOOL)trimUser
+                    successBlock:(void(^)(NSArray *statuses))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		statuses/show/:id
+- (void)getStatusesShowID:(NSString *)statusID
+                 trimUser:(BOOL)trimUser
+         includeMyRetweet:(BOOL)includeMyRetweet
+          includeEntities:(BOOL)includeEntities
+             successBlock:(void(^)(NSDictionary *status))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	statuses/destroy/:id
 //	Returns Tweets (1: the destroyed tweet)
