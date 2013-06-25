@@ -402,6 +402,27 @@
     [self signRequest:r isMediaUpload:NO];
 }
 
+- (NSError *)errorFromResponseData:(NSData *)responseData {
+    // assume error message such as: {"errors":[{"message":"Bad Authentication data","code":215}]}
+    
+    NSError *jsonError = nil;
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+    if([json isKindOfClass:[NSDictionary class]]) {
+        NSArray *errors = [json valueForKey:@"errors"];
+        if([errors isKindOfClass:[NSArray class]] && [errors count] > 0) {
+            NSDictionary *errorDictionary = [errors lastObject];
+            if([errorDictionary isKindOfClass:[NSDictionary class]]) {
+                NSString *message = errorDictionary[@"message"];
+                NSInteger *code = [errorDictionary[@"code"] integerValue];
+                NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:@{NSLocalizedDescriptionKey : message}];
+                return error;
+            }
+        }
+    }
+    
+    return nil;
+}
+
 - (void)getResource:(NSString *)resource
          parameters:(NSDictionary *)params
        successBlock:(void(^)(id response))successBlock
@@ -440,6 +461,14 @@
     };
     
     r.errorBlock = ^(NSError *error) {
+
+        NSError *e = [self errorFromResponseData:r.responseData];
+        
+        if(e) {
+            errorBlock(e);
+            return;
+        }
+        
         errorBlock(error);
     };
     
@@ -499,9 +528,18 @@
         NSString *errorString = [r.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
         
         if(errorString) {
-            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-        } else if(r.responseString && [r.responseString length] < 64) {
-            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
+            NSError *e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
+            errorBlock(e);
+            return;
+        }
+        
+        /**/
+        
+        NSError *e = [self errorFromResponseData:r.responseData];
+        
+        if(e) {
+            errorBlock(e);
+            return;
         }
         
         errorBlock(error);
