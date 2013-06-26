@@ -1478,6 +1478,25 @@ id removeNull(id rootObject);
 
 //	POST	lists/create
 
+- (void)postListsCreateWithName:(NSString *)name
+                      isPrivate:(BOOL)isPrivate
+            optionalDescription:(NSString *)description
+                   successBlock:(void(^)(NSDictionary *list))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+    NSParameterAssert(name);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"name"] = [name st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    md[@"mode"] = isPrivate ? @"private" : @"public";
+    if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [_oauth postResource:@"lists/create.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 //	GET		lists/show
 
 - (void)getListsShowListID:(NSString *)listID
@@ -1522,9 +1541,9 @@ id removeNull(id rootObject);
 //	POST	lists/members/destroy_all
 
 - (void)postListsMembersDestroyAllForListID:(NSString *)listID
-                                     userIDs:(NSArray *)userIDs // array of strings
-                                orScreenNames:(NSArray *)screenNames // array of strings
-                              successBlock:(void(^)())successBlock
+                                    userIDs:(NSArray *)userIDs // array of strings
+                              orScreenNames:(NSArray *)screenNames // array of strings
+                               successBlock:(void(^)())successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -1547,12 +1566,12 @@ id removeNull(id rootObject);
 }
 
 - (void)postListsMembersDestroyAllForSlug:(NSString *)slug
-                         ownerScreenName:(NSString *)ownerScreenName
-                               orOwnerID:(NSString *)ownerID
+                          ownerScreenName:(NSString *)ownerScreenName
+                                orOwnerID:(NSString *)ownerID
                                   userIDs:(NSArray *)userIDs // array of strings
                             orScreenNames:(NSArray *)screenNames // array of strings
-                            successBlock:(void(^)())successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock {
+                             successBlock:(void(^)())successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");

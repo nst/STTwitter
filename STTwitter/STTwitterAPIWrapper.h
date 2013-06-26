@@ -581,8 +581,30 @@
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/update
+/*
+ Updates the specified list. The authenticated user must own the list to be able to update it.
+ */
+
+//- (void)postListsUpdateForListID:(NSString *)listID
+//                     successBlock:(void(^)())successBlock
+//                       errorBlock:(void(^)(NSError *error))errorBlock;
+//
+//- (void)postListsUpdateForSlug:(NSString *)slug
+//                ownerScreenName:(NSString *)ownerScreenName
+//                      orOwnerID:(NSString *)ownerID
+//                   successBlock:(void(^)())successBlock
+//                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/create
+/*
+ Creates a new list for the authenticated user. Note that you can't create more than 20 lists per account.
+ */
+
+- (void)postListsCreateWithName:(NSString *)name
+                      isPrivate:(BOOL)isPrivate
+            optionalDescription:(NSString *)description
+                   successBlock:(void(^)(NSDictionary *list))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		lists/show
 
