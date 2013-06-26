@@ -389,19 +389,35 @@
 
 //	POST	lists/members/destroy
 
-- (void)postListMembersDestroyForListID:(NSString *)listID
-                           successBlock:(void(^)())successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postListsMembersDestroyForListID:(NSString *)listID
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListMembersDestroyForSlug:(NSString *)slug
-                       optionalUserID:(NSString *)userID
-                   optionalScreenName:(NSString *)screenName
-              optionalOwnerScreenName:(NSString *)ownerScreenName
-                      optionalOwnerID:(NSString *)ownerID
-                         successBlock:(void(^)())successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postListsMembersDestroyForSlug:(NSString *)slug
+                        optionalUserID:(NSString *)userID
+                    optionalScreenName:(NSString *)screenName
+               optionalOwnerScreenName:(NSString *)ownerScreenName
+                       optionalOwnerID:(NSString *)ownerID
+                          successBlock:(void(^)())successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		lists/subscribers
+
+- (void)getListsSubscribersForSlug:(NSString *)slug
+                   ownerScreenName:(NSString *)ownerScreenName
+                         orOwnerID:(NSString *)ownerID
+                    optionalCursor:(NSString *)cursor
+                   includeEntities:(BOOL)includeEntities
+                        skipStatus:(BOOL)skipStatus
+                      successBlock:(void(^)())successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getListsSubscribersForListID:(NSString *)listID
+                      optionalCursor:(NSString *)cursor
+                     includeEntities:(BOOL)includeEntities
+                          skipStatus:(BOOL)skipStatus
+                        successBlock:(void(^)())successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/subscribers/create
 

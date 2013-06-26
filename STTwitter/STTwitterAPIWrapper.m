@@ -503,12 +503,12 @@ id removeNull(id rootObject);
     
 }
 
-- (void)getListsgetListsSubscriptionsForUserIDForUserID:(NSString *)userID
-                                           orScreenName:(NSString *)screenName
-                                          optionalCount:(NSString *)count
-                                         optionalCursor:(NSString *)cursor
-                                           successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
-                                             errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getListsSubscriptionsForUserID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                         optionalCount:(NSString *)count
+                        optionalCursor:(NSString *)cursor
+                          successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert((userID || screenName), @"missing userID or screenName");
     
@@ -914,9 +914,9 @@ id removeNull(id rootObject);
 
 //	POST	lists/members/destroy
 
-- (void)postListMembersDestroyForListID:(NSString *)listID
-                           successBlock:(void(^)())successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postListsMembersDestroyForListID:(NSString *)listID
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{ @"list_id" : listID };
     
@@ -927,13 +927,13 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)postListMembersDestroyForSlug:(NSString *)slug
-                       optionalUserID:(NSString *)userID
-                   optionalScreenName:(NSString *)screenName
-              optionalOwnerScreenName:(NSString *)ownerScreenName
-                      optionalOwnerID:(NSString *)ownerID
-                         successBlock:(void(^)())successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postListsMembersDestroyForSlug:(NSString *)slug
+                        optionalUserID:(NSString *)userID
+                    optionalScreenName:(NSString *)screenName
+               optionalOwnerScreenName:(NSString *)ownerScreenName
+                       optionalOwnerID:(NSString *)ownerID
+                          successBlock:(void(^)())successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
     
@@ -952,9 +952,66 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/memberships
-
 //	GET		lists/subscribers
+
+- (void)getListsSubscribersForSlug:(NSString *)slug
+                   ownerScreenName:(NSString *)ownerScreenName
+                         orOwnerID:(NSString *)ownerID
+                    optionalCursor:(NSString *)cursor
+                   includeEntities:(BOOL)includeEntities
+                        skipStatus:(BOOL)skipStatus
+                      successBlock:(void(^)())successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(slug);
+    
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or onwerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) {
+        md[@"owner_screen_name"] = ownerScreenName;
+    } else if (ownerID) {
+        md[@"owner_id"] = ownerID;
+    }
+    if(cursor) md[@"cursor"] = cursor;
+    if(includeEntities) md[@"include_entities"] = @"true";
+    if(skipStatus) md[@"skip_status"] = @"true";
+    
+    [_oauth getResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
+        NSArray *users = [response valueForKey:@"users"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getListsSubscribersForListID:(NSString *)listID
+                      optionalCursor:(NSString *)cursor
+                     includeEntities:(BOOL)includeEntities
+                          skipStatus:(BOOL)skipStatus
+                        successBlock:(void(^)())successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(listID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"listID"] = listID;
+    if(cursor) md[@"cursor"] = cursor;
+    if(includeEntities) md[@"include_entities"] = @"true";
+    if(skipStatus) md[@"skip_status"] = @"true";
+    
+    [_oauth getResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
+        NSArray *users = [response valueForKey:@"users"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 //	POST	lists/subscribers/create
 
@@ -979,8 +1036,8 @@ id removeNull(id rootObject);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"listID"] = listID;
-    md[@"cursor"] = cursor ? cursor : @"-1";
-    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(cursor) md[@"cursor"] = cursor;
+    if(includeEntities) md[@"include_entities"] = @"true";
     if(skipStatus) md[@"skip_status"] = @"true";
     
     [_oauth getResource:@"lists/members.json" parameters:md successBlock:^(id response) {
