@@ -1085,6 +1085,43 @@ id removeNull(id rootObject);
 
 //	POST	lists/subscribers/create
 
+- (void)postListSubscribersCreateForListID:(NSString *)listID
+                              successBlock:(void(^)())successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(listID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    
+    [_oauth postResource:@"lists/subscribers/create.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postListSubscribersCreateForSlug:(NSString *)slug
+                         ownerScreenName:(NSString *)ownerScreenName
+                               orOwnerID:(NSString *)ownerID
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    
+    [_oauth postResource:@"lists/subscribers/create.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 //	GET		lists/subscribers/show
 
 //	POST	lists/subscribers/destroy
@@ -1159,9 +1196,9 @@ id removeNull(id rootObject);
                          successBlock:(void(^)())successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSParameterAssert(listID != nil);
-    NSParameterAssert(userID != nil);
-    NSParameterAssert(screenName != nil);
+    NSParameterAssert(listID);
+    NSParameterAssert(userID);
+    NSParameterAssert(screenName);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
@@ -1183,7 +1220,7 @@ id removeNull(id rootObject);
                        successBlock:(void(^)())successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSParameterAssert(slug != nil);
+    NSParameterAssert(slug);
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];

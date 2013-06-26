@@ -445,6 +445,18 @@
 
 //	POST	lists/subscribers/create
 
+// Subscribes the authenticated user to the specified list.
+
+- (void)postListSubscribersCreateForListID:(NSString *)listID
+                              successBlock:(void(^)())successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postListSubscribersCreateForSlug:(NSString *)slug
+                         ownerScreenName:(NSString *)ownerScreenName
+                               orOwnerID:(NSString *)ownerID
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	GET		lists/subscribers/show
 
 //	POST	lists/subscribers/destroy
