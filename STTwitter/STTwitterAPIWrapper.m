@@ -1277,6 +1277,57 @@ id removeNull(id rootObject);
 
 //	GET		lists/members/show
 
+- (void)getListsMembersShowForListID:(NSString *)listID
+                              userID:(NSString *)userID
+                          screenName:(NSString *)screenName
+                     includeEntities:(BOOL)includeEntities
+                          skipStatus:(BOOL)skipStatus
+                        successBlock:(void(^)(NSDictionary *user))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert(listID, @"listID is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"listID"] = listID;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(includeEntities) md[@"include_entities"] = @"true";
+    if(skipStatus) md[@"skip_status"] = @"true";
+    
+    [_oauth getResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getListsMembersShowForSlug:(NSString *)slug
+                   ownerScreenName:(NSString *)ownerScreenName
+                         orOwnerID:(NSString *)ownerID
+                            userID:(NSString *)userID
+                        screenName:(NSString *)screenName
+                   includeEntities:(BOOL)includeEntities
+                        skipStatus:(BOOL)skipStatus
+                      successBlock:(void(^)(NSDictionary *user))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(includeEntities) md[@"include_entities"] = @"true";
+    if(skipStatus) md[@"skip_status"] = @"true";
+    
+    [_oauth getResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 //	GET		lists/members
 
 - (void)getListMembersForListID:(NSString *)listID
@@ -1313,9 +1364,9 @@ id removeNull(id rootObject);
                  successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                    errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSParameterAssert(slug != nil);
+    NSParameterAssert(slug);
     
-    NSAssert((ownerScreenName || ownerID), @"missing screenName or ownerID");
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"slug"] = slug;

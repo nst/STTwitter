@@ -512,6 +512,27 @@
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		lists/members/show
+/*
+ Check if the specified user is a member of the specified list.
+ */
+
+- (void)getListsMembersShowForListID:(NSString *)listID
+                              userID:(NSString *)userID
+                          screenName:(NSString *)screenName
+                     includeEntities:(BOOL)includeEntities
+                          skipStatus:(BOOL)skipStatus
+                        successBlock:(void(^)(NSDictionary *user))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getListsMembersShowForSlug:(NSString *)slug
+                   ownerScreenName:(NSString *)ownerScreenName
+                         orOwnerID:(NSString *)ownerID
+                            userID:(NSString *)userID
+                        screenName:(NSString *)screenName
+                   includeEntities:(BOOL)includeEntities
+                        skipStatus:(BOOL)skipStatus
+                      successBlock:(void(^)(NSDictionary *user))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		lists/members
 
