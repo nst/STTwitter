@@ -1218,6 +1218,63 @@ id removeNull(id rootObject);
 
 //	POST	lists/members/create_all
 
+- (void)postListsMembersCreateAllForListID:(NSString *)listID
+                                   userIDs:(NSArray *)userIDs // array of strings
+                             orScreenNames:(NSArray *)screenNames // array of strings
+                              successBlock:(void(^)())successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    NSParameterAssert(listID);
+    NSAssert((userIDs || screenNames), @"missing usersIDs or screenNames");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    
+    if(userIDs) {
+        md[@"user_id"] = [userIDs componentsJoinedByString:@","];
+    } else if (screenNames) {
+        md[@"screen_name"] = [screenNames componentsJoinedByString:@","];
+    }
+    
+    [_oauth postResource:@"lists/members/create_all.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postListsMembersCreateAllForSlug:(NSString *)slug
+                         ownerScreenName:(NSString *)ownerScreenName
+                               orOwnerID:(NSString *)ownerID
+                                 userIDs:(NSArray *)userIDs // array of strings
+                           orScreenNames:(NSArray *)screenNames // array of strings
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    NSAssert((userIDs || screenNames), @"missing usersIDs or screenNames");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    
+    if(ownerScreenName) {
+        md[@"owner_screen_name"] = ownerScreenName;
+    } else if (ownerID) {
+        md[@"owner_id"] = ownerID;
+    }
+    
+    if(userIDs) {
+        md[@"user_id"] = [userIDs componentsJoinedByString:@","];
+    } else if (screenNames) {
+        md[@"screen_name"] = [screenNames componentsJoinedByString:@","];
+    }
+    
+    [_oauth postResource:@"lists/members/create_all.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 //	GET		lists/members/show
 
 //	GET		lists/members

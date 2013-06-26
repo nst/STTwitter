@@ -491,6 +491,26 @@
 
 //	POST	lists/members/create_all
 
+/*
+ Adds multiple members to a list, by specifying a comma-separated list of member ids or screen names. The authenticated user must own the list to be able to add members to it. Note that lists can't have more than 5,000 members, and you are limited to adding up to 100 members to a list at a time with this method.
+ 
+ Please note that there can be issues with lists that rapidly remove and add memberships. Take care when using these methods such that you are not too rapidly switching between removals and adds on the same list.
+ */
+
+- (void)postListsMembersCreateAllForListID:(NSString *)listID
+                                   userIDs:(NSArray *)userIDs // array of strings
+                             orScreenNames:(NSArray *)screenNames // array of strings
+                              successBlock:(void(^)())successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postListsMembersCreateAllForSlug:(NSString *)slug
+                         ownerScreenName:(NSString *)ownerScreenName
+                               orOwnerID:(NSString *)ownerID
+                                 userIDs:(NSArray *)userIDs // array of strings
+                           orScreenNames:(NSArray *)screenNames // array of strings
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	GET		lists/members/show
 
 //	GET		lists/members
