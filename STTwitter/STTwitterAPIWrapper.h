@@ -565,6 +565,25 @@
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/members/destroy_all
+/*
+ Removes multiple members from a list, by specifying a comma-separated list of member ids or screen names. The authenticated user must own the list to be able to remove members from it. Note that lists can't have more than 500 members, and you are limited to removing up to 100 members to a list at a time with this method.
+ 
+ Please note that there can be issues with lists that rapidly remove and add memberships. Take care when using these methods such that you are not too rapidly switching between removals and adds on the same list.
+ */
+
+- (void)postListsMembersDestroyAllForListID:(NSString *)listID
+                                    userIDs:(NSArray *)userIDs // array of strings
+                              orScreenNames:(NSArray *)screenNames // array of strings
+                               successBlock:(void(^)())successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postListsMembersDestroyAllForSlug:(NSString *)slug
+                          ownerScreenName:(NSString *)ownerScreenName
+                                orOwnerID:(NSString *)ownerID
+                                  userIDs:(NSArray *)userIDs // array of strings
+                            orScreenNames:(NSArray *)screenNames // array of strings
+                             successBlock:(void(^)())successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 //  GET     lists/ownerships
 
