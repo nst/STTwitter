@@ -526,6 +526,16 @@
 
 //	GET		lists/show
 
+- (void)getListsShowListID:(NSString *)listID
+              successBlock:(void(^)(NSDictionary *list))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getListsShowListSlug:(NSString *)slug
+             ownerScreenName:(NSString *)ownerScreenName
+                   orOwnerID:(NSString *)ownerID
+                successBlock:(void(^)(NSDictionary *list))successBlock
+                  errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	GET		lists/subscriptions
 
 - (void)getListsSubscriptionsForUserID:(NSString *)userID

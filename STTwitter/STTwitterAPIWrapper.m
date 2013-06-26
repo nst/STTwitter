@@ -1313,12 +1313,48 @@ id removeNull(id rootObject);
     }];
 }
 
-
 //	POST	lists/update
 
 //	POST	lists/create
 
 //	GET		lists/show
+
+- (void)getListsShowListID:(NSString *)listID
+              successBlock:(void(^)(NSDictionary *list))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(listID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    
+    [_oauth getResource:@"lists/show.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getListsShowListSlug:(NSString *)slug
+             ownerScreenName:(NSString *)ownerScreenName
+                   orOwnerID:(NSString *)ownerID
+                successBlock:(void(^)(NSDictionary *list))successBlock
+                  errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    
+    [_oauth getResource:@"lists/show.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 //	GET		lists/subscriptions
 
