@@ -182,6 +182,23 @@
 #pragma mark Search
 
 //	GET		search/tweets
+
+// full method
+- (void)getSearchTweetsWithQuery:(NSString *)q
+                 optionalGeocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
+                    optionalLang:(NSString *)lang // eg. "eu"
+                  optionalLocale:(NSString *)locale // eg. "ja"
+              optionalResultType:(NSString *)resultType // eg. "mixed, recent, popular"
+                   optionalCount:(NSString *)count // eg. "100"
+                   optionalUntil:(NSString *)until // eg. "2012-09-01"
+                 optionalSinceID:(NSString *)sinceID // eg. "12345"
+                   optionalMaxID:(NSString *)maxID // eg. "54321"
+                 includeEntities:(BOOL)includeEntities
+                optionalCallback:(NSString *)callback // eg. "processTweets"
+					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
+					  errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience method
 //	Returns Tweets (*: tweets matching the query)
 - (void)getSearchTweetsWithQuery:(NSString *)q
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock

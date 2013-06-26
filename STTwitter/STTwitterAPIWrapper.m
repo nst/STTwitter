@@ -568,16 +568,63 @@ id removeNull(id rootObject);
 #pragma mark Search
 
 - (void)getSearchTweetsWithQuery:(NSString *)q
+                 optionalGeocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
+                    optionalLang:(NSString *)lang // eg. "eu"
+                  optionalLocale:(NSString *)locale // eg. "ja"
+              optionalResultType:(NSString *)resultType // eg. "mixed, recent, popular"
+                   optionalCount:(NSString *)count // eg. "100"
+                   optionalUntil:(NSString *)until // eg. "2012-09-01"
+                 optionalSinceID:(NSString *)sinceID // eg. "12345"
+                   optionalMaxID:(NSString *)maxID // eg. "54321"
+                 includeEntities:(BOOL)includeEntities
+                optionalCallback:(NSString *)callback // eg. "processTweets"
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSDictionary *d = @{@"q" : [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding]};
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+  
+    NSParameterAssert(q);
     
-    [_oauth getResource:@"search/tweets.json" parameters:d successBlock:^(id response) {
+    if(geoCode) md[@"geocode"] = geoCode;
+    if(lang) md[@"lang"] = lang;
+    if(locale) md[@"locale"] = locale;
+    if(resultType) md[@"result_type"] = resultType;
+    if(count) md[@"count"] = count;
+    if(until) md[@"until"] = until;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
+    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(callback) md[@"callback"] = callback;
+    
+    md[@"q"] = [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [_oauth getResource:@"search/tweets.json" parameters:md successBlock:^(id response) {
         
         NSDictionary *searchMetadata = [response valueForKey:@"search_metadata"];
         NSArray *statuses = [response valueForKey:@"statuses"];
         
+        successBlock(searchMetadata, statuses);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getSearchTweetsWithQuery:(NSString *)q
+					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
+					  errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self getSearchTweetsWithQuery:q
+                   optionalGeocode:nil
+                      optionalLang:nil
+                    optionalLocale:nil
+                optionalResultType:nil
+                     optionalCount:nil
+                     optionalUntil:nil
+                   optionalSinceID:nil
+                     optionalMaxID:nil
+                   includeEntities:YES
+                  optionalCallback:nil
+                      successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
         successBlock(searchMetadata, statuses);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
