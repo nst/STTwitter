@@ -401,8 +401,6 @@
                          successBlock:(void(^)())successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/memberships
-
 //	GET		lists/subscribers
 
 //	POST	lists/subscribers/create
@@ -459,9 +457,23 @@
 
 //	GET		lists/subscriptions
 
+- (void)getListsSubscriptionsForUserID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                         optionalCount:(NSString *)count
+                        optionalCursor:(NSString *)cursor
+                          successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	POST	lists/members/destroy_all
 
 //  GET     lists/ownerships
+
+- (void)getListsOwnershipsForUserID:(NSString *)userID
+                       orScreenName:(NSString *)screenName
+                      optionalCount:(NSString *)count
+                     optionalCursor:(NSString *)cursor
+                       successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Saved Searches
 

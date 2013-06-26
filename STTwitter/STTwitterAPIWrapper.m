@@ -332,7 +332,7 @@ id removeNull(id rootObject);
                         trimUser:(BOOL)trimUser
                     successBlock:(void(^)(NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(statusID);
     
     NSString *resource = [NSString stringWithFormat:@"statuses/retweets/%@.json", statusID];
@@ -353,11 +353,11 @@ id removeNull(id rootObject);
                  trimUser:(BOOL)trimUser
          includeMyRetweet:(BOOL)includeMyRetweet
           includeEntities:(BOOL)includeEntities
-                    successBlock:(void(^)(NSDictionary *status))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock {
+             successBlock:(void(^)(NSDictionary *status))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(statusID);
-        
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
     md[@"id"] = statusID;
@@ -501,6 +501,68 @@ id removeNull(id rootObject);
         errorBlock(error);
     }];
     
+}
+
+- (void)getListsgetListsSubscriptionsForUserIDForUserID:(NSString *)userID
+                                           orScreenName:(NSString *)screenName
+                                          optionalCount:(NSString *)count
+                                         optionalCursor:(NSString *)cursor
+                                           successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                                             errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"missing userID or screenName");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(userID) {
+        md[@"user_id"] = userID;
+    } else if (screenName) {
+        md[@"screen_name"] = screenName;
+    }
+    
+    if(count) md[@"count"] = count;
+    if(cursor) md[@"cursor"] = cursor;
+    
+    [_oauth getResource:@"lists/subscriptions.json" parameters:md successBlock:^(id response) {
+        
+        NSArray *lists = [response valueForKey:@"lists"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        successBlock(lists, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getListsOwnershipsForUserID:(NSString *)userID
+                       orScreenName:(NSString *)screenName
+                      optionalCount:(NSString *)count
+                     optionalCursor:(NSString *)cursor
+                       successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"missing userID or screenName");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(userID) {
+        md[@"user_id"] = userID;
+    } else if (screenName) {
+        md[@"screen_name"] = screenName;
+    }
+    
+    if(count) md[@"count"] = count;
+    if(cursor) md[@"cursor"] = cursor;
+    
+    [_oauth getResource:@"lists/ownerships.json" parameters:md successBlock:^(id response) {
+        
+        NSArray *lists = [response valueForKey:@"lists"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        successBlock(lists, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
 
 #pragma mark Search
@@ -1008,7 +1070,7 @@ id removeNull(id rootObject);
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
-    }];    
+    }];
 }
 
 //	POST	lists/destroy
