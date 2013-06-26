@@ -1124,6 +1124,59 @@ id removeNull(id rootObject);
 
 //	GET		lists/subscribers/show
 
+- (void)getListsSubscribersShowForListID:(NSString *)listID
+                                  userID:(NSString *)userID
+                            orScreenName:(NSString *)screenName
+                         includeEntities:(BOOL)includeEntities
+                              skipStatus:(BOOL)skipStatus
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+    NSParameterAssert(listID);
+    NSAssert((userID || screenName), @"missing userID or screenName");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(skipStatus) md[@"skipStatus"] = @"true";
+    
+    [_oauth getResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getListsSubscribersShowForSlug:(NSString *)slug
+                       ownerScreenName:(NSString *)ownerScreenName
+                             orOwnerID:(NSString *)ownerID
+                                userID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                       includeEntities:(BOOL)includeEntities
+                            skipStatus:(BOOL)skipStatus
+                          successBlock:(void(^)())successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    NSAssert((userID || screenName), @"missing userID or screenName");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(skipStatus) md[@"skipStatus"] = @"true";
+    
+    [_oauth getResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 //	POST	lists/subscribers/destroy
 
 - (void)postListSubscribersDestroyForListID:(NSString *)listID

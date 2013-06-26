@@ -457,6 +457,25 @@
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		lists/subscribers/show
+// Check if the specified user is a subscriber of the specified list. Returns the user if they are subscriber.
+
+- (void)getListsSubscribersShowForListID:(NSString *)listID
+                                  userID:(NSString *)userID
+                            orScreenName:(NSString *)screenName
+                         includeEntities:(BOOL)includeEntities
+                              skipStatus:(BOOL)skipStatus
+                            successBlock:(void(^)())successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getListsSubscribersShowForSlug:(NSString *)slug
+                       ownerScreenName:(NSString *)ownerScreenName
+                             orOwnerID:(NSString *)ownerID
+                                userID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                       includeEntities:(BOOL)includeEntities
+                            skipStatus:(BOOL)skipStatus
+                          successBlock:(void(^)())successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/subscribers/destroy
 
