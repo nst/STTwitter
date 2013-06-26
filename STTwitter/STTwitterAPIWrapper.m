@@ -775,6 +775,29 @@ id removeNull(id rootObject);
     }];
 }
 
+- (void)getUsersSearchQuery:(NSString *)query
+               optionalPage:(NSString *)page
+              optionalCount:(NSString *)count
+            includeEntities:(BOOL)includeEntities
+               successBlock:(void(^)(NSDictionary *users))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(query);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    md[@"query"] = [query st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if(page) md[@"page"] = page;
+    if(count) md[@"count"] = count;
+    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    
+    [_oauth getResource:@"users/search.json" parameters:md successBlock:^(id response) {
+        successBlock(response); // NSArray of users dictionaries
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 #pragma mark Suggested Users
 
 #pragma mark Favorites

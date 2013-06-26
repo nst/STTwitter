@@ -328,6 +328,13 @@
 
 //	GET		users/search
 
+- (void)getUsersSearchQuery:(NSString *)query
+               optionalPage:(NSString *)page
+              optionalCount:(NSString *)count
+            includeEntities:(BOOL)includeEntities
+               successBlock:(void(^)(NSDictionary *users))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock;
+
 //	GET		users/contributees
 
 //	GET		users/contributors
