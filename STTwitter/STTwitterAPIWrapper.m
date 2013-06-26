@@ -1476,6 +1476,55 @@ id removeNull(id rootObject);
 
 //	POST	lists/update
 
+- (void)postListsUpdateForListID:(NSString *)listID
+                    optionalName:(NSString *)name
+                       isPrivate:(BOOL)isPrivate
+             optionalDescription:(NSString *)description
+                    successBlock:(void(^)())successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(listID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    if(name) md[@"name"] = [name st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    md[@"mode"] = isPrivate ? @"private" : @"public";
+    if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [_oauth postResource:@"lists/update.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postListsUpdateForSlug:(NSString *)slug
+               ownerScreenName:(NSString *)ownerScreenName
+                     orOwnerID:(NSString *)ownerID
+                  optionalName:(NSString *)name
+                     isPrivate:(BOOL)isPrivate
+           optionalDescription:(NSString *)description
+                  successBlock:(void(^)())successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    if(name) md[@"name"] = [name st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    md[@"mode"] = isPrivate ? @"private" : @"public";
+    if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    [_oauth postResource:@"lists/update.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 //	POST	lists/create
 
 - (void)postListsCreateWithName:(NSString *)name

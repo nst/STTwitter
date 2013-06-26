@@ -585,15 +585,21 @@
  Updates the specified list. The authenticated user must own the list to be able to update it.
  */
 
-//- (void)postListsUpdateForListID:(NSString *)listID
-//                     successBlock:(void(^)())successBlock
-//                       errorBlock:(void(^)(NSError *error))errorBlock;
-//
-//- (void)postListsUpdateForSlug:(NSString *)slug
-//                ownerScreenName:(NSString *)ownerScreenName
-//                      orOwnerID:(NSString *)ownerID
-//                   successBlock:(void(^)())successBlock
-//                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postListsUpdateForListID:(NSString *)listID
+                    optionalName:(NSString *)name
+                       isPrivate:(BOOL)isPrivate
+             optionalDescription:(NSString *)description
+                    successBlock:(void(^)())successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postListsUpdateForSlug:(NSString *)slug
+               ownerScreenName:(NSString *)ownerScreenName
+                     orOwnerID:(NSString *)ownerID
+                  optionalName:(NSString *)name
+                     isPrivate:(BOOL)isPrivate
+           optionalDescription:(NSString *)description
+                  successBlock:(void(^)())successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/create
 /*
