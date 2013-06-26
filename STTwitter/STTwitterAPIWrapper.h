@@ -444,7 +444,6 @@
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/subscribers/create
-
 // Subscribes the authenticated user to the specified list.
 
 - (void)postListSubscribersCreateForListID:(NSString *)listID
@@ -460,6 +459,16 @@
 //	GET		lists/subscribers/show
 
 //	POST	lists/subscribers/destroy
+
+- (void)postListSubscribersDestroyForListID:(NSString *)listID
+                               successBlock:(void(^)())successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postListSubscribersDestroyForSlug:(NSString *)slug
+                          ownerScreenName:(NSString *)ownerScreenName
+                                orOwnerID:(NSString *)ownerID
+                             successBlock:(void(^)())successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/members/create_all
 
@@ -500,6 +509,16 @@
                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/destroy
+
+- (void)postListsDestroyForListID:(NSString *)listID
+                     successBlock:(void(^)())successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postListsDestroyForSlug:(NSString *)slug
+                ownerScreenName:(NSString *)ownerScreenName
+                      orOwnerID:(NSString *)ownerID
+                   successBlock:(void(^)())successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	lists/update
 

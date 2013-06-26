@@ -582,7 +582,7 @@ id removeNull(id rootObject);
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-  
+    
     NSParameterAssert(q);
     
     if(geoCode) md[@"geocode"] = geoCode;
@@ -625,10 +625,10 @@ id removeNull(id rootObject);
                    includeEntities:YES
                   optionalCallback:nil
                       successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
-        successBlock(searchMetadata, statuses);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                          successBlock(searchMetadata, statuses);
+                      } errorBlock:^(NSError *error) {
+                          errorBlock(error);
+                      }];
 }
 
 #pragma mark Streaming
@@ -828,7 +828,7 @@ id removeNull(id rootObject);
             includeEntities:(BOOL)includeEntities
                successBlock:(void(^)(NSDictionary *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(query);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1106,7 +1106,7 @@ id removeNull(id rootObject);
                                orOwnerID:(NSString *)ownerID
                             successBlock:(void(^)())successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(slug);
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
     
@@ -1125,6 +1125,43 @@ id removeNull(id rootObject);
 //	GET		lists/subscribers/show
 
 //	POST	lists/subscribers/destroy
+
+- (void)postListSubscribersDestroyForListID:(NSString *)listID
+                               successBlock:(void(^)())successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(listID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    
+    [_oauth postResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postListSubscribersDestroyForSlug:(NSString *)slug
+                          ownerScreenName:(NSString *)ownerScreenName
+                                orOwnerID:(NSString *)ownerID
+                             successBlock:(void(^)())successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    
+    [_oauth postResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 //	POST	lists/members/create_all
 
@@ -1238,6 +1275,44 @@ id removeNull(id rootObject);
 }
 
 //	POST	lists/destroy
+
+- (void)postListsDestroyForListID:(NSString *)listID
+                     successBlock:(void(^)())successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(listID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"list_id"] = listID;
+    
+    [_oauth postResource:@"lists/destroy.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postListsDestroyForSlug:(NSString *)slug
+                ownerScreenName:(NSString *)ownerScreenName
+                      orOwnerID:(NSString *)ownerID
+                   successBlock:(void(^)())successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(slug);
+    NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    
+    [_oauth postResource:@"lists/destroy.json" parameters:md successBlock:^(id response) {
+        successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 
 //	POST	lists/update
 
