@@ -381,7 +381,15 @@
 
 #pragma mark Lists
 
-//	GET		lists/list
+/*
+ GET    lists/list
+
+ Returns all lists the authenticating or specified user subscribes to, including their own. The user is specified using the user_id or screen_name parameters. If no user is given, the authenticating user is used.
+ 
+ This method used to be GET lists in version 1.0 of the API and has been renamed for consistency with other call.
+ 
+ A maximum of 100 results will be returned by this call. Subscribed lists are returned first, followed by owned lists. This means that if a user subscribes to 90 lists and owns 20 lists, this method returns 90 subscriptions and 10 owned lists. The reverse method returns owned lists first, so with reverse=true, 20 owned lists and 80 subscriptions would be returned. If your goal is to obtain every list a user owns or subscribes to, use GET lists/ownerships and/or GET lists/subscriptions instead.
+ */
 
 - (void)getListsSubscribedByUsername:(NSString *)username
                             orUserID:(NSString *)userID
@@ -389,29 +397,37 @@
                         successBlock:(void(^)(NSArray *lists))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/statuses
+/*
+ GET	lists/statuses
 
-- (void)getListStatusesForListID:(NSString *)listID
-                 optionalSinceID:(NSString *)sinceID
-                   optionalMaxID:(NSString *)maxID
-                   optionalCount:(NSString *)count
-                 includeEntities:(BOOL)includeEntities
-                 includeRetweets:(BOOL)includeRetweets
-                    successBlock:(void(^)(NSArray *statuses))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+ Returns a timeline of tweets authored by members of the specified list. Retweets are included by default. Use the include_rts=false parameter to omit retweets. Embedded Timelines is a great way to embed list timelines on your website.
+ */
 
-- (void)getListStatusesForSlug:(NSString *)slug
-               ownerScreenName:(NSString *)ownerScreenName
-                     orOwnerID:(NSString *)ownerID
-               optionalSinceID:(NSString *)sinceID
-                 optionalMaxID:(NSString *)maxID
-                 optionalCount:(NSString *)count
-               includeEntities:(BOOL)includeEntities
-               includeRetweets:(BOOL)includeRetweets
-                  successBlock:(void(^)(NSArray *statuses))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getListsStatusesForListID:(NSString *)listID
+                  optionalSinceID:(NSString *)sinceID
+                    optionalMaxID:(NSString *)maxID
+                    optionalCount:(NSString *)count
+                  includeEntities:(BOOL)includeEntities
+                  includeRetweets:(BOOL)includeRetweets
+                     successBlock:(void(^)(NSArray *statuses))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/members/destroy
+- (void)getListsStatusesForSlug:(NSString *)slug
+                ownerScreenName:(NSString *)ownerScreenName
+                      orOwnerID:(NSString *)ownerID
+                optionalSinceID:(NSString *)sinceID
+                  optionalMaxID:(NSString *)maxID
+                  optionalCount:(NSString *)count
+                includeEntities:(BOOL)includeEntities
+                includeRetweets:(BOOL)includeRetweets
+                   successBlock:(void(^)(NSArray *statuses))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	lists/members/destroy
+
+ Removes the specified member from the list. The authenticated user must be the list's owner to remove members from the list.
+ */
 
 - (void)postListsMembersDestroyForListID:(NSString *)listID
                             successBlock:(void(^)())successBlock
@@ -425,7 +441,11 @@
                           successBlock:(void(^)())successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/subscribers
+/*
+ GET	lists/subscribers
+
+ Returns the subscribers of the specified list. Private list subscribers will only be shown if the authenticated user owns the specified list.
+ */
 
 - (void)getListsSubscribersForSlug:(NSString *)slug
                    ownerScreenName:(NSString *)ownerScreenName
@@ -443,8 +463,11 @@
                         successBlock:(void(^)())successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/subscribers/create
-// Subscribes the authenticated user to the specified list.
+/*
+ POST	lists/subscribers/create
+
+ Subscribes the authenticated user to the specified list.
+ */
 
 - (void)postListSubscribersCreateForListID:(NSString *)listID
                               successBlock:(void(^)())successBlock
@@ -456,8 +479,11 @@
                             successBlock:(void(^)())successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/subscribers/show
-// Check if the specified user is a subscriber of the specified list. Returns the user if they are subscriber.
+/*
+ GET	lists/subscribers/show
+
+ Check if the specified user is a subscriber of the specified list. Returns the user if they are subscriber.
+ */
 
 - (void)getListsSubscribersShowForListID:(NSString *)listID
                                   userID:(NSString *)userID
@@ -477,7 +503,11 @@
                           successBlock:(void(^)())successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/subscribers/destroy
+/*
+ POST	lists/subscribers/destroy
+
+ Unsubscribes the authenticated user from the specified list.
+ */
 
 - (void)postListSubscribersDestroyForListID:(NSString *)listID
                                successBlock:(void(^)())successBlock
@@ -489,9 +519,9 @@
                              successBlock:(void(^)())successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/members/create_all
-
 /*
+ POST	lists/members/create_all
+ 
  Adds multiple members to a list, by specifying a comma-separated list of member ids or screen names. The authenticated user must own the list to be able to add members to it. Note that lists can't have more than 5,000 members, and you are limited to adding up to 100 members to a list at a time with this method.
  
  Please note that there can be issues with lists that rapidly remove and add memberships. Take care when using these methods such that you are not too rapidly switching between removals and adds on the same list.
@@ -511,8 +541,9 @@
                             successBlock:(void(^)())successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/members/show
 /*
+ GET	lists/members/show
+
  Check if the specified user is a member of the specified list.
  */
 
@@ -534,25 +565,33 @@
                       successBlock:(void(^)(NSDictionary *user))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/members
+/*
+ GET		lists/members
+ 
+ Returns the members of the specified list. Private list members will only be shown if the authenticated user owns the specified list.
+ */
 
-- (void)getListMembersForListID:(NSString *)listID
-                 optionalCursor:(NSString *)cursor
-                includeEntities:(BOOL)includeEntities
-                     skipStatus:(BOOL)skipStatus
-                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getListsMembersForListID:(NSString *)listID
+                  optionalCursor:(NSString *)cursor
+                 includeEntities:(BOOL)includeEntities
+                      skipStatus:(BOOL)skipStatus
+                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getListMembersForSlug:(NSString *)slug
-              ownerScreenName:(NSString *)screenName
-                    orOwnerID:(NSString *)ownerID
-               optionalCursor:(NSString *)cursor
-              includeEntities:(BOOL)includeEntities
-                   skipStatus:(BOOL)skipStatus
-                 successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getListsMembersForSlug:(NSString *)slug
+               ownerScreenName:(NSString *)screenName
+                     orOwnerID:(NSString *)ownerID
+                optionalCursor:(NSString *)cursor
+               includeEntities:(BOOL)includeEntities
+                    skipStatus:(BOOL)skipStatus
+                  successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/members/create
+/*
+ POST	lists/members/create
+ 
+ Creates a new list for the authenticated user. Note that you can't create more than 20 lists per account.
+ */
 
 - (void)postListMemberCreateForListID:(NSString *)listID
                                userID:(NSString *)userID
@@ -568,7 +607,11 @@
                        successBlock:(void(^)())successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/destroy
+/*
+ POST	lists/destroy
+ 
+ Deletes the specified list. The authenticated user must own the list to be able to destroy it.
+ */
 
 - (void)postListsDestroyForListID:(NSString *)listID
                      successBlock:(void(^)())successBlock
@@ -580,8 +623,8 @@
                    successBlock:(void(^)())successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/update
 /*
+ POST	lists/update
  Updates the specified list. The authenticated user must own the list to be able to update it.
  */
 
@@ -601,8 +644,9 @@
                   successBlock:(void(^)())successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/create
 /*
+ POST	lists/create
+ 
  Creates a new list for the authenticated user. Note that you can't create more than 20 lists per account.
  */
 
@@ -612,7 +656,11 @@
                    successBlock:(void(^)(NSDictionary *list))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/show
+/*
+ GET	lists/show
+ 
+ Returns the specified list. Private lists will only be shown if the authenticated user owns the specified list.
+ */
 
 - (void)getListsShowListID:(NSString *)listID
               successBlock:(void(^)(NSDictionary *list))successBlock
@@ -624,7 +672,11 @@
                 successBlock:(void(^)(NSDictionary *list))successBlock
                   errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		lists/subscriptions
+/*
+ GET	lists/subscriptions
+ 
+ Obtain a collection of the lists the specified user is subscribed to, 20 lists per page by default. Does not include the user's own lists.
+ */
 
 - (void)getListsSubscriptionsForUserID:(NSString *)userID
                           orScreenName:(NSString *)screenName
@@ -633,8 +685,9 @@
                           successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	lists/members/destroy_all
 /*
+ POST	lists/members/destroy_all
+ 
  Removes multiple members from a list, by specifying a comma-separated list of member ids or screen names. The authenticated user must own the list to be able to remove members from it. Note that lists can't have more than 500 members, and you are limited to removing up to 100 members to a list at a time with this method.
  
  Please note that there can be issues with lists that rapidly remove and add memberships. Take care when using these methods such that you are not too rapidly switching between removals and adds on the same list.
@@ -654,7 +707,11 @@
                              successBlock:(void(^)())successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
-//  GET     lists/ownerships
+/*
+ GET     lists/ownerships
+ 
+ Returns the lists owned by the specified Twitter user. Private lists will only be shown if the authenticated user is also the owner of the lists.
+ */
 
 - (void)getListsOwnershipsForUserID:(NSString *)userID
                        orScreenName:(NSString *)screenName

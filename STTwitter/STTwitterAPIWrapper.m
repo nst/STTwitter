@@ -534,6 +534,8 @@ id removeNull(id rootObject);
     }];
 }
 
+//  GET     lists/ownerships
+
 - (void)getListsOwnershipsForUserID:(NSString *)userID
                        orScreenName:(NSString *)screenName
                       optionalCount:(NSString *)count
@@ -879,7 +881,7 @@ id removeNull(id rootObject);
 
 #pragma mark Lists
 
-//	GET		lists/list
+// GET	lists/list
 
 - (void)getListsSubscribedByUsername:(NSString *)username
                             orUserID:(NSString *)userID
@@ -910,16 +912,16 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/statuses
+// GET    lists/statuses
 
-- (void)getListStatusesForListID:(NSString *)listID
-                 optionalSinceID:(NSString *)sinceID
-                   optionalMaxID:(NSString *)maxID
-                   optionalCount:(NSString *)count
-                 includeEntities:(BOOL)includeEntities
-                 includeRetweets:(BOOL)includeRetweets
-                    successBlock:(void(^)(NSArray *statuses))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getListsStatusesForListID:(NSString *)listID
+                  optionalSinceID:(NSString *)sinceID
+                    optionalMaxID:(NSString *)maxID
+                    optionalCount:(NSString *)count
+                  includeEntities:(BOOL)includeEntities
+                  includeRetweets:(BOOL)includeRetweets
+                     successBlock:(void(^)(NSArray *statuses))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
     
@@ -945,16 +947,16 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)getListStatusesForSlug:(NSString *)slug
-               ownerScreenName:(NSString *)ownerScreenName
-                     orOwnerID:(NSString *)ownerID
-               optionalSinceID:(NSString *)sinceID
-                 optionalMaxID:(NSString *)maxID
-                 optionalCount:(NSString *)count
-               includeEntities:(BOOL)includeEntities
-               includeRetweets:(BOOL)includeRetweets
-                  successBlock:(void(^)(NSArray *statuses))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getListsStatusesForSlug:(NSString *)slug
+                ownerScreenName:(NSString *)ownerScreenName
+                      orOwnerID:(NSString *)ownerID
+                optionalSinceID:(NSString *)sinceID
+                  optionalMaxID:(NSString *)maxID
+                  optionalCount:(NSString *)count
+                includeEntities:(BOOL)includeEntities
+                includeRetweets:(BOOL)includeRetweets
+                   successBlock:(void(^)(NSArray *statuses))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
     
@@ -982,7 +984,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/members/destroy
+// POST lists/members/destroy
 
 - (void)postListsMembersDestroyForListID:(NSString *)listID
                             successBlock:(void(^)())successBlock
@@ -1022,7 +1024,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/subscribers
+// GET	lists/subscribers
 
 - (void)getListsSubscribersForSlug:(NSString *)slug
                    ownerScreenName:(NSString *)ownerScreenName
@@ -1083,7 +1085,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/subscribers/create
+// POST	lists/subscribers/create
 
 - (void)postListSubscribersCreateForListID:(NSString *)listID
                               successBlock:(void(^)())successBlock
@@ -1122,8 +1124,8 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/subscribers/show
-
+// GET	lists/subscribers/show
+ 
 - (void)getListsSubscribersShowForListID:(NSString *)listID
                                   userID:(NSString *)userID
                             orScreenName:(NSString *)screenName
@@ -1177,7 +1179,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/subscribers/destroy
+// POST	lists/subscribers/destroy
 
 - (void)postListSubscribersDestroyForListID:(NSString *)listID
                                successBlock:(void(^)())successBlock
@@ -1216,7 +1218,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/members/create_all
+// POST	lists/members/create_all
 
 - (void)postListsMembersCreateAllForListID:(NSString *)listID
                                    userIDs:(NSArray *)userIDs // array of strings
@@ -1275,7 +1277,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/members/show
+// GET	lists/members/show
 
 - (void)getListsMembersShowForListID:(NSString *)listID
                               userID:(NSString *)userID
@@ -1328,14 +1330,14 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/members
+// GET	lists/members
 
-- (void)getListMembersForListID:(NSString *)listID
-                 optionalCursor:(NSString *)cursor
-                includeEntities:(BOOL)includeEntities
-                     skipStatus:(BOOL)skipStatus
-                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getListsMembersForListID:(NSString *)listID
+                  optionalCursor:(NSString *)cursor
+                 includeEntities:(BOOL)includeEntities
+                      skipStatus:(BOOL)skipStatus
+                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert(listID, @"listID is missing");
     
@@ -1355,14 +1357,14 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)getListMembersForSlug:(NSString *)slug
-              ownerScreenName:(NSString *)ownerScreenName
-                    orOwnerID:(NSString *)ownerID
-               optionalCursor:(NSString *)cursor
-              includeEntities:(BOOL)includeEntities
-                   skipStatus:(BOOL)skipStatus
-                 successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getListsMembersForSlug:(NSString *)slug
+               ownerScreenName:(NSString *)ownerScreenName
+                     orOwnerID:(NSString *)ownerID
+                optionalCursor:(NSString *)cursor
+               includeEntities:(BOOL)includeEntities
+                    skipStatus:(BOOL)skipStatus
+                  successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
     
@@ -1386,7 +1388,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/members/create
+// POST	lists/members/create
 
 - (void)postListMemberCreateForListID:(NSString *)listID
                                userID:(NSString *)userID
@@ -1435,7 +1437,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/destroy
+// POST	lists/destroy
 
 - (void)postListsDestroyForListID:(NSString *)listID
                      successBlock:(void(^)())successBlock
@@ -1474,7 +1476,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/update
+// POST	lists/update
 
 - (void)postListsUpdateForListID:(NSString *)listID
                     optionalName:(NSString *)name
@@ -1509,7 +1511,7 @@ id removeNull(id rootObject);
     
     NSParameterAssert(slug);
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"slug"] = slug;
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
@@ -1525,7 +1527,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	POST	lists/create
+// POST	lists/create
 
 - (void)postListsCreateWithName:(NSString *)name
                       isPrivate:(BOOL)isPrivate
@@ -1546,7 +1548,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/show
+// GET	lists/show
 
 - (void)getListsShowListID:(NSString *)listID
               successBlock:(void(^)(NSDictionary *list))successBlock
@@ -1585,9 +1587,7 @@ id removeNull(id rootObject);
     }];
 }
 
-//	GET		lists/subscriptions
-
-//	POST	lists/members/destroy_all
+// POST	lists/members/destroy_all
 
 - (void)postListsMembersDestroyAllForListID:(NSString *)listID
                                     userIDs:(NSArray *)userIDs // array of strings
@@ -1647,8 +1647,6 @@ id removeNull(id rootObject);
         errorBlock(error);
     }];
 }
-
-//  GET     lists/ownerships
 
 #pragma mark Saved Searches
 
