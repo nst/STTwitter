@@ -413,7 +413,7 @@
             NSDictionary *errorDictionary = [errors lastObject];
             if([errorDictionary isKindOfClass:[NSDictionary class]]) {
                 NSString *message = errorDictionary[@"message"];
-                NSInteger *code = [errorDictionary[@"code"] integerValue];
+                NSInteger code = [errorDictionary[@"code"] integerValue];
                 NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:@{NSLocalizedDescriptionKey : message}];
                 return error;
             }
