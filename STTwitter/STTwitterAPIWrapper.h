@@ -92,15 +92,35 @@
 
 #pragma mark Timelines
 
-//	GET		statuses/mentions_timeline
-//	Returns Tweets (*: mentions for the user)
+/*
+ GET	statuses/mentions_timeline
+ Returns Tweets (*: mentions for the user)
+ 
+ Returns the 20 most recent mentions (tweets containing a users's @screen_name) for the authenticating user.
+ 
+ The timeline returned is the equivalent of the one seen when you view your mentions on twitter.com.
+ 
+ This method can only return up to 800 tweets.
+ */
+
 - (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
 							 count:(NSUInteger)optionalCount
 					  successBlock:(void(^)(NSArray *statuses))successBlock
 						errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		statuses/user_timeline
-//	Returns Tweets (*: tweets for the user)
+/*
+ GET	statuses/user_timeline
+ Returns Tweets (*: tweets for the user)
+ 
+ Returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id parameters.
+ 
+ User timelines belonging to protected users may only be requested when the authenticated user either "owns" the timeline or is an approved follower of the owner.
+ 
+ The timeline returned is the equivalent of the one seen when you view a user's profile on twitter.com.
+ 
+ This method can only return up to 3,200 of a user's most recent Tweets. Native retweets of other statuses by the user is included in this total, regardless of whether include_rts is set to false when requesting this resource.
+ */
+
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
                               sinceID:(NSString *)optionalSinceID
                                 maxID:(NSString *)optionalMaxID
@@ -117,12 +137,38 @@
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		statuses/home_timeline
-//	Returns Tweets (*: tweets from people the user follows)
+/*
+ GET	statuses/home_timeline
+ Returns Tweets (*: tweets from people the user follows)
+ 
+ Returns a collection of the most recent Tweets and retweets posted by the authenticating user and the users they follow. The home timeline is central to how most users interact with the Twitter service.
+ 
+ Up to 800 Tweets are obtainable on the home timeline. It is more volatile for users that follow many users or follow users who tweet frequently.
+ */
+
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
                          count:(NSUInteger)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    statuses/retweets_of_me
+ 
+ Returns the most recent tweets authored by the authenticating user that have been retweeted by others. This timeline is a subset of the user's GET statuses/user_timeline. See Working with Timelines for instructions on traversing timelines.
+ */
+
+- (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)count
+                                 optionalSinceID:(NSString *)sinceID
+                                   optionalMaxID:(NSString *)maxID
+                                        trimUser:(BOOL)trimUser
+                                 includeEntitied:(BOOL)includeEntities
+                             includeUserEntities:(BOOL)includeUserEntities
+                                    successBlock:(void(^)(NSArray *statuses))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience method without all optional values
+- (void)getStatusesRetweetsOfMeWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Tweets
 
@@ -395,7 +441,7 @@
 
 /*
  GET    lists/list
-
+ 
  Returns all lists the authenticating or specified user subscribes to, including their own. The user is specified using the user_id or screen_name parameters. If no user is given, the authenticating user is used.
  
  This method used to be GET lists in version 1.0 of the API and has been renamed for consistency with other call.
@@ -411,7 +457,7 @@
 
 /*
  GET	lists/statuses
-
+ 
  Returns a timeline of tweets authored by members of the specified list. Retweets are included by default. Use the include_rts=false parameter to omit retweets. Embedded Timelines is a great way to embed list timelines on your website.
  */
 
@@ -437,7 +483,7 @@
 
 /*
  POST	lists/members/destroy
-
+ 
  Removes the specified member from the list. The authenticated user must be the list's owner to remove members from the list.
  */
 
@@ -455,7 +501,7 @@
 
 /*
  GET	lists/subscribers
-
+ 
  Returns the subscribers of the specified list. Private list subscribers will only be shown if the authenticated user owns the specified list.
  */
 
@@ -477,7 +523,7 @@
 
 /*
  POST	lists/subscribers/create
-
+ 
  Subscribes the authenticated user to the specified list.
  */
 
@@ -493,7 +539,7 @@
 
 /*
  GET	lists/subscribers/show
-
+ 
  Check if the specified user is a subscriber of the specified list. Returns the user if they are subscriber.
  */
 
@@ -517,7 +563,7 @@
 
 /*
  POST	lists/subscribers/destroy
-
+ 
  Unsubscribes the authenticated user from the specified list.
  */
 
@@ -555,7 +601,7 @@
 
 /*
  GET	lists/members/show
-
+ 
  Check if the specified user is a member of the specified list.
  */
 

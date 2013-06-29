@@ -342,6 +342,7 @@ id removeNull(id rootObject);
                          count:(NSUInteger)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
     [self getTimeline:@"statuses/home_timeline.json"
 	   withParameters:nil
 			  sinceID:optionalSinceID
@@ -349,6 +350,47 @@ id removeNull(id rootObject);
 				count:optionalCount
 		 successBlock:successBlock
 		   errorBlock:errorBlock];
+}
+
+- (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)count
+                                 optionalSinceID:(NSString *)sinceID
+                                   optionalMaxID:(NSString *)maxID
+                                        trimUser:(BOOL)trimUser
+                                 includeEntitied:(BOOL)includeEntities
+                             includeUserEntities:(BOOL)includeUserEntities
+                                    successBlock:(void(^)(NSArray *statuses))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(count) md[@"count"] = count;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
+    if(trimUser) md[@"trim_user"] = @"true";
+    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(includeUserEntities == NO) md[@"include_user_entities"] = @"false";
+    
+    [_oauth getResource:@"statuses/retweets_of_me.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// convenience method, shorter
+- (void)getStatusesRetweetsOfMeWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock {
+    [self getStatusesRetweetsOfMeWithOptionalCount:nil
+                                   optionalSinceID:nil
+                                     optionalMaxID:nil
+                                          trimUser:NO
+                                   includeEntitied:YES
+                               includeUserEntities:YES
+                                      successBlock:^(NSArray *statuses) {
+        successBlock(statuses);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
 
 #pragma mark Tweets
