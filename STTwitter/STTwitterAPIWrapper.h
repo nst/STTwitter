@@ -78,13 +78,17 @@
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
 
-- (void)profileImageFor:(NSString *)screenName
-#if TARGET_OS_IPHONE
-           successBlock:(void(^)(UIImage *image))successBlock
-#else
-           successBlock:(void(^)(NSImage *image))successBlock
-#endif
-             errorBlock:(void(^)(NSError *error))errorBlock;
+#pragma mark Generic methods to GET and POST
+
+- (void)getResource:(NSString *)resource
+         parameters:(NSDictionary *)parameters
+       successBlock:(void(^)(id json))successBlock
+         errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postResource:(NSString *)resource
+          parameters:(NSDictionary *)parameters
+        successBlock:(void(^)(id response))successBlock
+          errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Timelines
 
@@ -342,6 +346,14 @@
 - (void)getUserInformationFor:(NSString *)screenName
 				 successBlock:(void(^)(NSDictionary *user))successBlock
 				   errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)profileImageFor:(NSString *)screenName
+#if TARGET_OS_IPHONE
+           successBlock:(void(^)(UIImage *image))successBlock
+#else
+           successBlock:(void(^)(NSImage *image))successBlock
+#endif
+             errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		users/search
 

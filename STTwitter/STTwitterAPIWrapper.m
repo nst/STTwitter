@@ -180,6 +180,32 @@ id removeNull(id rootObject);
 
 /**/
 
+#pragma mark Generic methods to GET and POST
+
+- (void)getResource:(NSString *)resource
+         parameters:(NSDictionary *)parameters
+       successBlock:(void(^)(id json))successBlock
+         errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth getResource:resource
+             parameters:parameters
+           successBlock:successBlock
+             errorBlock:errorBlock];
+}
+
+- (void)postResource:(NSString *)resource
+          parameters:(NSDictionary *)parameters
+        successBlock:(void(^)(id response))successBlock
+          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth postResource:resource
+              parameters:parameters
+           successBlock:successBlock
+             errorBlock:errorBlock];
+}
+
+/**/
+
 - (void)profileImageFor:(NSString *)screenName
 
 #if TARGET_OS_IPHONE
@@ -1747,7 +1773,7 @@ id removeNull(id rootObject);
         d = @{ @"user_id" : userID };
     }
     
-    [_oauth getResource:@"users/report_spam.json" parameters:d successBlock:^(id response) {
+    [_oauth postResource:@"users/report_spam.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
