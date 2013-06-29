@@ -294,32 +294,86 @@
 
 #pragma mark Friends & Followers
 
-//	GET		friends/ids
-//	Returns Users (*: user IDs for followees)
+/*
+ GET friendships/no_retweets/ids
+
+ Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from. Use POST friendships/update to set the "no retweets" status for a given user account on behalf of the current user.
+ */
+
+/*
+ GET		friends/ids
+ Returns Users (*: user IDs for followees)
+ 
+ Returns a cursored collection of user IDs for every user the specified user is following (otherwise known as their "friends").
+ 
+ At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 5,000 user IDs and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
+ 
+ This method is especially powerful when used in conjunction with GET users/lookup, a method that allows you to convert user IDs into full user objects in bulk.
+ */
+
 - (void)getFriendsIDsForScreenName:(NSString *)screenName
 				      successBlock:(void(^)(NSArray *friends))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		followers/ids
-//	Returns Users (*: user IDs for followers)
+/*
+ GET    followers/ids
+ Returns Users (*: user IDs for followers)
+ 
+ Returns a cursored collection of user IDs for every user following the specified user.
+ 
+ At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 5,000 user IDs and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
+ 
+ This method is especially powerful when used in conjunction with GET users/lookup, a method that allows you to convert user IDs into full user objects in bulk.
+ */
+
 - (void)getFollowersIDsForScreenName:(NSString *)screenName
                         successBlock:(void(^)(NSArray *followers))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		friendships/lookup
+/*
+ GET    friendships/lookup
 
-//	GET		friendships/incoming
+ Returns the relationships of the authenticating user to the comma-separated list of up to 100 screen_names or user_ids provided. Values for connections can be: following, following_requested, followed_by, none.
+ */
 
-//	GET		friendships/outgoing
+/*
+ GET    friendships/incoming
 
-//	POST	friendships/create
-//	Returns Users (1: the followed user)
+ Returns a collection of numeric IDs for every user who has a pending request to follow the authenticating user.
+ */
+
+/*
+ GET    friendships/outgoing
+
+ Returns a collection of numeric IDs for every protected user for whom the authenticating user has a pending follow request.
+ */
+
+/*
+ POST   friendships/create
+ Returns Users (1: the followed user)
+ 
+ Allows the authenticating users to follow the user specified in the ID parameter.
+ 
+ Returns the befriended user in the requested format when successful. Returns a string describing the failure condition when unsuccessful. If you are already friends with the user a HTTP 403 may be returned, though for performance reasons you may get a 200 OK message even if the friendship already exists.
+ 
+ Actions taken in this method are asynchronous and changes will be eventually consistent.
+ */
+
 - (void)postFollow:(NSString *)screenName
 	  successBlock:(void(^)(NSDictionary *user))successBlock
 		errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	friendships/destroy
-//	Returns Users (1: the unfollowed user)
+/*
+ POST	friendships/destroy
+ Returns Users (1: the unfollowed user)
+ 
+ Allows the authenticating user to unfollow the user specified in the ID parameter.
+ 
+ Returns the unfollowed user in the requested format when successful. Returns a string describing the failure condition when unsuccessful.
+ 
+ Actions taken in this method are asynchronous and changes will be eventually consistent.
+ */
+
 - (void)postUnfollow:(NSString *)screenName
 		successBlock:(void(^)(NSDictionary *user))successBlock
 		  errorBlock:(void(^)(NSError *error))errorBlock;
@@ -331,44 +385,99 @@
 				   successBlock:(void(^)(NSDictionary *relationship))successBlock
 					 errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		friendships/show
+/*
+ GET    friendships/show
 
-//	GET		friends/list
+ Returns detailed information about the relationship between two arbitrary users.
+ */
+
+/*
+ GET    friends/list
+ 
+ Returns a cursored collection of user objects for every user the specified user is following (otherwise known as their "friends").
+ 
+ At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 20 users and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
+ */
+
 - (void)getFriendsForScreenName:(NSString *)screenName
 				   successBlock:(void(^)(NSArray *friends))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		followers/list
+/*
+ GET    followers/list
+
+ Returns a cursored collection of user objects for users following the specified user.
+ 
+ At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 20 users and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
+ */
+
 - (void)getFollowersForScreenName:(NSString *)screenName
 					 successBlock:(void(^)(NSArray *followers))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Users
 
-//	GET		account/settings
+/*
+ GET    account/settings
 
-//	GET		account/verify_credentials
-//	Returns Users (1: the user)
+ Returns settings (including current trend, geo and sleep time information) for the authenticating user.
+ */
+ 
+/*
+ GET	account/verify_credentials
+ Returns Users (1: the user)
+ 
+ Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
+ */
+
 - (void)getAccountVerifyCredentialsSkipStatus:(BOOL)skipStatus
                                  successBlock:(void(^)(NSDictionary *myInfo))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	account/settings
+/*
+ POST	account/settings
 
-//	POST	account/update_delivery_device
+ Updates the authenticating user's settings.
+ */
 
-//	POST	account/update_profile
-//	Returns Users (1: the user)
+/*
+ POST	account/update_delivery_device
+
+ Sets which device Twitter delivers updates to for the authenticating user. Sending none as the device parameter will disable SMS updates.
+ */
+
+/*
+ POST	account/update_profile
+ Returns Users (1: the user)
+ 
+ Sets values that users are able to set under the "Account" tab of their settings page. Only the parameters specified will be updated.
+ */
+
 - (void)postUpdateProfile:(NSDictionary *)profileData
 			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
 			   errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	account/update_profile_background_image
+/*
+ POST	account/update_profile_background_image
 
-//	POST	account/update_profile_colors
+ Updates the authenticating user's profile background image. This method can also be used to enable or disable the profile background image. Although each parameter is marked as optional, at least one of image, tile or use must be provided when making this request.
+ */
 
-//	POST	account/update_profile_image
-//	Returns Users (1: the user)
+/*
+ POST	account/update_profile_colors
+
+ Sets one or more hex values that control the color scheme of the authenticating user's profile page on twitter.com. Each parameter's value must be a valid hexidecimal value, and may be either three or six characters (ex: #fff or #ffffff).
+ */
+
+/*
+ POST	account/update_profile_image
+ Returns Users (1: the user)
+ 
+ Updates the authenticating user's profile image. Note that this method expects raw multipart data, not a URL to an image.
+ 
+ This method asynchronously processes the uploaded file before updating the user's profile image URL. You can either update your local cache the next time you request the user's information, or, at least 5 seconds after uploading the image, ask for the updated URL using GET users/show.
+ */
+
 #if TARGET_OS_IPHONE
 - (void)postUpdateProfileImage:(UIImage *)newImage
 #else
@@ -377,18 +486,47 @@
 				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
 					errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		blocks/list
+/*
+ GET    blocks/list
 
-//	GET		blocks/ids
+ Returns a collection of user objects that the authenticating user is blocking. Important On October 15, 2012 this method will become cursored by default, altering the default response format. See Using cursors to navigate collections for more details on how cursoring works.
+ */
 
-//	POST	blocks/create
+/*
+ GET    blocks/ids
 
-//	POST	blocks/destroy
+ Returns an array of numeric user ids the authenticating user is blocking. Important On October 15, 2012 this method will become cursored by default, altering the default response format. See Using cursors to navigate collections for more details on how cursoring works.
+ */
 
-//	GET		users/lookup
+/*
+ POST	blocks/create
 
-//	GET		users/show
-//	Returns Users (1: detailed information for the user)
+ Blocks the specified user from following the authenticating user. In addition the blocked user will not show in the authenticating users mentions or timeline (unless retweeted by another user). If a follow or friend relationship exists it is destroyed.
+ */
+
+/*
+ POST	blocks/destroy
+
+ Un-blocks the user specified in the ID parameter for the authenticating user. Returns the un-blocked user in the requested format when successful. If relationships existed before the block was instated, they will not be restored.
+ */
+
+/*
+ GET    users/lookup
+
+ Returns fully-hydrated user objects for up to 100 users per request, as specified by comma-separated values passed to the user_id and/or screen_name parameters.
+ 
+ This method is especially useful when used in conjunction with collections of user IDs returned from GET friends/ids and GET followers/ids.
+ 
+ GET users/show is used to retrieve a single user object.
+ */
+
+/*
+ GET    users/show
+
+ Returns a variety of information about the user specified by the required user_id or screen_name parameter. The author's most recent Tweet will be returned inline when possible. GET users/lookup is used to retrieve a bulk collection of user objects.
+ */
+
+ //	Returns Users (1: detailed information for the user)
 - (void)getUserInformationFor:(NSString *)screenName
 				 successBlock:(void(^)(NSDictionary *user))successBlock
 				   errorBlock:(void(^)(NSError *error))errorBlock;
@@ -401,7 +539,13 @@
 #endif
              errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		users/search
+/*
+ GET		users/search
+
+ Provides a simple, relevance-based search interface to public user accounts on Twitter. Try querying by topical interest, full name, company name, location, or other criteria. Exact match searches are not supported.
+ 
+ Only the first 1,000 matching results are available.
+ */
 
 - (void)getUsersSearchQuery:(NSString *)query
                optionalPage:(NSString *)page
@@ -410,10 +554,38 @@
                successBlock:(void(^)(NSDictionary *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		users/contributees
+/*
+ GET		users/contributees
 
-//	GET		users/contributors
+ Returns a collection of users that the specified user can "contribute" to.
+ */
 
+/*
+ GET		users/contributors
+
+ Returns a collection of users who can contribute to the specified account.
+ */
+
+/*
+ POST    account/remove_profile_banner
+
+ Removes the uploaded profile banner for the authenticating user. Returns HTTP 200 upon success.
+ */
+
+/*
+ POST    account/update_profile_banner
+
+ Uploads a profile banner on behalf of the authenticating user. For best results, upload an <5MB image that is exactly 1252px by 626px. Images will be resized for a number of display options. Users with an uploaded profile banner will have a profile_banner_url node in their Users objects. More information about sizing variations can be found in User Profile Images and Banners and GET users/profile_banner.
+ 
+ Profile banner images are processed asynchronously. The profile_banner_url and its variant sizes will not necessary be available directly after upload.
+ */
+
+/*
+ GET     users/profile_banner
+
+ Returns a map of the available size variations of the specified user's profile banner. If the user has not uploaded a profile banner, a HTTP 404 will be served instead. This method can be used instead of string manipulation on the profile_banner_url returned in user objects as described in User Profile Images and Banners.
+ */
+ 
 #pragma mark Suggested Users
 
 //	GET		users/suggestions/:slug
