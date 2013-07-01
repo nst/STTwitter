@@ -4,26 +4,48 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
 
 ### Project News
 
+[2013-06] STTwitter 0.0.2 is [available on CocoaPods](https://github.com/CocoaPods/Specs/tree/master/STTwitter) thanks to Evan Roth (bug fixes, implemented all 'Lists' API endpoints)  
+[2013-05] STTwitter 0.0.1 is [available on CocoaPods](https://github.com/CocoaPods/Specs/tree/master/STTwitter) thanks to Evan Roth  
 [2013-04] [nightly build](http://seriot.ch/resources/abusing_twitter_api/STTwitter.app.zip) 114 KB (signed)  
+[2013-03] STTwitter can use [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication  
 [2013-03] [Adium](http://adium.im/) developers have [chosen](http://permalink.gmane.org/gmane.network.instant-messaging.adium.devel/2332) to use STTwitter to handle Twitter connectivity in Adium, starting from version 1.5.7.
 
-### Typical Usage
+### Brief Description
 
-##### 1a. Copy the `STTwitter` directory into your project OR
-##### 1b. If you're using CocoaPods, simply include the `STTwitter` pod in your project's podfile:
-	pod 'STTwitter'
-#####and then
+`STTwitter` is lightweight Objective-C wrapper for Twitter REST API 1.1.
+
+It works on iOS 5+ and OS X 10.7+.
+
+### Installation
+
+##### Standard Way
+
+Just copy the `STTwitter` directory into your project and that's it.
+
+##### CocoaPods
+
+Iif you are using CocoaPods, include the `STTwitter` pod in your project's podfile:
+
+    pod 'STTwitter'
+
+and install it:
+
 	pod install
 
-##### 2. Import STTwitterAPIWrapper
+##### ARC
 
-    #import "STTwitterAPIWrapper.h"
+`STTwitter` compiles without modification with non-ARC projects.
 
-##### 3. Instantiate `STTwitterAPIWrapper`
+If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([explanations here](http://stackoverflow.com/questions/6646052/how-can-i-disable-arc-for-a-single-file-in-a-project)).
 
+### Simple Usage
+
+##### 1. Instantiate `STTwitterAPIWrapper`
+
+    // here, we use the credentials from OS X Preferences
     STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIWithOAuthOSX];
 
-##### 4. Verify the credentials
+##### 2. Verify the credentials
 
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         // ...
@@ -31,27 +53,36 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
         // ...
     }];
 
-##### 5. Get the timeline statuses
+##### 3. Get the timeline statuses
 
     [twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
         // ...
     } errorBlock:^(NSError *error) {
         // ...
     }];
-   
-	    
+
+### App Only Authentication
+
+In this mode, the user doesn't need to provide user authentication.
+
+    STTwitterAPIWrapper *twitter =
+        [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"CONSUMER_KEY"
+                                                       consumerSecret:@"CONSUMER_SECRET"];
     
-### Demo Project
-
-STTwitter demo project lets you choose how to get the OAuth tokens (see below).
-
-Once you got the OAuth tokens, you can get your timeline and post a new status.
-
-![STTwitter](Art/STTwitter.png "STTwitter Demo Project")
-
-![STTweet](Art/STTweet.png "STTwitter Demo Tweet")
-
-### OAuth Connection
+    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+        
+        [twitter getUserTimelineWithScreenName:@"barackobama"
+                                  successBlock:^(NSArray *statuses) {
+            // ...
+        } errorBlock:^(NSError *error) {
+            // ...
+        }];
+    
+    } errorBlock:^(NSError *error) {
+        // ...
+    }];
+    
+### Several Kinds of OAuth Connections
 
 You can instantiate `STTwitterAPIWrapper` in three ways:
 
@@ -60,9 +91,9 @@ You can instantiate `STTwitterAPIWrapper` in three ways:
   - get an URL, fetch a PIN, enter it in your app, get oauth access tokens  
   - set `username` and `password`, get oauth access tokens with XAuth, if the app is entitled to
   - set `oauth token` and `oauth token secret` directly
-- use the new [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication and get / use a "bearer token"
+- use the [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication and get / use a "bearer token"
 
-So there are five cases altogether, hence the five methods:
+So there are five cases altogether, hence these five methods:
 
     + (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX;
 
@@ -80,24 +111,43 @@ So there are five cases altogether, hence the five methods:
                                            oauthTokenSecret:(NSString *)oauthTokenSecret;
                    
     + (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
-                                                       consumerSecret:(NSString *)consumerSecret;
-                   
+                                                       consumerSecret:(NSString *)consumerSecret;               
                                            
 ### OAuth Consumer Key / Consumer Secret
 
-In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. With STTwitter you can provide the tokens you want. You can request consumer tokens for your app on Twitter website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
+In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
 
 STTwitter demo project comes with `TwitterClients.plist` where you can enter your own consumer tokens.
+
+### Demo / Test Project
+
+STTwitter demo (or test) project lets you choose how to get the OAuth tokens (see below).
+
+Once you got the OAuth tokens, you can get your timeline and post a new status.
+
+![STTwitter](Art/STTwitter.png "STTwitter Demo Project")
+
+![STTweet](Art/STTweet.png "STTwitter Demo Tweet")
 
 ### Architecture
 
 Your code only interacts with `STTwitterAPIWrapper`.
 
-`STTwitterAPIWrapper` maps Objective-C methods with the Twitter API resources and parameters.
+`STTwitterAPIWrapper` maps Objective-C methods with most common Twitter API endpoints.
 
-`STTwitterAPIWrapper` implements the most common Twitter API methods, add more if you need to.
+Add more if you need to, or use these generic methods directly:
 
-`STTwitterAPIWrapper` uses `STAuthOSX` or `STTwitterOAuth` to actually connect to Twitter.
+    - (void)getResource:(NSString *)resource
+             parameters:(NSDictionary *)parameters
+           successBlock:(void(^)(id json))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock;
+    
+    - (void)postResource:(NSString *)resource
+              parameters:(NSDictionary *)parameters
+            successBlock:(void(^)(id response))successBlock
+              errorBlock:(void(^)(NSError *error))errorBlock;
+
+`STTwitterAPIWrapper` uses `STAuthOSX`, `STTwitterOAuth` or `STTwitterAppOnly` to actually connect to Twitter.
 
 `STTwitterOSX` uses OS X 10.8 `Accounts.framework` and `Social.framework`.
 
@@ -105,7 +155,7 @@ Your code only interacts with `STTwitterAPIWrapper`.
 
 `STTwitterAppOnly` implements the [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) OAuth 2.0 authentication for Twitter.
 
-`STTwitterOAuth` and `STTwitterAppOnly` both relies on `STHTTPRequest` to POST and GET asynchronous HTTP requests.
+`STTwitterOAuth` and `STTwitterAppOnly` both relies on [STHTTPRequest](https://github.com/nst/STHTTPRequest) to POST and GET asynchronous HTTP requests.
 
 ![STTwitter](Art/architecture.png "STTwitter Architecture")
 
