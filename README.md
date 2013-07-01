@@ -1,6 +1,6 @@
 ## STTwitter
 
-_A lightweight Objective-C wrapper for Twitter REST API 1.1_
+_A lightweight Objective-C library for Twitter REST API 1.1_
 
 ### Project News
 
@@ -10,9 +10,9 @@ _A lightweight Objective-C wrapper for Twitter REST API 1.1_
 [2013-03] STTwitter can use [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication  
 [2013-03] [Adium](http://adium.im/) developers have [chosen](http://permalink.gmane.org/gmane.network.instant-messaging.adium.devel/2332) to use STTwitter to handle Twitter connectivity in Adium, starting from version 1.5.7.
 
-### Brief Description
+### Short Description
 
-`STTwitter` is lightweight Objective-C wrapper for Twitter REST API 1.1.
+`STTwitter` is lightweight Objective-C library for Twitter REST API 1.1.
 
 It works on iOS 5+ and OS X 10.7+.
 
@@ -38,7 +38,7 @@ and install it:
 
 If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([explanations here](http://stackoverflow.com/questions/6646052/how-can-i-disable-arc-for-a-single-file-in-a-project)).
 
-### Simple Usage
+### Sample Usage
 
 ##### 1. Instantiate `STTwitterAPIWrapper`
 
