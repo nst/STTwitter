@@ -129,6 +129,12 @@ Once you got the OAuth tokens, you can get your timeline and post a new status.
 
 ![STTweet](Art/STTweet.png "STTwitter Demo Tweet")
 
+### Troubleshooting
+
+##### xAuth
+
+Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So if you get an error like `NSURLErrorDomain Code=-1012, Unhandled authentication challenge type - NSURLAuthenticationMethodOAuth2` while accessing `https://api.twitter.com/oauth/access_token` then your consumer tokens are probably not xAuth-enabled. You can read more on this on Twitter website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
+
 ### Architecture
 
 Your code only interacts with `STTwitterAPIWrapper`.
