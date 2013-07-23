@@ -103,6 +103,16 @@
  This method can only return up to 800 tweets.
  */
 
+- (void)getStatusesMentionTimelineWithOptionalCount:(NSString *)optionalCount
+                                    optionalSinceID:(NSString *)optionalSinceID
+                                      optionalMaxID:(NSString *)optionalMaxID
+                                           trimUser:(BOOL)trimUser
+                                 contributorDetails:(BOOL)contributorDetails
+                                    includeEntities:(BOOL)includeEntities
+                                       successBlock:(void(^)(NSArray *statuses))successBlock
+                                         errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience method
 - (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
 							 count:(NSUInteger)optionalCount
 					  successBlock:(void(^)(NSArray *statuses))successBlock
@@ -121,6 +131,19 @@
  This method can only return up to 3,200 of a user's most recent Tweets. Native retweets of other statuses by the user is included in this total, regardless of whether include_rts is set to false when requesting this resource.
  */
 
+- (void)getStatusesUserTimelineForOptionalUserID:(NSString *)optionalUserID
+                              optionalScreenName:(NSString *)optionalScreenName
+                                 optionalSinceID:(NSString *)optionalSinceID
+                                   optionalCount:(NSString *)optionalCount
+                                   optionalMaxID:(NSString *)optionalMaxID
+                                        trimUser:(BOOL)trimUser
+                                  excludeReplies:(BOOL)excludeReplies
+                              contributorDetails:(BOOL)contributorDetails
+                                 includeRetweets:(BOOL)includeRetweets
+                                    successBlock:(void(^)(NSArray *statuses))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience method
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
                               sinceID:(NSString *)optionalSinceID
                                 maxID:(NSString *)optionalMaxID
@@ -128,11 +151,13 @@
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
+// convenience method
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
 								count:(NSUInteger)optionalCount
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
+// convenience method
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
@@ -146,6 +171,17 @@
  Up to 800 Tweets are obtainable on the home timeline. It is more volatile for users that follow many users or follow users who tweet frequently.
  */
 
+- (void)getStatusesHomeTimelineWithOptionalCount:(NSString *)optionalCount
+                                 optionalSinceID:(NSString *)optionalSinceID
+                                   optionalMaxID:(NSString *)optionalMaxID
+                                        trimUser:(BOOL)trimUser
+                                  excludeReplies:(BOOL)excludeReplies
+                              contributorDetails:(BOOL)contributorDetails
+                                 includeEntities:(BOOL)includeEntities
+                                    successBlock:(void(^)(NSArray *statuses))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience method
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
                          count:(NSUInteger)optionalCount
                   successBlock:(void(^)(NSArray *statuses))successBlock
@@ -161,12 +197,12 @@
                                  optionalSinceID:(NSString *)sinceID
                                    optionalMaxID:(NSString *)maxID
                                         trimUser:(BOOL)trimUser
-                                 includeEntitied:(BOOL)includeEntities
+                                 includeEntities:(BOOL)includeEntities
                              includeUserEntities:(BOOL)includeUserEntities
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
-// convenience method without all optional values
+// convenience method
 - (void)getStatusesRetweetsOfMeWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
