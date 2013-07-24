@@ -807,7 +807,7 @@ id removeNull(id rootObject);
                                   skipStatus:(BOOL)skipStatus
                                 successBlock:(void(^)(NSArray *statuses))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
     if(optionalMaxID) [md setObject:optionalMaxID forKey:@"max_id"];
@@ -827,7 +827,10 @@ id removeNull(id rootObject);
 						   count:(NSUInteger)optionalCount
 					successBlock:(void(^)(NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
-    [self getDirectMessagesWithOptionalSinceID:optionalSinceID optionalMaxID:nil optionalCount:optionalCount includeEntities:YES skipStatus:NO successBlock:^(NSArray *statuses) {
+    
+    NSString *count = optionalCount > 0 ? [@(optionalCount) description] : nil;
+    
+    [self getDirectMessagesWithOptionalSinceID:optionalSinceID optionalMaxID:nil optionalCount:count includeEntities:YES skipStatus:NO successBlock:^(NSArray *statuses) {
         successBlock(statuses);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -837,7 +840,7 @@ id removeNull(id rootObject);
 - (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
-                               optionalPage:(NSString *)optionalPage
+                                optionalPage:(NSString *)optionalPage
                              includeEntities:(BOOL)includeEntities
                                 successBlock:(void(^)(NSArray *statuses))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
@@ -859,7 +862,7 @@ id removeNull(id rootObject);
 - (void)getDirectMessagesSwowWithID:(NSString *)messageID
                        successBlock:(void(^)(NSArray *statuses))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSDictionary *d = @{@"id" : messageID};
     
     [_oauth getResource:@"direct_messages/show.json" parameters:d successBlock:^(id response) {
@@ -901,46 +904,140 @@ id removeNull(id rootObject);
 }
 
 #pragma mark Friends & Followers
-- (void)getUsersAtResource:(NSString *)resource
-			 forScreenName:(NSString *)screenName
-			  successBlock:(void(^)(NSArray *friends))successBlock
-				errorBlock:(void(^)(NSError *error))errorBlock {
-	NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:screenName forKey:@"screen_name"];
-	
-	__block NSMutableArray *ids = [NSMutableArray new];
-	__block void (^requestHandler)(id response) = nil;
-	__block NSString *cursor = @"-1";
-	requestHandler = [[^(id response) {
-		if (response) {
-			[ids addObjectsFromArray:[response objectForKey:@"users"]];
-			[cursor release]; cursor = [[response objectForKey:@"next_cursor_str"] copy];
-			d[@"cursor"] = cursor;
-		}
-		
-		if ([cursor isEqualToString:@"0"]) {
-			successBlock(ids);
-			[ids release]; ids = nil;
-			[cursor release]; cursor = nil;
-		} else {
-			[_oauth getResource:resource parameters:d successBlock:requestHandler
-					 errorBlock:errorBlock];
-		}
-	} copy] autorelease];
-	
-	//Send the first request
-	requestHandler(nil);
+
+- (void)getFriendshipNoRetweetsIDsWithOptionalStringifyIDsDefaultNO:(BOOL)stringifyIDs // 'stringify_ids'
+                                                       successBlock:(void(^)(NSArray *ids))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
+    
+    [_oauth getResource:@"friendships/no_retweets/ids.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
+
+- (void)getFriendsIDsForUserID:(NSString *)userID
+                  orScreenName:(NSString *)screenName
+                        cursor:(NSString *)cursor
+         stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                 optionalCount:(NSString *)count
+                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"userID or screenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
+    if(count) md[@"count"] = count;
+    
+    [_oauth getResource:@"friends/ids.json" parameters:md successBlock:^(id response) {
+        NSArray *ids = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            ids = [response valueForKey:@"ids"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(ids, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+//- (void)getUsersAtResource:(NSString *)resource
+//			 forScreenName:(NSString *)screenName
+//			  successBlock:(void(^)(NSArray *friends))successBlock
+//				errorBlock:(void(^)(NSError *error))errorBlock {
+//
+//	NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:screenName forKey:@"screen_name"];
+//
+//	__block NSMutableArray *ids = [NSMutableArray new];
+//	__block void (^requestHandler)(id response) = nil;
+//	__block NSString *cursor = @"-1";
+//	requestHandler = [[^(id response) {
+//		if (response) {
+//			[ids addObjectsFromArray:[response objectForKey:@"users"]];
+//			[cursor release]; cursor = [[response objectForKey:@"next_cursor_str"] copy];
+//			d[@"cursor"] = cursor;
+//		}
+//
+//		if ([cursor isEqualToString:@"0"]) {
+//			successBlock(ids);
+//			[ids release]; ids = nil;
+//			[cursor release]; cursor = nil;
+//		} else {
+//			[_oauth getResource:resource parameters:d successBlock:requestHandler
+//					 errorBlock:errorBlock];
+//		}
+//	} copy] autorelease];
+//
+//	//Send the first request
+//	requestHandler(nil);
+//}
 
 - (void)getFriendsIDsForScreenName:(NSString *)screenName
 				      successBlock:(void(^)(NSArray *friends))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
-	[self getUsersAtResource:@"friends/ids.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
+    
+    [self getFriendsIDsForUserID:nil orScreenName:screenName cursor:nil stringifyIDsDefaultNO:NO optionalCount:nil successBlock:^(NSArray *ids, NSString *previousCursor, NSString *nextCursor) {
+        successBlock(ids);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getFollowersIDsForUserID:(NSString *)userID
+                    orScreenName:(NSString *)screenName
+                          cursor:(NSString *)cursor
+           stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                   optionalCount:(NSString *)count
+                    successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"userID or screenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
+    if(count) md[@"count"] = count;
+    
+    [_oauth getResource:@"followers/ids.json" parameters:md successBlock:^(id response) {
+        NSArray *ids = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            ids = [response valueForKey:@"ids"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(ids, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
 
 - (void)getFollowersIDsForScreenName:(NSString *)screenName
 					    successBlock:(void(^)(NSArray *followers))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
-	[self getUsersAtResource:@"followers/ids.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
+    
+    [self getFollowersIDsForUserID:nil orScreenName:screenName cursor:nil stringifyIDsDefaultNO:NO optionalCount:nil successBlock:^(NSArray *ids, NSString *previousCursor, NSString *nextCursor) {
+        successBlock(ids);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
 
 - (void)postFollow:(NSString *)screenName
@@ -981,16 +1078,100 @@ id removeNull(id rootObject);
     }];
 }
 
+- (void)getFriendsListForUserID:(NSString *)userID
+                   orScreenName:(NSString *)screenName
+                         cursor:(NSString *)cursor
+                     skipStatus:(BOOL)skipStatus
+            includeUserEntities:(BOOL)includeUserEntities
+                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"userID or screenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    md[@"skip_status"] = skipStatus ? @"1" : @"0";
+    md[@"include_user_entities"] = includeUserEntities ? @"1" : @"0";
+    
+    [_oauth getResource:@"friends/list.json" parameters:md successBlock:^(id response) {
+        NSArray *users = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            users = [response valueForKey:@"users"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 - (void)getFriendsForScreenName:(NSString *)screenName
 				   successBlock:(void(^)(NSArray *friends))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
-	[self getUsersAtResource:@"friends/list.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
+    
+    [self getFriendsListForUserID:nil orScreenName:screenName cursor:nil skipStatus:NO includeUserEntities:YES successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
+        successBlock(users);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
 
+- (void)getFollowersListForUserID:(NSString *)userID
+                   orScreenName:(NSString *)screenName
+                         cursor:(NSString *)cursor
+                     skipStatus:(BOOL)skipStatus
+            includeUserEntities:(BOOL)includeUserEntities
+                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"userID or screenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    md[@"skip_status"] = skipStatus ? @"1" : @"0";
+    md[@"include_user_entities"] = includeUserEntities ? @"1" : @"0";
+    
+    [_oauth getResource:@"followers/list.json" parameters:md successBlock:^(id response) {
+        NSArray *users = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            users = [response valueForKey:@"users"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// TODO
 - (void)getFollowersForScreenName:(NSString *)screenName
 					 successBlock:(void(^)(NSArray *followers))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
-	[self getUsersAtResource:@"followers/list.json" forScreenName:screenName successBlock:successBlock errorBlock:errorBlock];
+    
+	[self getFollowersListForUserID:nil
+                       orScreenName:screenName
+                             cursor:nil
+                         skipStatus:NO
+                includeUserEntities:YES
+                       successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
+        successBlock(users);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
 
 #pragma mark Users

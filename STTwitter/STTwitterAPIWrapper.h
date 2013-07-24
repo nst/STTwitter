@@ -310,7 +310,7 @@
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
                              includeEntities:(BOOL)includeEntities
-                             skipStatus:(BOOL)skipStatus
+                                  skipStatus:(BOOL)skipStatus
                                 successBlock:(void(^)(NSArray *statuses))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 // convenience
@@ -351,9 +351,13 @@
 
 /*
  GET friendships/no_retweets/ids
-
+ 
  Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from. Use POST friendships/update to set the "no retweets" status for a given user account on behalf of the current user.
  */
+
+- (void)getFriendshipNoRetweetsIDsWithOptionalStringifyIDsDefaultNO:(BOOL)stringifyIDs // 'stringify_ids'
+                                                       successBlock:(void(^)(NSArray *ids))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET		friends/ids
@@ -366,6 +370,15 @@
  This method is especially powerful when used in conjunction with GET users/lookup, a method that allows you to convert user IDs into full user objects in bulk.
  */
 
+- (void)getFriendsIDsForUserID:(NSString *)userID
+                  orScreenName:(NSString *)screenName
+                        cursor:(NSString *)cursor
+         stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                 optionalCount:(NSString *)count
+                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getFriendsIDsForScreenName:(NSString *)screenName
 				      successBlock:(void(^)(NSArray *friends))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
@@ -381,25 +394,34 @@
  This method is especially powerful when used in conjunction with GET users/lookup, a method that allows you to convert user IDs into full user objects in bulk.
  */
 
+- (void)getFollowersIDsForUserID:(NSString *)userID
+                    orScreenName:(NSString *)screenName
+                          cursor:(NSString *)cursor
+           stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                   optionalCount:(NSString *)count
+                    successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getFollowersIDsForScreenName:(NSString *)screenName
                         successBlock:(void(^)(NSArray *followers))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/lookup
-
+ 
  Returns the relationships of the authenticating user to the comma-separated list of up to 100 screen_names or user_ids provided. Values for connections can be: following, following_requested, followed_by, none.
  */
 
 /*
  GET    friendships/incoming
-
+ 
  Returns a collection of numeric IDs for every user who has a pending request to follow the authenticating user.
  */
 
 /*
  GET    friendships/outgoing
-
+ 
  Returns a collection of numeric IDs for every protected user for whom the authenticating user has a pending follow request.
  */
 
@@ -442,7 +464,7 @@
 
 /*
  GET    friendships/show
-
+ 
  Returns detailed information about the relationship between two arbitrary users.
  */
 
@@ -454,18 +476,36 @@
  At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 20 users and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
  */
 
+- (void)getFriendsListForUserID:(NSString *)userID
+                   orScreenName:(NSString *)screenName
+                         cursor:(NSString *)cursor
+                     skipStatus:(BOOL)skipStatus
+            includeUserEntities:(BOOL)includeUserEntities
+                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getFriendsForScreenName:(NSString *)screenName
 				   successBlock:(void(^)(NSArray *friends))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    followers/list
-
+ 
  Returns a cursored collection of user objects for users following the specified user.
  
  At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 20 users and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
  */
 
+- (void)getFollowersListForUserID:(NSString *)userID
+                     orScreenName:(NSString *)screenName
+                           cursor:(NSString *)cursor
+                       skipStatus:(BOOL)skipStatus
+              includeUserEntities:(BOOL)includeUserEntities
+                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getFollowersForScreenName:(NSString *)screenName
 					 successBlock:(void(^)(NSArray *followers))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
@@ -474,10 +514,10 @@
 
 /*
  GET    account/settings
-
+ 
  Returns settings (including current trend, geo and sleep time information) for the authenticating user.
  */
- 
+
 /*
  GET	account/verify_credentials
  Returns Users (1: the user)
@@ -491,13 +531,13 @@
 
 /*
  POST	account/settings
-
+ 
  Updates the authenticating user's settings.
  */
 
 /*
  POST	account/update_delivery_device
-
+ 
  Sets which device Twitter delivers updates to for the authenticating user. Sending none as the device parameter will disable SMS updates.
  */
 
@@ -514,13 +554,13 @@
 
 /*
  POST	account/update_profile_background_image
-
+ 
  Updates the authenticating user's profile background image. This method can also be used to enable or disable the profile background image. Although each parameter is marked as optional, at least one of image, tile or use must be provided when making this request.
  */
 
 /*
  POST	account/update_profile_colors
-
+ 
  Sets one or more hex values that control the color scheme of the authenticating user's profile page on twitter.com. Each parameter's value must be a valid hexidecimal value, and may be either three or six characters (ex: #fff or #ffffff).
  */
 
@@ -543,31 +583,31 @@
 
 /*
  GET    blocks/list
-
+ 
  Returns a collection of user objects that the authenticating user is blocking. Important On October 15, 2012 this method will become cursored by default, altering the default response format. See Using cursors to navigate collections for more details on how cursoring works.
  */
 
 /*
  GET    blocks/ids
-
+ 
  Returns an array of numeric user ids the authenticating user is blocking. Important On October 15, 2012 this method will become cursored by default, altering the default response format. See Using cursors to navigate collections for more details on how cursoring works.
  */
 
 /*
  POST	blocks/create
-
+ 
  Blocks the specified user from following the authenticating user. In addition the blocked user will not show in the authenticating users mentions or timeline (unless retweeted by another user). If a follow or friend relationship exists it is destroyed.
  */
 
 /*
  POST	blocks/destroy
-
+ 
  Un-blocks the user specified in the ID parameter for the authenticating user. Returns the un-blocked user in the requested format when successful. If relationships existed before the block was instated, they will not be restored.
  */
 
 /*
  GET    users/lookup
-
+ 
  Returns fully-hydrated user objects for up to 100 users per request, as specified by comma-separated values passed to the user_id and/or screen_name parameters.
  
  This method is especially useful when used in conjunction with collections of user IDs returned from GET friends/ids and GET followers/ids.
@@ -577,11 +617,11 @@
 
 /*
  GET    users/show
-
+ 
  Returns a variety of information about the user specified by the required user_id or screen_name parameter. The author's most recent Tweet will be returned inline when possible. GET users/lookup is used to retrieve a bulk collection of user objects.
  */
 
- //	Returns Users (1: detailed information for the user)
+//	Returns Users (1: detailed information for the user)
 - (void)getUserInformationFor:(NSString *)screenName
 				 successBlock:(void(^)(NSDictionary *user))successBlock
 				   errorBlock:(void(^)(NSError *error))errorBlock;
@@ -596,7 +636,7 @@
 
 /*
  GET		users/search
-
+ 
  Provides a simple, relevance-based search interface to public user accounts on Twitter. Try querying by topical interest, full name, company name, location, or other criteria. Exact match searches are not supported.
  
  Only the first 1,000 matching results are available.
@@ -611,25 +651,25 @@
 
 /*
  GET		users/contributees
-
+ 
  Returns a collection of users that the specified user can "contribute" to.
  */
 
 /*
  GET		users/contributors
-
+ 
  Returns a collection of users who can contribute to the specified account.
  */
 
 /*
  POST    account/remove_profile_banner
-
+ 
  Removes the uploaded profile banner for the authenticating user. Returns HTTP 200 upon success.
  */
 
 /*
  POST    account/update_profile_banner
-
+ 
  Uploads a profile banner on behalf of the authenticating user. For best results, upload an <5MB image that is exactly 1252px by 626px. Images will be resized for a number of display options. Users with an uploaded profile banner will have a profile_banner_url node in their Users objects. More information about sizing variations can be found in User Profile Images and Banners and GET users/profile_banner.
  
  Profile banner images are processed asynchronously. The profile_banner_url and its variant sizes will not necessary be available directly after upload.
@@ -637,10 +677,10 @@
 
 /*
  GET     users/profile_banner
-
+ 
  Returns a map of the available size variations of the specified user's profile banner. If the user has not uploaded a profile banner, a HTTP 404 will be served instead. This method can be used instead of string manipulation on the profile_banner_url returned in user objects as described in User Profile Images and Banners.
  */
- 
+
 #pragma mark Suggested Users
 
 //	GET		users/suggestions/:slug
