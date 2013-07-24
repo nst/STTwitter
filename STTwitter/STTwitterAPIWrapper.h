@@ -435,6 +435,11 @@
  Returns a collection of numeric IDs for every protected user for whom the authenticating user has a pending follow request.
  */
 
+- (void)getFriendshipOutgoingWithOptionalCursor:(NSString *)cursor
+                          stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST   friendships/create
  Returns Users (1: the followed user)
@@ -446,6 +451,12 @@
  Actions taken in this method are asynchronous and changes will be eventually consistent.
  */
 
+- (void)postFriendshipsCreateForScreenName:(NSString *)screenName
+                                orUserID:(NSString *)userID
+                            successBlock:(void(^)(NSDictionary *user))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)postFollow:(NSString *)screenName
 	  successBlock:(void(^)(NSDictionary *user))successBlock
 		errorBlock:(void(^)(NSError *error))errorBlock;
@@ -461,6 +472,12 @@
  Actions taken in this method are asynchronous and changes will be eventually consistent.
  */
 
+- (void)postFriendshipsDestroyScreenName:(NSString *)screenName
+                                orUserID:(NSString *)userID
+                            successBlock:(void(^)(NSDictionary *user))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)postUnfollow:(NSString *)screenName
 		successBlock:(void(^)(NSDictionary *user))successBlock
 		  errorBlock:(void(^)(NSError *error))errorBlock;
@@ -477,6 +494,13 @@
  
  Returns detailed information about the relationship between two arbitrary users.
  */
+
+- (void)getFriendshipShowForSourceID:(NSString *)sourceID
+                  orSourceScreenName:(NSString *)sourceScreenName
+                            targetID:(NSString *)targetID
+                  orTargetScreenName:(NSString *)targetScreenName
+                        successBlock:(void(^)(id relationship))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friends/list

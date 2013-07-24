@@ -1087,25 +1087,85 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)postFollow:(NSString *)screenName
-	  successBlock:(void(^)(NSDictionary *user))successBlock
-		errorBlock:(void(^)(NSError *error))errorBlock {
-	NSDictionary *d = @{@"screen_name" : screenName};
+- (void)getFriendshipOutgoingWithOptionalCursor:(NSString *)cursor
+                          stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
     
-    [_oauth postResource:@"friendships/create.json" parameters:d successBlock:^(id response) {
+    [_oauth getResource:@"friendships/outgoing.json" parameters:md successBlock:^(id response) {
+        NSArray *ids = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            ids = [response valueForKey:@"ids"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(ids, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+
+
+- (void)postFriendshipsCreateForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert((screenName || userID), @"screenName or userID is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    
+    [_oauth postResource:@"friendships/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
 }
 
+- (void)postFollow:(NSString *)screenName
+	  successBlock:(void(^)(NSDictionary *user))successBlock
+		errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postFriendshipsCreateForScreenName:screenName orUserID:nil successBlock:^(NSDictionary *user) {
+        successBlock(user);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postFriendshipsDestroyScreenName:(NSString *)screenName
+                                orUserID:(NSString *)userID
+                            successBlock:(void(^)(NSDictionary *user))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenName || userID), @"screenName or userID is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    
+    [_oauth postResource:@"friendships/destroy.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];    
+}
+
 - (void)postUnfollow:(NSString *)screenName
 		successBlock:(void(^)(NSDictionary *user))successBlock
 		  errorBlock:(void(^)(NSError *error))errorBlock {
-	NSDictionary *d = @{@"screen_name" : screenName};
-    
-    [_oauth postResource:@"friendships/destroy.json" parameters:d successBlock:^(id response) {
-        successBlock(response);
+	
+    [self postFriendshipsDestroyScreenName:screenName orUserID:nil successBlock:^(NSDictionary *user) {
+        successBlock(user);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -1119,6 +1179,28 @@ id removeNull(id rootObject);
 	d[@"device"] = notify ? @"true" : @"false";
     
     [_oauth postResource:@"friendships/update.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getFriendshipShowForSourceID:(NSString *)sourceID
+                  orSourceScreenName:(NSString *)sourceScreenName
+                            targetID:(NSString *)targetID
+                  orTargetScreenName:(NSString *)targetScreenName
+                        successBlock:(void(^)(id relationship))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert((sourceID || sourceScreenName), @"sourceID or sourceScreenName is missing");
+    NSAssert((targetID || targetScreenName), @"targetID or targetScreenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(sourceID) md[@"source_id"] = sourceID;
+    if(sourceScreenName) md[@"source_screen_name"] = sourceScreenName;
+    if(targetID) md[@"target_id"] = targetID;
+    if(targetScreenName) md[@"target_screen_name"] = targetScreenName;
+    
+    [_oauth getResource:@"friendships/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
