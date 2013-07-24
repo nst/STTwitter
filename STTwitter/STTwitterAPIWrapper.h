@@ -306,6 +306,14 @@
 
 //	GET		direct_messages
 //	Returns Tweets (*: direct messages to the user)
+- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
+                               optionalMaxID:(NSString *)optionalMaxID
+                               optionalCount:(NSString *)optionalCount
+                             includeEntities:(BOOL)includeEntities
+                             skipStatus:(BOOL)skipStatus
+                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                  errorBlock:(void(^)(NSError *error))errorBlock;
+// convenience
 - (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
 						   count:(NSUInteger)optionalCount
 					successBlock:(void(^)(NSArray *statuses))successBlock

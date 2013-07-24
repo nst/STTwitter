@@ -799,16 +799,36 @@ id removeNull(id rootObject);
 #pragma mark Streaming
 
 #pragma mark Direct Messages
+
+- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
+                               optionalMaxID:(NSString *)optionalMaxID
+                               optionalCount:(NSString *)optionalCount
+                             includeEntities:(BOOL)includeEntities
+                                  skipStatus:(BOOL)skipStatus
+                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                  errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
+    if(optionalMaxID) [md setObject:optionalMaxID forKey:@"max_id"];
+    if(optionalCount) [md setObject:optionalCount forKey:@"count"];
+    md[@"include_entities"] = includeEntities ? @"1" : @"0";
+    md[@"skip_status"] = skipStatus ? @"1" : @"0";
+    
+    [_oauth getResource:@"direct_messages.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// convenience
 - (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
 						   count:(NSUInteger)optionalCount
 					successBlock:(void(^)(NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
-	NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
-	if (optionalCount != NSNotFound) [md setObject:[@(optionalCount) stringValue] forKey:@"count"];
-    
-    [_oauth getResource:@"direct_messages.json" parameters:md successBlock:^(id response) {
-        successBlock(response);
+    [self getDirectMessagesWithOptionalSinceID:optionalSinceID optionalMaxID:nil optionalCount:optionalCount includeEntities:YES skipStatus:NO successBlock:^(NSArray *statuses) {
+        successBlock(statuses);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
