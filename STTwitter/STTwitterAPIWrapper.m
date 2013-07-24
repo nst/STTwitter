@@ -1040,6 +1040,53 @@ id removeNull(id rootObject);
     }];
 }
 
+- (void)getFriendshipsLookupForScreenNames:(NSArray *)screenNames
+                                 orUserIDs:(NSArray *)userIDs
+                              successBlock:(void(^)(NSArray *users))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenNames || userIDs), @"missing screen names or user IDs");
+    
+    NSString *commaSeparatedScreenNames = [screenNames componentsJoinedByString:@","];
+    NSString *commaSeparatedUserIDs = [userIDs componentsJoinedByString:@","];
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(commaSeparatedScreenNames) md[@"screen_name"] = commaSeparatedScreenNames;
+    if(commaSeparatedUserIDs) md[@"user_id"] = commaSeparatedUserIDs;
+    
+    [_oauth getResource:@"friendships/lookup.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getFriendshipIncomingWithOptionalCursor:(NSString *)cursor
+                          stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"cursor"] = cursor ? cursor : @"-1";
+    md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
+    
+    [_oauth getResource:@"friendships/incoming.json" parameters:md successBlock:^(id response) {
+        NSArray *ids = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            ids = [response valueForKey:@"ids"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(ids, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 - (void)postFollow:(NSString *)screenName
 	  successBlock:(void(^)(NSDictionary *user))successBlock
 		errorBlock:(void(^)(NSError *error))errorBlock {

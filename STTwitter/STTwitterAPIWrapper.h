@@ -413,11 +413,21 @@
  Returns the relationships of the authenticating user to the comma-separated list of up to 100 screen_names or user_ids provided. Values for connections can be: following, following_requested, followed_by, none.
  */
 
+- (void)getFriendshipsLookupForScreenNames:(NSArray *)screenNames
+                                 orUserIDs:(NSArray *)userIDs
+                              successBlock:(void(^)(NSArray *users))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  GET    friendships/incoming
  
  Returns a collection of numeric IDs for every user who has a pending request to follow the authenticating user.
  */
+
+- (void)getFriendshipIncomingWithOptionalCursor:(NSString *)cursor
+                          stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/outgoing
