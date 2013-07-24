@@ -834,12 +834,52 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)postDestroyDirectMessageWithID:(NSString *)dmID
+- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
+                               optionalMaxID:(NSString *)optionalMaxID
+                               optionalCount:(NSString *)optionalCount
+                               optionalPage:(NSString *)optionalPage
+                             includeEntities:(BOOL)includeEntities
+                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                  errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
+    if(optionalMaxID) [md setObject:optionalMaxID forKey:@"max_id"];
+    if(optionalCount) [md setObject:optionalCount forKey:@"count"];
+    if(optionalPage) [md setObject:optionalPage forKey:@"page"];
+    md[@"include_entities"] = includeEntities ? @"1" : @"0";
+    
+    [_oauth getResource:@"direct_messages/sent.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getDirectMessagesSwowWithID:(NSString *)messageID
+                       successBlock:(void(^)(NSArray *statuses))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSDictionary *d = @{@"id" : messageID};
+    
+    [_oauth getResource:@"direct_messages/show.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+    
+}
+
+- (void)postDestroyDirectMessageWithID:(NSString *)messageID
+                       includeEntities:(BOOL)includeEntities
 						  successBlock:(void(^)(NSDictionary *dm))successBlock
 							errorBlock:(void(^)(NSError *error))errorBlock {
-	NSDictionary *d = @{@"id" : dmID};
     
-    [_oauth postResource:@"direct_messages/destroy.json" parameters:d successBlock:^(id response) {
+	NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"id"] = messageID;
+    md[@"include_entities"] = includeEntities ? @"1" : @"0";
+    
+    [_oauth postResource:@"direct_messages/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

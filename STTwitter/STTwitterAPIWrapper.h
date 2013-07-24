@@ -320,12 +320,23 @@
 					  errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		direct_messages/sent
+- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
+                               optionalMaxID:(NSString *)optionalMaxID
+                               optionalCount:(NSString *)optionalCount
+                                optionalPage:(NSString *)optionalPage
+                             includeEntities:(BOOL)includeEntities
+                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		direct_messages/show
+- (void)getDirectMessagesSwowWithID:(NSString *)messageID
+                       successBlock:(void(^)(NSArray *statuses))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	POST	direct_messages/destroy
 //	Returns Tweets (1: the destroyed DM)
-- (void)postDestroyDirectMessageWithID:(NSString *)dmID
+- (void)postDestroyDirectMessageWithID:(NSString *)messageID
+                       includeEntities:(BOOL)includeEntities
 						  successBlock:(void(^)(NSDictionary *dm))successBlock
 							errorBlock:(void(^)(NSError *error))errorBlock;
 
