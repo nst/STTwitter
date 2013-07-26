@@ -215,20 +215,27 @@ id removeNull(id rootObject);
 #endif
 
              errorBlock:(void(^)(NSError *error))errorBlock {
+
 	[self getUserInformationFor:screenName
 				   successBlock:^(NSDictionary *response) {
-					   NSString *imageURL = [response objectForKey:@"profile_image_url"];
+					   NSString *imageURLString = [response objectForKey:@"profile_image_url"];
                        
-					   NSURLRequest *imageRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:imageURL]];
-					   
-					   NSData *imageData = [NSURLConnection sendSynchronousRequest:imageRequest returningResponse:nil error:nil];
+                       __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
                        
+                       r.completionBlock = ^(NSDictionary *headers, NSString *body) {
+                           
+                           NSData *imageData = r.responseData;
+
 #if TARGET_OS_IPHONE
-					   successBlock([[[UIImage alloc] initWithData:imageData] autorelease]);
+                           successBlock([[[UIImage alloc] initWithData:imageData] autorelease]);
 #else
-					   successBlock([[[NSImage alloc] initWithData:imageData] autorelease]);
+                           successBlock([[[NSImage alloc] initWithData:imageData] autorelease]);
 #endif
+                       };
                        
+                       r.errorBlock = ^(NSError *error) {
+                           errorBlock(error);
+                       };
 				   } errorBlock:^(NSError *error) {
 					   errorBlock(error);
 				   }];
@@ -1644,11 +1651,11 @@ id removeNull(id rootObject);
 }
 
 // GET users/lookup
-- (void)getUsersLookupWithScreenName:(NSString *)screenName
-                            orUserID:(NSString *)userID
-             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                        successBlock:(void(^)(NSArray *users))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getUsersLookupForScreenName:(NSString *)screenName
+                           orUserID:(NSString *)userID
+            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                       successBlock:(void(^)(NSArray *users))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert((screenName || userID), @"missing screenName or userID");
     
@@ -1665,23 +1672,45 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)getUserInformationFor:(NSString *)screenName
-				 successBlock:(void(^)(NSDictionary *user))successBlock
-				   errorBlock:(void(^)(NSError *error))errorBlock {
-	NSDictionary *d = @{@"screen_name" : screenName};
+// GET users/show
+- (void)getUsersShowForUserID:(NSString *)userID
+                 orScreenName:(NSString *)screenName
+      optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                 successBlock:(void(^)(NSDictionary *user))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [_oauth getResource:@"users/show.json" parameters:d successBlock:^(id response) {
+    NSAssert((screenName || userID), @"missing screenName or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    
+    [_oauth getResource:@"users/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
 }
 
+- (void)getUserInformationFor:(NSString *)screenName
+				 successBlock:(void(^)(NSDictionary *user))successBlock
+				   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self getUsersShowForUserID:nil orScreenName:screenName optionalIncludeEntities:nil successBlock:^(NSDictionary *user) {
+        successBlock(user);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET users/search
 - (void)getUsersSearchQuery:(NSString *)query
-               optionalPage:(NSString *)page
-              optionalCount:(NSString *)count
-            includeEntities:(BOOL)includeEntities
-               successBlock:(void(^)(NSDictionary *users))successBlock
+               optionalPage:(NSString *)optionalPage
+              optionalCount:(NSString *)optionalCount
+    optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+               successBlock:(void(^)(NSArray *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(query);
@@ -1689,9 +1718,9 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
     md[@"query"] = [query st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    if(page) md[@"page"] = page;
-    if(count) md[@"count"] = count;
-    if(includeEntities == NO) md[@"include_entities"] = @"false";
+    if(optionalPage) md[@"page"] = optionalPage;
+    if(optionalCount) md[@"count"] = optionalCount;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"users/search.json" parameters:md successBlock:^(id response) {
         successBlock(response); // NSArray of users dictionaries

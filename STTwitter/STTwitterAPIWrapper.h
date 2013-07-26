@@ -741,11 +741,11 @@
  */
 
 - (void)postBlocksDestroyWithScreenName:(NSString *)screenName
-                              orUserID:(NSString *)userID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
-                          successBlock:(void(^)(NSDictionary *user))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+                               orUserID:(NSString *)userID
+                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                           successBlock:(void(^)(NSDictionary *user))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/lookup
@@ -765,19 +765,27 @@
  - You are strongly encouraged to use a POST for larger requests.
  */
 
-- (void)getUsersLookupWithScreenName:(NSString *)screenName
-                            orUserID:(NSString *)userID
-             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                        successBlock:(void(^)(NSArray *users))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getUsersLookupForScreenName:(NSString *)screenName
+                           orUserID:(NSString *)userID
+            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                       successBlock:(void(^)(NSArray *users))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/show
  
  Returns a variety of information about the user specified by the required user_id or screen_name parameter. The author's most recent Tweet will be returned inline when possible. GET users/lookup is used to retrieve a bulk collection of user objects.
+ 
+ You must be following a protected user to be able to see their most recent Tweet. If you don't follow a protected user, the users Tweet will be removed. A Tweet will not always be returned in the current_status field.
  */
 
-//	Returns Users (1: detailed information for the user)
+- (void)getUsersShowForUserID:(NSString *)userID
+                 orScreenName:(NSString *)screenName
+      optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                 successBlock:(void(^)(NSDictionary *user))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getUserInformationFor:(NSString *)screenName
 				 successBlock:(void(^)(NSDictionary *user))successBlock
 				   errorBlock:(void(^)(NSError *error))errorBlock;
@@ -799,10 +807,10 @@
  */
 
 - (void)getUsersSearchQuery:(NSString *)query
-               optionalPage:(NSString *)page
-              optionalCount:(NSString *)count
-            includeEntities:(BOOL)includeEntities
-               successBlock:(void(^)(NSDictionary *users))successBlock
+               optionalPage:(NSString *)optionalPage
+              optionalCount:(NSString *)optionalCount
+    optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+               successBlock:(void(^)(NSArray *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
