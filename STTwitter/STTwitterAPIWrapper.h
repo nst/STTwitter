@@ -699,25 +699,27 @@
                          successBlock:(void(^)(NSDictionary *profile))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
-#if TARGET_OS_IPHONE
-- (void)postUpdateProfileImage:(UIImage *)newImage
-#else
-- (void)postUpdateProfileImage:(NSImage *)newImage
-#endif
-				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
-					errorBlock:(void(^)(NSError *error))errorBlock;
-
 /*
  GET    blocks/list
  
- Returns a collection of user objects that the authenticating user is blocking. Important On October 15, 2012 this method will become cursored by default, altering the default response format. See Using cursors to navigate collections for more details on how cursoring works.
+ Returns a collection of user objects that the authenticating user is blocking.
  */
+
+- (void)getBlocksListWithOptionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                  optionalCursor:(NSString *)optionalCursor
+                                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    blocks/ids
  
- Returns an array of numeric user ids the authenticating user is blocking. Important On October 15, 2012 this method will become cursored by default, altering the default response format. See Using cursors to navigate collections for more details on how cursoring works.
+ Returns an array of numeric user ids the authenticating user is blocking.
  */
+
+- (void)getBlocksIDsWithOptionalOptionalCursor:(NSString *)optionalCursor
+                                    successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	blocks/create

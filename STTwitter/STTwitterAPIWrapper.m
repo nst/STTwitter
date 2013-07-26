@@ -1541,18 +1541,58 @@ id removeNull(id rootObject);
     }];
 }
 
-#if TARGET_OS_IPHONE
-- (void)postUpdateProfileImage:(UIImage *)newImage
-#else
-- (void)postUpdateProfileImage:(NSImage *)newImage
-#endif
-				  successBlock:(void(^)(NSDictionary *myInfo))successBlock
-					errorBlock:(void(^)(NSError *error))errorBlock {
-	NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:newImage forKey:@"image"];
-	[md setObject:@"image" forKey:@"postDataKey"];
+// GET blocks/list
+- (void)getBlocksListWithOptionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                  optionalCursor:(NSString *)optionalCursor
+                                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(optionalCursor) md[@"cursor"] = optionalCursor;
     
-    [_oauth postResource:@"account/update_profile_image.json" parameters:md successBlock:^(id response) {
-        successBlock(response);
+    [_oauth postResource:@"blocks/list.json" parameters:md successBlock:^(id response) {
+        
+        NSArray *users = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            users = [response valueForKey:@"users"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+
+}
+
+// GET blocks/ids
+- (void)getBlocksIDsWithOptionalOptionalCursor:(NSString *)optionalCursor
+                                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"stringify_ids"] = @"1";
+    if(optionalCursor) md[@"cursor"] = optionalCursor;
+    
+    [_oauth postResource:@"blocks/ids.json" parameters:md successBlock:^(id response) {
+        
+        NSArray *ids = nil;
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            ids = [response valueForKey:@"ids"];
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+        }
+        
+        successBlock(ids, previousCursor, nextCursor);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
