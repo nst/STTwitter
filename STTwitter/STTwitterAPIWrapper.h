@@ -790,6 +790,7 @@
 				 successBlock:(void(^)(NSDictionary *user))successBlock
 				   errorBlock:(void(^)(NSError *error))errorBlock;
 
+// convenience
 - (void)profileImageFor:(NSString *)screenName
 #if TARGET_OS_IPHONE
            successBlock:(void(^)(UIImage *image))successBlock
@@ -819,11 +820,25 @@
  Returns a collection of users that the specified user can "contribute" to.
  */
 
+- (void)getUsersContributeesWithUserID:(NSString *)userID
+                            screenName:(NSString *)screenName
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          successBlock:(void(^)(NSArray *contributees))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  GET		users/contributors
  
  Returns a collection of users who can contribute to the specified account.
  */
+
+- (void)getUsersContributeesWithUserID:(NSString *)userID
+                            screenName:(NSString *)screenName
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          successBlock:(void(^)(NSArray *contributors))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST    account/remove_profile_banner
@@ -831,13 +846,31 @@
  Removes the uploaded profile banner for the authenticating user. Returns HTTP 200 upon success.
  */
 
+- (void)postAccountRemoveProfileBannerWithSuccessBlock:(void(^)(id response))successBlock
+                                            errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST    account/update_profile_banner
  
  Uploads a profile banner on behalf of the authenticating user. For best results, upload an <5MB image that is exactly 1252px by 626px. Images will be resized for a number of display options. Users with an uploaded profile banner will have a profile_banner_url node in their Users objects. More information about sizing variations can be found in User Profile Images and Banners and GET users/profile_banner.
  
  Profile banner images are processed asynchronously. The profile_banner_url and its variant sizes will not necessary be available directly after upload.
+ 
+ If providing any one of the height, width, offset_left, or offset_top parameters, you must provide all of the sizing parameters.
+ 
+ HTTP Response Codes
+ 200, 201, 202	Profile banner image succesfully uploaded
+ 400	Either an image was not provided or the image data could not be processed
+ 422	The image could not be resized or is too large.
  */
+
+- (void)postAccountUpdateProfileBannerWithImage:(NSString *)base64encodedImage
+                                  optionalWidth:(NSString *)optionalWidth
+                                 optionalHeight:(NSString *)optionalHeight
+                             optionalOffsetLeft:(NSString *)optionalOffsetLeft
+                              optionalOffsetTop:(NSString *)optionalOffsetTop
+                                   successBlock:(void(^)(id response))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET     users/profile_banner

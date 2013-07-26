@@ -215,7 +215,7 @@ id removeNull(id rootObject);
 #endif
 
              errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
 	[self getUserInformationFor:screenName
 				   successBlock:^(NSDictionary *response) {
 					   NSString *imageURLString = [response objectForKey:@"profile_image_url"];
@@ -225,7 +225,7 @@ id removeNull(id rootObject);
                        r.completionBlock = ^(NSDictionary *headers, NSString *body) {
                            
                            NSData *imageData = r.responseData;
-
+                           
 #if TARGET_OS_IPHONE
                            successBlock([[[UIImage alloc] initWithData:imageData] autorelease]);
 #else
@@ -1724,6 +1724,92 @@ id removeNull(id rootObject);
     
     [_oauth getResource:@"users/search.json" parameters:md successBlock:^(id response) {
         successBlock(response); // NSArray of users dictionaries
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET users/contributees
+- (void)getUsersContributeesWithUserID:(NSString *)userID
+                            screenName:(NSString *)screenName
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          successBlock:(void(^)(NSArray *contributees))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenName || userID), @"missing screenName or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    
+    [_oauth getResource:@"users/contributees.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET users/contributors
+- (void)getUsersContributeesWithUserID:(NSString *)userID
+                            screenName:(NSString *)screenName
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          successBlock:(void(^)(NSArray *contributors))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenName || userID), @"missing screenName or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    
+    [_oauth getResource:@"users/contributors.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST account/remove_profile_banner
+- (void)postAccountRemoveProfileBannerWithSuccessBlock:(void(^)(id response))successBlock
+                                            errorBlock:(void(^)(NSError *error))errorBlock {
+    [_oauth postResource:@"account/remove_profile_banner.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST account/update_profile_banner
+- (void)postAccountUpdateProfileBannerWithImage:(NSString *)base64encodedImage
+                                  optionalWidth:(NSString *)optionalWidth
+                                 optionalHeight:(NSString *)optionalHeight
+                             optionalOffsetLeft:(NSString *)optionalOffsetLeft
+                              optionalOffsetTop:(NSString *)optionalOffsetTop
+                                   successBlock:(void(^)(id response))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    if(optionalWidth || optionalHeight || optionalOffsetLeft || optionalOffsetTop) {
+        NSParameterAssert(optionalWidth);
+        NSParameterAssert(optionalHeight);
+        NSParameterAssert(optionalOffsetLeft);
+        NSParameterAssert(optionalOffsetTop);
+    }
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"banner"] = base64encodedImage;
+    if(optionalWidth) md[@"width"] = optionalWidth;
+    if(optionalHeight) md[@"height"] = optionalHeight;
+    if(optionalOffsetLeft) md[@"offset_left"] = optionalOffsetLeft;
+    if(optionalOffsetTop) md[@"offset_top"] = optionalOffsetTop;
+    
+    [_oauth getResource:@"account/update_profile_banner.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
