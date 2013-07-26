@@ -268,8 +268,6 @@
 #pragma mark Search
 
 //	GET		search/tweets
-
-// full method
 - (void)getSearchTweetsWithQuery:(NSString *)q
                  optionalGeocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
                     optionalLang:(NSString *)lang // eg. "eu"
@@ -482,12 +480,32 @@
 		successBlock:(void(^)(NSDictionary *user))successBlock
 		  errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	friendships/update
-//	Returns ?
-- (void)postUpdateNotifications:(BOOL)notify
-				  forScreenName:(NSString *)screenName
-				   successBlock:(void(^)(NSDictionary *relationship))successBlock
-					 errorBlock:(void(^)(NSError *error))errorBlock;
+/*
+ POST	friendships/update
+
+ Allows one to enable or disable retweets and device notifications from the specified user.
+ */
+
+- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                orUserID:(NSString *)userID
+                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
+                            enableRetweets:(BOOL)enableRetweets
+                            successBlock:(void(^)(NSDictionary *user))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
+                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                            enableRetweets:(BOOL)enableRetweets
+                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/show

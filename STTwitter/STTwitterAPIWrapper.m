@@ -1171,14 +1171,56 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)postUpdateNotifications:(BOOL)notify
-				  forScreenName:(NSString *)screenName
-				   successBlock:(void(^)(NSDictionary *relationship))successBlock
-					 errorBlock:(void(^)(NSError *error))errorBlock {
-	NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:screenName forKey:@"screen_name"];
-	d[@"device"] = notify ? @"true" : @"false";
+- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
+                            enableRetweets:(BOOL)enableRetweets
+                              successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
+    NSAssert((screenName || userID), @"screenName or userID is missing");
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    md[@"device"] = enableDeviceNotifications ? @"true" : @"false";
+    md[@"retweets"] = enableRetweets ? @"true" : @"false";
     
-    [_oauth postResource:@"friendships/update.json" parameters:d successBlock:^(id response) {
+    [_oauth postResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
+                              successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
+    NSAssert((screenName || userID), @"screenName or userID is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    md[@"device"] = enableDeviceNotifications ? @"true" : @"false";
+    
+    [_oauth postResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                            enableRetweets:(BOOL)enableRetweets
+                              successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
+    NSAssert((screenName || userID), @"screenName or userID is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    md[@"retweets"] = enableRetweets ? @"true" : @"false";
+    
+    [_oauth postResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
