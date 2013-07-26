@@ -1157,7 +1157,7 @@ id removeNull(id rootObject);
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
-    }];    
+    }];
 }
 
 - (void)postUnfollow:(NSString *)screenName
@@ -1177,7 +1177,7 @@ id removeNull(id rootObject);
                             enableRetweets:(BOOL)enableRetweets
                               successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
     NSAssert((screenName || userID), @"screenName or userID is missing");
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
@@ -1295,12 +1295,12 @@ id removeNull(id rootObject);
 }
 
 - (void)getFollowersListForUserID:(NSString *)userID
-                   orScreenName:(NSString *)screenName
-                         cursor:(NSString *)cursor
-                     skipStatus:(BOOL)skipStatus
-            includeUserEntities:(BOOL)includeUserEntities
-                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock {
+                     orScreenName:(NSString *)screenName
+                           cursor:(NSString *)cursor
+                       skipStatus:(BOOL)skipStatus
+              includeUserEntities:(BOOL)includeUserEntities
+                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert((userID || screenName), @"userID or screenName is missing");
     
@@ -1339,10 +1339,10 @@ id removeNull(id rootObject);
                          skipStatus:NO
                 includeUserEntities:YES
                        successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
-        successBlock(users);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                           successBlock(users);
+                       } errorBlock:^(NSError *error) {
+                           errorBlock(error);
+                       }];
 }
 
 #pragma mark Users
@@ -1607,7 +1607,7 @@ id removeNull(id rootObject);
                   filterToOwnedLists:(BOOL)filterToOwnedLists
                         successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSAssert((userID || screenName), @"userID or screenName is missing");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1615,7 +1615,7 @@ id removeNull(id rootObject);
     if(screenName) md[@"screen_name"] = screenName;
     if(optionalCursor) md[@"cursor"] = optionalCursor;
     md[@"filter_to_owned_lists"] = filterToOwnedLists ? @"1" : @"0";
-
+    
     [_oauth getResource:@"lists/memberships" parameters:md successBlock:^(id response) {
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -2281,7 +2281,7 @@ id removeNull(id rootObject);
                         optionalAccuracy:(NSString *)optionalAccuracy // eg. "5ft"
                      optionalGranularity:(NSString *)optionalGranularity // eg. "city"
                       optionalMaxResults:(NSString *)optionalMaxResults // eg. "3"
-                        optionalCallback:(NSString *)optionalCallback
+                        optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
                             successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2312,7 +2312,13 @@ id removeNull(id rootObject);
                             successBlock:(void(^)(NSArray *places))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getGeoReverseGeocodeWithLatitude:latitude longitude:longitude optionalAccuracy:nil optionalGranularity:nil optionalMaxResults:nil optionalCallback:nil successBlock:^(NSDictionary *query, NSDictionary *result) {
+    [self getGeoReverseGeocodeWithLatitude:latitude
+                                 longitude:longitude
+                          optionalAccuracy:nil
+                       optionalGranularity:nil
+                        optionalMaxResults:nil
+                          optionalCallback:nil
+                              successBlock:^(NSDictionary *query, NSDictionary *result) {
         successBlock([result valueForKey:@"places"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2328,12 +2334,12 @@ id removeNull(id rootObject);
                      optionalGranularity:(NSString *)optionalGranularity
                         optionalAccuracy:(NSString *)optionalAccuracy
                       optionalMaxResults:(NSString *)optionalMaxResults
-                optionalContaintedWithin:(NSString *)optionalContaintedWithin
+         optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin
           optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress
                         optionalCallback:(NSString *)optionalCallback
                             successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(optionalLatitude) md[@"lat"] = optionalLatitude;
     if(optionalLongitude) md[@"long"] = optionalLongitude;
@@ -2342,7 +2348,7 @@ id removeNull(id rootObject);
     if(optionalGranularity) md[@"granularity"] = optionalGranularity;
     if(optionalAccuracy) md[@"accuracy"] = optionalAccuracy;
     if(optionalMaxResults) md[@"max_results"] = optionalMaxResults;
-    if(optionalContaintedWithin) md[@"contained_within"] = optionalContaintedWithin;
+    if(optionalPlaceIDContaintedWithin) md[@"contained_within"] = optionalPlaceIDContaintedWithin;
     if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
     if(optionalCallback) md[@"callback"] = optionalCallback;
     
@@ -2365,7 +2371,17 @@ id removeNull(id rootObject);
     NSParameterAssert(latitude);
     NSParameterAssert(longitude);
     
-    [self getGeoSearchWithOptionalLatitude:latitude optionalLongitude:longitude optionalQuery:nil optionalIP:nil optionalGranularity:nil optionalAccuracy:nil optionalMaxResults:nil optionalContaintedWithin:nil optionalAttributeStreetAddress:nil optionalCallback:nil successBlock:^(NSDictionary *query, NSDictionary *result) {
+    [self getGeoSearchWithOptionalLatitude:latitude
+                         optionalLongitude:longitude
+                             optionalQuery:nil
+                                optionalIP:nil
+                       optionalGranularity:nil
+                          optionalAccuracy:nil
+                        optionalMaxResults:nil
+           optionalPlaceIDContaintedWithin:nil
+            optionalAttributeStreetAddress:nil
+                          optionalCallback:nil
+                              successBlock:^(NSDictionary *query, NSDictionary *result) {
         successBlock([result valueForKey:@"places"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

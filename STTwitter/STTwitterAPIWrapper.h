@@ -1143,7 +1143,7 @@
 
 /*
  GET    geo/reverse_geocode
-
+ 
  Given a latitude and a longitude, searches for up to 20 places that can be used as a place_id when updating a status.
  
  This request is an informative call and will deliver generalized results about geography.
@@ -1166,7 +1166,7 @@
 
 /*
  GET    geo/search
-
+ 
  Search for places that can be attached to a statuses/update. Given a latitude and a longitude pair, an IP address, or a name, this request will return a list of all the valid places that can be used as the place_id when updating a status.
  
  Conceptually, a query can be made from the user's location, retrieve a list of places, have the user validate the location he or she is at, and then send the ID of this location with a call to POST statuses/update.
@@ -1174,16 +1174,16 @@
  This is the recommended method to use find places that can be attached to statuses/update. Unlike GET geo/reverse_geocode which provides raw data access, this endpoint can potentially re-order places with regards to the user who is authenticated. This approach is also preferred for interactive place matching with the user.
  */
 
-- (void)getGeoSearchWithOptionalLatitude:(NSString *)optionalLatitude
-                       optionalLongitude:(NSString *)optionalLongitude
-                           optionalQuery:(NSString *)optionalQuery
-                              optionalIP:(NSString *)optionalIP
-                     optionalGranularity:(NSString *)optionalGranularity
-                        optionalAccuracy:(NSString *)optionalAccuracy
-                      optionalMaxResults:(NSString *)optionalMaxResults
-                optionalContaintedWithin:(NSString *)optionalContaintedWithin
-          optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress
-                        optionalCallback:(NSString *)optionalCallback
+- (void)getGeoSearchWithOptionalLatitude:(NSString *)optionalLatitude // eg. "37.7821120598956"
+                       optionalLongitude:(NSString *)optionalLongitude // eg. "-122.400612831116"
+                           optionalQuery:(NSString *)optionalQuery // eg. "Twitter HQ"
+                              optionalIP:(NSString *)optionalIP // eg. 74.125.19.104
+                     optionalGranularity:(NSString *)optionalGranularity // eg. "city"
+                        optionalAccuracy:(NSString *)optionalAccuracy // eg. "5ft"
+                      optionalMaxResults:(NSString *)optionalMaxResults // eg. "3"
+         optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin // eg. "247f43d441defc03"
+          optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
+                        optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
                             successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
