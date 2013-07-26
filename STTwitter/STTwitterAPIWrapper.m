@@ -1731,7 +1731,7 @@ id removeNull(id rootObject);
 
 // GET users/contributees
 - (void)getUsersContributeesWithUserID:(NSString *)userID
-                            screenName:(NSString *)screenName
+                            orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributees))successBlock
@@ -1753,8 +1753,8 @@ id removeNull(id rootObject);
 }
 
 // GET users/contributors
-- (void)getUsersContributeesWithUserID:(NSString *)userID
-                            screenName:(NSString *)screenName
+- (void)getUsersContributorsWithUserID:(NSString *)userID
+                            orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributors))successBlock
@@ -1808,7 +1808,27 @@ id removeNull(id rootObject);
     if(optionalOffsetLeft) md[@"offset_left"] = optionalOffsetLeft;
     if(optionalOffsetTop) md[@"offset_top"] = optionalOffsetTop;
     
-    [_oauth getResource:@"account/update_profile_banner.json" parameters:md successBlock:^(id response) {
+    [_oauth postResource:@"account/update_profile_banner.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET users/profile_banner
+- (void)getUsersProfileBannerForUserID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                          successBlock:(void(^)(NSDictionary *banner))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenName || userID), @"missing screenName or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    
+    [_oauth getResource:@"users/profile_banner.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

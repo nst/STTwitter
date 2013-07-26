@@ -821,7 +821,7 @@
  */
 
 - (void)getUsersContributeesWithUserID:(NSString *)userID
-                            screenName:(NSString *)screenName
+                            orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributees))successBlock
@@ -833,8 +833,8 @@
  Returns a collection of users who can contribute to the specified account.
  */
 
-- (void)getUsersContributeesWithUserID:(NSString *)userID
-                            screenName:(NSString *)screenName
+- (void)getUsersContributorsWithUserID:(NSString *)userID
+                            orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributors))successBlock
@@ -877,6 +877,11 @@
  
  Returns a map of the available size variations of the specified user's profile banner. If the user has not uploaded a profile banner, a HTTP 404 will be served instead. This method can be used instead of string manipulation on the profile_banner_url returned in user objects as described in User Profile Images and Banners.
  */
+
+- (void)getUsersProfileBannerForUserID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                          successBlock:(void(^)(NSDictionary *banner))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Suggested Users
 
