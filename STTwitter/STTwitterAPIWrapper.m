@@ -1835,10 +1835,85 @@ id removeNull(id rootObject);
 
 #pragma mark Favorites
 
+// GET favorites/list
+- (void)getFavoritesListWithOptionalUserID:(NSString *)optionalUserID
+                        optionalScreenName:(NSString *)optionalScreenName
+                             optionalCount:(NSString *)optionalCount
+                           optionalSinceID:(NSString *)optionalSinceID
+                             optionalMaxID:(NSString *)optionalMaxID
+                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                          successBlock:(void(^)(NSArray *statuses))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalUserID) md[@"user_id"] = optionalUserID;
+    if(optionalScreenName) md[@"screen_name"] = optionalScreenName;
+    if(optionalCount) md[@"count"] = optionalCount;
+    if(optionalSinceID) md[@"since_id"] = optionalSinceID;
+    if(optionalMaxID) md[@"max_id"] = optionalMaxID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    
+    [_oauth getResource:@"favorites/list.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 - (void)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
+    [self getFavoritesListWithOptionalUserID:nil
+                          optionalScreenName:nil
+                               optionalCount:nil
+                             optionalSinceID:nil
+                               optionalMaxID:nil
+                     optionalIncludeEntities:nil
+                                successBlock:^(NSArray *statuses) {
+                                    successBlock(statuses);
+                                } errorBlock:^(NSError *error) {
+                                    errorBlock(error);
+                                }];
+    
     [_oauth getResource:@"favorites/list.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST favorites/destroy
+- (void)postFavoriteDestroyWithStatusID:(NSString *)statusID
+                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                           successBlock:(void(^)(NSDictionary *status))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(statusID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(statusID) md[@"id"] = statusID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"favorites/destroy.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST	favorites/create
+- (void)postFavoriteCreateWithStatusID:(NSString *)statusID
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                          successBlock:(void(^)(NSDictionary *status))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(statusID);
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(statusID) md[@"id"] = statusID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"favorites/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

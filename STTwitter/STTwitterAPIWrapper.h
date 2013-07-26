@@ -817,7 +817,7 @@
  */
 
 - (void)getUsersContributeesWithUserID:(NSString *)userID
-                            orScreenName:(NSString *)screenName
+                          orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributees))successBlock
@@ -830,7 +830,7 @@
  */
 
 - (void)getUsersContributorsWithUserID:(NSString *)userID
-                            orScreenName:(NSString *)screenName
+                          orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributors))successBlock
@@ -889,14 +889,54 @@
 
 #pragma mark Favorites
 
-//	GET		favorites/list
-//	Returns Tweets (20: last 20 favorited tweets)
+/*
+ GET    favorites/list
+ 
+ Returns the 20 most recent Tweets favorited by the authenticating or specified user.
+ 
+ If you do not provide either a user_id or screen_name to this method, it will assume you are requesting on behalf of the authenticating user. Specify one or the other for best results.
+ */
+
+- (void)getFavoritesListWithOptionalUserID:(NSString *)optionalUserID
+                        optionalScreenName:(NSString *)optionalScreenName
+                             optionalCount:(NSString *)optionalCount
+                           optionalSinceID:(NSString *)optionalSinceID
+                             optionalMaxID:(NSString *)optionalMaxID
+                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                              successBlock:(void(^)(NSArray *statuses))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	favorites/destroy
-//	POST	favorites/create
-//	Returns Tweets (1: the (un)favorited tweet)
+/*
+ POST	favorites/destroy
+ 
+ Un-favorites the status specified in the ID parameter as the authenticating user. Returns the un-favorited status in the requested format when successful.
+ 
+ This process invoked by this method is asynchronous. The immediately returned status may not indicate the resultant favorited status of the tweet. A 200 OK response from this method will indicate whether the intended action was successful or not.
+ */
+
+- (void)postFavoriteDestroyWithStatusID:(NSString *)statusID
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                          successBlock:(void(^)(NSDictionary *status))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	favorites/create
+ 
+ Favorites the status specified in the ID parameter as the authenticating user. Returns the favorite status when successful.
+ 
+ This process invoked by this method is asynchronous. The immediately returned status may not indicate the resultant favorited status of the tweet. A 200 OK response from this method will indicate whether the intended action was successful or not.
+ */
+
+- (void)postFavoriteCreateWithStatusID:(NSString *)statusID
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                          successBlock:(void(^)(NSDictionary *status))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)postFavoriteState:(BOOL)favoriteState
               forStatusID:(NSString *)statusID
              successBlock:(void(^)(NSDictionary *status))successBlock
