@@ -805,7 +805,7 @@ id removeNull(id rootObject);
                                optionalCount:(NSString *)optionalCount
                              includeEntities:(BOOL)includeEntities
                                   skipStatus:(BOOL)skipStatus
-                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -825,7 +825,7 @@ id removeNull(id rootObject);
 // convenience
 - (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
 						   count:(NSUInteger)optionalCount
-					successBlock:(void(^)(NSArray *statuses))successBlock
+					successBlock:(void(^)(NSArray *messages))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *count = optionalCount > 0 ? [@(optionalCount) description] : nil;
@@ -842,7 +842,7 @@ id removeNull(id rootObject);
                                optionalCount:(NSString *)optionalCount
                                 optionalPage:(NSString *)optionalPage
                              includeEntities:(BOOL)includeEntities
-                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -860,7 +860,7 @@ id removeNull(id rootObject);
 }
 
 - (void)getDirectMessagesSwowWithID:(NSString *)messageID
-                       successBlock:(void(^)(NSArray *statuses))successBlock
+                       successBlock:(void(^)(NSArray *messages))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{@"id" : messageID};
@@ -875,7 +875,7 @@ id removeNull(id rootObject);
 
 - (void)postDestroyDirectMessageWithID:(NSString *)messageID
                        includeEntities:(BOOL)includeEntities
-						  successBlock:(void(^)(NSDictionary *dm))successBlock
+						  successBlock:(void(^)(NSDictionary *message))successBlock
 							errorBlock:(void(^)(NSError *error))errorBlock {
     
 	NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -891,7 +891,7 @@ id removeNull(id rootObject);
 
 - (void)postDirectMessage:(NSString *)status
 					   to:(NSString *)screenName
-             successBlock:(void(^)(NSDictionary *dm))successBlock
+             successBlock:(void(^)(NSDictionary *message))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock {
 	NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"text"];
     [md setObject:screenName forKey:@"screen_name"];
@@ -1594,6 +1594,40 @@ id removeNull(id rootObject);
     
     [_oauth postResource:@"lists/members/destroy" parameters:md successBlock:^(id response) {
         successBlock();
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET lists/memberships
+
+- (void)getListsMembershipsForUserID:(NSString *)userID
+                        orScreenName:(NSString *)screenName
+                      optionalCursor:(NSString *)optionalCursor
+                  filterToOwnedLists:(BOOL)filterToOwnedLists
+                        successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSAssert((userID || screenName), @"userID or screenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(optionalCursor) md[@"cursor"] = optionalCursor;
+    md[@"filter_to_owned_lists"] = filterToOwnedLists ? @"1" : @"0";
+
+    [_oauth getResource:@"lists/memberships" parameters:md successBlock:^(id response) {
+        NSString *previousCursor = nil;
+        NSString *nextCursor = nil;
+        NSArray *lists = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            previousCursor = [response valueForKey:@"previous_cursor_str"];
+            nextCursor = [response valueForKey:@"next_cursor_str"];
+            lists = [response valueForKey:@"lists"];
+        }
+        
+        successBlock(lists, previousCursor, nextCursor);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];

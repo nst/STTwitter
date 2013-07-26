@@ -302,47 +302,64 @@
 
 #pragma mark Direct Messages
 
-//	GET		direct_messages
-//	Returns Tweets (*: direct messages to the user)
+/*
+ GET	direct_messages
+ 
+ Returns the 20 most recent direct messages sent to the authenticating user. Includes detailed information about the sender and recipient user. You can request up to 200 direct messages per call, up to a maximum of 800 incoming DMs.
+ */
 - (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
                              includeEntities:(BOOL)includeEntities
                                   skipStatus:(BOOL)skipStatus
-                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 // convenience
 - (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
 						   count:(NSUInteger)optionalCount
-					successBlock:(void(^)(NSArray *statuses))successBlock
+					successBlock:(void(^)(NSArray *messages))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		direct_messages/sent
+/*
+ GET    direct_messages/sent
+ 
+ Returns the 20 most recent direct messages sent by the authenticating user. Includes detailed information about the sender and recipient user. You can request up to 200 direct messages per call, up to a maximum of 800 outgoing DMs.
+ */
 - (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
                                 optionalPage:(NSString *)optionalPage
                              includeEntities:(BOOL)includeEntities
-                                successBlock:(void(^)(NSArray *statuses))successBlock
+                                successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		direct_messages/show
+/*
+ GET    direct_messages/show
+ 
+ Returns a single direct message, specified by an id parameter. Like the /1.1/direct_messages.format request, this method will include the user objects of the sender and recipient.
+ */
 - (void)getDirectMessagesSwowWithID:(NSString *)messageID
                        successBlock:(void(^)(NSArray *statuses))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	direct_messages/destroy
-//	Returns Tweets (1: the destroyed DM)
+/*
+ POST	direct_messages/destroy
+ 
+ Destroys the direct message specified in the required ID parameter. The authenticating user must be the recipient of the specified direct message.
+ */
 - (void)postDestroyDirectMessageWithID:(NSString *)messageID
                        includeEntities:(BOOL)includeEntities
-						  successBlock:(void(^)(NSDictionary *dm))successBlock
+						  successBlock:(void(^)(NSDictionary *message))successBlock
 							errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	direct_messages/new
-//	Returns Tweets (1: the sent DM)
+/*
+ POST	direct_messages/new
+ 
+ Sends a new direct message to the specified user from the authenticating user. Requires both the user and text parameters and must be a POST. Returns the sent message in the requested format if successful.
+ */
 - (void)postDirectMessage:(NSString *)status
 					   to:(NSString *)screenName
-             successBlock:(void(^)(NSDictionary *dm))successBlock
+             successBlock:(void(^)(NSDictionary *message))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Friends & Followers
@@ -358,7 +375,7 @@
                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET		friends/ids
+ GET    friends/ids
  Returns Users (*: user IDs for followees)
  
  Returns a cursored collection of user IDs for every user the specified user is following (otherwise known as their "friends").
@@ -450,9 +467,9 @@
  */
 
 - (void)postFriendshipsCreateForScreenName:(NSString *)screenName
-                                orUserID:(NSString *)userID
-                            successBlock:(void(^)(NSDictionary *user))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+                                  orUserID:(NSString *)userID
+                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (void)postFollow:(NSString *)screenName
@@ -482,16 +499,16 @@
 
 /*
  POST	friendships/update
-
+ 
  Allows one to enable or disable retweets and device notifications from the specified user.
  */
 
 - (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
-                                orUserID:(NSString *)userID
+                                  orUserID:(NSString *)userID
                  enableDeviceNotifications:(BOOL)enableDeviceNotifications
                             enableRetweets:(BOOL)enableRetweets
-                            successBlock:(void(^)(NSDictionary *user))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
@@ -819,6 +836,19 @@
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
+ GET lists/memberships
+ 
+ Returns the lists the specified user has been added to. If user_id or screen_name are not provided the memberships for the authenticating user are returned.
+ */
+
+- (void)getListsMembershipsForUserID:(NSString *)userID
+                        orScreenName:(NSString *)screenName
+                      optionalCursor:(NSString *)optionalCursor
+                  filterToOwnedLists:(BOOL)filterToOwnedLists // When set to true, t or 1, will return just lists the authenticating user owns, and the user represented by user_id or screen_name is a member of.
+                        successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
  GET	lists/subscribers
  
  Returns the subscribers of the specified list. Private list subscribers will only be shown if the authenticated user owns the specified list.
@@ -943,7 +973,7 @@
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET		lists/members
+ GET    lists/members
  
  Returns the members of the specified list. Private list members will only be shown if the authenticated user owns the specified list.
  */
@@ -1085,7 +1115,7 @@
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET     lists/ownerships
+ GET    lists/ownerships
  
  Returns the lists owned by the specified Twitter user. Private lists will only be shown if the authenticated user is also the owner of the lists.
  */
