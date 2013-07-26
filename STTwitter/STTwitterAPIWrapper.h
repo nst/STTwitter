@@ -693,6 +693,12 @@
  This method asynchronously processes the uploaded file before updating the user's profile image URL. You can either update your local cache the next time you request the user's information, or, at least 5 seconds after uploading the image, ask for the updated URL using GET users/show.
  */
 
+- (void)postAccountUpdateProfileImage:(NSString *)base64EncodedImage
+              optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                   optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                         successBlock:(void(^)(NSDictionary *profile))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
 #if TARGET_OS_IPHONE
 - (void)postUpdateProfileImage:(UIImage *)newImage
 #else

@@ -1519,6 +1519,28 @@ id removeNull(id rootObject);
     }];
 }
 
+// POST account/update_profile_image
+- (void)postAccountUpdateProfileImage:(NSString *)base64EncodedImage
+              optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                   optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                         successBlock:(void(^)(NSDictionary *profile))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(base64EncodedImage);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"image"] = base64EncodedImage;
+    
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"account/update_profile_image.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 #if TARGET_OS_IPHONE
 - (void)postUpdateProfileImage:(UIImage *)newImage
 #else
