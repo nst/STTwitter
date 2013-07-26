@@ -2394,13 +2394,18 @@ id removeNull(id rootObject);
     
     NSParameterAssert(ipAddress);
     
-    NSDictionary *d = @{ @"ip":ipAddress };
-    
-    [_oauth getResource:@"geo/search.json" parameters:d successBlock:^(id response) {
-        
-        NSArray *places = [response valueForKeyPath:@"result.places"];
-        
-        successBlock(places);
+    [self getGeoSearchWithOptionalLatitude:nil
+                         optionalLongitude:nil
+                             optionalQuery:nil
+                                optionalIP:ipAddress
+                       optionalGranularity:nil
+                          optionalAccuracy:nil
+                        optionalMaxResults:nil
+           optionalPlaceIDContaintedWithin:nil
+            optionalAttributeStreetAddress:nil
+                          optionalCallback:nil
+                              successBlock:^(NSDictionary *query, NSDictionary *result) {
+        successBlock([result valueForKey:@"places"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2412,13 +2417,82 @@ id removeNull(id rootObject);
     
     NSParameterAssert(query);
     
-    NSDictionary *d = @{ @"query":query };
+    [self getGeoSearchWithOptionalLatitude:nil
+                         optionalLongitude:nil
+                             optionalQuery:query
+                                optionalIP:nil
+                       optionalGranularity:nil
+                          optionalAccuracy:nil
+                        optionalMaxResults:nil
+           optionalPlaceIDContaintedWithin:nil
+            optionalAttributeStreetAddress:nil
+                          optionalCallback:nil
+                              successBlock:^(NSDictionary *query, NSDictionary *result) {
+        successBlock([result valueForKey:@"places"]);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET geo/similar_places
+
+- (void)getGeoSimilarPlacesToLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                            longitude:(NSString *)longitude // eg. "-122.400612831116"
+                                 name:(NSString *)name // eg. "Twitter HQ"
+      optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin // eg. "247f43d441defc03"
+       optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
+                     optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+                         successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(latitude);
+    NSParameterAssert(longitude);
+    NSParameterAssert(name);
     
-    [_oauth getResource:@"geo/search.json" parameters:d successBlock:^(id response) {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"lat"] = latitude;
+    md[@"long"] = longitude;
+    md[@"name"] = name;
+    if(optionalPlaceIDContaintedWithin) md[@"contained_within"] = optionalPlaceIDContaintedWithin;
+    if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
+    if(optionalCallback) md[@"callback"] = optionalCallback;
+    
+    [_oauth getResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
-        NSArray *places = [response valueForKeyPath:@"result.places"];
+        NSDictionary *query = [response valueForKey:@"query"];
+        NSDictionary *result = [response valueForKey:@"result"];
+        NSArray *places = [result valueForKey:@"places"];
+        NSString *token = [result valueForKey:@"token"];
         
-        successBlock(places);
+        successBlock(query, places, token);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST get/place
+
+- (void)postGeoPlaceWithName:(NSString *)name // eg. "Twitter HQ"
+     placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+           similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"
+                    latitude:(NSString *)latitude // eg. "37.7821120598956"
+                   longitude:(NSString *)longitude // eg. "-122.400612831116"
+optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
+            optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+                successBlock:(void(^)(NSDictionary *place))successBlock
+                  errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"name"] = name;
+    md[@"contained_within"] = placeIDContaintedWithin;
+    md[@"token"] = similarPlaceToken;
+    md[@"lat"] = latitude;
+    md[@"long"] = longitude;
+    if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
+    if(optionalCallback) md[@"callback"] = optionalCallback;
+
+    [_oauth postResource:@"get/create.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];

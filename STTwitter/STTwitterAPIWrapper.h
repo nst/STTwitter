@@ -1203,9 +1203,44 @@
                  successBlock:(void(^)(NSArray *places))successBlock
                    errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		geo/similar_places
+/*
+ GET geo/similar_places
+ 
+ Locates places near the given coordinates which are similar in name.
+ 
+ Conceptually you would use this method to get a list of known places to choose from first. Then, if the desired place doesn't exist, make a request to POST geo/place to create a new one.
+ 
+ The token contained in the response is the token needed to be able to create a new place.
+ */
 
-//	POST	geo/place
+- (void)getGeoSimilarPlacesToLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                            longitude:(NSString *)longitude // eg. "-122.400612831116"
+                                 name:(NSString *)name // eg. "Twitter HQ"
+      optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin // eg. "247f43d441defc03"
+       optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
+                     optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+                         successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	geo/place
+ 
+ Creates a new place object at the given latitude and longitude.
+ 
+ Before creating a place you need to query GET geo/similar_places with the latitude, longitude and name of the place you wish to create. The query will return an array of places which are similar to the one you wish to create, and a token. If the place you wish to create isn't in the returned array you can use the token with this method to create a new one.
+ 
+ Learn more about Finding Tweets about Places.
+ */
+
+- (void)postGeoPlaceWithName:(NSString *)name // eg. "Twitter HQ"
+     placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+           similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"
+                    latitude:(NSString *)latitude // eg. "37.7821120598956"
+                   longitude:(NSString *)longitude // eg. "-122.400612831116"
+optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
+            optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+                successBlock:(void(^)(NSDictionary *place))successBlock
+                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Trends
 
