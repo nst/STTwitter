@@ -1347,13 +1347,70 @@ id removeNull(id rootObject);
 
 #pragma mark Users
 
-- (void)getAccountVerifyCredentialsSkipStatus:(BOOL)skipStatus
-								 successBlock:(void(^)(NSDictionary *myInfo))successBlock
-								   errorBlock:(void(^)(NSError *error))errorBlock {
+// GET account/settings
+- (void)getAccountSettingsWithSuccessBlock:(void(^)(NSDictionary *settings))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    [_oauth getResource:@"account/settings.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET account/verify_credentials
+- (void)getAccountVerifyCredentialsIncludeEntites:(BOOL)includeEntities
+                                       skipStatus:(BOOL)skipStatus
+                                     successBlock:(void(^)(NSDictionary *myInfo))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"include_entities"] = includeEntities ? @"1" : @"0";
+    md[@"skip_status"] = skipStatus ? @"1" : @"0";
     
-    NSDictionary *d = @{@"skip_status" : (skipStatus ? @"true" : @"false")};
+    [_oauth getResource:@"account/verify_credentials.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST account/settings
+- (void)postAccountSettingsWithOptionalTrendLocationWOEID:(NSString *)optionalTrendLocationWOEID // eg. "1"
+                                 optionalSleepTimeEnabled:(NSNumber *)optionalSleepTimeEnabled // eg. @(YES)
+                                   optionalStartSleepTime:(NSString *)optionalStartSleepTime // eg. "13"
+                                     optionalEndSleepTime:(NSString *)optionalEndSleepTime // eg. "13"
+                                         optionalTimezone:(NSString *)optionalTimezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
+                                         optionalLanguage:(NSString *)optionalLanguage // eg. "it", "en", "es"
+                                             successBlock:(void(^)(NSDictionary *settings))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert((optionalTrendLocationWOEID || optionalSleepTimeEnabled || optionalStartSleepTime || optionalEndSleepTime || optionalTimezone || optionalLanguage), @"at least one parameter is needed");
     
-    [_oauth getResource:@"account/verify_credentials.json" parameters:d successBlock:^(id response) {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalTrendLocationWOEID) md[@"trend_location_woeid"] = optionalTrendLocationWOEID;
+    if(optionalSleepTimeEnabled) md[@"sleep_time_enabled"] = [optionalSleepTimeEnabled boolValue] ? @"1" : @"0";
+    if(optionalStartSleepTime) md[@"start_sleep_time"] = optionalStartSleepTime;
+    if(optionalEndSleepTime) md[@"end_sleep_time"] = optionalEndSleepTime;
+    if(optionalTimezone) md[@"time_zone"] = optionalTimezone;
+    if(optionalLanguage) md[@"lang"] = optionalLanguage;
+    
+    [_oauth postResource:@"account/settings.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST	account/update_delivery_device
+- (void)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
+                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                           successBlock:(void(^)(NSDictionary *response))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"device"] = deliveryDeviceSMS ? @"sms" : @"none";
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"account/update_delivery_device.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2319,10 +2376,10 @@ id removeNull(id rootObject);
                         optionalMaxResults:nil
                           optionalCallback:nil
                               successBlock:^(NSDictionary *query, NSDictionary *result) {
-        successBlock([result valueForKey:@"places"]);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                                  successBlock([result valueForKey:@"places"]);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 // GET geo/search
@@ -2382,10 +2439,10 @@ id removeNull(id rootObject);
             optionalAttributeStreetAddress:nil
                           optionalCallback:nil
                               successBlock:^(NSDictionary *query, NSDictionary *result) {
-        successBlock([result valueForKey:@"places"]);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                                  successBlock([result valueForKey:@"places"]);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 - (void)getGeoSearchWithIPAddress:(NSString *)ipAddress
@@ -2405,10 +2462,10 @@ id removeNull(id rootObject);
             optionalAttributeStreetAddress:nil
                           optionalCallback:nil
                               successBlock:^(NSDictionary *query, NSDictionary *result) {
-        successBlock([result valueForKey:@"places"]);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                                  successBlock([result valueForKey:@"places"]);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 - (void)getGeoSearchWithQuery:(NSString *)query
@@ -2428,10 +2485,10 @@ id removeNull(id rootObject);
             optionalAttributeStreetAddress:nil
                           optionalCallback:nil
                               successBlock:^(NSDictionary *query, NSDictionary *result) {
-        successBlock([result valueForKey:@"places"]);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                                  successBlock([result valueForKey:@"places"]);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 // GET geo/similar_places
@@ -2444,7 +2501,7 @@ id removeNull(id rootObject);
                      optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
                          successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(latitude);
     NSParameterAssert(longitude);
     NSParameterAssert(name);
@@ -2490,7 +2547,7 @@ optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg.
     md[@"long"] = longitude;
     if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
     if(optionalCallback) md[@"callback"] = optionalCallback;
-
+    
     [_oauth postResource:@"get/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {

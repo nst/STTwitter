@@ -587,16 +587,19 @@
  Returns settings (including current trend, geo and sleep time information) for the authenticating user.
  */
 
+- (void)getAccountSettingsWithSuccessBlock:(void(^)(NSDictionary *settings))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  GET	account/verify_credentials
- Returns Users (1: the user)
  
  Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
  */
 
-- (void)getAccountVerifyCredentialsSkipStatus:(BOOL)skipStatus
-                                 successBlock:(void(^)(NSDictionary *myInfo))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getAccountVerifyCredentialsIncludeEntites:(BOOL)includeEntities
+                                       skipStatus:(BOOL)skipStatus
+                                     successBlock:(void(^)(NSDictionary *myInfo))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/settings
@@ -604,15 +607,28 @@
  Updates the authenticating user's settings.
  */
 
+- (void)postAccountSettingsWithOptionalTrendLocationWOEID:(NSString *)optionalTrendLocationWOEID // eg. "1"
+                                 optionalSleepTimeEnabled:(NSNumber *)optionalSleepTimeEnabled // eg. @(YES)
+                                   optionalStartSleepTime:(NSString *)optionalStartSleepTime // eg. "13"
+                                     optionalEndSleepTime:(NSString *)optionalEndSleepTime // eg. "13"
+                                         optionalTimezone:(NSString *)optionalTimezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
+                                         optionalLanguage:(NSString *)optionalLanguage // eg. "it", "en", "es"
+                                             successBlock:(void(^)(NSDictionary *settings))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST	account/update_delivery_device
  
  Sets which device Twitter delivers updates to for the authenticating user. Sending none as the device parameter will disable SMS updates.
  */
 
+- (void)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
+                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                              successBlock:(void(^)(NSDictionary *response))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST	account/update_profile
- Returns Users (1: the user)
  
  Sets values that users are able to set under the "Account" tab of their settings page. Only the parameters specified will be updated.
  */
@@ -635,7 +651,6 @@
 
 /*
  POST	account/update_profile_image
- Returns Users (1: the user)
  
  Updates the authenticating user's profile image. Note that this method expects raw multipart data, not a URL to an image.
  
