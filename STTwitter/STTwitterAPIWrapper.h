@@ -1131,26 +1131,74 @@
 
 #pragma mark Places & Geo
 
-//	GET		geo/id/:place_id
+/*
+ GET    geo/id/:place_id
+ 
+ Returns all the information about a known place.
+ */
 
-//	GET		geo/reverse_geocode
-//	Returns Places (*: up to 20 places that match the lat/lon)
+- (void)getGeoIDForPlaceID:(NSString *)placeID // A place in the world. These IDs can be retrieved from geo/reverse_geocode.
+              successBlock:(void(^)(NSDictionary *place))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    geo/reverse_geocode
+
+ Given a latitude and a longitude, searches for up to 20 places that can be used as a place_id when updating a status.
+ 
+ This request is an informative call and will deliver generalized results about geography.
+ */
+
+- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                               longitude:(NSString *)longitude // eg. "-122.400612831116"
+                        optionalAccuracy:(NSString *)optionalAccuracy // eg. "5ft"
+                     optionalGranularity:(NSString *)optionalGranularity // eg. "city"
+                      optionalMaxResults:(NSString *)optionalMaxResults // eg. "3"
+                        optionalCallback:(NSString *)optionalCallback
+                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
                                longitude:(NSString *)longitude
                             successBlock:(void(^)(NSArray *places))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		geo/search
-//	Returns Places (*: places that match the lat/lon)
+/*
+ GET    geo/search
+
+ Search for places that can be attached to a statuses/update. Given a latitude and a longitude pair, an IP address, or a name, this request will return a list of all the valid places that can be used as the place_id when updating a status.
+ 
+ Conceptually, a query can be made from the user's location, retrieve a list of places, have the user validate the location he or she is at, and then send the ID of this location with a call to POST statuses/update.
+ 
+ This is the recommended method to use find places that can be attached to statuses/update. Unlike GET geo/reverse_geocode which provides raw data access, this endpoint can potentially re-order places with regards to the user who is authenticated. This approach is also preferred for interactive place matching with the user.
+ */
+
+- (void)getGeoSearchWithOptionalLatitude:(NSString *)optionalLatitude
+                       optionalLongitude:(NSString *)optionalLongitude
+                           optionalQuery:(NSString *)optionalQuery
+                              optionalIP:(NSString *)optionalIP
+                     optionalGranularity:(NSString *)optionalGranularity
+                        optionalAccuracy:(NSString *)optionalAccuracy
+                      optionalMaxResults:(NSString *)optionalMaxResults
+                optionalContaintedWithin:(NSString *)optionalContaintedWithin
+          optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress
+                        optionalCallback:(NSString *)optionalCallback
+                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)getGeoSearchWithLatitude:(NSString *)latitude
                        longitude:(NSString *)longitude
                     successBlock:(void(^)(NSArray *places))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
+// convenience
 - (void)getGeoSearchWithIPAddress:(NSString *)ipAddress
                      successBlock:(void(^)(NSArray *places))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
+// convenience
 - (void)getGeoSearchWithQuery:(NSString *)query
                  successBlock:(void(^)(NSArray *places))successBlock
                    errorBlock:(void(^)(NSError *error))errorBlock;

@@ -2261,21 +2261,97 @@ id removeNull(id rootObject);
 
 #pragma mark Places & Geo
 
-- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
-                               longitude:(NSString *)longitude
-                            successBlock:(void(^)(NSArray *places))successBlock
+// GET geo/id/:place_id
+- (void)getGeoIDForPlaceID:(NSString *)placeID // A place in the world. These IDs can be retrieved from geo/reverse_geocode.
+              successBlock:(void(^)(NSDictionary *place))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSString *resource = [NSString stringWithFormat:@"geo/id/%@.json", placeID];
+    
+    [_oauth getResource:resource parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET geo/reverse_geocode
+- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                               longitude:(NSString *)longitude // eg. "-122.400612831116"
+                        optionalAccuracy:(NSString *)optionalAccuracy // eg. "5ft"
+                     optionalGranularity:(NSString *)optionalGranularity // eg. "city"
+                      optionalMaxResults:(NSString *)optionalMaxResults // eg. "3"
+                        optionalCallback:(NSString *)optionalCallback
+                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(latitude);
     NSParameterAssert(longitude);
     
-    NSDictionary *d = @{ @"lat":latitude, @"lon":longitude };
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"lat"] = latitude;
+    md[@"long"] = longitude;
+    if(optionalAccuracy) md[@"accuracy"] = optionalAccuracy;
+    if(optionalGranularity) md[@"granularity"] = optionalGranularity;
+    if(optionalMaxResults) md[@"max_results"] = optionalMaxResults;
+    if(optionalCallback) md[@"callback"] = optionalCallback;
     
-    [_oauth getResource:@"geo/reverse_geocode.json" parameters:d successBlock:^(id response) {
+    [_oauth getResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
-        NSArray *places = [response valueForKeyPath:@"result.places"];
+        NSDictionary *query = [response valueForKeyPath:@"query"];
+        NSDictionary *result = [response valueForKeyPath:@"result"];
         
-        successBlock(places);
+        successBlock(query, result);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
+                               longitude:(NSString *)longitude
+                            successBlock:(void(^)(NSArray *places))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self getGeoReverseGeocodeWithLatitude:latitude longitude:longitude optionalAccuracy:nil optionalGranularity:nil optionalMaxResults:nil optionalCallback:nil successBlock:^(NSDictionary *query, NSDictionary *result) {
+        successBlock([result valueForKey:@"places"]);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET geo/search
+
+- (void)getGeoSearchWithOptionalLatitude:(NSString *)optionalLatitude
+                       optionalLongitude:(NSString *)optionalLongitude
+                           optionalQuery:(NSString *)optionalQuery
+                              optionalIP:(NSString *)optionalIP
+                     optionalGranularity:(NSString *)optionalGranularity
+                        optionalAccuracy:(NSString *)optionalAccuracy
+                      optionalMaxResults:(NSString *)optionalMaxResults
+                optionalContaintedWithin:(NSString *)optionalContaintedWithin
+          optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress
+                        optionalCallback:(NSString *)optionalCallback
+                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalLatitude) md[@"lat"] = optionalLatitude;
+    if(optionalLongitude) md[@"long"] = optionalLongitude;
+    if(optionalQuery) md[@"query"] = optionalQuery;
+    if(optionalIP) md[@"ip"] = optionalIP;
+    if(optionalGranularity) md[@"granularity"] = optionalGranularity;
+    if(optionalAccuracy) md[@"accuracy"] = optionalAccuracy;
+    if(optionalMaxResults) md[@"max_results"] = optionalMaxResults;
+    if(optionalContaintedWithin) md[@"contained_within"] = optionalContaintedWithin;
+    if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
+    if(optionalCallback) md[@"callback"] = optionalCallback;
+    
+    [_oauth getResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
+        
+        NSDictionary *query = [response valueForKeyPath:@"query"];
+        NSDictionary *result = [response valueForKeyPath:@"result"];
+        
+        successBlock(query, result);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2289,13 +2365,8 @@ id removeNull(id rootObject);
     NSParameterAssert(latitude);
     NSParameterAssert(longitude);
     
-    NSDictionary *d = @{ @"lat":latitude, @"lon":longitude };
-    
-    [_oauth getResource:@"geo/search.json" parameters:d successBlock:^(id response) {
-        
-        NSArray *places = [response valueForKeyPath:@"result.places"];
-        
-        successBlock(places);
+    [self getGeoSearchWithOptionalLatitude:latitude optionalLongitude:longitude optionalQuery:nil optionalIP:nil optionalGranularity:nil optionalAccuracy:nil optionalMaxResults:nil optionalContaintedWithin:nil optionalAttributeStreetAddress:nil optionalCallback:nil successBlock:^(NSDictionary *query, NSDictionary *result) {
+        successBlock([result valueForKey:@"places"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
