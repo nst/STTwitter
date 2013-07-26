@@ -1547,13 +1547,13 @@ id removeNull(id rootObject);
                                   optionalCursor:(NSString *)optionalCursor
                                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
     if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
     if(optionalCursor) md[@"cursor"] = optionalCursor;
     
-    [_oauth postResource:@"blocks/list.json" parameters:md successBlock:^(id response) {
+    [_oauth getResource:@"blocks/list.json" parameters:md successBlock:^(id response) {
         
         NSArray *users = nil;
         NSString *previousCursor = nil;
@@ -1569,7 +1569,6 @@ id removeNull(id rootObject);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
-
 }
 
 // GET blocks/ids
@@ -1580,7 +1579,7 @@ id removeNull(id rootObject);
     md[@"stringify_ids"] = @"1";
     if(optionalCursor) md[@"cursor"] = optionalCursor;
     
-    [_oauth postResource:@"blocks/ids.json" parameters:md successBlock:^(id response) {
+    [_oauth getResource:@"blocks/ids.json" parameters:md successBlock:^(id response) {
         
         NSArray *ids = nil;
         NSString *previousCursor = nil;
@@ -1593,6 +1592,74 @@ id removeNull(id rootObject);
         }
         
         successBlock(ids, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST blocks/create
+- (void)postBlocksCreateWithScreenName:(NSString *)screenName
+                              orUserID:(NSString *)userID
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          successBlock:(void(^)(NSDictionary *user))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenName || userID), @"missing screenName or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"blocks/create.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST blocks/destroy
+- (void)postBlocksDestroyWithScreenName:(NSString *)screenName
+                               orUserID:(NSString *)userID
+                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                           successBlock:(void(^)(NSDictionary *user))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenName || userID), @"missing screenName or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"blocks/destroy.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET users/lookup
+- (void)getUsersLookupWithScreenName:(NSString *)screenName
+                            orUserID:(NSString *)userID
+             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                        successBlock:(void(^)(NSArray *users))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((screenName || userID), @"missing screenName or userID");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    
+    [_oauth getResource:@"users/lookup.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];

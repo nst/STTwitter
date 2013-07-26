@@ -603,7 +603,7 @@
 
 // convenience
 - (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
-                                       errorBlock:(void(^)(NSError *error))errorBlock;
+                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/settings
@@ -718,8 +718,8 @@
  */
 
 - (void)getBlocksIDsWithOptionalOptionalCursor:(NSString *)optionalCursor
-                                    successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock;
+                                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	blocks/create
@@ -727,11 +727,25 @@
  Blocks the specified user from following the authenticating user. In addition the blocked user will not show in the authenticating users mentions or timeline (unless retweeted by another user). If a follow or friend relationship exists it is destroyed.
  */
 
+- (void)postBlocksCreateWithScreenName:(NSString *)screenName
+                              orUserID:(NSString *)userID
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          successBlock:(void(^)(NSDictionary *user))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST	blocks/destroy
  
  Un-blocks the user specified in the ID parameter for the authenticating user. Returns the un-blocked user in the requested format when successful. If relationships existed before the block was instated, they will not be restored.
  */
+
+- (void)postBlocksDestroyWithScreenName:(NSString *)screenName
+                              orUserID:(NSString *)userID
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          successBlock:(void(^)(NSDictionary *user))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/lookup
@@ -741,7 +755,21 @@
  This method is especially useful when used in conjunction with collections of user IDs returned from GET friends/ids and GET followers/ids.
  
  GET users/show is used to retrieve a single user object.
+ 
+ There are a few things to note when using this method.
+ 
+ - You must be following a protected user to be able to see their most recent status update. If you don't follow a protected user their status will be removed.
+ - The order of user IDs or screen names may not match the order of users in the returned array.
+ - If a requested user is unknown, suspended, or deleted, then that user will not be returned in the results list.
+ - If none of your lookup criteria can be satisfied by returning a user object, a HTTP 404 will be thrown.
+ - You are strongly encouraged to use a POST for larger requests.
  */
+
+- (void)getUsersLookupWithScreenName:(NSString *)screenName
+                            orUserID:(NSString *)userID
+             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                        successBlock:(void(^)(NSArray *users))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/show
