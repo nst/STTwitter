@@ -124,7 +124,7 @@ id removeNull(id rootObject);
             errorBlock(error);
         }];
     } else {
-        [self getAccountVerifyCredentialsSkipStatus:YES successBlock:^(NSDictionary *myInfo) {
+        [self getAccountVerifyCredentialsIncludeEntites:NO skipStatus:YES successBlock:^(NSDictionary *myInfo) {
             self.userName = [myInfo valueForKey:@"screen_name"];
             successBlock(_userName);
         } errorBlock:^(NSError *error) {
@@ -1362,7 +1362,7 @@ id removeNull(id rootObject);
                                        skipStatus:(BOOL)skipStatus
                                      successBlock:(void(^)(NSDictionary *myInfo))successBlock
                                        errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"include_entities"] = includeEntities ? @"1" : @"0";
     md[@"skip_status"] = skipStatus ? @"1" : @"0";
@@ -1402,9 +1402,9 @@ id removeNull(id rootObject);
 
 // POST	account/update_delivery_device
 - (void)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
-                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                           successBlock:(void(^)(NSDictionary *response))successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock {
+                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                              successBlock:(void(^)(NSDictionary *response))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"device"] = deliveryDeviceSMS ? @"sms" : @"none";
@@ -1417,10 +1417,93 @@ id removeNull(id rootObject);
     }];
 }
 
+// POST account/update_profile
+- (void)postAccountUpdateProfileWithOptionalName:(NSString *)optionalName
+                               optionalURLString:(NSString *)optionalURLString
+                                optionalLocation:(NSString *)optionalLocation
+                             optionalDescription:(NSString *)optionalDescription
+                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                    successBlock:(void(^)(NSDictionary *profile))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert((optionalName || optionalURLString || optionalLocation || optionalDescription || optionalIncludeEntities || optionalSkipStatus), @"at least one parameter is needed");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalName) md[@"name"] = optionalName;
+    if(optionalURLString) md[@"url"] = optionalURLString;
+    if(optionalLocation) md[@"location"] = optionalLocation;
+    if(optionalDescription) md[@"description"] = optionalDescription;
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";;
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"account/update_profile.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 - (void)postUpdateProfile:(NSDictionary *)profileData
 			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
 			   errorBlock:(void(^)(NSError *error))errorBlock {
 	[_oauth postResource:@"account/update_profile.json" parameters:profileData successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST account/update_profile_background_image
+#if TARGET_OS_IPHONE
+- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(UIImage *)optionalImage
+#else
+- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSImage *)optionalImage
+#endif
+                                                   optionalTitle:(NSString *)optionalTitle
+                                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                     optionalUse:(NSNumber *)optionalUse
+                                                    successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert((optionalImage || optionalTitle || optionalIncludeEntities || optionalSkipStatus || optionalUse), @"at least one parameter is needed");
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalImage) md[@"image"] = optionalImage;
+    if(optionalTitle) md[@"title"] = optionalTitle;
+    
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";;
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(optionalUse) md[@"use"] = [optionalUse boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"account/update_profile_background_image.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST account/update_profile_colors
+- (void)postAccountUpdateProfileColorsWithOptionalBackgroundColor:(NSString *)optionalBackgroundColor
+                                                optionalLinkColor:(NSString *)optionalLinkColor
+                                       optionalSidebarBorderColor:(NSString *)optionalSidebarBorderColor
+                                         optionalSidebarFillColor:(NSString *)optionalSidebarFillColor
+                                         optionalProfileTextColor:(NSString *)optionalProfileTextColor
+                                          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                               optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(optionalBackgroundColor) md[@"profile_background_color"] = optionalBackgroundColor;
+    if(optionalLinkColor) md[@"profile_link_color"] = optionalLinkColor;
+    if(optionalSidebarBorderColor) md[@"profile_sidebar_border_color"] = optionalSidebarBorderColor;
+    if(optionalSidebarFillColor) md[@"profile_sidebar_fill_color"] = optionalSidebarFillColor;
+    if(optionalProfileTextColor) md[@"profile_text_color"] = optionalProfileTextColor;
+    
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:@"account/update_profile_colors.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

@@ -633,6 +633,16 @@
  Sets values that users are able to set under the "Account" tab of their settings page. Only the parameters specified will be updated.
  */
 
+- (void)postAccountUpdateProfileWithOptionalName:(NSString *)optionalName
+                               optionalURLString:(NSString *)optionalURLString
+                                optionalLocation:(NSString *)optionalLocation
+                             optionalDescription:(NSString *)optionalDescription
+                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                    successBlock:(void(^)(NSDictionary *profile))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)postUpdateProfile:(NSDictionary *)profileData
 			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
 			   errorBlock:(void(^)(NSError *error))errorBlock;
@@ -643,11 +653,33 @@
  Updates the authenticating user's profile background image. This method can also be used to enable or disable the profile background image. Although each parameter is marked as optional, at least one of image, tile or use must be provided when making this request.
  */
 
+#if TARGET_OS_IPHONE
+- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(UIImage *)optionalImage
+#else
+- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSImage *)optionalImage
+#endif
+                                                   optionalTitle:(NSString *)optionalTitle
+                                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                     optionalUse:(NSNumber *)optionalUse
+                                                    successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST	account/update_profile_colors
  
  Sets one or more hex values that control the color scheme of the authenticating user's profile page on twitter.com. Each parameter's value must be a valid hexidecimal value, and may be either three or six characters (ex: #fff or #ffffff).
  */
+
+- (void)postAccountUpdateProfileColorsWithOptionalBackgroundColor:(NSString *)optionalBackgroundColor
+                                                optionalLinkColor:(NSString *)optionalLinkColor
+                                       optionalSidebarBorderColor:(NSString *)optionalSidebarBorderColor
+                                         optionalSidebarFillColor:(NSString *)optionalSidebarFillColor
+                                         optionalProfileTextColor:(NSString *)optionalProfileTextColor
+                                          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                               optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_profile_image
