@@ -596,9 +596,13 @@
  Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
  */
 
-- (void)getAccountVerifyCredentialsIncludeEntites:(BOOL)includeEntities
-                                       skipStatus:(BOOL)skipStatus
-                                     successBlock:(void(^)(NSDictionary *myInfo))successBlock
+- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)optionalIncludeEntities
+                                           optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                 successBlock:(void(^)(NSDictionary *account))successBlock
+                                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*

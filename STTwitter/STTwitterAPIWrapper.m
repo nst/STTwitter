@@ -124,8 +124,8 @@ id removeNull(id rootObject);
             errorBlock(error);
         }];
     } else {
-        [self getAccountVerifyCredentialsIncludeEntites:NO skipStatus:YES successBlock:^(NSDictionary *myInfo) {
-            self.userName = [myInfo valueForKey:@"screen_name"];
+        [self getAccountVerifyCredentialsWithSuccessBlock:^(NSDictionary *account) {
+            self.userName = [account valueForKey:@"screen_name"];
             successBlock(_userName);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
@@ -1358,17 +1358,26 @@ id removeNull(id rootObject);
 }
 
 // GET account/verify_credentials
-- (void)getAccountVerifyCredentialsIncludeEntites:(BOOL)includeEntities
-                                       skipStatus:(BOOL)skipStatus
-                                     successBlock:(void(^)(NSDictionary *myInfo))successBlock
-                                       errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)optionalIncludeEntities
+                                           optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                 successBlock:(void(^)(NSDictionary *myInfo))successBlock
+                                                   errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"include_entities"] = includeEntities ? @"1" : @"0";
-    md[@"skip_status"] = skipStatus ? @"1" : @"0";
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"account/verify_credentials.json" parameters:md successBlock:^(id response) {
         successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
+                                         errorBlock:(void(^)(NSError *error))errorBlock {
+    [self getAccountVerifyCredentialsWithOptionalIncludeEntites:nil optionalSkipStatus:nil successBlock:^(NSDictionary *account) {
+        successBlock(account);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -1466,7 +1475,7 @@ id removeNull(id rootObject);
                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock {
     NSAssert((optionalImage || optionalTitle || optionalIncludeEntities || optionalSkipStatus || optionalUse), @"at least one parameter is needed");
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(optionalImage) md[@"image"] = optionalImage;
     if(optionalTitle) md[@"title"] = optionalTitle;
