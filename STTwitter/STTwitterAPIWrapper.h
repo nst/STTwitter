@@ -657,11 +657,7 @@
  Updates the authenticating user's profile background image. This method can also be used to enable or disable the profile background image. Although each parameter is marked as optional, at least one of image, tile or use must be provided when making this request.
  */
 
-#if TARGET_OS_IPHONE
-- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(UIImage *)optionalImage
-#else
-- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSImage *)optionalImage
-#endif
+- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSString *)base64EncodedImage
                                                    optionalTitle:(NSString *)optionalTitle
                                          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                                               optionalSkipStatus:(NSNumber *)optionalSkipStatus

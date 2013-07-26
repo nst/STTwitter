@@ -1470,21 +1470,17 @@ id removeNull(id rootObject);
 }
 
 // POST account/update_profile_background_image
-#if TARGET_OS_IPHONE
-- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(UIImage *)optionalImage
-#else
-- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSImage *)optionalImage
-#endif
+- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSString *)optionalBase64EncodedImage
                                                    optionalTitle:(NSString *)optionalTitle
                                          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                                               optionalSkipStatus:(NSNumber *)optionalSkipStatus
                                                      optionalUse:(NSNumber *)optionalUse
                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock {
-    NSAssert((optionalImage || optionalTitle || optionalIncludeEntities || optionalSkipStatus || optionalUse), @"at least one parameter is needed");
+    NSAssert((optionalBase64EncodedImage || optionalTitle || optionalIncludeEntities || optionalSkipStatus || optionalUse), @"at least one parameter is needed");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalImage) md[@"image"] = optionalImage;
+    if(optionalBase64EncodedImage) md[@"image"] = optionalBase64EncodedImage;
     if(optionalTitle) md[@"title"] = optionalTitle;
     
     if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";;
