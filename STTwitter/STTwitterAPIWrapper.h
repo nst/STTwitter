@@ -108,7 +108,7 @@
                                       optionalMaxID:(NSString *)optionalMaxID
                                    optionalTrimUser:(NSNumber *)optionalTrimUser
                          optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                    includeEntities:(NSNumber *)includeEntities
                                        successBlock:(void(^)(NSArray *statuses))successBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -197,7 +197,7 @@
                                  optionalSinceID:(NSString *)optionalSinceID
                                    optionalMaxID:(NSString *)optionalMaxID
                                 optionalTrimUser:(NSNumber *)optionalTrimUser
-                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                 includeEntities:(NSNumber *)includeEntities
                      optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock;
@@ -219,7 +219,7 @@
 - (void)getStatusesShowID:(NSString *)statusID
          optionalTrimUser:(NSNumber *)optionalTrimUser
  optionalIncludeMyRetweet:(NSNumber *)optionalIncludeMyRetweet
-  optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+          includeEntities:(NSNumber *)includeEntities
              successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -277,7 +277,7 @@
                    optionalUntil:(NSString *)until // eg. "2012-09-01"
                  optionalSinceID:(NSString *)sinceID // eg. "12345"
                    optionalMaxID:(NSString *)maxID // eg. "54321"
-         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                 includeEntities:(NSNumber *)includeEntities
                 optionalCallback:(NSString *)callback // eg. "processTweets"
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock;
@@ -310,8 +310,8 @@
 - (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
-                     optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                          optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                             includeEntities:(NSNumber *)includeEntities
+                                  skipStatus:(NSNumber *)skipStatus
                                 successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 // convenience
@@ -329,7 +329,7 @@
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
                                 optionalPage:(NSString *)optionalPage
-                     optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                             includeEntities:(NSNumber *)includeEntities
                                 successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -348,7 +348,7 @@
  Destroys the direct message specified in the required ID parameter. The authenticating user must be the recipient of the specified direct message.
  */
 - (void)postDestroyDirectMessageWithID:(NSString *)messageID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                       includeEntities:(NSNumber *)includeEntities
 						  successBlock:(void(^)(NSDictionary *message))successBlock
 							errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -440,7 +440,7 @@
  */
 
 - (void)getFriendshipIncomingWithOptionalCursor:(NSString *)cursor
-                          stringifyIDs:(NSNumber *)stringifyIDs
+                                   stringifyIDs:(NSNumber *)stringifyIDs
                                    successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -548,7 +548,7 @@
 - (void)getFriendsListForUserID:(NSString *)userID
                    orScreenName:(NSString *)screenName
                  optionalCursor:(NSString *)optionalCursor
-             optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                     skipStatus:(NSNumber *)skipStatus
     optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
@@ -569,7 +569,7 @@
 - (void)getFollowersListForUserID:(NSString *)userID
                      orScreenName:(NSString *)screenName
                            cursor:(NSString *)cursor
-               optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       skipStatus:(NSNumber *)skipStatus
       optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
@@ -596,8 +596,8 @@
  Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
  */
 
-- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)optionalIncludeEntities
-                                           optionalSkipStatus:(NSNumber *)optionalSkipStatus
+- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)includeEntities
+                                                   skipStatus:(NSNumber *)skipStatus
                                                  successBlock:(void(^)(NSDictionary *account))successBlock
                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -627,7 +627,7 @@
  */
 
 - (void)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
-                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                           includeEntities:(NSNumber *)includeEntities
                               successBlock:(void(^)(NSDictionary *response))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -641,8 +641,8 @@
                                optionalURLString:(NSString *)optionalURLString
                                 optionalLocation:(NSString *)optionalLocation
                              optionalDescription:(NSString *)optionalDescription
-                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                 includeEntities:(NSNumber *)includeEntities
+                                      skipStatus:(NSNumber *)skipStatus
                                     successBlock:(void(^)(NSDictionary *profile))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -659,8 +659,8 @@
 
 - (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSString *)base64EncodedImage
                                                    optionalTitle:(NSString *)optionalTitle
-                                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                 includeEntities:(NSNumber *)includeEntities
+                                                      skipStatus:(NSNumber *)skipStatus
                                                      optionalUse:(NSNumber *)optionalUse
                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock;
@@ -676,8 +676,8 @@
                                        optionalSidebarBorderColor:(NSString *)optionalSidebarBorderColor
                                          optionalSidebarFillColor:(NSString *)optionalSidebarFillColor
                                          optionalProfileTextColor:(NSString *)optionalProfileTextColor
-                                          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                                               optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                  includeEntities:(NSNumber *)includeEntities
+                                                       skipStatus:(NSNumber *)skipStatus
                                                      successBlock:(void(^)(NSDictionary *profile))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -690,8 +690,8 @@
  */
 
 - (void)postAccountUpdateProfileImage:(NSString *)base64EncodedImage
-              optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                   optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                      includeEntities:(NSNumber *)includeEntities
+                           skipStatus:(NSNumber *)skipStatus
                          successBlock:(void(^)(NSDictionary *profile))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -701,11 +701,11 @@
  Returns a collection of user objects that the authenticating user is blocking.
  */
 
-- (void)getBlocksListWithOptionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
-                                  optionalCursor:(NSString *)optionalCursor
-                                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getBlocksListWithincludeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
+                          optionalCursor:(NSString *)optionalCursor
+                            successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    blocks/ids
@@ -725,8 +725,8 @@
 
 - (void)postBlocksCreateWithScreenName:(NSString *)screenName
                               orUserID:(NSString *)userID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)(NSDictionary *user))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -738,8 +738,8 @@
 
 - (void)postBlocksDestroyWithScreenName:(NSString *)screenName
                                orUserID:(NSString *)userID
-                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                        includeEntities:(NSNumber *)includeEntities
+                             skipStatus:(NSNumber *)skipStatus
                            successBlock:(void(^)(NSDictionary *user))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -763,7 +763,7 @@
 
 - (void)getUsersLookupForScreenName:(NSString *)screenName
                            orUserID:(NSString *)userID
-            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    includeEntities:(NSNumber *)includeEntities
                        successBlock:(void(^)(NSArray *users))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -777,7 +777,7 @@
 
 - (void)getUsersShowForUserID:(NSString *)userID
                  orScreenName:(NSString *)screenName
-      optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+              includeEntities:(NSNumber *)includeEntities
                  successBlock:(void(^)(NSDictionary *user))successBlock
                    errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -806,7 +806,7 @@
 - (void)getUsersSearchQuery:(NSString *)query
                optionalPage:(NSString *)optionalPage
               optionalCount:(NSString *)optionalCount
-    optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+            includeEntities:(NSNumber *)includeEntities
                successBlock:(void(^)(NSArray *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -818,8 +818,8 @@
 
 - (void)getUsersContributeesWithUserID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)(NSArray *contributees))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -831,8 +831,8 @@
 
 - (void)getUsersContributorsWithUserID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)(NSArray *contributors))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -902,7 +902,7 @@
                              optionalCount:(NSString *)optionalCount
                            optionalSinceID:(NSString *)optionalSinceID
                              optionalMaxID:(NSString *)optionalMaxID
-                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                           includeEntities:(NSNumber *)includeEntities
                               successBlock:(void(^)(NSArray *statuses))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -919,7 +919,7 @@
  */
 
 - (void)postFavoriteDestroyWithStatusID:(NSString *)statusID
-                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                        includeEntities:(NSNumber *)includeEntities
                            successBlock:(void(^)(NSDictionary *status))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -932,7 +932,7 @@
  */
 
 - (void)postFavoriteCreateWithStatusID:(NSString *)statusID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                       includeEntities:(NSNumber *)includeEntities
                           successBlock:(void(^)(NSDictionary *status))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -970,7 +970,7 @@
                   optionalSinceID:(NSString *)sinceID
                     optionalMaxID:(NSString *)maxID
                     optionalCount:(NSString *)count
-          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                  includeEntities:(NSNumber *)includeEntities
                   includeRetweets:(NSNumber *)includeRetweets
                      successBlock:(void(^)(NSArray *statuses))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
@@ -981,7 +981,7 @@
                 optionalSinceID:(NSString *)sinceID
                   optionalMaxID:(NSString *)maxID
                   optionalCount:(NSString *)count
-        optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                includeEntities:(NSNumber *)includeEntities
                 includeRetweets:(NSNumber *)includeRetweets
                    successBlock:(void(^)(NSArray *statuses))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
@@ -1027,15 +1027,15 @@
                    ownerScreenName:(NSString *)ownerScreenName
                          orOwnerID:(NSString *)ownerID
                     optionalCursor:(NSString *)cursor
-           optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                   includeEntities:(NSNumber *)includeEntities
+                        skipStatus:(NSNumber *)skipStatus
                       successBlock:(void(^)())successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getListsSubscribersForListID:(NSString *)listID
                       optionalCursor:(NSString *)cursor
-             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                  optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                     includeEntities:(NSNumber *)includeEntities
+                          skipStatus:(NSNumber *)skipStatus
                         successBlock:(void(^)())successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1064,8 +1064,8 @@
 - (void)getListsSubscribersShowForListID:(NSString *)listID
                                   userID:(NSString *)userID
                             orScreenName:(NSString *)screenName
-                 optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                      optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                         includeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
                             successBlock:(void(^)())successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1074,8 +1074,8 @@
                              orOwnerID:(NSString *)ownerID
                                 userID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)())successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1126,8 +1126,8 @@
 - (void)getListsMembersShowForListID:(NSString *)listID
                               userID:(NSString *)userID
                           screenName:(NSString *)screenName
-             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                  optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                     includeEntities:(NSNumber *)includeEntities
+                          skipStatus:(NSNumber *)skipStatus
                         successBlock:(void(^)(NSDictionary *user))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1136,8 +1136,8 @@
                          orOwnerID:(NSString *)ownerID
                             userID:(NSString *)userID
                         screenName:(NSString *)screenName
-           optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                   includeEntities:(NSNumber *)includeEntities
+                        skipStatus:(NSNumber *)skipStatus
                       successBlock:(void(^)(NSDictionary *user))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1148,18 +1148,18 @@
  */
 
 - (void)getListsMembersForListID:(NSString *)listID
-                  optionalCursor:(NSString *)cursor
-         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          cursor:(NSString *)cursor
+                 includeEntities:(NSNumber *)includeEntities
+                      skipStatus:(NSNumber *)skipStatus
                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getListsMembersForSlug:(NSString *)slug
                ownerScreenName:(NSString *)screenName
                      orOwnerID:(NSString *)ownerID
-                optionalCursor:(NSString *)cursor
-       optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-            optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                        cursor:(NSString *)cursor
+               includeEntities:(NSNumber *)includeEntities
+                    skipStatus:(NSNumber *)skipStatus
                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1320,10 +1320,10 @@
 
 - (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
                                longitude:(NSString *)longitude // eg. "-122.400612831116"
-                        optionalAccuracy:(NSString *)optionalAccuracy // eg. "5ft"
-                     optionalGranularity:(NSString *)optionalGranularity // eg. "city"
-                      optionalMaxResults:(NSString *)optionalMaxResults // eg. "3"
-                        optionalCallback:(NSString *)optionalCallback
+                                accuracy:(NSString *)accuracy // eg. "5ft"
+                             granularity:(NSString *)granularity // eg. "city"
+                              maxResults:(NSString *)maxResults // eg. "3"
+                                callback:(NSString *)callback
                             successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 

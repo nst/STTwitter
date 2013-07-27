@@ -248,7 +248,7 @@ id removeNull(id rootObject);
                                       optionalMaxID:(NSString *)optionalMaxID
                                    optionalTrimUser:(NSNumber *)optionalTrimUser
                          optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                    includeEntities:(NSNumber *)includeEntities
                                        successBlock:(void(^)(NSArray *statuses))successBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -259,7 +259,7 @@ id removeNull(id rootObject);
     if(optionalMaxID) md[@"max_id"] = optionalMaxID;
     if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
     if(optionalContributorDetails) md[@"contributor_details"] = [optionalContributorDetails boolValue] ? @"1" : @"0";
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -278,7 +278,7 @@ id removeNull(id rootObject);
                                         optionalMaxID:nil
                                      optionalTrimUser:nil
                            optionalContributorDetails:nil
-                              optionalIncludeEntities:nil
+                                      includeEntities:nil
                                          successBlock:^(NSArray *statuses) {
                                              successBlock(statuses);
                                          } errorBlock:^(NSError *error) {
@@ -475,7 +475,7 @@ id removeNull(id rootObject);
                                  optionalSinceID:(NSString *)optionalSinceID
                                    optionalMaxID:(NSString *)optionalMaxID
                                 optionalTrimUser:(NSNumber *)optionalTrimUser
-                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                                 includeEntities:(NSNumber *)includeEntities
                      optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock {
@@ -487,7 +487,7 @@ id removeNull(id rootObject);
     if(optionalMaxID) md[@"max_id"] = optionalMaxID;
     
     if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/retweets_of_me.json" parameters:md successBlock:^(id response) {
@@ -504,7 +504,7 @@ id removeNull(id rootObject);
                                    optionalSinceID:nil
                                      optionalMaxID:nil
                                   optionalTrimUser:nil
-                           optionalIncludeEntities:nil
+                                   includeEntities:nil
                        optionalIncludeUserEntities:nil
                                       successBlock:^(NSArray *statuses) {
                                           successBlock(statuses);
@@ -540,7 +540,7 @@ id removeNull(id rootObject);
 - (void)getStatusesShowID:(NSString *)statusID
          optionalTrimUser:(NSNumber *)optionalTrimUser
  optionalIncludeMyRetweet:(NSNumber *)optionalIncludeMyRetweet
-  optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+          includeEntities:(NSNumber *)includeEntities
              successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -551,7 +551,7 @@ id removeNull(id rootObject);
     md[@"id"] = statusID;
     if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
     if(optionalIncludeMyRetweet) md[@"include_my_retweet"] = [optionalIncludeMyRetweet boolValue] ? @"1" : @"0";
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -766,7 +766,7 @@ id removeNull(id rootObject);
                    optionalUntil:(NSString *)until // eg. "2012-09-01"
                  optionalSinceID:(NSString *)sinceID // eg. "12345"
                    optionalMaxID:(NSString *)maxID // eg. "54321"
-         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                 includeEntities:(NSNumber *)includeEntities
                 optionalCallback:(NSString *)callback // eg. "processTweets"
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
@@ -783,7 +783,7 @@ id removeNull(id rootObject);
     if(until) md[@"until"] = until;
     if(sinceID) md[@"since_id"] = sinceID;
     if(maxID) md[@"max_id"] = maxID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(callback) md[@"callback"] = callback;
     
     md[@"q"] = [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -812,7 +812,7 @@ id removeNull(id rootObject);
                      optionalUntil:nil
                    optionalSinceID:nil
                      optionalMaxID:nil
-           optionalIncludeEntities:YES
+                   includeEntities:YES
                   optionalCallback:nil
                       successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
                           successBlock(searchMetadata, statuses);
@@ -828,8 +828,8 @@ id removeNull(id rootObject);
 - (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
-                     optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                          optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                             includeEntities:(NSNumber *)includeEntities
+                                  skipStatus:(NSNumber *)skipStatus
                                 successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -837,8 +837,8 @@ id removeNull(id rootObject);
     if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
     if(optionalMaxID) [md setObject:optionalMaxID forKey:@"max_id"];
     if(optionalCount) [md setObject:optionalCount forKey:@"count"];
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"direct_messages.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -858,8 +858,8 @@ id removeNull(id rootObject);
     [self getDirectMessagesWithOptionalSinceID:optionalSinceID
                                  optionalMaxID:nil
                                  optionalCount:count
-                       optionalIncludeEntities:nil
-                            optionalSkipStatus:nil
+                               includeEntities:nil
+                                    skipStatus:nil
                                   successBlock:^(NSArray *statuses) {
                                       successBlock(statuses);
                                   } errorBlock:^(NSError *error) {
@@ -871,7 +871,7 @@ id removeNull(id rootObject);
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
                                 optionalPage:(NSString *)optionalPage
-                     optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                             includeEntities:(NSNumber *)includeEntities
                                 successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -880,7 +880,7 @@ id removeNull(id rootObject);
     if(optionalMaxID) [md setObject:optionalMaxID forKey:@"max_id"];
     if(optionalCount) [md setObject:optionalCount forKey:@"count"];
     if(optionalPage) [md setObject:optionalPage forKey:@"page"];
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"direct_messages/sent.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -904,13 +904,13 @@ id removeNull(id rootObject);
 }
 
 - (void)postDestroyDirectMessageWithID:(NSString *)messageID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                       includeEntities:(NSNumber *)includeEntities
 						  successBlock:(void(^)(NSDictionary *message))successBlock
 							errorBlock:(void(^)(NSError *error))errorBlock {
     
 	NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"id"] = messageID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"direct_messages/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1224,7 +1224,7 @@ id removeNull(id rootObject);
     if(userID) md[@"user_id"] = userID;
     if(enableDeviceNotifications) md[@"device"] = [enableDeviceNotifications boolValue] ? @"1" : @"0";
     if(enableRetweets) md[@"retweets"] = [enableRetweets boolValue] ? @"1" : @"0";
-
+    
     [_oauth postResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -1243,10 +1243,10 @@ id removeNull(id rootObject);
                    enableDeviceNotifications:@(enableDeviceNotifications)
                               enableRetweets:nil
                                 successBlock:^(NSDictionary *user) {
-        successBlock(user);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                                    successBlock(user);
+                                } errorBlock:^(NSError *error) {
+                                    errorBlock(error);
+                                }];
 }
 
 - (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
@@ -1254,7 +1254,7 @@ id removeNull(id rootObject);
                             enableRetweets:(BOOL)enableRetweets
                               successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
     NSAssert((screenName || userID), @"screenName or userID is missing");
-
+    
     [self postFriendshipsUpdateForScreenName:screenName
                                     orUserID:userID
                    enableDeviceNotifications:nil
@@ -1291,7 +1291,7 @@ id removeNull(id rootObject);
 - (void)getFriendsListForUserID:(NSString *)userID
                    orScreenName:(NSString *)screenName
                  optionalCursor:(NSString *)optionalCursor
-             optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                     skipStatus:(NSNumber *)skipStatus
     optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
@@ -1302,7 +1302,7 @@ id removeNull(id rootObject);
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
     if(optionalCursor) md[@"cursor"] = optionalCursor;
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"friends/list.json" parameters:md successBlock:^(id response) {
@@ -1329,7 +1329,7 @@ id removeNull(id rootObject);
     [self getFriendsListForUserID:nil
                      orScreenName:screenName
                    optionalCursor:nil
-               optionalSkipStatus:NO
+                       skipStatus:NO
       optionalIncludeUserEntities:YES
                      successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
                          successBlock(users);
@@ -1341,7 +1341,7 @@ id removeNull(id rootObject);
 - (void)getFollowersListForUserID:(NSString *)userID
                      orScreenName:(NSString *)screenName
                            cursor:(NSString *)cursor
-               optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       skipStatus:(NSNumber *)skipStatus
       optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
@@ -1352,7 +1352,7 @@ id removeNull(id rootObject);
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
     if(cursor) md[@"cursor"] = cursor;
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"followers/list.json" parameters:md successBlock:^(id response) {
@@ -1380,7 +1380,7 @@ id removeNull(id rootObject);
 	[self getFollowersListForUserID:nil
                        orScreenName:screenName
                              cursor:nil
-                 optionalSkipStatus:nil
+                         skipStatus:nil
         optionalIncludeUserEntities:nil
                        successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
                            successBlock(users);
@@ -1402,14 +1402,14 @@ id removeNull(id rootObject);
 }
 
 // GET account/verify_credentials
-- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)optionalIncludeEntities
-                                           optionalSkipStatus:(NSNumber *)optionalSkipStatus
+- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)includeEntities
+                                                   skipStatus:(NSNumber *)skipStatus
                                                  successBlock:(void(^)(NSDictionary *myInfo))successBlock
                                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"account/verify_credentials.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1420,7 +1420,7 @@ id removeNull(id rootObject);
 
 - (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock {
-    [self getAccountVerifyCredentialsWithOptionalIncludeEntites:nil optionalSkipStatus:nil successBlock:^(NSDictionary *account) {
+    [self getAccountVerifyCredentialsWithOptionalIncludeEntites:nil skipStatus:nil successBlock:^(NSDictionary *account) {
         successBlock(account);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1455,13 +1455,13 @@ id removeNull(id rootObject);
 
 // POST	account/update_delivery_device
 - (void)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
-                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                           includeEntities:(NSNumber *)includeEntities
                               successBlock:(void(^)(NSDictionary *response))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"device"] = deliveryDeviceSMS ? @"sms" : @"none";
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"account/update_delivery_device.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1475,19 +1475,19 @@ id removeNull(id rootObject);
                                optionalURLString:(NSString *)optionalURLString
                                 optionalLocation:(NSString *)optionalLocation
                              optionalDescription:(NSString *)optionalDescription
-                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                 includeEntities:(NSNumber *)includeEntities
+                                      skipStatus:(NSNumber *)skipStatus
                                     successBlock:(void(^)(NSDictionary *profile))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock {
-    NSAssert((optionalName || optionalURLString || optionalLocation || optionalDescription || optionalIncludeEntities || optionalSkipStatus), @"at least one parameter is needed");
+    NSAssert((optionalName || optionalURLString || optionalLocation || optionalDescription || includeEntities || skipStatus), @"at least one parameter is needed");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(optionalName) md[@"name"] = optionalName;
     if(optionalURLString) md[@"url"] = optionalURLString;
     if(optionalLocation) md[@"location"] = optionalLocation;
     if(optionalDescription) md[@"description"] = optionalDescription;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";;
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";;
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"account/update_profile.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1509,19 +1509,19 @@ id removeNull(id rootObject);
 // POST account/update_profile_background_image
 - (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSString *)optionalBase64EncodedImage
                                                    optionalTitle:(NSString *)optionalTitle
-                                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                 includeEntities:(NSNumber *)includeEntities
+                                                      skipStatus:(NSNumber *)skipStatus
                                                      optionalUse:(NSNumber *)optionalUse
                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock {
-    NSAssert((optionalBase64EncodedImage || optionalTitle || optionalIncludeEntities || optionalSkipStatus || optionalUse), @"at least one parameter is needed");
+    NSAssert((optionalBase64EncodedImage || optionalTitle || includeEntities || skipStatus || optionalUse), @"at least one parameter is needed");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(optionalBase64EncodedImage) md[@"image"] = optionalBase64EncodedImage;
     if(optionalTitle) md[@"title"] = optionalTitle;
     
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";;
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";;
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(optionalUse) md[@"use"] = [optionalUse boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"account/update_profile_background_image.json" parameters:md successBlock:^(id response) {
@@ -1537,8 +1537,8 @@ id removeNull(id rootObject);
                                        optionalSidebarBorderColor:(NSString *)optionalSidebarBorderColor
                                          optionalSidebarFillColor:(NSString *)optionalSidebarFillColor
                                          optionalProfileTextColor:(NSString *)optionalProfileTextColor
-                                          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                                               optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                                                  includeEntities:(NSNumber *)includeEntities
+                                                       skipStatus:(NSNumber *)skipStatus
                                                      successBlock:(void(^)(NSDictionary *profile))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1549,8 +1549,8 @@ id removeNull(id rootObject);
     if(optionalSidebarFillColor) md[@"profile_sidebar_fill_color"] = optionalSidebarFillColor;
     if(optionalProfileTextColor) md[@"profile_text_color"] = optionalProfileTextColor;
     
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"account/update_profile_colors.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1561,8 +1561,8 @@ id removeNull(id rootObject);
 
 // POST account/update_profile_image
 - (void)postAccountUpdateProfileImage:(NSString *)base64EncodedImage
-              optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                   optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                      includeEntities:(NSNumber *)includeEntities
+                           skipStatus:(NSNumber *)skipStatus
                          successBlock:(void(^)(NSDictionary *profile))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1571,8 +1571,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"image"] = base64EncodedImage;
     
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"account/update_profile_image.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1582,15 +1582,15 @@ id removeNull(id rootObject);
 }
 
 // GET blocks/list
-- (void)getBlocksListWithOptionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                              optionalSkipStatus:(NSNumber *)optionalSkipStatus
-                                  optionalCursor:(NSString *)optionalCursor
-                                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getBlocksListWithincludeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
+                          optionalCursor:(NSString *)optionalCursor
+                            successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(optionalCursor) md[@"cursor"] = optionalCursor;
     
     [_oauth getResource:@"blocks/list.json" parameters:md successBlock:^(id response) {
@@ -1640,8 +1640,8 @@ id removeNull(id rootObject);
 // POST blocks/create
 - (void)postBlocksCreateWithScreenName:(NSString *)screenName
                               orUserID:(NSString *)userID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)(NSDictionary *user))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1650,8 +1650,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"blocks/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1663,8 +1663,8 @@ id removeNull(id rootObject);
 // POST blocks/destroy
 - (void)postBlocksDestroyWithScreenName:(NSString *)screenName
                                orUserID:(NSString *)userID
-                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                        includeEntities:(NSNumber *)includeEntities
+                             skipStatus:(NSNumber *)skipStatus
                            successBlock:(void(^)(NSDictionary *user))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1673,8 +1673,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"blocks/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1686,7 +1686,7 @@ id removeNull(id rootObject);
 // GET users/lookup
 - (void)getUsersLookupForScreenName:(NSString *)screenName
                            orUserID:(NSString *)userID
-            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    includeEntities:(NSNumber *)includeEntities
                        successBlock:(void(^)(NSArray *users))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1696,7 +1696,7 @@ id removeNull(id rootObject);
     
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"users/lookup.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1708,7 +1708,7 @@ id removeNull(id rootObject);
 // GET users/show
 - (void)getUsersShowForUserID:(NSString *)userID
                  orScreenName:(NSString *)screenName
-      optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+              includeEntities:(NSNumber *)includeEntities
                  successBlock:(void(^)(NSDictionary *user))successBlock
                    errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1718,7 +1718,7 @@ id removeNull(id rootObject);
     
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"users/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1731,7 +1731,7 @@ id removeNull(id rootObject);
 				 successBlock:(void(^)(NSDictionary *user))successBlock
 				   errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getUsersShowForUserID:nil orScreenName:screenName optionalIncludeEntities:nil successBlock:^(NSDictionary *user) {
+    [self getUsersShowForUserID:nil orScreenName:screenName includeEntities:nil successBlock:^(NSDictionary *user) {
         successBlock(user);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1742,7 +1742,7 @@ id removeNull(id rootObject);
 - (void)getUsersSearchQuery:(NSString *)query
                optionalPage:(NSString *)optionalPage
               optionalCount:(NSString *)optionalCount
-    optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+            includeEntities:(NSNumber *)includeEntities
                successBlock:(void(^)(NSArray *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1753,7 +1753,7 @@ id removeNull(id rootObject);
     md[@"query"] = [query st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     if(optionalPage) md[@"page"] = optionalPage;
     if(optionalCount) md[@"count"] = optionalCount;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"users/search.json" parameters:md successBlock:^(id response) {
         successBlock(response); // NSArray of users dictionaries
@@ -1765,8 +1765,8 @@ id removeNull(id rootObject);
 // GET users/contributees
 - (void)getUsersContributeesWithUserID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)(NSArray *contributees))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1775,8 +1775,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"users/contributees.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1788,8 +1788,8 @@ id removeNull(id rootObject);
 // GET users/contributors
 - (void)getUsersContributorsWithUserID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)(NSArray *contributors))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1798,8 +1798,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"users/contributors.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1878,7 +1878,7 @@ id removeNull(id rootObject);
                              optionalCount:(NSString *)optionalCount
                            optionalSinceID:(NSString *)optionalSinceID
                              optionalMaxID:(NSString *)optionalMaxID
-                   optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                           includeEntities:(NSNumber *)includeEntities
                               successBlock:(void(^)(NSArray *statuses))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1888,7 +1888,7 @@ id removeNull(id rootObject);
     if(optionalCount) md[@"count"] = optionalCount;
     if(optionalSinceID) md[@"since_id"] = optionalSinceID;
     if(optionalMaxID) md[@"max_id"] = optionalMaxID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"favorites/list.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1905,7 +1905,7 @@ id removeNull(id rootObject);
                                optionalCount:nil
                              optionalSinceID:nil
                                optionalMaxID:nil
-                     optionalIncludeEntities:nil
+                             includeEntities:nil
                                 successBlock:^(NSArray *statuses) {
                                     successBlock(statuses);
                                 } errorBlock:^(NSError *error) {
@@ -1921,7 +1921,7 @@ id removeNull(id rootObject);
 
 // POST favorites/destroy
 - (void)postFavoriteDestroyWithStatusID:(NSString *)statusID
-                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                        includeEntities:(NSNumber *)includeEntities
                            successBlock:(void(^)(NSDictionary *status))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1929,7 +1929,7 @@ id removeNull(id rootObject);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(statusID) md[@"id"] = statusID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"favorites/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1940,7 +1940,7 @@ id removeNull(id rootObject);
 
 // POST	favorites/create
 - (void)postFavoriteCreateWithStatusID:(NSString *)statusID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                       includeEntities:(NSNumber *)includeEntities
                           successBlock:(void(^)(NSDictionary *status))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1948,7 +1948,7 @@ id removeNull(id rootObject);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(statusID) md[@"id"] = statusID;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"favorites/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -2014,7 +2014,7 @@ id removeNull(id rootObject);
                   optionalSinceID:(NSString *)sinceID
                     optionalMaxID:(NSString *)maxID
                     optionalCount:(NSString *)count
-          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                  includeEntities:(NSNumber *)includeEntities
                   includeRetweets:(NSNumber *)includeRetweets
                      successBlock:(void(^)(NSArray *statuses))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
@@ -2028,7 +2028,7 @@ id removeNull(id rootObject);
     if(maxID) md[@"max_id"] = maxID;
     if(count) md[@"count"] = count;
     
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = includeRetweets ? @"1" : @"0";
     
     [_oauth getResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
@@ -2049,7 +2049,7 @@ id removeNull(id rootObject);
                 optionalSinceID:(NSString *)sinceID
                   optionalMaxID:(NSString *)maxID
                   optionalCount:(NSString *)count
-        optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                includeEntities:(NSNumber *)includeEntities
                 includeRetweets:(NSNumber *)includeRetweets
                    successBlock:(void(^)(NSArray *statuses))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
@@ -2065,7 +2065,7 @@ id removeNull(id rootObject);
     if(maxID) md[@"max_id"] = maxID;
     if(count) md[@"count"] = count;
     
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
@@ -2160,8 +2160,8 @@ id removeNull(id rootObject);
                    ownerScreenName:(NSString *)ownerScreenName
                          orOwnerID:(NSString *)ownerID
                     optionalCursor:(NSString *)cursor
-           optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                   includeEntities:(NSNumber *)includeEntities
+                        skipStatus:(NSNumber *)skipStatus
                       successBlock:(void(^)())successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2177,8 +2177,8 @@ id removeNull(id rootObject);
         md[@"owner_id"] = ownerID;
     }
     if(cursor) md[@"cursor"] = cursor;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
@@ -2192,8 +2192,8 @@ id removeNull(id rootObject);
 
 - (void)getListsSubscribersForListID:(NSString *)listID
                       optionalCursor:(NSString *)cursor
-             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                  optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                     includeEntities:(NSNumber *)includeEntities
+                          skipStatus:(NSNumber *)skipStatus
                         successBlock:(void(^)())successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2202,8 +2202,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"listID"] = listID;
     if(cursor) md[@"cursor"] = cursor;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
@@ -2259,8 +2259,8 @@ id removeNull(id rootObject);
 - (void)getListsSubscribersShowForListID:(NSString *)listID
                                   userID:(NSString *)userID
                             orScreenName:(NSString *)screenName
-                 optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                      optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                         includeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
                             successBlock:(void(^)())successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(listID);
@@ -2270,8 +2270,8 @@ id removeNull(id rootObject);
     md[@"list_id"] = listID;
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
         successBlock();
@@ -2285,8 +2285,8 @@ id removeNull(id rootObject);
                              orOwnerID:(NSString *)ownerID
                                 userID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
                           successBlock:(void(^)())successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(slug);
@@ -2299,8 +2299,8 @@ id removeNull(id rootObject);
     if(ownerID) md[@"owner_id"] = ownerID;
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
         successBlock();
@@ -2412,8 +2412,8 @@ id removeNull(id rootObject);
 - (void)getListsMembersShowForListID:(NSString *)listID
                               userID:(NSString *)userID
                           screenName:(NSString *)screenName
-             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                  optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                     includeEntities:(NSNumber *)includeEntities
+                          skipStatus:(NSNumber *)skipStatus
                         successBlock:(void(^)(NSDictionary *user))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
     NSAssert(listID, @"listID is missing");
@@ -2422,8 +2422,8 @@ id removeNull(id rootObject);
     md[@"listID"] = listID;
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -2437,8 +2437,8 @@ id removeNull(id rootObject);
                          orOwnerID:(NSString *)ownerID
                             userID:(NSString *)userID
                         screenName:(NSString *)screenName
-           optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                   includeEntities:(NSNumber *)includeEntities
+                        skipStatus:(NSNumber *)skipStatus
                       successBlock:(void(^)(NSDictionary *user))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(slug);
@@ -2450,8 +2450,8 @@ id removeNull(id rootObject);
     if(ownerID) md[@"owner_id"] = ownerID;
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -2463,9 +2463,9 @@ id removeNull(id rootObject);
 // GET	lists/members
 
 - (void)getListsMembersForListID:(NSString *)listID
-                  optionalCursor:(NSString *)cursor
-         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-              optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                          cursor:(NSString *)cursor
+                 includeEntities:(NSNumber *)includeEntities
+                      skipStatus:(NSNumber *)skipStatus
                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2474,8 +2474,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"listID"] = listID;
     if(cursor) md[@"cursor"] = cursor;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/members.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
@@ -2490,9 +2490,9 @@ id removeNull(id rootObject);
 - (void)getListsMembersForSlug:(NSString *)slug
                ownerScreenName:(NSString *)ownerScreenName
                      orOwnerID:(NSString *)ownerID
-                optionalCursor:(NSString *)cursor
-       optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-            optionalSkipStatus:(NSNumber *)optionalSkipStatus
+                        cursor:(NSString *)cursor
+               includeEntities:(NSNumber *)includeEntities
+                    skipStatus:(NSNumber *)skipStatus
                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2505,8 +2505,8 @@ id removeNull(id rootObject);
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     if(cursor) md[@"cursor"] = cursor;
-    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
-    if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/members.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
@@ -2799,10 +2799,10 @@ id removeNull(id rootObject);
 // GET geo/reverse_geocode
 - (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
                                longitude:(NSString *)longitude // eg. "-122.400612831116"
-                        optionalAccuracy:(NSString *)optionalAccuracy // eg. "5ft"
-                     optionalGranularity:(NSString *)optionalGranularity // eg. "city"
-                      optionalMaxResults:(NSString *)optionalMaxResults // eg. "3"
-                        optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+                                accuracy:(NSString *)accuracy // eg. "5ft"
+                             granularity:(NSString *)granularity // eg. "city"
+                              maxResults:(NSString *)maxResults // eg. "3"
+                                callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                             successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2812,10 +2812,10 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"lat"] = latitude;
     md[@"long"] = longitude;
-    if(optionalAccuracy) md[@"accuracy"] = optionalAccuracy;
-    if(optionalGranularity) md[@"granularity"] = optionalGranularity;
-    if(optionalMaxResults) md[@"max_results"] = optionalMaxResults;
-    if(optionalCallback) md[@"callback"] = optionalCallback;
+    if(accuracy) md[@"accuracy"] = accuracy;
+    if(granularity) md[@"granularity"] = granularity;
+    if(maxResults) md[@"max_results"] = maxResults;
+    if(callback) md[@"callback"] = callback;
     
     [_oauth getResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
@@ -2835,10 +2835,10 @@ id removeNull(id rootObject);
     
     [self getGeoReverseGeocodeWithLatitude:latitude
                                  longitude:longitude
-                          optionalAccuracy:nil
-                       optionalGranularity:nil
-                        optionalMaxResults:nil
-                          optionalCallback:nil
+                                  accuracy:nil
+                               granularity:nil
+                                maxResults:nil
+                                  callback:nil
                               successBlock:^(NSDictionary *query, NSDictionary *result) {
                                   successBlock([result valueForKey:@"places"]);
                               } errorBlock:^(NSError *error) {
