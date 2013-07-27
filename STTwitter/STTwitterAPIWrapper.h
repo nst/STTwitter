@@ -440,7 +440,7 @@
  */
 
 - (void)getFriendshipIncomingWithOptionalCursor:(NSString *)cursor
-                          stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                          stringifyIDs:(NSNumber *)stringifyIDs
                                    successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -505,8 +505,8 @@
 
 - (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
                                   orUserID:(NSString *)userID
-                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
-                            enableRetweets:(BOOL)enableRetweets
+                 enableDeviceNotifications:(NSNumber *)enableDeviceNotifications
+                            enableRetweets:(NSNumber *)enableRetweets
                               successBlock:(void(^)(NSDictionary *user))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1013,7 +1013,7 @@
 - (void)getListsMembershipsForUserID:(NSString *)userID
                         orScreenName:(NSString *)screenName
                       optionalCursor:(NSString *)optionalCursor
-                  filterToOwnedLists:(BOOL)filterToOwnedLists // When set to true, t or 1, will return just lists the authenticating user owns, and the user represented by user_id or screen_name is a member of.
+                  filterToOwnedLists:(NSNumber *)filterToOwnedLists // When set to true, t or 1, will return just lists the authenticating user owns, and the user represented by user_id or screen_name is a member of.
                         successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 

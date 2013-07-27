@@ -1104,12 +1104,12 @@ id removeNull(id rootObject);
 }
 
 - (void)getFriendshipIncomingWithOptionalCursor:(NSString *)cursor
-                          stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                                   stringifyIDs:(NSNumber *)stringifyIDs
                                    successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"cursor"] = cursor ? cursor : @"-1";
-    md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
+    if(cursor) md[@"cursor"] = cursor;
+    if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"friendships/incoming.json" parameters:md successBlock:^(id response) {
         NSArray *ids = nil;
@@ -1214,17 +1214,17 @@ id removeNull(id rootObject);
 
 - (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
                                   orUserID:(NSString *)userID
-                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
-                            enableRetweets:(BOOL)enableRetweets
+                 enableDeviceNotifications:(NSNumber *)enableDeviceNotifications
+                            enableRetweets:(NSNumber *)enableRetweets
                               successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
     NSAssert((screenName || userID), @"screenName or userID is missing");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
-    md[@"device"] = enableDeviceNotifications ? @"true" : @"false";
-    md[@"retweets"] = enableRetweets ? @"true" : @"false";
-    
+    if(enableDeviceNotifications) md[@"device"] = [enableDeviceNotifications boolValue] ? @"1" : @"0";
+    if(enableRetweets) md[@"retweets"] = [enableRetweets boolValue] ? @"1" : @"0";
+
     [_oauth postResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -1238,12 +1238,11 @@ id removeNull(id rootObject);
                               successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
     NSAssert((screenName || userID), @"screenName or userID is missing");
     
-    NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(screenName) md[@"screen_name"] = screenName;
-    if(userID) md[@"user_id"] = userID;
-    md[@"device"] = enableDeviceNotifications ? @"true" : @"false";
-    
-    [_oauth postResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
+    [self postFriendshipsUpdateForScreenName:screenName
+                                    orUserID:userID
+                   enableDeviceNotifications:@(enableDeviceNotifications)
+                              enableRetweets:nil
+                                successBlock:^(NSDictionary *user) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1255,17 +1254,16 @@ id removeNull(id rootObject);
                             enableRetweets:(BOOL)enableRetweets
                               successBlock:(void (^)(NSDictionary *))successBlock errorBlock:(void (^)(NSError *))errorBlock {
     NSAssert((screenName || userID), @"screenName or userID is missing");
-    
-    NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(screenName) md[@"screen_name"] = screenName;
-    if(userID) md[@"user_id"] = userID;
-    md[@"retweets"] = enableRetweets ? @"true" : @"false";
-    
-    [_oauth postResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
-        successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+
+    [self postFriendshipsUpdateForScreenName:screenName
+                                    orUserID:userID
+                   enableDeviceNotifications:nil
+                              enableRetweets:@(enableRetweets)
+                                successBlock:^(NSDictionary *user) {
+                                    successBlock(response);
+                                } errorBlock:^(NSError *error) {
+                                    errorBlock(error);
+                                }];
 }
 
 - (void)getFriendshipShowForSourceID:(NSString *)sourceID
@@ -2127,7 +2125,7 @@ id removeNull(id rootObject);
 - (void)getListsMembershipsForUserID:(NSString *)userID
                         orScreenName:(NSString *)screenName
                       optionalCursor:(NSString *)optionalCursor
-                  filterToOwnedLists:(BOOL)filterToOwnedLists
+                  filterToOwnedLists:(NSNumber *)filterToOwnedLists
                         successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2137,7 +2135,7 @@ id removeNull(id rootObject);
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
     if(optionalCursor) md[@"cursor"] = optionalCursor;
-    md[@"filter_to_owned_lists"] = filterToOwnedLists ? @"1" : @"0";
+    if(filterToOwnedLists) md[@"filter_to_owned_lists"] = [filterToOwnedLists boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/memberships" parameters:md successBlock:^(id response) {
         NSString *previousCursor = nil;
