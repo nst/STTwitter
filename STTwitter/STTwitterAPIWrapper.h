@@ -106,9 +106,9 @@
 - (void)getStatusesMentionTimelineWithOptionalCount:(NSString *)optionalCount
                                     optionalSinceID:(NSString *)optionalSinceID
                                       optionalMaxID:(NSString *)optionalMaxID
-                                           trimUser:(BOOL)trimUser
-                                 contributorDetails:(BOOL)contributorDetails
-                                    includeEntities:(BOOL)includeEntities
+                                   optionalTrimUser:(NSNumber *)optionalTrimUser
+                         optionalContributorDetails:(NSNumber *)optionalContributorDetails
+                            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                                        successBlock:(void(^)(NSArray *statuses))successBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -136,10 +136,10 @@
                                  optionalSinceID:(NSString *)optionalSinceID
                                    optionalCount:(NSString *)optionalCount
                                    optionalMaxID:(NSString *)optionalMaxID
-                                        trimUser:(BOOL)trimUser
-                                  excludeReplies:(BOOL)excludeReplies
-                              contributorDetails:(BOOL)contributorDetails
-                                 includeRetweets:(BOOL)includeRetweets
+                                optionalTrimUser:(NSNumber *)optionalTrimUser
+                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
+                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
+                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -174,10 +174,10 @@
 - (void)getStatusesHomeTimelineWithOptionalCount:(NSString *)optionalCount
                                  optionalSinceID:(NSString *)optionalSinceID
                                    optionalMaxID:(NSString *)optionalMaxID
-                                        trimUser:(BOOL)trimUser
-                                  excludeReplies:(BOOL)excludeReplies
-                              contributorDetails:(BOOL)contributorDetails
-                                 includeEntities:(BOOL)includeEntities
+                                optionalTrimUser:(NSNumber *)optionalTrimUser
+                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
+                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
+                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -193,12 +193,12 @@
  Returns the most recent tweets authored by the authenticating user that have been retweeted by others. This timeline is a subset of the user's GET statuses/user_timeline. See Working with Timelines for instructions on traversing timelines.
  */
 
-- (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)count
-                                 optionalSinceID:(NSString *)sinceID
-                                   optionalMaxID:(NSString *)maxID
-                                        trimUser:(BOOL)trimUser
-                                 includeEntities:(BOOL)includeEntities
-                             includeUserEntities:(BOOL)includeUserEntities
+- (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)optionalCount
+                                 optionalSinceID:(NSString *)optionalSinceID
+                                   optionalMaxID:(NSString *)optionalMaxID
+                                optionalTrimUser:(NSNumber *)optionalTrimUser
+                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                     optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -211,7 +211,7 @@
 //	GET		statuses/retweets/:id
 - (void)getStatusesRetweetsForID:(NSString *)statusID
                    optionalCount:(NSString *)count
-                        trimUser:(BOOL)trimUser
+                optionalTrimUser:(NSNumber *)optionalTrimUser
                     successBlock:(void(^)(NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 

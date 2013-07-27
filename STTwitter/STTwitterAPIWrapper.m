@@ -246,9 +246,9 @@ id removeNull(id rootObject);
 - (void)getStatusesMentionTimelineWithOptionalCount:(NSString *)optionalCount
                                     optionalSinceID:(NSString *)optionalSinceID
                                       optionalMaxID:(NSString *)optionalMaxID
-                                           trimUser:(BOOL)trimUser
-                                 contributorDetails:(BOOL)contributorDetails
-                                    includeEntities:(BOOL)includeEntities
+                                   optionalTrimUser:(NSNumber *)optionalTrimUser
+                         optionalContributorDetails:(NSNumber *)optionalContributorDetails
+                            optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                                        successBlock:(void(^)(NSArray *statuses))successBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -257,8 +257,9 @@ id removeNull(id rootObject);
     if(optionalCount) md[@"count"] = optionalCount;
     if(optionalSinceID) md[@"since_id"] = optionalSinceID;
     if(optionalMaxID) md[@"max_id"] = optionalMaxID;
-    md[@"trim_user"] = trimUser ? @"1" : @"0";
-    md[@"include_entities"] = includeEntities ? @"1" : @"0";
+    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
+    if(optionalContributorDetails) md[@"contributor_details"] = [optionalContributorDetails boolValue] ? @"1" : @"0";
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -275,9 +276,9 @@ id removeNull(id rootObject);
     [self getStatusesMentionTimelineWithOptionalCount:[@(optionalCount) description]
                                       optionalSinceID:nil
                                         optionalMaxID:nil
-                                             trimUser:NO
-                                   contributorDetails:NO
-                                      includeEntities:NO
+                                     optionalTrimUser:nil
+                           optionalContributorDetails:nil
+                              optionalIncludeEntities:nil
                                          successBlock:^(NSArray *statuses) {
                                              successBlock(statuses);
                                          } errorBlock:^(NSError *error) {
@@ -292,10 +293,10 @@ id removeNull(id rootObject);
                                  optionalSinceID:(NSString *)optionalSinceID
                                    optionalCount:(NSString *)optionalCount
                                    optionalMaxID:(NSString *)optionalMaxID
-                                        trimUser:(BOOL)trimUser
-                                  excludeReplies:(BOOL)excludeReplies
-                              contributorDetails:(BOOL)contributorDetails
-                                 includeRetweets:(BOOL)includeRetweets
+                                optionalTrimUser:(NSNumber *)optionalTrimUser
+                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
+                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
+                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -307,10 +308,10 @@ id removeNull(id rootObject);
     if(optionalCount) md[@"count"] = optionalCount;
     if(optionalMaxID) md[@"max_id"] = optionalMaxID;
     
-    md[@"trim_user"] = trimUser ? @"1" : @"0";
-    md[@"exclude_replies"] = excludeReplies ? @"1" : @"0";
-    md[@"contributor_details"] = contributorDetails ? @"1" : @"0";
-    md[@"include_rts"] = includeRetweets ? @"1" : @"0";
+    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
+    if(optionalExcludeReplies) md[@"exclude_replies"] = [optionalExcludeReplies boolValue] ? @"1" : @"0";
+    if(optionalContributorDetails) md[@"contributor_details"] = [optionalContributorDetails boolValue] ? @"1" : @"0";
+    if(optionalIncludeRetweets) md[@"include_rts"] = [optionalIncludeRetweets boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/user_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -323,10 +324,10 @@ id removeNull(id rootObject);
 - (void)getStatusesHomeTimelineWithOptionalCount:(NSString *)optionalCount
                                  optionalSinceID:(NSString *)optionalSinceID
                                    optionalMaxID:(NSString *)optionalMaxID
-                                        trimUser:(BOOL)trimUser
-                                  excludeReplies:(BOOL)excludeReplies
-                              contributorDetails:(BOOL)contributorDetails
-                                 includeEntities:(BOOL)includeEntities
+                                optionalTrimUser:(NSNumber *)optionalTrimUser
+                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
+                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
+                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -336,10 +337,10 @@ id removeNull(id rootObject);
     if(optionalSinceID) md[@"since_id"] = optionalSinceID;
     if(optionalMaxID) md[@"max_id"] = optionalMaxID;
     
-    md[@"trim_user"] = trimUser ? @"1" : @"0";
-    md[@"exclude_replies"] = excludeReplies ? @"1" : @"0";
-    md[@"contributor_details"] = contributorDetails ? @"1" : @"0";
-    md[@"include_entities"] = includeEntities ? @"1" : @"0";
+    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
+    if(optionalExcludeReplies) md[@"exclude_replies"] = [optionalExcludeReplies boolValue] ? @"1" : @"0";
+    if(optionalContributorDetails) md[@"contributor_details"] = [optionalContributorDetails boolValue] ? @"1" : @"0";
+    if(optionalIncludeRetweets) md[@"include_rts"] = [optionalIncludeRetweets boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -347,7 +348,6 @@ id removeNull(id rootObject);
         errorBlock(error);
     }];
 }
-
 
 /*
  - (void)getTimeline:(NSString *)timeline
@@ -413,11 +413,20 @@ id removeNull(id rootObject);
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getStatusesUserTimelineForOptionalUserID:nil optionalScreenName:screenName optionalSinceID:optionalSinceID optionalCount:[@(optionalCount) description] optionalMaxID:optionalMaxID trimUser:NO excludeReplies:NO contributorDetails:NO includeRetweets:YES successBlock:^(NSArray *statuses) {
-        successBlock(statuses);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [self getStatusesUserTimelineForOptionalUserID:nil
+                                optionalScreenName:screenName
+                                   optionalSinceID:optionalSinceID
+                                     optionalCount:optionalCount
+                                     optionalMaxID:optionalMaxID
+                                  optionalTrimUser:nil
+                            optionalExcludeReplies:nil
+                        optionalContributorDetails:nil
+                           optionalIncludeRetweets:nil
+                                      successBlock:^(NSArray *statuses) {
+                                          successBlock(statuses);
+                                      } errorBlock:^(NSError *error) {
+                                          errorBlock(error);
+                                      }];
 }
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
@@ -446,19 +455,28 @@ id removeNull(id rootObject);
     
     NSString *count = optionalCount > 0 ? [@(optionalCount) description] : nil;
     
-    [self getStatusesHomeTimelineWithOptionalCount:count optionalSinceID:optionalSinceID optionalMaxID:nil trimUser:NO excludeReplies:NO contributorDetails:NO includeEntities:YES successBlock:^(NSArray *statuses) {
-        successBlock(statuses);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [self getStatusesUserTimelineForOptionalUserID:nil
+                                optionalScreenName:nil
+                                   optionalSinceID:optionalSinceID
+                                     optionalCount:count
+                                     optionalMaxID:nil
+                                  optionalTrimUser:nil
+                            optionalExcludeReplies:nil
+                        optionalContributorDetails:nil
+                           optionalIncludeRetweets:nil
+                                      successBlock:^(NSArray *statuses) {
+                                          successBlock(statuses);
+                                      } errorBlock:^(NSError *error) {
+                                          errorBlock(error);
+                                      }];
 }
 
 - (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)optionalCount
                                  optionalSinceID:(NSString *)optionalSinceID
                                    optionalMaxID:(NSString *)optionalMaxID
-                                        trimUser:(BOOL)trimUser
-                                 includeEntities:(BOOL)includeEntities
-                             includeUserEntities:(BOOL)includeUserEntities
+                                optionalTrimUser:(NSNumber *)optionalTrimUser
+                         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                     optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -468,9 +486,9 @@ id removeNull(id rootObject);
     if(optionalSinceID) md[@"since_id"] = optionalSinceID;
     if(optionalMaxID) md[@"max_id"] = optionalMaxID;
     
-    md[@"trim_user"] = trimUser ? @"1" : @"0";
-    md[@"include_entities"] = includeEntities ? @"1" : @"0";
-    md[@"include_user_entities"] = includeUserEntities ? @"1" : @"0";
+    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
+    if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
+    if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/retweets_of_me.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -485,9 +503,9 @@ id removeNull(id rootObject);
     [self getStatusesRetweetsOfMeWithOptionalCount:nil
                                    optionalSinceID:nil
                                      optionalMaxID:nil
-                                          trimUser:NO
-                                   includeEntities:YES
-                               includeUserEntities:YES
+                                          optionalTrimUser:NO
+                                   optionalIncludeEntities:YES
+                               optionalIncludeUserEntities:YES
                                       successBlock:^(NSArray *statuses) {
                                           successBlock(statuses);
                                       } errorBlock:^(NSError *error) {
@@ -499,7 +517,7 @@ id removeNull(id rootObject);
 
 - (void)getStatusesRetweetsForID:(NSString *)statusID
                    optionalCount:(NSString *)count
-                        trimUser:(BOOL)trimUser
+                optionalTrimUser:(NSNumber *)optionalTrimUser
                     successBlock:(void(^)(NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -510,7 +528,7 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
     if(count) md[@"count"] = count;
-    if(trimUser) md[@"trim_user"] = @"true";
+    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
     
     [_oauth getResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1727,7 +1745,7 @@ id removeNull(id rootObject);
 
 // GET users/contributees
 - (void)getUsersContributeesWithUserID:(NSString *)userID
-                            orScreenName:(NSString *)screenName
+                          orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributees))successBlock
@@ -1750,7 +1768,7 @@ id removeNull(id rootObject);
 
 // GET users/contributors
 - (void)getUsersContributorsWithUserID:(NSString *)userID
-                            orScreenName:(NSString *)screenName
+                          orScreenName:(NSString *)screenName
                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                     optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)(NSArray *contributors))successBlock
@@ -1842,7 +1860,7 @@ id removeNull(id rootObject);
                            optionalSinceID:(NSString *)optionalSinceID
                              optionalMaxID:(NSString *)optionalMaxID
                    optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                          successBlock:(void(^)(NSArray *statuses))successBlock
+                              successBlock:(void(^)(NSArray *statuses))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1908,7 +1926,7 @@ id removeNull(id rootObject);
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(statusID);
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(statusID) md[@"id"] = statusID;
     if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
