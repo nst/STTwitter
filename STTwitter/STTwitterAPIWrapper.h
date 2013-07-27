@@ -217,9 +217,9 @@
 
 //	GET		statuses/show/:id
 - (void)getStatusesShowID:(NSString *)statusID
-                 trimUser:(BOOL)trimUser
-         includeMyRetweet:(BOOL)includeMyRetweet
-          includeEntities:(BOOL)includeEntities
+         optionalTrimUser:(NSNumber *)optionalTrimUser
+ optionalIncludeMyRetweet:(NSNumber *)optionalIncludeMyRetweet
+  optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
              successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -261,7 +261,7 @@
 //  GET     statuses/retweeters/ids
 - (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
                              optionalCursor:(NSString *)cursor
-                         returnIDsAsStrings:(BOOL)returnIDsAsStrings
+                         returnIDsAsStrings:(NSNumber *)returnIDsAsStrings
                                successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -277,7 +277,7 @@
                    optionalUntil:(NSString *)until // eg. "2012-09-01"
                  optionalSinceID:(NSString *)sinceID // eg. "12345"
                    optionalMaxID:(NSString *)maxID // eg. "54321"
-                 includeEntities:(BOOL)includeEntities
+         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                 optionalCallback:(NSString *)callback // eg. "processTweets"
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock;
@@ -310,8 +310,8 @@
 - (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
-                             includeEntities:(BOOL)includeEntities
-                                  skipStatus:(BOOL)skipStatus
+                     optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                          optionalSkipStatus:(NSNumber *)optionalSkipStatus
                                 successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 // convenience
@@ -329,7 +329,7 @@
                                optionalMaxID:(NSString *)optionalMaxID
                                optionalCount:(NSString *)optionalCount
                                 optionalPage:(NSString *)optionalPage
-                             includeEntities:(BOOL)includeEntities
+                     optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
                                 successBlock:(void(^)(NSArray *messages))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -348,7 +348,7 @@
  Destroys the direct message specified in the required ID parameter. The authenticating user must be the recipient of the specified direct message.
  */
 - (void)postDestroyDirectMessageWithID:(NSString *)messageID
-                       includeEntities:(BOOL)includeEntities
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
 						  successBlock:(void(^)(NSDictionary *message))successBlock
 							errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -370,9 +370,9 @@
  Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from. Use POST friendships/update to set the "no retweets" status for a given user account on behalf of the current user.
  */
 
-- (void)getFriendshipNoRetweetsIDsWithOptionalStringifyIDsDefaultNO:(BOOL)stringifyIDs // 'stringify_ids'
-                                                       successBlock:(void(^)(NSArray *ids))successBlock
-                                                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getFriendshipNoRetweetsIDsWithOptionalStringifyIDs:(NSNumber *)stringifyIDs
+                                              successBlock:(void(^)(NSArray *ids))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friends/ids
@@ -388,7 +388,7 @@
 - (void)getFriendsIDsForUserID:(NSString *)userID
                   orScreenName:(NSString *)screenName
                         cursor:(NSString *)cursor
-         stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                  stringifyIDs:(NSNumber *)stringifyIDs
                  optionalCount:(NSString *)count
                   successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
@@ -412,7 +412,7 @@
 - (void)getFollowersIDsForUserID:(NSString *)userID
                     orScreenName:(NSString *)screenName
                           cursor:(NSString *)cursor
-           stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                    stringifyIDs:(NSNumber *)stringifyIDs
                    optionalCount:(NSString *)count
                     successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
@@ -451,7 +451,7 @@
  */
 
 - (void)getFriendshipOutgoingWithOptionalCursor:(NSString *)cursor
-                          stringifyIDsDefaultNO:(BOOL)stringifyIDs
+                                   stringifyIDs:(NSNumber *)stringifyIDs
                                    successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -547,9 +547,9 @@
 
 - (void)getFriendsListForUserID:(NSString *)userID
                    orScreenName:(NSString *)screenName
-                         cursor:(NSString *)cursor
-                     skipStatus:(BOOL)skipStatus
-            includeUserEntities:(BOOL)includeUserEntities
+                 optionalCursor:(NSString *)optionalCursor
+             optionalSkipStatus:(NSNumber *)optionalSkipStatus
+    optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -569,8 +569,8 @@
 - (void)getFollowersListForUserID:(NSString *)userID
                      orScreenName:(NSString *)screenName
                            cursor:(NSString *)cursor
-                       skipStatus:(BOOL)skipStatus
-              includeUserEntities:(BOOL)includeUserEntities
+               optionalSkipStatus:(NSNumber *)optionalSkipStatus
+      optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -919,9 +919,9 @@
  */
 
 - (void)postFavoriteDestroyWithStatusID:(NSString *)statusID
-               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
-                          successBlock:(void(^)(NSDictionary *status))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+                optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                           successBlock:(void(^)(NSDictionary *status))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	favorites/create
@@ -956,7 +956,7 @@
 
 - (void)getListsSubscribedByUsername:(NSString *)username
                             orUserID:(NSString *)userID
-                             reverse:(BOOL)reverse
+                             reverse:(NSNumber *)reverse
                         successBlock:(void(^)(NSArray *lists))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -970,8 +970,8 @@
                   optionalSinceID:(NSString *)sinceID
                     optionalMaxID:(NSString *)maxID
                     optionalCount:(NSString *)count
-                  includeEntities:(BOOL)includeEntities
-                  includeRetweets:(BOOL)includeRetweets
+          optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                  includeRetweets:(NSNumber *)includeRetweets
                      successBlock:(void(^)(NSArray *statuses))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -981,8 +981,8 @@
                 optionalSinceID:(NSString *)sinceID
                   optionalMaxID:(NSString *)maxID
                   optionalCount:(NSString *)count
-                includeEntities:(BOOL)includeEntities
-                includeRetweets:(BOOL)includeRetweets
+        optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                includeRetweets:(NSNumber *)includeRetweets
                    successBlock:(void(^)(NSArray *statuses))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1027,15 +1027,15 @@
                    ownerScreenName:(NSString *)ownerScreenName
                          orOwnerID:(NSString *)ownerID
                     optionalCursor:(NSString *)cursor
-                   includeEntities:(BOOL)includeEntities
-                        skipStatus:(BOOL)skipStatus
+           optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                optionalSkipStatus:(NSNumber *)optionalSkipStatus
                       successBlock:(void(^)())successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getListsSubscribersForListID:(NSString *)listID
                       optionalCursor:(NSString *)cursor
-                     includeEntities:(BOOL)includeEntities
-                          skipStatus:(BOOL)skipStatus
+             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                  optionalSkipStatus:(NSNumber *)optionalSkipStatus
                         successBlock:(void(^)())successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1064,8 +1064,8 @@
 - (void)getListsSubscribersShowForListID:(NSString *)listID
                                   userID:(NSString *)userID
                             orScreenName:(NSString *)screenName
-                         includeEntities:(BOOL)includeEntities
-                              skipStatus:(BOOL)skipStatus
+                 optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                      optionalSkipStatus:(NSNumber *)optionalSkipStatus
                             successBlock:(void(^)())successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1074,8 +1074,8 @@
                              orOwnerID:(NSString *)ownerID
                                 userID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-                       includeEntities:(BOOL)includeEntities
-                            skipStatus:(BOOL)skipStatus
+               optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                    optionalSkipStatus:(NSNumber *)optionalSkipStatus
                           successBlock:(void(^)())successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1126,8 +1126,8 @@
 - (void)getListsMembersShowForListID:(NSString *)listID
                               userID:(NSString *)userID
                           screenName:(NSString *)screenName
-                     includeEntities:(BOOL)includeEntities
-                          skipStatus:(BOOL)skipStatus
+             optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                  optionalSkipStatus:(NSNumber *)optionalSkipStatus
                         successBlock:(void(^)(NSDictionary *user))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1136,8 +1136,8 @@
                          orOwnerID:(NSString *)ownerID
                             userID:(NSString *)userID
                         screenName:(NSString *)screenName
-                   includeEntities:(BOOL)includeEntities
-                        skipStatus:(BOOL)skipStatus
+           optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+                optionalSkipStatus:(NSNumber *)optionalSkipStatus
                       successBlock:(void(^)(NSDictionary *user))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1149,8 +1149,8 @@
 
 - (void)getListsMembersForListID:(NSString *)listID
                   optionalCursor:(NSString *)cursor
-                 includeEntities:(BOOL)includeEntities
-                      skipStatus:(BOOL)skipStatus
+         optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+              optionalSkipStatus:(NSNumber *)optionalSkipStatus
                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1158,8 +1158,8 @@
                ownerScreenName:(NSString *)screenName
                      orOwnerID:(NSString *)ownerID
                 optionalCursor:(NSString *)cursor
-               includeEntities:(BOOL)includeEntities
-                    skipStatus:(BOOL)skipStatus
+       optionalIncludeEntities:(NSNumber *)optionalIncludeEntities
+            optionalSkipStatus:(NSNumber *)optionalSkipStatus
                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
