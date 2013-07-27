@@ -1243,7 +1243,7 @@ id removeNull(id rootObject);
                    enableDeviceNotifications:@(enableDeviceNotifications)
                               enableRetweets:nil
                                 successBlock:^(NSDictionary *user) {
-        successBlock(response);
+        successBlock(user);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -1260,7 +1260,7 @@ id removeNull(id rootObject);
                    enableDeviceNotifications:nil
                               enableRetweets:@(enableRetweets)
                                 successBlock:^(NSDictionary *user) {
-                                    successBlock(response);
+                                    successBlock(user);
                                 } errorBlock:^(NSError *error) {
                                     errorBlock(error);
                                 }];
