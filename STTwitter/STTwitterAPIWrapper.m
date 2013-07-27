@@ -962,7 +962,7 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    md[@"cursor"] = cursor ? cursor : @"-1";
+    if(cursor) md[@"cursor"] = cursor;
     if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
     
     if(count) md[@"count"] = count;
@@ -1044,7 +1044,7 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    md[@"cursor"] = cursor ? cursor : @"-1";
+    if(cursor) md[@"cursor"] = cursor;
     if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
     if(count) md[@"count"] = count;
     
@@ -1133,7 +1133,7 @@ id removeNull(id rootObject);
                                    successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"cursor"] = cursor ? cursor : @"-1";
+    if(cursor) md[@"cursor"] = cursor;
     if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"friendships/outgoing.json" parameters:md successBlock:^(id response) {
@@ -1351,7 +1351,7 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    md[@"cursor"] = cursor ? cursor : @"-1";
+    if(cursor) md[@"cursor"] = cursor;
     if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
     if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
     
@@ -2504,7 +2504,7 @@ id removeNull(id rootObject);
     md[@"slug"] = slug;
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
-    md[@"cursor"] = cursor ? cursor : @"-1";
+    if(cursor) md[@"cursor"] = cursor;
     if(optionalIncludeEntities) md[@"include_entities"] = [optionalIncludeEntities boolValue] ? @"1" : @"0";
     if(optionalSkipStatus) md[@"skip_status"] = [optionalSkipStatus boolValue] ? @"1" : @"0";
     
