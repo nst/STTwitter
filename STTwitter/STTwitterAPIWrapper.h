@@ -131,29 +131,29 @@
  This method can only return up to 3,200 of a user's most recent Tweets. Native retweets of other statuses by the user is included in this total, regardless of whether include_rts is set to false when requesting this resource.
  */
 
-- (void)getStatusesUserTimelineForOptionalUserID:(NSString *)optionalUserID
-                              optionalScreenName:(NSString *)optionalScreenName
-                                 optionalSinceID:(NSString *)optionalSinceID
-                                   optionalCount:(NSString *)optionalCount
-                                   optionalMaxID:(NSString *)optionalMaxID
-                                optionalTrimUser:(NSNumber *)optionalTrimUser
-                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
-                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
-                                    successBlock:(void(^)(NSArray *statuses))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getStatusesUserTimelineForUserID:(NSString *)userID
+                              screenName:(NSString *)screenName
+                                 sinceID:(NSString *)sinceID
+                                   count:(NSString *)count
+                                   maxID:(NSString *)maxID
+                                trimUser:(NSNumber *)trimUser
+                          excludeReplies:(NSNumber *)excludeReplies
+                      contributorDetails:(NSNumber *)contributorDetails
+                         includeRetweets:(NSNumber *)includeRetweets
+                            successBlock:(void(^)(NSArray *statuses))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
-                              sinceID:(NSString *)optionalSinceID
-                                maxID:(NSString *)optionalMaxID
-								count:(NSUInteger)optionalCount
+                              sinceID:(NSString *)sinceID
+                                maxID:(NSString *)maxID
+								count:(NSUInteger)count
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
-								count:(NSUInteger)optionalCount
+								count:(NSUInteger)count
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -171,15 +171,15 @@
  Up to 800 Tweets are obtainable on the home timeline. It is more volatile for users that follow many users or follow users who tweet frequently.
  */
 
-- (void)getStatusesHomeTimelineWithOptionalCount:(NSString *)optionalCount
-                                 optionalSinceID:(NSString *)optionalSinceID
-                                   optionalMaxID:(NSString *)optionalMaxID
-                                optionalTrimUser:(NSNumber *)optionalTrimUser
-                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
-                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
-                                    successBlock:(void(^)(NSArray *statuses))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getStatusesHomeTimelineWithCount:(NSString *)count
+                                 sinceID:(NSString *)sinceID
+                                   maxID:(NSString *)maxID
+                                trimUser:(NSNumber *)trimUser
+                          excludeReplies:(NSNumber *)excludeReplies
+                      contributorDetails:(NSNumber *)contributorDetails
+                         includeRetweets:(NSNumber *)includeRetweets
+                            successBlock:(void(^)(NSArray *statuses))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
 - (void)getHomeTimelineSinceID:(NSString *)optionalSinceID

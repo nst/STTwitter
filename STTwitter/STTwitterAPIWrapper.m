@@ -288,30 +288,30 @@ id removeNull(id rootObject);
 
 /**/
 
-- (void)getStatusesUserTimelineForOptionalUserID:(NSString *)optionalUserID
-                              optionalScreenName:(NSString *)optionalScreenName
-                                 optionalSinceID:(NSString *)optionalSinceID
-                                   optionalCount:(NSString *)optionalCount
-                                   optionalMaxID:(NSString *)optionalMaxID
-                                optionalTrimUser:(NSNumber *)optionalTrimUser
-                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
-                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
-                                    successBlock:(void(^)(NSArray *statuses))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getStatusesUserTimelineForUserID:(NSString *)userID
+                              screenName:(NSString *)screenName
+                                 sinceID:(NSString *)sinceID
+                                   count:(NSString *)count
+                                   maxID:(NSString *)maxID
+                                trimUser:(NSNumber *)trimUser
+                          excludeReplies:(NSNumber *)excludeReplies
+                      contributorDetails:(NSNumber *)contributorDetails
+                         includeRetweets:(NSNumber *)includeRetweets
+                            successBlock:(void(^)(NSArray *statuses))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
-    if(optionalUserID) md[@"user_id"] = optionalUserID;
-    if(optionalScreenName) md[@"screen_name"] = optionalScreenName;
-    if(optionalSinceID) md[@"since_id"] = optionalSinceID;
-    if(optionalCount) md[@"count"] = optionalCount;
-    if(optionalMaxID) md[@"max_id"] = optionalMaxID;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(count) md[@"count"] = count;
+    if(maxID) md[@"max_id"] = maxID;
     
-    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
-    if(optionalExcludeReplies) md[@"exclude_replies"] = [optionalExcludeReplies boolValue] ? @"1" : @"0";
-    if(optionalContributorDetails) md[@"contributor_details"] = [optionalContributorDetails boolValue] ? @"1" : @"0";
-    if(optionalIncludeRetweets) md[@"include_rts"] = [optionalIncludeRetweets boolValue] ? @"1" : @"0";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
+    if(excludeReplies) md[@"exclude_replies"] = [excludeReplies boolValue] ? @"1" : @"0";
+    if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
+    if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/user_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -320,27 +320,26 @@ id removeNull(id rootObject);
     }];
 }
 
-
-- (void)getStatusesHomeTimelineWithOptionalCount:(NSString *)optionalCount
-                                 optionalSinceID:(NSString *)optionalSinceID
-                                   optionalMaxID:(NSString *)optionalMaxID
-                                optionalTrimUser:(NSNumber *)optionalTrimUser
-                          optionalExcludeReplies:(NSNumber *)optionalExcludeReplies
-                      optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                         optionalIncludeRetweets:(NSNumber *)optionalIncludeRetweets
-                                    successBlock:(void(^)(NSArray *statuses))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getStatusesHomeTimelineWithCount:(NSString *)count
+                                 sinceID:(NSString *)sinceID
+                                   maxID:(NSString *)maxID
+                                trimUser:(NSNumber *)trimUser
+                          excludeReplies:(NSNumber *)excludeReplies
+                      contributorDetails:(NSNumber *)contributorDetails
+                         includeRetweets:(NSNumber *)includeRetweets
+                            successBlock:(void(^)(NSArray *statuses))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
-    if(optionalCount) md[@"count"] = optionalCount;
-    if(optionalSinceID) md[@"since_id"] = optionalSinceID;
-    if(optionalMaxID) md[@"max_id"] = optionalMaxID;
+    if(count) md[@"count"] = count;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
     
-    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
-    if(optionalExcludeReplies) md[@"exclude_replies"] = [optionalExcludeReplies boolValue] ? @"1" : @"0";
-    if(optionalContributorDetails) md[@"contributor_details"] = [optionalContributorDetails boolValue] ? @"1" : @"0";
-    if(optionalIncludeRetweets) md[@"include_rts"] = [optionalIncludeRetweets boolValue] ? @"1" : @"0";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
+    if(excludeReplies) md[@"exclude_replies"] = [excludeReplies boolValue] ? @"1" : @"0";
+    if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
+    if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -413,20 +412,20 @@ id removeNull(id rootObject);
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getStatusesUserTimelineForOptionalUserID:nil
-                                optionalScreenName:screenName
-                                   optionalSinceID:optionalSinceID
-                                     optionalCount:optionalCount
-                                     optionalMaxID:optionalMaxID
-                                  optionalTrimUser:nil
-                            optionalExcludeReplies:nil
-                        optionalContributorDetails:nil
-                           optionalIncludeRetweets:nil
-                                      successBlock:^(NSArray *statuses) {
-                                          successBlock(statuses);
-                                      } errorBlock:^(NSError *error) {
-                                          errorBlock(error);
-                                      }];
+    [self getStatusesUserTimelineForUserID:nil
+                                screenName:screenName
+                                   sinceID:optionalSinceID
+                                     count:optionalCount
+                                     maxID:optionalMaxID
+                                  trimUser:nil
+                            excludeReplies:nil
+                        contributorDetails:nil
+                           includeRetweets:nil
+                              successBlock:^(NSArray *statuses) {
+                                  successBlock(statuses);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
@@ -455,20 +454,20 @@ id removeNull(id rootObject);
     
     NSString *count = optionalCount > 0 ? [@(optionalCount) description] : nil;
     
-    [self getStatusesUserTimelineForOptionalUserID:nil
-                                optionalScreenName:nil
-                                   optionalSinceID:optionalSinceID
-                                     optionalCount:count
-                                     optionalMaxID:nil
-                                  optionalTrimUser:nil
-                            optionalExcludeReplies:nil
-                        optionalContributorDetails:nil
-                           optionalIncludeRetweets:nil
-                                      successBlock:^(NSArray *statuses) {
-                                          successBlock(statuses);
-                                      } errorBlock:^(NSError *error) {
-                                          errorBlock(error);
-                                      }];
+    [self getStatusesUserTimelineForUserID:nil
+                                screenName:nil
+                                   sinceID:optionalSinceID
+                                     count:count
+                                     maxID:nil
+                                  trimUser:nil
+                            excludeReplies:nil
+                        contributorDetails:nil
+                           includeRetweets:nil
+                              successBlock:^(NSArray *statuses) {
+                                  successBlock(statuses);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 - (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)optionalCount
