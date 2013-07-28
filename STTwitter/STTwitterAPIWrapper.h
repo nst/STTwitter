@@ -193,14 +193,14 @@
  Returns the most recent tweets authored by the authenticating user that have been retweeted by others. This timeline is a subset of the user's GET statuses/user_timeline. See Working with Timelines for instructions on traversing timelines.
  */
 
-- (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)optionalCount
-                                 optionalSinceID:(NSString *)optionalSinceID
-                                   optionalMaxID:(NSString *)optionalMaxID
-                                optionalTrimUser:(NSNumber *)optionalTrimUser
-                                 includeEntities:(NSNumber *)includeEntities
-                     optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
-                                    successBlock:(void(^)(NSArray *statuses))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getStatusesRetweetsOfMeWithCount:(NSString *)count
+                                 sinceID:(NSString *)sinceID
+                                   maxID:(NSString *)maxID
+                                trimUser:(NSNumber *)trimUser
+                         includeEntities:(NSNumber *)includeEntities
+                     includeUserEntities:(NSNumber *)includeUserEntities
+                            successBlock:(void(^)(NSArray *statuses))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
 - (void)getStatusesRetweetsOfMeWithSuccessBlock:(void(^)(NSArray *statuses))successBlock

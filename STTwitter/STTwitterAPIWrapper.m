@@ -429,13 +429,14 @@ id removeNull(id rootObject);
 }
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
-								count:(NSUInteger)optionalCount
+								count:(NSUInteger)count
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
 	[self getUserTimelineWithScreenName:screenName
                                 sinceID:nil
                                   maxID:nil
-                                  count:optionalCount
+                                  count:count
                            successBlock:successBlock
                              errorBlock:errorBlock];
 }
@@ -447,17 +448,17 @@ id removeNull(id rootObject);
     [self getUserTimelineWithScreenName:screenName count:NSNotFound successBlock:successBlock errorBlock:errorBlock];
 }
 
-- (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
-                         count:(NSUInteger)optionalCount
+- (void)getHomeTimelineSinceID:(NSString *)sinceID
+                         count:(NSUInteger)count
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSString *count = optionalCount > 0 ? [@(optionalCount) description] : nil;
+    NSString *countString = count > 0 ? [@(count) description] : nil;
     
     [self getStatusesUserTimelineForUserID:nil
                                 screenName:nil
-                                   sinceID:optionalSinceID
-                                     count:count
+                                   sinceID:sinceID
+                                     count:countString
                                      maxID:nil
                                   trimUser:nil
                             excludeReplies:nil
@@ -470,24 +471,24 @@ id removeNull(id rootObject);
                               }];
 }
 
-- (void)getStatusesRetweetsOfMeWithOptionalCount:(NSString *)optionalCount
-                                 optionalSinceID:(NSString *)optionalSinceID
-                                   optionalMaxID:(NSString *)optionalMaxID
-                                optionalTrimUser:(NSNumber *)optionalTrimUser
-                                 includeEntities:(NSNumber *)includeEntities
-                     optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
-                                    successBlock:(void(^)(NSArray *statuses))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getStatusesRetweetsOfMeWithCount:(NSString *)count
+                                 sinceID:(NSString *)sinceID
+                                   maxID:(NSString *)maxID
+                                trimUser:(NSNumber *)trimUser
+                         includeEntities:(NSNumber *)includeEntities
+                     includeUserEntities:(NSNumber *)includeUserEntities
+                            successBlock:(void(^)(NSArray *statuses))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
-    if(optionalCount) md[@"count"] = optionalCount;
-    if(optionalSinceID) md[@"since_id"] = optionalSinceID;
-    if(optionalMaxID) md[@"max_id"] = optionalMaxID;
+    if(count) md[@"count"] = count;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
     
-    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
-    if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
+    if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/retweets_of_me.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -499,17 +500,17 @@ id removeNull(id rootObject);
 // convenience method, shorter
 - (void)getStatusesRetweetsOfMeWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock {
-    [self getStatusesRetweetsOfMeWithOptionalCount:nil
-                                   optionalSinceID:nil
-                                     optionalMaxID:nil
-                                  optionalTrimUser:nil
-                                   includeEntities:nil
-                       optionalIncludeUserEntities:nil
-                                      successBlock:^(NSArray *statuses) {
-                                          successBlock(statuses);
-                                      } errorBlock:^(NSError *error) {
-                                          errorBlock(error);
-                                      }];
+    [self getStatusesRetweetsOfMeWithCount:nil
+                                   sinceID:nil
+                                     maxID:nil
+                                  trimUser:nil
+                           includeEntities:nil
+                       includeUserEntities:nil
+                              successBlock:^(NSArray *statuses) {
+                                  successBlock(statuses);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 #pragma mark Tweets
