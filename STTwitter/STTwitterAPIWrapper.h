@@ -103,18 +103,18 @@
  This method can only return up to 800 tweets.
  */
 
-- (void)getStatusesMentionTimelineWithOptionalCount:(NSString *)optionalCount
-                                    optionalSinceID:(NSString *)optionalSinceID
-                                      optionalMaxID:(NSString *)optionalMaxID
-                                   optionalTrimUser:(NSNumber *)optionalTrimUser
-                         optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                                    includeEntities:(NSNumber *)includeEntities
-                                       successBlock:(void(^)(NSArray *statuses))successBlock
-                                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getStatusesMentionTimelineWithCount:(NSString *)count
+                                    sinceID:(NSString *)sinceID
+                                      maxID:(NSString *)maxID
+                                   trimUser:(NSNumber *)timUser
+                         contributorDetails:(NSNumber *)contributorDetails
+                            includeEntities:(NSNumber *)includeEntities
+                               successBlock:(void(^)(NSArray *statuses))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
-							 count:(NSUInteger)optionalCount
+- (void)getMentionsTimelineSinceID:(NSString *)sinceID
+							 count:(NSUInteger)count
 					  successBlock:(void(^)(NSArray *statuses))successBlock
 						errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1343,16 +1343,16 @@
  This is the recommended method to use find places that can be attached to statuses/update. Unlike GET geo/reverse_geocode which provides raw data access, this endpoint can potentially re-order places with regards to the user who is authenticated. This approach is also preferred for interactive place matching with the user.
  */
 
-- (void)getGeoSearchWithOptionalLatitude:(NSString *)optionalLatitude // eg. "37.7821120598956"
-                       optionalLongitude:(NSString *)optionalLongitude // eg. "-122.400612831116"
-                           optionalQuery:(NSString *)optionalQuery // eg. "Twitter HQ"
-                              optionalIP:(NSString *)optionalIP // eg. 74.125.19.104
-                     optionalGranularity:(NSString *)optionalGranularity // eg. "city"
-                        optionalAccuracy:(NSString *)optionalAccuracy // eg. "5ft"
-                      optionalMaxResults:(NSString *)optionalMaxResults // eg. "3"
-         optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin // eg. "247f43d441defc03"
-          optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
-                        optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+- (void)getGeoSearchWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                       longitude:(NSString *)longitude // eg. "-122.400612831116"
+                           query:(NSString *)query // eg. "Twitter HQ"
+                              ip:(NSString *)ip // eg. 74.125.19.104
+                     granularity:(NSString *)granularity // eg. "city"
+                        accuracy:(NSString *)accuracy // eg. "5ft"
+                      maxResults:(NSString *)maxResults // eg. "3"
+         placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+          attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                        callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                             successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1385,9 +1385,9 @@
 - (void)getGeoSimilarPlacesToLatitude:(NSString *)latitude // eg. "37.7821120598956"
                             longitude:(NSString *)longitude // eg. "-122.400612831116"
                                  name:(NSString *)name // eg. "Twitter HQ"
-      optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin // eg. "247f43d441defc03"
-       optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
-                     optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+      placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+       attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                     callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                          successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1406,8 +1406,8 @@
            similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"
                     latitude:(NSString *)latitude // eg. "37.7821120598956"
                    longitude:(NSString *)longitude // eg. "-122.400612831116"
-optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
-            optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+            callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                 successBlock:(void(^)(NSDictionary *place))successBlock
                   errorBlock:(void(^)(NSError *error))errorBlock;
 

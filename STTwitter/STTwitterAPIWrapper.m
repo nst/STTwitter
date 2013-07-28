@@ -243,22 +243,22 @@ id removeNull(id rootObject);
 
 #pragma mark Timelines
 
-- (void)getStatusesMentionTimelineWithOptionalCount:(NSString *)optionalCount
-                                    optionalSinceID:(NSString *)optionalSinceID
-                                      optionalMaxID:(NSString *)optionalMaxID
-                                   optionalTrimUser:(NSNumber *)optionalTrimUser
-                         optionalContributorDetails:(NSNumber *)optionalContributorDetails
-                                    includeEntities:(NSNumber *)includeEntities
-                                       successBlock:(void(^)(NSArray *statuses))successBlock
-                                         errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getStatusesMentionTimelineWithCount:(NSString *)count
+                                    sinceID:(NSString *)sinceID
+                                      maxID:(NSString *)maxID
+                                   trimUser:(NSNumber *)timUser
+                         contributorDetails:(NSNumber *)contributorDetails
+                            includeEntities:(NSNumber *)includeEntities
+                               successBlock:(void(^)(NSArray *statuses))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"include_rts"] = @"1"; // "It is recommended you always send include_rts=1 when using this API method" https://dev.twitter.com/docs/api/1.1/get/statuses/mentions_timeline
-    if(optionalCount) md[@"count"] = optionalCount;
-    if(optionalSinceID) md[@"since_id"] = optionalSinceID;
-    if(optionalMaxID) md[@"max_id"] = optionalMaxID;
-    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
-    if(optionalContributorDetails) md[@"contributor_details"] = [optionalContributorDetails boolValue] ? @"1" : @"0";
+    if(count) md[@"count"] = count;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
+    if(timUser) md[@"trim_user"] = [timUser boolValue] ? @"1" : @"0";
+    if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(id response) {
@@ -268,22 +268,22 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)getMentionsTimelineSinceID:(NSString *)optionalSinceID
-							 count:(NSUInteger)optionalCount
+- (void)getMentionsTimelineSinceID:(NSString *)sinceID
+							 count:(NSUInteger)count
 					  successBlock:(void(^)(NSArray *statuses))successBlock
 						errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getStatusesMentionTimelineWithOptionalCount:[@(optionalCount) description]
-                                      optionalSinceID:nil
-                                        optionalMaxID:nil
-                                     optionalTrimUser:nil
-                           optionalContributorDetails:nil
-                                      includeEntities:nil
-                                         successBlock:^(NSArray *statuses) {
-                                             successBlock(statuses);
-                                         } errorBlock:^(NSError *error) {
-                                             errorBlock(error);
-                                         }];
+    [self getStatusesMentionTimelineWithCount:[@(count) description]
+                                      sinceID:nil
+                                        maxID:nil
+                                     trimUser:nil
+                           contributorDetails:nil
+                              includeEntities:nil
+                                 successBlock:^(NSArray *statuses) {
+                                     successBlock(statuses);
+                                 } errorBlock:^(NSError *error) {
+                                     errorBlock(error);
+                                 }];
 }
 
 /**/
@@ -2848,30 +2848,30 @@ id removeNull(id rootObject);
 
 // GET geo/search
 
-- (void)getGeoSearchWithOptionalLatitude:(NSString *)optionalLatitude
-                       optionalLongitude:(NSString *)optionalLongitude
-                           optionalQuery:(NSString *)optionalQuery
-                              optionalIP:(NSString *)optionalIP
-                     optionalGranularity:(NSString *)optionalGranularity
-                        optionalAccuracy:(NSString *)optionalAccuracy
-                      optionalMaxResults:(NSString *)optionalMaxResults
-         optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin
-          optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress
-                        optionalCallback:(NSString *)optionalCallback
-                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getGeoSearchWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                       longitude:(NSString *)longitude // eg. "-122.400612831116"
+                           query:(NSString *)query // eg. "Twitter HQ"
+                              ip:(NSString *)ip // eg. 74.125.19.104
+                     granularity:(NSString *)granularity // eg. "city"
+                        accuracy:(NSString *)accuracy // eg. "5ft"
+                      maxResults:(NSString *)maxResults // eg. "3"
+         placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+          attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                        callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
+                    successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalLatitude) md[@"lat"] = optionalLatitude;
-    if(optionalLongitude) md[@"long"] = optionalLongitude;
-    if(optionalQuery) md[@"query"] = optionalQuery;
-    if(optionalIP) md[@"ip"] = optionalIP;
-    if(optionalGranularity) md[@"granularity"] = optionalGranularity;
-    if(optionalAccuracy) md[@"accuracy"] = optionalAccuracy;
-    if(optionalMaxResults) md[@"max_results"] = optionalMaxResults;
-    if(optionalPlaceIDContaintedWithin) md[@"contained_within"] = optionalPlaceIDContaintedWithin;
-    if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
-    if(optionalCallback) md[@"callback"] = optionalCallback;
+    if(latitude) md[@"lat"] = latitude;
+    if(longitude) md[@"long"] = longitude;
+    if(query) md[@"query"] = query;
+    if(ip) md[@"ip"] = ip;
+    if(granularity) md[@"granularity"] = granularity;
+    if(accuracy) md[@"accuracy"] = accuracy;
+    if(maxResults) md[@"max_results"] = maxResults;
+    if(placeIDContaintedWithin) md[@"contained_within"] = placeIDContaintedWithin;
+    if(attributeStreetAddress) md[@"attribute:street_address"] = attributeStreetAddress;
+    if(callback) md[@"callback"] = callback;
     
     [_oauth getResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
@@ -2892,21 +2892,21 @@ id removeNull(id rootObject);
     NSParameterAssert(latitude);
     NSParameterAssert(longitude);
     
-    [self getGeoSearchWithOptionalLatitude:latitude
-                         optionalLongitude:longitude
-                             optionalQuery:nil
-                                optionalIP:nil
-                       optionalGranularity:nil
-                          optionalAccuracy:nil
-                        optionalMaxResults:nil
-           optionalPlaceIDContaintedWithin:nil
-            optionalAttributeStreetAddress:nil
-                          optionalCallback:nil
-                              successBlock:^(NSDictionary *query, NSDictionary *result) {
-                                  successBlock([result valueForKey:@"places"]);
-                              } errorBlock:^(NSError *error) {
-                                  errorBlock(error);
-                              }];
+    [self getGeoSearchWithLatitude:latitude
+                         longitude:longitude
+                             query:nil
+                                ip:nil
+                       granularity:nil
+                          accuracy:nil
+                        maxResults:nil
+           placeIDContaintedWithin:nil
+            attributeStreetAddress:nil
+                          callback:nil
+                      successBlock:^(NSDictionary *query, NSDictionary *result) {
+                          successBlock([result valueForKey:@"places"]);
+                      } errorBlock:^(NSError *error) {
+                          errorBlock(error);
+                      }];
 }
 
 - (void)getGeoSearchWithIPAddress:(NSString *)ipAddress
@@ -2915,21 +2915,21 @@ id removeNull(id rootObject);
     
     NSParameterAssert(ipAddress);
     
-    [self getGeoSearchWithOptionalLatitude:nil
-                         optionalLongitude:nil
-                             optionalQuery:nil
-                                optionalIP:ipAddress
-                       optionalGranularity:nil
-                          optionalAccuracy:nil
-                        optionalMaxResults:nil
-           optionalPlaceIDContaintedWithin:nil
-            optionalAttributeStreetAddress:nil
-                          optionalCallback:nil
-                              successBlock:^(NSDictionary *query, NSDictionary *result) {
-                                  successBlock([result valueForKey:@"places"]);
-                              } errorBlock:^(NSError *error) {
-                                  errorBlock(error);
-                              }];
+    [self getGeoSearchWithLatitude:nil
+                         longitude:nil
+                             query:nil
+                                ip:ipAddress
+                       granularity:nil
+                          accuracy:nil
+                        maxResults:nil
+           placeIDContaintedWithin:nil
+            attributeStreetAddress:nil
+                          callback:nil
+                      successBlock:^(NSDictionary *query, NSDictionary *result) {
+                          successBlock([result valueForKey:@"places"]);
+                      } errorBlock:^(NSError *error) {
+                          errorBlock(error);
+                      }];
 }
 
 - (void)getGeoSearchWithQuery:(NSString *)query
@@ -2938,21 +2938,21 @@ id removeNull(id rootObject);
     
     NSParameterAssert(query);
     
-    [self getGeoSearchWithOptionalLatitude:nil
-                         optionalLongitude:nil
-                             optionalQuery:query
-                                optionalIP:nil
-                       optionalGranularity:nil
-                          optionalAccuracy:nil
-                        optionalMaxResults:nil
-           optionalPlaceIDContaintedWithin:nil
-            optionalAttributeStreetAddress:nil
-                          optionalCallback:nil
-                              successBlock:^(NSDictionary *query, NSDictionary *result) {
-                                  successBlock([result valueForKey:@"places"]);
-                              } errorBlock:^(NSError *error) {
-                                  errorBlock(error);
-                              }];
+    [self getGeoSearchWithLatitude:nil
+                         longitude:nil
+                             query:query
+                                ip:nil
+                       granularity:nil
+                          accuracy:nil
+                        maxResults:nil
+           placeIDContaintedWithin:nil
+            attributeStreetAddress:nil
+                          callback:nil
+                      successBlock:^(NSDictionary *query, NSDictionary *result) {
+                          successBlock([result valueForKey:@"places"]);
+                      } errorBlock:^(NSError *error) {
+                          errorBlock(error);
+                      }];
 }
 
 // GET geo/similar_places
@@ -2960,9 +2960,9 @@ id removeNull(id rootObject);
 - (void)getGeoSimilarPlacesToLatitude:(NSString *)latitude // eg. "37.7821120598956"
                             longitude:(NSString *)longitude // eg. "-122.400612831116"
                                  name:(NSString *)name // eg. "Twitter HQ"
-      optionalPlaceIDContaintedWithin:(NSString *)optionalPlaceIDContaintedWithin // eg. "247f43d441defc03"
-       optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
-                     optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+              placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+               attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                             callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                          successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2974,9 +2974,9 @@ id removeNull(id rootObject);
     md[@"lat"] = latitude;
     md[@"long"] = longitude;
     md[@"name"] = name;
-    if(optionalPlaceIDContaintedWithin) md[@"contained_within"] = optionalPlaceIDContaintedWithin;
-    if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
-    if(optionalCallback) md[@"callback"] = optionalCallback;
+    if(placeIDContaintedWithin) md[@"contained_within"] = placeIDContaintedWithin;
+    if(attributeStreetAddress) md[@"attribute:street_address"] = attributeStreetAddress;
+    if(callback) md[@"callback"] = callback;
     
     [_oauth getResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
@@ -2998,8 +2998,8 @@ id removeNull(id rootObject);
            similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"
                     latitude:(NSString *)latitude // eg. "37.7821120598956"
                    longitude:(NSString *)longitude // eg. "-122.400612831116"
-optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg. "795 Folsom St"
-            optionalCallback:(NSString *)optionalCallback // If supplied, the response will use the JSONP format with a callback of the given name.
+      attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                    callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                 successBlock:(void(^)(NSDictionary *place))successBlock
                   errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -3009,8 +3009,8 @@ optionalAttributeStreetAddress:(NSString *)optionalAttributeStreetAddress // eg.
     md[@"token"] = similarPlaceToken;
     md[@"lat"] = latitude;
     md[@"long"] = longitude;
-    if(optionalAttributeStreetAddress) md[@"attribute:street_address"] = optionalAttributeStreetAddress;
-    if(optionalCallback) md[@"callback"] = optionalCallback;
+    if(attributeStreetAddress) md[@"attribute:street_address"] = attributeStreetAddress;
+    if(callback) md[@"callback"] = callback;
     
     [_oauth postResource:@"get/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
