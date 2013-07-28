@@ -217,8 +217,8 @@
 
 //	GET		statuses/show/:id
 - (void)getStatusesShowID:(NSString *)statusID
-         optionalTrimUser:(NSNumber *)optionalTrimUser
- optionalIncludeMyRetweet:(NSNumber *)optionalIncludeMyRetweet
+                 trimUser:(NSNumber *)trimUser
+         includeMyRetweet:(NSNumber *)includeMyRetweet
           includeEntities:(NSNumber *)includeEntities
              successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
@@ -229,13 +229,31 @@
                    successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	statuses/update
-//	Returns Tweets (1: the new tweet)
+/*
+ POST	statuses/update
+ 
+ Updates the authenticating user's current status, also known as tweeting. To upload an image to accompany the tweet, use POST statuses/update_with_media.
+ 
+ For each update attempt, the update text is compared with the authenticating user's recent tweets. Any attempt that would result in duplication will be blocked, resulting in a 403 error. Therefore, a user cannot submit the same status twice in a row.
+ 
+ While not rate limited by the API a user is limited in the number of tweets they can create at a time. If the number of updates posted by the user reaches the current allowed limit this method will return an HTTP 403 error.
+ 
+ - Any geo-tagging parameters in the update will be ignored if geo_enabled for the user is false (this is the default setting for all users unless the user has enabled geolocation in their settings)
+ - The number of digits passed the decimal separator passed to lat, up to 8, will be tracked so that the lat is returned in a status object it will have the same number of digits after the decimal separator.
+ - Please make sure to use to use a decimal point as the separator (and not the decimal comma) for the latitude and the longitude - usage of the decimal comma will cause the geo-tagged portion of the status update to be dropped.
+ - For JSON, the response mostly uses conventions described in GeoJSON. Unfortunately, the geo object has coordinates that Twitter renderers are reversed from the GeoJSON specification (GeoJSON specifies a longitude then a latitude, whereas we are currently representing it as a latitude then a longitude. Our JSON renders as: "geo": { "type":"Point", "coordinates":[37.78217, -122.40062] }
+ - The coordinates object is replacing the geo object (no deprecation date has been set for the geo object yet) -- the difference is that the coordinates object, in JSON, is now rendered correctly in GeoJSON.
+ - If a place_id is passed into the status update, then that place will be attached to the status. If no place_id was explicitly provided, but latitude and longitude are, we attempt to implicitly provide a place by calling geo/reverse_geocode.
+ - Users will have the ability, from their settings page, to remove all the geotags from all their tweets en masse. Currently we are not doing any automatic scrubbing nor providing a method to remove geotags from individual tweets.
+ */
+
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)optionalExistingStatusID
-                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
-                     lat:(NSString *)optionalLat
-                     lon:(NSString *)optionalLon
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
+                 placeID:(NSString *)placeID // wins over lat/lon
+      displayCoordinates:(NSNumber *)displayCoordinates
+                trimUser:(NSNumber *)trimUser
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -248,11 +266,11 @@
 //	POST	statuses/update_with_media
 //	Returns Tweets (1: the new tweet)
 - (void)postStatusUpdate:(NSString *)status
-       inReplyToStatusID:(NSString *)optionalExistingStatusID
+       inReplyToStatusID:(NSString *)existingStatusID
                 mediaURL:(NSURL *)mediaURL
-                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
-                     lat:(NSString *)optionalLat
-                     lon:(NSString *)optionalLon
+                 placeID:(NSString *)placeID // wins over lat/lon
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1353,8 +1371,8 @@
          placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
           attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
                         callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
-                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+                    successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (void)getGeoSearchWithLatitude:(NSString *)latitude
@@ -1385,9 +1403,9 @@
 - (void)getGeoSimilarPlacesToLatitude:(NSString *)latitude // eg. "37.7821120598956"
                             longitude:(NSString *)longitude // eg. "-122.400612831116"
                                  name:(NSString *)name // eg. "Twitter HQ"
-      placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
-       attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
-                     callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
+              placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+               attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                             callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                          successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1406,8 +1424,8 @@
            similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"
                     latitude:(NSString *)latitude // eg. "37.7821120598956"
                    longitude:(NSString *)longitude // eg. "-122.400612831116"
-attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
-            callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
+      attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                    callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
                 successBlock:(void(^)(NSDictionary *place))successBlock
                   errorBlock:(void(^)(NSError *error))errorBlock;
 

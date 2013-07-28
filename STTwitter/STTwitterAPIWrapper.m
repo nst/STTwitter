@@ -538,8 +538,8 @@ id removeNull(id rootObject);
 }
 
 - (void)getStatusesShowID:(NSString *)statusID
-         optionalTrimUser:(NSNumber *)optionalTrimUser
- optionalIncludeMyRetweet:(NSNumber *)optionalIncludeMyRetweet
+                 trimUser:(NSNumber *)trimUser
+         includeMyRetweet:(NSNumber *)includeMyRetweet
           includeEntities:(NSNumber *)includeEntities
              successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock {
@@ -549,8 +549,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
     md[@"id"] = statusID;
-    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
-    if(optionalIncludeMyRetweet) md[@"include_my_retweet"] = [optionalIncludeMyRetweet boolValue] ? @"1" : @"0";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
+    if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"statuses/show.json" parameters:md successBlock:^(id response) {
@@ -577,10 +577,12 @@ id removeNull(id rootObject);
 }
 
 - (void)postStatusUpdate:(NSString *)status
-       inReplyToStatusID:(NSString *)optionalExistingStatusID
-                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
-                     lat:(NSString *)optionalLat
-                     lon:(NSString *)optionalLon
+       inReplyToStatusID:(NSString *)existingStatusID
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
+                 placeID:(NSString *)placeID // wins over lat/lon
+      displayCoordinates:(NSNumber *)displayCoordinates
+                trimUser:(NSNumber *)trimUser
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -592,16 +594,16 @@ id removeNull(id rootObject);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"status"];
     
-    if(optionalExistingStatusID) {
-        md[@"in_reply_to_status_id"] = optionalExistingStatusID;
+    if(existingStatusID) {
+        md[@"in_reply_to_status_id"] = existingStatusID;
     }
     
-    if(optionalPlaceID) {
-        md[@"place_id"] = optionalPlaceID;
+    if(placeID) {
+        md[@"place_id"] = placeID;
         md[@"display_coordinates"] = @"true";
-    } else if(optionalLat && optionalLon) {
-        md[@"lat"] = optionalLat;
-        md[@"lon"] = optionalLon;
+    } else if(latitude && longitude) {
+        md[@"lat"] = latitude;
+        md[@"lon"] = longitude;
         md[@"display_coordinates"] = @"true";
     }
     
@@ -613,11 +615,11 @@ id removeNull(id rootObject);
 }
 
 - (void)postStatusUpdate:(NSString *)status
-       inReplyToStatusID:(NSString *)optionalExistingStatusID
+       inReplyToStatusID:(NSString *)existingStatusID
                 mediaURL:(NSURL *)mediaURL
-                 placeID:(NSString *)optionalPlaceID // wins over lat/lon
-                     lat:(NSString *)optionalLat
-                     lon:(NSString *)optionalLon
+                 placeID:(NSString *)placeID // wins over lat/lon
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -625,16 +627,14 @@ id removeNull(id rootObject);
     
     NSMutableDictionary *md = [[ @{ @"status":status, @"media[]":data, @"postDataKey":@"media[]" } mutableCopy] autorelease];
     
-    if(optionalExistingStatusID) {
-        md[@"in_reply_to_status_id"] = optionalExistingStatusID;
-    }
+    if(existingStatusID) md[@"in_reply_to_status_id"] = existingStatusID;
     
-    if(optionalPlaceID) {
-        md[@"place_id"] = optionalPlaceID;
+    if(placeID) {
+        md[@"place_id"] = placeID;
         md[@"display_coordinates"] = @"true";
-    } else if(optionalLat && optionalLon) {
-        md[@"lat"] = optionalLat;
-        md[@"lon"] = optionalLon;
+    } else if(latitude && longitude) {
+        md[@"lat"] = latitude;
+        md[@"lon"] = longitude;
         md[@"display_coordinates"] = @"true";
     }
     
