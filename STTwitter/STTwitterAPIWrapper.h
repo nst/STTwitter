@@ -182,8 +182,8 @@
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getHomeTimelineSinceID:(NSString *)optionalSinceID
-                         count:(NSUInteger)optionalCount
+- (void)getHomeTimelineSinceID:(NSString *)sinceID
+                         count:(NSUInteger)count
                   successBlock:(void(^)(NSArray *statuses))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -210,8 +210,8 @@
 
 //	GET		statuses/retweets/:id
 - (void)getStatusesRetweetsForID:(NSString *)statusID
-                   optionalCount:(NSString *)count
-                optionalTrimUser:(NSNumber *)optionalTrimUser
+                           count:(NSString *)count
+                        trimUser:(NSNumber *)trimUser
                     successBlock:(void(^)(NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -225,7 +225,7 @@
 
 /*
  POST	statuses/destroy/:id
-
+ 
  Destroys the status specified by the required ID parameter. The authenticating user must be the author of the specified status. Returns the destroyed status if successful.
  */
 
@@ -253,7 +253,7 @@
  */
 
 - (void)postStatusUpdate:(NSString *)status
-       inReplyToStatusID:(NSString *)optionalExistingStatusID
+       inReplyToStatusID:(NSString *)existingStatusID
                 latitude:(NSString *)latitude
                longitude:(NSString *)longitude
                  placeID:(NSString *)placeID // wins over lat/lon
@@ -292,16 +292,16 @@
 
 //	GET		search/tweets
 - (void)getSearchTweetsWithQuery:(NSString *)q
-                 optionalGeocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
-                    optionalLang:(NSString *)lang // eg. "eu"
-                  optionalLocale:(NSString *)locale // eg. "ja"
-              optionalResultType:(NSString *)resultType // eg. "mixed, recent, popular"
-                   optionalCount:(NSString *)count // eg. "100"
-                   optionalUntil:(NSString *)until // eg. "2012-09-01"
-                 optionalSinceID:(NSString *)sinceID // eg. "12345"
-                   optionalMaxID:(NSString *)maxID // eg. "54321"
+                         geocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
+                            lang:(NSString *)lang // eg. "eu"
+                          locale:(NSString *)locale // eg. "ja"
+                      resultType:(NSString *)resultType // eg. "mixed, recent, popular"
+                           count:(NSString *)count // eg. "100"
+                           until:(NSString *)until // eg. "2012-09-01"
+                         sinceID:(NSString *)sinceID // eg. "12345"
+                           maxID:(NSString *)maxID // eg. "54321"
                  includeEntities:(NSNumber *)includeEntities
-                optionalCallback:(NSString *)callback // eg. "processTweets"
+                        callback:(NSString *)callback // eg. "processTweets"
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -330,16 +330,17 @@
  
  Returns the 20 most recent direct messages sent to the authenticating user. Includes detailed information about the sender and recipient user. You can request up to 200 direct messages per call, up to a maximum of 800 incoming DMs.
  */
-- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
-                               optionalMaxID:(NSString *)optionalMaxID
-                               optionalCount:(NSString *)optionalCount
-                             includeEntities:(NSNumber *)includeEntities
-                                  skipStatus:(NSNumber *)skipStatus
-                                successBlock:(void(^)(NSArray *messages))successBlock
-                                  errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)getDirectMessagesSinceID:(NSString *)sinceID
+                           maxID:(NSString *)maxID
+                           count:(NSString *)count
+                 includeEntities:(NSNumber *)includeEntities
+                      skipStatus:(NSNumber *)skipStatus
+                    successBlock:(void(^)(NSArray *messages))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
 // convenience
-- (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
-						   count:(NSUInteger)optionalCount
+- (void)getDirectMessagesSinceID:(NSString *)sinceID
+						   count:(NSUInteger)count
 					successBlock:(void(^)(NSArray *messages))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -348,20 +349,20 @@
  
  Returns the 20 most recent direct messages sent by the authenticating user. Includes detailed information about the sender and recipient user. You can request up to 200 direct messages per call, up to a maximum of 800 outgoing DMs.
  */
-- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
-                               optionalMaxID:(NSString *)optionalMaxID
-                               optionalCount:(NSString *)optionalCount
-                                optionalPage:(NSString *)optionalPage
-                             includeEntities:(NSNumber *)includeEntities
-                                successBlock:(void(^)(NSArray *messages))successBlock
-                                  errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getDirectMessagesSinceID:(NSString *)sinceID
+                           maxID:(NSString *)maxID
+                           count:(NSString *)count
+                            page:(NSString *)page
+                 includeEntities:(NSNumber *)includeEntities
+                    successBlock:(void(^)(NSArray *messages))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    direct_messages/show
  
  Returns a single direct message, specified by an id parameter. Like the /1.1/direct_messages.format request, this method will include the user objects of the sender and recipient.
  */
-- (void)getDirectMessagesSwowWithID:(NSString *)messageID
+- (void)getDirectMessagesShowWithID:(NSString *)messageID
                        successBlock:(void(^)(NSArray *statuses))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -393,9 +394,9 @@
  Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from. Use POST friendships/update to set the "no retweets" status for a given user account on behalf of the current user.
  */
 
-- (void)getFriendshipNoRetweetsIDsWithOptionalStringifyIDs:(NSNumber *)stringifyIDs
-                                              successBlock:(void(^)(NSArray *ids))successBlock
-                                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getFriendshipNoRetweetsIDsWithStringifyIDs:(NSNumber *)stringifyIDs
+                                      successBlock:(void(^)(NSArray *ids))successBlock
+                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friends/ids
@@ -412,7 +413,7 @@
                   orScreenName:(NSString *)screenName
                         cursor:(NSString *)cursor
                   stringifyIDs:(NSNumber *)stringifyIDs
-                 optionalCount:(NSString *)count
+                         count:(NSString *)count
                   successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -436,7 +437,7 @@
                     orScreenName:(NSString *)screenName
                           cursor:(NSString *)cursor
                     stringifyIDs:(NSNumber *)stringifyIDs
-                   optionalCount:(NSString *)count
+                           count:(NSString *)count
                     successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -462,10 +463,10 @@
  Returns a collection of numeric IDs for every user who has a pending request to follow the authenticating user.
  */
 
-- (void)getFriendshipIncomingWithOptionalCursor:(NSString *)cursor
-                                   stringifyIDs:(NSNumber *)stringifyIDs
-                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getFriendshipIncomingWithCursor:(NSString *)cursor
+                           stringifyIDs:(NSNumber *)stringifyIDs
+                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/outgoing
@@ -473,10 +474,10 @@
  Returns a collection of numeric IDs for every protected user for whom the authenticating user has a pending follow request.
  */
 
-- (void)getFriendshipOutgoingWithOptionalCursor:(NSString *)cursor
-                                   stringifyIDs:(NSNumber *)stringifyIDs
-                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getFriendshipOutgoingWithCursor:(NSString *)cursor
+                           stringifyIDs:(NSNumber *)stringifyIDs
+                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST   friendships/create
@@ -570,9 +571,9 @@
 
 - (void)getFriendsListForUserID:(NSString *)userID
                    orScreenName:(NSString *)screenName
-                 optionalCursor:(NSString *)optionalCursor
+                         cursor:(NSString *)cursor
                      skipStatus:(NSNumber *)skipStatus
-    optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
+            includeUserEntities:(NSNumber *)includeUserEntities
                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -593,7 +594,7 @@
                      orScreenName:(NSString *)screenName
                            cursor:(NSString *)cursor
                        skipStatus:(NSNumber *)skipStatus
-      optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
+              includeUserEntities:(NSNumber *)includeUserEntities
                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -619,10 +620,10 @@
  Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
  */
 
-- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)includeEntities
-                                                   skipStatus:(NSNumber *)skipStatus
-                                                 successBlock:(void(^)(NSDictionary *account))successBlock
-                                                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getAccountVerifyCredentialsWithIncludeEntites:(NSNumber *)includeEntities
+                                           skipStatus:(NSNumber *)skipStatus
+                                         successBlock:(void(^)(NSDictionary *account))successBlock
+                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
@@ -634,14 +635,14 @@
  Updates the authenticating user's settings.
  */
 
-- (void)postAccountSettingsWithOptionalTrendLocationWOEID:(NSString *)optionalTrendLocationWOEID // eg. "1"
-                                 optionalSleepTimeEnabled:(NSNumber *)optionalSleepTimeEnabled // eg. @(YES)
-                                   optionalStartSleepTime:(NSString *)optionalStartSleepTime // eg. "13"
-                                     optionalEndSleepTime:(NSString *)optionalEndSleepTime // eg. "13"
-                                         optionalTimezone:(NSString *)optionalTimezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
-                                         optionalLanguage:(NSString *)optionalLanguage // eg. "it", "en", "es"
-                                             successBlock:(void(^)(NSDictionary *settings))successBlock
-                                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postAccountSettingsWithTrendLocationWOEID:(NSString *)trendLocationWOEID // eg. "1"
+                                 sleepTimeEnabled:(NSNumber *)sleepTimeEnabled // eg. @(YES)
+                                   startSleepTime:(NSString *)startSleepTime // eg. "13"
+                                     endSleepTime:(NSString *)endSleepTime // eg. "13"
+                                         timezone:(NSString *)timezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
+                                         language:(NSString *)language // eg. "it", "en", "es"
+                                     successBlock:(void(^)(NSDictionary *settings))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_delivery_device
@@ -660,14 +661,14 @@
  Sets values that users are able to set under the "Account" tab of their settings page. Only the parameters specified will be updated.
  */
 
-- (void)postAccountUpdateProfileWithOptionalName:(NSString *)optionalName
-                               optionalURLString:(NSString *)optionalURLString
-                                optionalLocation:(NSString *)optionalLocation
-                             optionalDescription:(NSString *)optionalDescription
-                                 includeEntities:(NSNumber *)includeEntities
-                                      skipStatus:(NSNumber *)skipStatus
-                                    successBlock:(void(^)(NSDictionary *profile))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postAccountUpdateProfileWithName:(NSString *)name
+                               URLString:(NSString *)URLString
+                                location:(NSString *)location
+                             description:(NSString *)description
+                         includeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
+                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (void)postUpdateProfile:(NSDictionary *)profileData
@@ -680,13 +681,13 @@
  Updates the authenticating user's profile background image. This method can also be used to enable or disable the profile background image. Although each parameter is marked as optional, at least one of image, tile or use must be provided when making this request.
  */
 
-- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSString *)base64EncodedImage
-                                                   optionalTitle:(NSString *)optionalTitle
-                                                 includeEntities:(NSNumber *)includeEntities
-                                                      skipStatus:(NSNumber *)skipStatus
-                                                     optionalUse:(NSNumber *)optionalUse
-                                                    successBlock:(void(^)(NSDictionary *profile))successBlock
-                                                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postAccountUpdateProfileBackgroundImageWithImage:(NSString *)base64EncodedImage
+                                                   title:(NSString *)title
+                                         includeEntities:(NSNumber *)includeEntities
+                                              skipStatus:(NSNumber *)skipStatus
+                                                     use:(NSNumber *)use
+                                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_profile_colors
@@ -694,15 +695,15 @@
  Sets one or more hex values that control the color scheme of the authenticating user's profile page on twitter.com. Each parameter's value must be a valid hexidecimal value, and may be either three or six characters (ex: #fff or #ffffff).
  */
 
-- (void)postAccountUpdateProfileColorsWithOptionalBackgroundColor:(NSString *)optionalBackgroundColor
-                                                optionalLinkColor:(NSString *)optionalLinkColor
-                                       optionalSidebarBorderColor:(NSString *)optionalSidebarBorderColor
-                                         optionalSidebarFillColor:(NSString *)optionalSidebarFillColor
-                                         optionalProfileTextColor:(NSString *)optionalProfileTextColor
-                                                  includeEntities:(NSNumber *)includeEntities
-                                                       skipStatus:(NSNumber *)skipStatus
-                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
-                                                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postAccountUpdateProfileColorsWithBackgroundColor:(NSString *)backgroundColor
+                                                linkColor:(NSString *)linkColor
+                                       sidebarBorderColor:(NSString *)sidebarBorderColor
+                                         sidebarFillColor:(NSString *)sidebarFillColor
+                                         profileTextColor:(NSString *)profileTextColor
+                                          includeEntities:(NSNumber *)includeEntities
+                                               skipStatus:(NSNumber *)skipStatus
+                                             successBlock:(void(^)(NSDictionary *profile))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_profile_image
@@ -726,7 +727,7 @@
 
 - (void)getBlocksListWithincludeEntities:(NSNumber *)includeEntities
                               skipStatus:(NSNumber *)skipStatus
-                          optionalCursor:(NSString *)optionalCursor
+                                  cursor:(NSString *)cursor
                             successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -736,9 +737,9 @@
  Returns an array of numeric user ids the authenticating user is blocking.
  */
 
-- (void)getBlocksIDsWithOptionalOptionalCursor:(NSString *)optionalCursor
-                                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
-                                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getBlocksIDsWithCursor:(NSString *)cursor
+                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	blocks/create
@@ -827,8 +828,8 @@
  */
 
 - (void)getUsersSearchQuery:(NSString *)query
-               optionalPage:(NSString *)optionalPage
-              optionalCount:(NSString *)optionalCount
+                       page:(NSString *)page
+                      count:(NSString *)count
             includeEntities:(NSNumber *)includeEntities
                successBlock:(void(^)(NSArray *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock;
@@ -884,10 +885,10 @@
  */
 
 - (void)postAccountUpdateProfileBannerWithImage:(NSString *)base64encodedImage
-                                  optionalWidth:(NSString *)optionalWidth
-                                 optionalHeight:(NSString *)optionalHeight
-                             optionalOffsetLeft:(NSString *)optionalOffsetLeft
-                              optionalOffsetTop:(NSString *)optionalOffsetTop
+                                          width:(NSString *)width
+                                         height:(NSString *)height
+                                     offsetLeft:(NSString *)offsetLeft
+                                      offsetTop:(NSString *)offsetTop
                                    successBlock:(void(^)(id response))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -920,14 +921,14 @@
  If you do not provide either a user_id or screen_name to this method, it will assume you are requesting on behalf of the authenticating user. Specify one or the other for best results.
  */
 
-- (void)getFavoritesListWithOptionalUserID:(NSString *)optionalUserID
-                        optionalScreenName:(NSString *)optionalScreenName
-                             optionalCount:(NSString *)optionalCount
-                           optionalSinceID:(NSString *)optionalSinceID
-                             optionalMaxID:(NSString *)optionalMaxID
-                           includeEntities:(NSNumber *)includeEntities
-                              successBlock:(void(^)(NSArray *statuses))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getFavoritesListWithUserID:(NSString *)userID
+                        screenName:(NSString *)screenName
+                             count:(NSString *)count
+                           sinceID:(NSString *)sinceID
+                             maxID:(NSString *)maxID
+                   includeEntities:(NSNumber *)includeEntities
+                      successBlock:(void(^)(NSArray *statuses))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (void)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
@@ -990,20 +991,20 @@
  */
 
 - (void)getListsStatusesForListID:(NSString *)listID
-                  optionalSinceID:(NSString *)sinceID
-                    optionalMaxID:(NSString *)maxID
-                    optionalCount:(NSString *)count
+                          sinceID:(NSString *)sinceID
+                            maxID:(NSString *)maxID
+                            count:(NSString *)count
                   includeEntities:(NSNumber *)includeEntities
                   includeRetweets:(NSNumber *)includeRetweets
                      successBlock:(void(^)(NSArray *statuses))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getListsStatusesForSlug:(NSString *)slug
-                ownerScreenName:(NSString *)ownerScreenName
-                      orOwnerID:(NSString *)ownerID
-                optionalSinceID:(NSString *)sinceID
-                  optionalMaxID:(NSString *)maxID
-                  optionalCount:(NSString *)count
+                     screenName:(NSString *)ownerScreenName
+                        ownerID:(NSString *)ownerID
+                        sinceID:(NSString *)sinceID
+                          maxID:(NSString *)maxID
+                          count:(NSString *)count
                 includeEntities:(NSNumber *)includeEntities
                 includeRetweets:(NSNumber *)includeRetweets
                    successBlock:(void(^)(NSArray *statuses))successBlock
@@ -1020,10 +1021,10 @@
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListsMembersDestroyForSlug:(NSString *)slug
-                        optionalUserID:(NSString *)userID
-                    optionalScreenName:(NSString *)screenName
-               optionalOwnerScreenName:(NSString *)ownerScreenName
-                       optionalOwnerID:(NSString *)ownerID
+                                userID:(NSString *)userID
+                            screenName:(NSString *)screenName
+                       ownerScreenName:(NSString *)ownerScreenName
+                               ownerID:(NSString *)ownerID
                           successBlock:(void(^)())successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1035,7 +1036,7 @@
 
 - (void)getListsMembershipsForUserID:(NSString *)userID
                         orScreenName:(NSString *)screenName
-                      optionalCursor:(NSString *)optionalCursor
+                              cursor:(NSString *)cursor
                   filterToOwnedLists:(NSNumber *)filterToOwnedLists // When set to true, t or 1, will return just lists the authenticating user owns, and the user represented by user_id or screen_name is a member of.
                         successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
@@ -1049,14 +1050,14 @@
 - (void)getListsSubscribersForSlug:(NSString *)slug
                    ownerScreenName:(NSString *)ownerScreenName
                          orOwnerID:(NSString *)ownerID
-                    optionalCursor:(NSString *)cursor
+                            cursor:(NSString *)cursor
                    includeEntities:(NSNumber *)includeEntities
                         skipStatus:(NSNumber *)skipStatus
                       successBlock:(void(^)())successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getListsSubscribersForListID:(NSString *)listID
-                      optionalCursor:(NSString *)cursor
+                              cursor:(NSString *)cursor
                      includeEntities:(NSNumber *)includeEntities
                           skipStatus:(NSNumber *)skipStatus
                         successBlock:(void(^)())successBlock
@@ -1228,18 +1229,18 @@
  */
 
 - (void)postListsUpdateForListID:(NSString *)listID
-                    optionalName:(NSString *)name
+                            name:(NSString *)name
                        isPrivate:(BOOL)isPrivate
-             optionalDescription:(NSString *)description
+                     description:(NSString *)description
                     successBlock:(void(^)())successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListsUpdateForSlug:(NSString *)slug
                ownerScreenName:(NSString *)ownerScreenName
                      orOwnerID:(NSString *)ownerID
-                  optionalName:(NSString *)name
+                          name:(NSString *)name
                      isPrivate:(BOOL)isPrivate
-           optionalDescription:(NSString *)description
+                   description:(NSString *)description
                   successBlock:(void(^)())successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1251,7 +1252,7 @@
 
 - (void)postListsCreateWithName:(NSString *)name
                       isPrivate:(BOOL)isPrivate
-            optionalDescription:(NSString *)description
+                    description:(NSString *)description
                    successBlock:(void(^)(NSDictionary *list))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1279,8 +1280,8 @@
 
 - (void)getListsSubscriptionsForUserID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-                         optionalCount:(NSString *)count
-                        optionalCursor:(NSString *)cursor
+                                 count:(NSString *)count
+                                cursor:(NSString *)cursor
                           successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1314,8 +1315,8 @@
 
 - (void)getListsOwnershipsForUserID:(NSString *)userID
                        orScreenName:(NSString *)screenName
-                      optionalCount:(NSString *)count
-                     optionalCursor:(NSString *)cursor
+                              count:(NSString *)count
+                             cursor:(NSString *)cursor
                        successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
 

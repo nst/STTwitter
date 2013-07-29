@@ -406,17 +406,17 @@ id removeNull(id rootObject);
  */
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
-                              sinceID:(NSString *)optionalSinceID
-                                maxID:(NSString *)optionalMaxID
-								count:(NSUInteger)optionalCount
+                              sinceID:(NSString *)sinceID
+                                maxID:(NSString *)maxID
+								count:(NSUInteger)count
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getStatusesUserTimelineForUserID:nil
                                 screenName:screenName
-                                   sinceID:optionalSinceID
-                                     count:optionalCount
-                                     maxID:optionalMaxID
+                                   sinceID:sinceID
+                                     count:count
+                                     maxID:maxID
                                   trimUser:nil
                             excludeReplies:nil
                         contributorDetails:nil
@@ -516,8 +516,8 @@ id removeNull(id rootObject);
 #pragma mark Tweets
 
 - (void)getStatusesRetweetsForID:(NSString *)statusID
-                   optionalCount:(NSString *)count
-                optionalTrimUser:(NSNumber *)optionalTrimUser
+                           count:(NSString *)count
+                        trimUser:(NSNumber *)trimUser
                     successBlock:(void(^)(NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -528,7 +528,7 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
     if(count) md[@"count"] = count;
-    if(optionalTrimUser) md[@"trim_user"] = [optionalTrimUser boolValue] ? @"1" : @"0";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     
     [_oauth getResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -564,7 +564,7 @@ id removeNull(id rootObject);
                    trimUser:(NSNumber *)trimUser
                successBlock:(void(^)(NSDictionary *status))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(statusID);
     
     NSString *resource = [NSString stringWithFormat:@"statuses/destroy/%@.json", statusID];
@@ -697,8 +697,8 @@ id removeNull(id rootObject);
 
 - (void)getListsSubscriptionsForUserID:(NSString *)userID
                           orScreenName:(NSString *)screenName
-                         optionalCount:(NSString *)count
-                        optionalCursor:(NSString *)cursor
+                                 count:(NSString *)count
+                                cursor:(NSString *)cursor
                           successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -730,8 +730,8 @@ id removeNull(id rootObject);
 
 - (void)getListsOwnershipsForUserID:(NSString *)userID
                        orScreenName:(NSString *)screenName
-                      optionalCount:(NSString *)count
-                     optionalCursor:(NSString *)cursor
+                              count:(NSString *)count
+                             cursor:(NSString *)cursor
                        successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -762,16 +762,16 @@ id removeNull(id rootObject);
 #pragma mark Search
 
 - (void)getSearchTweetsWithQuery:(NSString *)q
-                 optionalGeocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
-                    optionalLang:(NSString *)lang // eg. "eu"
-                  optionalLocale:(NSString *)locale // eg. "ja"
-              optionalResultType:(NSString *)resultType // eg. "mixed, recent, popular"
-                   optionalCount:(NSString *)count // eg. "100"
-                   optionalUntil:(NSString *)until // eg. "2012-09-01"
-                 optionalSinceID:(NSString *)sinceID // eg. "12345"
-                   optionalMaxID:(NSString *)maxID // eg. "54321"
+                         geocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
+                            lang:(NSString *)lang // eg. "eu"
+                          locale:(NSString *)locale // eg. "ja"
+                      resultType:(NSString *)resultType // eg. "mixed, recent, popular"
+                           count:(NSString *)count // eg. "100"
+                           until:(NSString *)until // eg. "2012-09-01"
+                         sinceID:(NSString *)sinceID // eg. "12345"
+                           maxID:(NSString *)maxID // eg. "54321"
                  includeEntities:(NSNumber *)includeEntities
-                optionalCallback:(NSString *)callback // eg. "processTweets"
+                        callback:(NSString *)callback // eg. "processTweets"
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -808,16 +808,16 @@ id removeNull(id rootObject);
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getSearchTweetsWithQuery:q
-                   optionalGeocode:nil
-                      optionalLang:nil
-                    optionalLocale:nil
-                optionalResultType:nil
-                     optionalCount:nil
-                     optionalUntil:nil
-                   optionalSinceID:nil
-                     optionalMaxID:nil
+                           geocode:nil
+                              lang:nil
+                            locale:nil
+                        resultType:nil
+                             count:nil
+                             until:nil
+                           sinceID:nil
+                             maxID:nil
                    includeEntities:YES
-                  optionalCallback:nil
+                          callback:nil
                       successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
                           successBlock(searchMetadata, statuses);
                       } errorBlock:^(NSError *error) {
@@ -829,18 +829,18 @@ id removeNull(id rootObject);
 
 #pragma mark Direct Messages
 
-- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
-                               optionalMaxID:(NSString *)optionalMaxID
-                               optionalCount:(NSString *)optionalCount
-                             includeEntities:(NSNumber *)includeEntities
-                                  skipStatus:(NSNumber *)skipStatus
-                                successBlock:(void(^)(NSArray *messages))successBlock
-                                  errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getDirectMessagesSinceID:(NSString *)sinceID
+                           maxID:(NSString *)maxID
+                           count:(NSString *)count
+                 includeEntities:(NSNumber *)includeEntities
+                      skipStatus:(NSNumber *)skipStatus
+                    successBlock:(void(^)(NSArray *messages))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
-    if(optionalMaxID) [md setObject:optionalMaxID forKey:@"max_id"];
-    if(optionalCount) [md setObject:optionalCount forKey:@"count"];
+    if(sinceID) [md setObject:sinceID forKey:@"since_id"];
+    if(maxID) [md setObject:maxID forKey:@"max_id"];
+    if(count) [md setObject:count forKey:@"count"];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
@@ -852,38 +852,38 @@ id removeNull(id rootObject);
 }
 
 // convenience
-- (void)getDirectMessagesSinceID:(NSString *)optionalSinceID
-						   count:(NSUInteger)optionalCount
+- (void)getDirectMessagesSinceID:(NSString *)sinceID
+						   count:(NSUInteger)count
 					successBlock:(void(^)(NSArray *messages))successBlock
 					  errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSString *count = optionalCount > 0 ? [@(optionalCount) description] : nil;
+    NSString *countString = count > 0 ? [@(count) description] : nil;
     
-    [self getDirectMessagesWithOptionalSinceID:optionalSinceID
-                                 optionalMaxID:nil
-                                 optionalCount:count
-                               includeEntities:nil
-                                    skipStatus:nil
-                                  successBlock:^(NSArray *statuses) {
-                                      successBlock(statuses);
-                                  } errorBlock:^(NSError *error) {
-                                      errorBlock(error);
-                                  }];
+    [self getDirectMessagesSinceID:sinceID
+                             maxID:nil
+                             count:countString
+                   includeEntities:nil
+                        skipStatus:nil
+                      successBlock:^(NSArray *statuses) {
+                          successBlock(statuses);
+                      } errorBlock:^(NSError *error) {
+                          errorBlock(error);
+                      }];
 }
 
-- (void)getDirectMessagesWithOptionalSinceID:(NSString *)optionalSinceID
-                               optionalMaxID:(NSString *)optionalMaxID
-                               optionalCount:(NSString *)optionalCount
-                                optionalPage:(NSString *)optionalPage
-                             includeEntities:(NSNumber *)includeEntities
-                                successBlock:(void(^)(NSArray *messages))successBlock
-                                  errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getDirectMessagesSinceID:(NSString *)sinceID
+                               maxID:(NSString *)maxID
+                               count:(NSString *)count
+                                page:(NSString *)page
+                     includeEntities:(NSNumber *)includeEntities
+                        successBlock:(void(^)(NSArray *messages))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalSinceID) [md setObject:optionalSinceID forKey:@"since_id"];
-    if(optionalMaxID) [md setObject:optionalMaxID forKey:@"max_id"];
-    if(optionalCount) [md setObject:optionalCount forKey:@"count"];
-    if(optionalPage) [md setObject:optionalPage forKey:@"page"];
+    if(sinceID) [md setObject:sinceID forKey:@"since_id"];
+    if(maxID) [md setObject:maxID forKey:@"max_id"];
+    if(count) [md setObject:count forKey:@"count"];
+    if(page) [md setObject:page forKey:@"page"];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"direct_messages/sent.json" parameters:md successBlock:^(id response) {
@@ -893,7 +893,7 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)getDirectMessagesSwowWithID:(NSString *)messageID
+- (void)getDirectMessagesShowWithID:(NSString *)messageID
                        successBlock:(void(^)(NSArray *messages))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -939,9 +939,9 @@ id removeNull(id rootObject);
 
 #pragma mark Friends & Followers
 
-- (void)getFriendshipNoRetweetsIDsWithOptionalStringifyIDs:(NSNumber *)stringifyIDs
-                                              successBlock:(void(^)(NSArray *ids))successBlock
-                                                errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getFriendshipNoRetweetsIDsWithStringifyIDs:(NSNumber *)stringifyIDs
+                                      successBlock:(void(^)(NSArray *ids))successBlock
+                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
@@ -957,7 +957,7 @@ id removeNull(id rootObject);
                   orScreenName:(NSString *)screenName
                         cursor:(NSString *)cursor
                   stringifyIDs:(NSNumber *)stringifyIDs
-                 optionalCount:(NSString *)count
+                         count:(NSString *)count
                   successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1027,7 +1027,7 @@ id removeNull(id rootObject);
                     orScreenName:screenName
                           cursor:nil
                     stringifyIDs:nil
-                   optionalCount:nil
+                           count:nil
                     successBlock:^(NSArray *ids, NSString *previousCursor, NSString *nextCursor) {
                         successBlock(ids);
                     } errorBlock:^(NSError *error) {
@@ -1039,7 +1039,7 @@ id removeNull(id rootObject);
                     orScreenName:(NSString *)screenName
                           cursor:(NSString *)cursor
                     stringifyIDs:(NSNumber *)stringifyIDs
-                   optionalCount:(NSString *)count
+                           count:(NSString *)count
                     successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1077,7 +1077,7 @@ id removeNull(id rootObject);
                       orScreenName:screenName
                             cursor:nil
                       stringifyIDs:nil
-                     optionalCount:nil
+                             count:nil
                       successBlock:^(NSArray *ids, NSString *previousCursor, NSString *nextCursor) {
                           successBlock(ids);
                       } errorBlock:^(NSError *error) {
@@ -1107,10 +1107,10 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)getFriendshipIncomingWithOptionalCursor:(NSString *)cursor
-                                   stringifyIDs:(NSNumber *)stringifyIDs
-                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                                     errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getFriendshipIncomingWithCursor:(NSString *)cursor
+                           stringifyIDs:(NSNumber *)stringifyIDs
+                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(cursor) md[@"cursor"] = cursor;
     if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
@@ -1132,10 +1132,10 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)getFriendshipOutgoingWithOptionalCursor:(NSString *)cursor
-                                   stringifyIDs:(NSNumber *)stringifyIDs
-                                   successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                                     errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getFriendshipOutgoingWithCursor:(NSString *)cursor
+                           stringifyIDs:(NSNumber *)stringifyIDs
+                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(cursor) md[@"cursor"] = cursor;
     if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
@@ -1294,9 +1294,9 @@ id removeNull(id rootObject);
 
 - (void)getFriendsListForUserID:(NSString *)userID
                    orScreenName:(NSString *)screenName
-                 optionalCursor:(NSString *)optionalCursor
+                         cursor:(NSString *)cursor
                      skipStatus:(NSNumber *)skipStatus
-    optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
+            includeUserEntities:(NSNumber *)includeUserEntities
                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1305,9 +1305,9 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    if(optionalCursor) md[@"cursor"] = optionalCursor;
+    if(cursor) md[@"cursor"] = cursor;
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
-    if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
+    if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"friends/list.json" parameters:md successBlock:^(id response) {
         NSArray *users = nil;
@@ -1332,9 +1332,9 @@ id removeNull(id rootObject);
     
     [self getFriendsListForUserID:nil
                      orScreenName:screenName
-                   optionalCursor:nil
+                           cursor:nil
                        skipStatus:NO
-      optionalIncludeUserEntities:YES
+              includeUserEntities:YES
                      successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
                          successBlock(users);
                      } errorBlock:^(NSError *error) {
@@ -1346,7 +1346,7 @@ id removeNull(id rootObject);
                      orScreenName:(NSString *)screenName
                            cursor:(NSString *)cursor
                        skipStatus:(NSNumber *)skipStatus
-      optionalIncludeUserEntities:(NSNumber *)optionalIncludeUserEntities
+              includeUserEntities:(NSNumber *)includeUserEntities
                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1357,7 +1357,7 @@ id removeNull(id rootObject);
     if(screenName) md[@"screen_name"] = screenName;
     if(cursor) md[@"cursor"] = cursor;
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
-    if(optionalIncludeUserEntities) md[@"include_user_entities"] = [optionalIncludeUserEntities boolValue] ? @"1" : @"0";
+    if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"followers/list.json" parameters:md successBlock:^(id response) {
         NSArray *users = nil;
@@ -1385,7 +1385,7 @@ id removeNull(id rootObject);
                        orScreenName:screenName
                              cursor:nil
                          skipStatus:nil
-        optionalIncludeUserEntities:nil
+                includeUserEntities:nil
                        successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
                            successBlock(users);
                        } errorBlock:^(NSError *error) {
@@ -1406,10 +1406,10 @@ id removeNull(id rootObject);
 }
 
 // GET account/verify_credentials
-- (void)getAccountVerifyCredentialsWithOptionalIncludeEntites:(NSNumber *)includeEntities
-                                                   skipStatus:(NSNumber *)skipStatus
-                                                 successBlock:(void(^)(NSDictionary *myInfo))successBlock
-                                                   errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getAccountVerifyCredentialsWithIncludeEntites:(NSNumber *)includeEntities
+                                           skipStatus:(NSNumber *)skipStatus
+                                         successBlock:(void(^)(NSDictionary *myInfo))successBlock
+                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
@@ -1424,7 +1424,7 @@ id removeNull(id rootObject);
 
 - (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock {
-    [self getAccountVerifyCredentialsWithOptionalIncludeEntites:nil skipStatus:nil successBlock:^(NSDictionary *account) {
+    [self getAccountVerifyCredentialsWithIncludeEntites:nil skipStatus:nil successBlock:^(NSDictionary *account) {
         successBlock(account);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1432,23 +1432,23 @@ id removeNull(id rootObject);
 }
 
 // POST account/settings
-- (void)postAccountSettingsWithOptionalTrendLocationWOEID:(NSString *)optionalTrendLocationWOEID // eg. "1"
-                                 optionalSleepTimeEnabled:(NSNumber *)optionalSleepTimeEnabled // eg. @(YES)
-                                   optionalStartSleepTime:(NSString *)optionalStartSleepTime // eg. "13"
-                                     optionalEndSleepTime:(NSString *)optionalEndSleepTime // eg. "13"
-                                         optionalTimezone:(NSString *)optionalTimezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
-                                         optionalLanguage:(NSString *)optionalLanguage // eg. "it", "en", "es"
-                                             successBlock:(void(^)(NSDictionary *settings))successBlock
-                                               errorBlock:(void(^)(NSError *error))errorBlock {
-    NSAssert((optionalTrendLocationWOEID || optionalSleepTimeEnabled || optionalStartSleepTime || optionalEndSleepTime || optionalTimezone || optionalLanguage), @"at least one parameter is needed");
+- (void)postAccountSettingsWithTrendLocationWOEID:(NSString *)trendLocationWOEID // eg. "1"
+                                 sleepTimeEnabled:(NSNumber *)sleepTimeEnabled // eg. @(YES)
+                                   startSleepTime:(NSString *)startSleepTime // eg. "13"
+                                     endSleepTime:(NSString *)endSleepTime // eg. "13"
+                                         timezone:(NSString *)timezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
+                                         language:(NSString *)language // eg. "it", "en", "es"
+                                     successBlock:(void(^)(NSDictionary *settings))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert((trendLocationWOEID || sleepTimeEnabled || startSleepTime || endSleepTime || timezone || language), @"at least one parameter is needed");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalTrendLocationWOEID) md[@"trend_location_woeid"] = optionalTrendLocationWOEID;
-    if(optionalSleepTimeEnabled) md[@"sleep_time_enabled"] = [optionalSleepTimeEnabled boolValue] ? @"1" : @"0";
-    if(optionalStartSleepTime) md[@"start_sleep_time"] = optionalStartSleepTime;
-    if(optionalEndSleepTime) md[@"end_sleep_time"] = optionalEndSleepTime;
-    if(optionalTimezone) md[@"time_zone"] = optionalTimezone;
-    if(optionalLanguage) md[@"lang"] = optionalLanguage;
+    if(trendLocationWOEID) md[@"trend_location_woeid"] = trendLocationWOEID;
+    if(sleepTimeEnabled) md[@"sleep_time_enabled"] = [sleepTimeEnabled boolValue] ? @"1" : @"0";
+    if(startSleepTime) md[@"start_sleep_time"] = startSleepTime;
+    if(endSleepTime) md[@"end_sleep_time"] = endSleepTime;
+    if(timezone) md[@"time_zone"] = timezone;
+    if(language) md[@"lang"] = language;
     
     [_oauth postResource:@"account/settings.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1475,21 +1475,22 @@ id removeNull(id rootObject);
 }
 
 // POST account/update_profile
-- (void)postAccountUpdateProfileWithOptionalName:(NSString *)optionalName
-                               optionalURLString:(NSString *)optionalURLString
-                                optionalLocation:(NSString *)optionalLocation
-                             optionalDescription:(NSString *)optionalDescription
-                                 includeEntities:(NSNumber *)includeEntities
-                                      skipStatus:(NSNumber *)skipStatus
-                                    successBlock:(void(^)(NSDictionary *profile))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock {
-    NSAssert((optionalName || optionalURLString || optionalLocation || optionalDescription || includeEntities || skipStatus), @"at least one parameter is needed");
+- (void)postAccountUpdateProfileWithName:(NSString *)name
+                               URLString:(NSString *)URLString
+                                location:(NSString *)location
+                             description:(NSString *)description
+                         includeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
+                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((name || URLString || location || description || includeEntities || skipStatus), @"at least one parameter is needed");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalName) md[@"name"] = optionalName;
-    if(optionalURLString) md[@"url"] = optionalURLString;
-    if(optionalLocation) md[@"location"] = optionalLocation;
-    if(optionalDescription) md[@"description"] = optionalDescription;
+    if(name) md[@"name"] = name;
+    if(URLString) md[@"url"] = URLString;
+    if(location) md[@"location"] = location;
+    if(description) md[@"description"] = description;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";;
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
@@ -1511,22 +1512,22 @@ id removeNull(id rootObject);
 }
 
 // POST account/update_profile_background_image
-- (void)postAccountUpdateProfileBackgroundImageWithOptionalImage:(NSString *)optionalBase64EncodedImage
-                                                   optionalTitle:(NSString *)optionalTitle
-                                                 includeEntities:(NSNumber *)includeEntities
-                                                      skipStatus:(NSNumber *)skipStatus
-                                                     optionalUse:(NSNumber *)optionalUse
-                                                    successBlock:(void(^)(NSDictionary *profile))successBlock
-                                                      errorBlock:(void(^)(NSError *error))errorBlock {
-    NSAssert((optionalBase64EncodedImage || optionalTitle || includeEntities || skipStatus || optionalUse), @"at least one parameter is needed");
+- (void)postAccountUpdateProfileBackgroundImageWithImage:(NSString *)base64EncodedImage
+                                                   title:(NSString *)title
+                                         includeEntities:(NSNumber *)includeEntities
+                                              skipStatus:(NSNumber *)skipStatus
+                                                     use:(NSNumber *)use
+                                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                                              errorBlock:(void(^)(NSError *error))errorBlock {
+    NSAssert((base64EncodedImage || title || includeEntities || skipStatus || use), @"at least one parameter is needed");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalBase64EncodedImage) md[@"image"] = optionalBase64EncodedImage;
-    if(optionalTitle) md[@"title"] = optionalTitle;
+    if(base64EncodedImage) md[@"image"] = base64EncodedImage;
+    if(title) md[@"title"] = title;
     
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";;
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
-    if(optionalUse) md[@"use"] = [optionalUse boolValue] ? @"1" : @"0";
+    if(use) md[@"use"] = [use boolValue] ? @"1" : @"0";
     
     [_oauth postResource:@"account/update_profile_background_image.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1536,22 +1537,22 @@ id removeNull(id rootObject);
 }
 
 // POST account/update_profile_colors
-- (void)postAccountUpdateProfileColorsWithOptionalBackgroundColor:(NSString *)optionalBackgroundColor
-                                                optionalLinkColor:(NSString *)optionalLinkColor
-                                       optionalSidebarBorderColor:(NSString *)optionalSidebarBorderColor
-                                         optionalSidebarFillColor:(NSString *)optionalSidebarFillColor
-                                         optionalProfileTextColor:(NSString *)optionalProfileTextColor
-                                                  includeEntities:(NSNumber *)includeEntities
-                                                       skipStatus:(NSNumber *)skipStatus
-                                                     successBlock:(void(^)(NSDictionary *profile))successBlock
-                                                       errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postAccountUpdateProfileColorsWithBackgroundColor:(NSString *)backgroundColor
+                                                linkColor:(NSString *)linkColor
+                                       sidebarBorderColor:(NSString *)sidebarBorderColor
+                                         sidebarFillColor:(NSString *)sidebarFillColor
+                                         profileTextColor:(NSString *)profileTextColor
+                                          includeEntities:(NSNumber *)includeEntities
+                                               skipStatus:(NSNumber *)skipStatus
+                                             successBlock:(void(^)(NSDictionary *profile))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalBackgroundColor) md[@"profile_background_color"] = optionalBackgroundColor;
-    if(optionalLinkColor) md[@"profile_link_color"] = optionalLinkColor;
-    if(optionalSidebarBorderColor) md[@"profile_sidebar_border_color"] = optionalSidebarBorderColor;
-    if(optionalSidebarFillColor) md[@"profile_sidebar_fill_color"] = optionalSidebarFillColor;
-    if(optionalProfileTextColor) md[@"profile_text_color"] = optionalProfileTextColor;
+    if(backgroundColor) md[@"profile_background_color"] = backgroundColor;
+    if(linkColor) md[@"profile_link_color"] = linkColor;
+    if(sidebarBorderColor) md[@"profile_sidebar_border_color"] = sidebarBorderColor;
+    if(sidebarFillColor) md[@"profile_sidebar_fill_color"] = sidebarFillColor;
+    if(profileTextColor) md[@"profile_text_color"] = profileTextColor;
     
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
@@ -1588,14 +1589,14 @@ id removeNull(id rootObject);
 // GET blocks/list
 - (void)getBlocksListWithincludeEntities:(NSNumber *)includeEntities
                               skipStatus:(NSNumber *)skipStatus
-                          optionalCursor:(NSString *)optionalCursor
+                                  cursor:(NSString *)cursor
                             successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
-    if(optionalCursor) md[@"cursor"] = optionalCursor;
+    if(cursor) md[@"cursor"] = cursor;
     
     [_oauth getResource:@"blocks/list.json" parameters:md successBlock:^(id response) {
         
@@ -1616,12 +1617,12 @@ id removeNull(id rootObject);
 }
 
 // GET blocks/ids
-- (void)getBlocksIDsWithOptionalOptionalCursor:(NSString *)optionalCursor
-                                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
-                                    errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getBlocksIDsWithCursor:(NSString *)cursor
+                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"stringify_ids"] = @"1";
-    if(optionalCursor) md[@"cursor"] = optionalCursor;
+    if(cursor) md[@"cursor"] = cursor;
     
     [_oauth getResource:@"blocks/ids.json" parameters:md successBlock:^(id response) {
         
@@ -1744,8 +1745,8 @@ id removeNull(id rootObject);
 
 // GET users/search
 - (void)getUsersSearchQuery:(NSString *)query
-               optionalPage:(NSString *)optionalPage
-              optionalCount:(NSString *)optionalCount
+                       page:(NSString *)page
+                      count:(NSString *)count
             includeEntities:(NSNumber *)includeEntities
                successBlock:(void(^)(NSArray *users))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock {
@@ -1755,8 +1756,8 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
     md[@"query"] = [query st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    if(optionalPage) md[@"page"] = optionalPage;
-    if(optionalCount) md[@"count"] = optionalCount;
+    if(page) md[@"page"] = page;
+    if(count) md[@"count"] = count;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"users/search.json" parameters:md successBlock:^(id response) {
@@ -1824,26 +1825,26 @@ id removeNull(id rootObject);
 
 // POST account/update_profile_banner
 - (void)postAccountUpdateProfileBannerWithImage:(NSString *)base64encodedImage
-                                  optionalWidth:(NSString *)optionalWidth
-                                 optionalHeight:(NSString *)optionalHeight
-                             optionalOffsetLeft:(NSString *)optionalOffsetLeft
-                              optionalOffsetTop:(NSString *)optionalOffsetTop
+                                          width:(NSString *)width
+                                         height:(NSString *)height
+                                     offsetLeft:(NSString *)offsetLeft
+                                      offsetTop:(NSString *)offsetTop
                                    successBlock:(void(^)(id response))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
-    if(optionalWidth || optionalHeight || optionalOffsetLeft || optionalOffsetTop) {
-        NSParameterAssert(optionalWidth);
-        NSParameterAssert(optionalHeight);
-        NSParameterAssert(optionalOffsetLeft);
-        NSParameterAssert(optionalOffsetTop);
+    if(width || height || offsetLeft || offsetTop) {
+        NSParameterAssert(width);
+        NSParameterAssert(height);
+        NSParameterAssert(offsetLeft);
+        NSParameterAssert(offsetTop);
     }
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"banner"] = base64encodedImage;
-    if(optionalWidth) md[@"width"] = optionalWidth;
-    if(optionalHeight) md[@"height"] = optionalHeight;
-    if(optionalOffsetLeft) md[@"offset_left"] = optionalOffsetLeft;
-    if(optionalOffsetTop) md[@"offset_top"] = optionalOffsetTop;
+    if(width) md[@"width"] = width;
+    if(height) md[@"height"] = height;
+    if(offsetLeft) md[@"offset_left"] = offsetLeft;
+    if(offsetTop) md[@"offset_top"] = offsetTop;
     
     [_oauth postResource:@"account/update_profile_banner.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1877,21 +1878,21 @@ id removeNull(id rootObject);
 #pragma mark Favorites
 
 // GET favorites/list
-- (void)getFavoritesListWithOptionalUserID:(NSString *)optionalUserID
-                        optionalScreenName:(NSString *)optionalScreenName
-                             optionalCount:(NSString *)optionalCount
-                           optionalSinceID:(NSString *)optionalSinceID
-                             optionalMaxID:(NSString *)optionalMaxID
-                           includeEntities:(NSNumber *)includeEntities
-                              successBlock:(void(^)(NSArray *statuses))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getFavoritesListWithUserID:(NSString *)userID
+                        screenName:(NSString *)screenName
+                             count:(NSString *)count
+                           sinceID:(NSString *)sinceID
+                             maxID:(NSString *)maxID
+                   includeEntities:(NSNumber *)includeEntities
+                      successBlock:(void(^)(NSArray *statuses))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(optionalUserID) md[@"user_id"] = optionalUserID;
-    if(optionalScreenName) md[@"screen_name"] = optionalScreenName;
-    if(optionalCount) md[@"count"] = optionalCount;
-    if(optionalSinceID) md[@"since_id"] = optionalSinceID;
-    if(optionalMaxID) md[@"max_id"] = optionalMaxID;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(count) md[@"count"] = count;
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(maxID) md[@"max_id"] = maxID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"favorites/list.json" parameters:md successBlock:^(id response) {
@@ -1904,17 +1905,17 @@ id removeNull(id rootObject);
 - (void)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getFavoritesListWithOptionalUserID:nil
-                          optionalScreenName:nil
-                               optionalCount:nil
-                             optionalSinceID:nil
-                               optionalMaxID:nil
-                             includeEntities:nil
-                                successBlock:^(NSArray *statuses) {
-                                    successBlock(statuses);
-                                } errorBlock:^(NSError *error) {
-                                    errorBlock(error);
-                                }];
+    [self getFavoritesListWithUserID:nil
+                          screenName:nil
+                               count:nil
+                             sinceID:nil
+                               maxID:nil
+                     includeEntities:nil
+                        successBlock:^(NSArray *statuses) {
+                            successBlock(statuses);
+                        } errorBlock:^(NSError *error) {
+                            errorBlock(error);
+                        }];
     
     [_oauth getResource:@"favorites/list.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
@@ -2015,9 +2016,9 @@ id removeNull(id rootObject);
 // GET    lists/statuses
 
 - (void)getListsStatusesForListID:(NSString *)listID
-                  optionalSinceID:(NSString *)sinceID
-                    optionalMaxID:(NSString *)maxID
-                    optionalCount:(NSString *)count
+                          sinceID:(NSString *)sinceID
+                            maxID:(NSString *)maxID
+                            count:(NSString *)count
                   includeEntities:(NSNumber *)includeEntities
                   includeRetweets:(NSNumber *)includeRetweets
                      successBlock:(void(^)(NSArray *statuses))successBlock
@@ -2048,11 +2049,11 @@ id removeNull(id rootObject);
 }
 
 - (void)getListsStatusesForSlug:(NSString *)slug
-                ownerScreenName:(NSString *)ownerScreenName
-                      orOwnerID:(NSString *)ownerID
-                optionalSinceID:(NSString *)sinceID
-                  optionalMaxID:(NSString *)maxID
-                  optionalCount:(NSString *)count
+                     screenName:(NSString *)ownerScreenName
+                        ownerID:(NSString *)ownerID
+                        sinceID:(NSString *)sinceID
+                          maxID:(NSString *)maxID
+                          count:(NSString *)count
                 includeEntities:(NSNumber *)includeEntities
                 includeRetweets:(NSNumber *)includeRetweets
                    successBlock:(void(^)(NSArray *statuses))successBlock
@@ -2100,10 +2101,10 @@ id removeNull(id rootObject);
 }
 
 - (void)postListsMembersDestroyForSlug:(NSString *)slug
-                        optionalUserID:(NSString *)userID
-                    optionalScreenName:(NSString *)screenName
-               optionalOwnerScreenName:(NSString *)ownerScreenName
-                       optionalOwnerID:(NSString *)ownerID
+                                userID:(NSString *)userID
+                            screenName:(NSString *)screenName
+                       ownerScreenName:(NSString *)ownerScreenName
+                               ownerID:(NSString *)ownerID
                           successBlock:(void(^)())successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2128,7 +2129,7 @@ id removeNull(id rootObject);
 
 - (void)getListsMembershipsForUserID:(NSString *)userID
                         orScreenName:(NSString *)screenName
-                      optionalCursor:(NSString *)optionalCursor
+                              cursor:(NSString *)cursor
                   filterToOwnedLists:(NSNumber *)filterToOwnedLists
                         successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
@@ -2138,7 +2139,7 @@ id removeNull(id rootObject);
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
-    if(optionalCursor) md[@"cursor"] = optionalCursor;
+    if(cursor) md[@"cursor"] = cursor;
     if(filterToOwnedLists) md[@"filter_to_owned_lists"] = [filterToOwnedLists boolValue] ? @"1" : @"0";
     
     [_oauth getResource:@"lists/memberships" parameters:md successBlock:^(id response) {
@@ -2163,7 +2164,7 @@ id removeNull(id rootObject);
 - (void)getListsSubscribersForSlug:(NSString *)slug
                    ownerScreenName:(NSString *)ownerScreenName
                          orOwnerID:(NSString *)ownerID
-                    optionalCursor:(NSString *)cursor
+                            cursor:(NSString *)cursor
                    includeEntities:(NSNumber *)includeEntities
                         skipStatus:(NSNumber *)skipStatus
                       successBlock:(void(^)())successBlock
@@ -2195,7 +2196,7 @@ id removeNull(id rootObject);
 }
 
 - (void)getListsSubscribersForListID:(NSString *)listID
-                      optionalCursor:(NSString *)cursor
+                              cursor:(NSString *)cursor
                      includeEntities:(NSNumber *)includeEntities
                           skipStatus:(NSNumber *)skipStatus
                         successBlock:(void(^)())successBlock
@@ -2613,9 +2614,9 @@ id removeNull(id rootObject);
 // POST	lists/update
 
 - (void)postListsUpdateForListID:(NSString *)listID
-                    optionalName:(NSString *)name
+                            name:(NSString *)name
                        isPrivate:(BOOL)isPrivate
-             optionalDescription:(NSString *)description
+                     description:(NSString *)description
                     successBlock:(void(^)())successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2637,9 +2638,9 @@ id removeNull(id rootObject);
 - (void)postListsUpdateForSlug:(NSString *)slug
                ownerScreenName:(NSString *)ownerScreenName
                      orOwnerID:(NSString *)ownerID
-                  optionalName:(NSString *)name
+                          name:(NSString *)name
                      isPrivate:(BOOL)isPrivate
-           optionalDescription:(NSString *)description
+                   description:(NSString *)description
                   successBlock:(void(^)())successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2665,7 +2666,7 @@ id removeNull(id rootObject);
 
 - (void)postListsCreateWithName:(NSString *)name
                       isPrivate:(BOOL)isPrivate
-            optionalDescription:(NSString *)description
+                    description:(NSString *)description
                    successBlock:(void(^)(NSDictionary *list))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(name);
