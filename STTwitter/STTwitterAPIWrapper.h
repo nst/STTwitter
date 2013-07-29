@@ -278,7 +278,7 @@
 
 //  GET     statuses/retweeters/ids
 - (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
-                             optionalCursor:(NSString *)cursor
+                                     cursor:(NSString *)cursor
                          returnIDsAsStrings:(NSNumber *)returnIDsAsStrings
                                successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock;
