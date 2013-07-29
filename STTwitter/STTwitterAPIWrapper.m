@@ -560,16 +560,20 @@ id removeNull(id rootObject);
     }];
 }
 
-- (void)postDestroyStatusWithID:(NSString *)statusID
-                   successBlock:(void(^)(NSDictionary *status))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    // set trim_user to true?
+- (void)postStatusesDestroy:(NSString *)statusID
+                   trimUser:(NSNumber *)trimUser
+               successBlock:(void(^)(NSDictionary *status))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(statusID);
     
     NSString *resource = [NSString stringWithFormat:@"statuses/destroy/%@.json", statusID];
     
-	//Twitter returns an unauthenticated error if parameters is nil.
-    [_oauth postResource:resource parameters:@{ @"id" : statusID } successBlock:^(id response) {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"id"] = statusID;
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
+    
+    [_oauth postResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

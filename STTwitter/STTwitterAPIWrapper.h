@@ -223,11 +223,16 @@
              successBlock:(void(^)(NSDictionary *status))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	statuses/destroy/:id
-//	Returns Tweets (1: the destroyed tweet)
-- (void)postDestroyStatusWithID:(NSString *)statusID
-                   successBlock:(void(^)(NSDictionary *status))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+/*
+ POST	statuses/destroy/:id
+
+ Destroys the status specified by the required ID parameter. The authenticating user must be the author of the specified status. Returns the destroyed status if successful.
+ */
+
+- (void)postStatusesDestroy:(NSString *)statusID
+                   trimUser:(NSNumber *)trimUser
+               successBlock:(void(^)(NSDictionary *status))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	statuses/update
