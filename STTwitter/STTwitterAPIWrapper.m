@@ -246,7 +246,7 @@ id removeNull(id rootObject);
 - (void)getStatusesMentionTimelineWithCount:(NSString *)count
                                     sinceID:(NSString *)sinceID
                                       maxID:(NSString *)maxID
-                                   trimUser:(NSNumber *)timUser
+                                   trimUser:(NSNumber *)trimUser
                          contributorDetails:(NSNumber *)contributorDetails
                             includeEntities:(NSNumber *)includeEntities
                                successBlock:(void(^)(NSArray *statuses))successBlock
@@ -257,7 +257,7 @@ id removeNull(id rootObject);
     if(count) md[@"count"] = count;
     if(sinceID) md[@"since_id"] = sinceID;
     if(maxID) md[@"max_id"] = maxID;
-    if(timUser) md[@"trim_user"] = [timUser boolValue] ? @"1" : @"0";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
