@@ -379,7 +379,7 @@
     self.twitterPostTweetStatus = @"-";
     
     if(_twitterPostMediaURL) {
-        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil mediaURL:_twitterPostMediaURL placeID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSDictionary *status) {
+        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil mediaURL:_twitterPostMediaURL placeID:nil latitude:_twitterPostLatitude longitude:_twitterPostLongitude successBlock:^(NSDictionary *status) {
             self.twitterPostTweetText = @"";
             self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;
@@ -389,7 +389,7 @@
             self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
         }];
     } else {
-        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil placeID:nil lat:_twitterPostLatitude lon:_twitterPostLongitude successBlock:^(NSDictionary *response) {
+        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil latitude:_twitterPostLatitude longitude:_twitterPostLongitude placeID:nil displayCoordinates:@(YES) trimUser:nil successBlock:^(NSDictionary *status) {
             self.twitterPostTweetText = @"";
             self.twitterPostTweetStatus = @"OK";
             self.twitterPostLatitude = nil;
