@@ -262,18 +262,54 @@
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	statuses/retweet/:id
-//	Returns Tweets (1: the retweeted tweet)
+/*
+ POST	statuses/retweet/:id
+
+ Retweets a tweet. Returns the original tweet with retweet details embedded.
+ 
+ - This method is subject to update limits. A HTTP 403 will be returned if this limit as been hit.
+ - Twitter will ignore attempts to perform duplicate retweets.
+ - The retweet_count will be current as of when the payload is generated and may not reflect the exact count. It is intended as an approximation.
+ 
+ Returns Tweets (1: the new tweet)
+ */
+
+- (void)postStatusRetweetWithID:(NSString *)statusID
+                       trimUser:(NSNumber *)trimUser
+                   successBlock:(void(^)(NSDictionary *status))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)postStatusRetweetWithID:(NSString *)statusID
                    successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	POST	statuses/update_with_media
-//	Returns Tweets (1: the new tweet)
+/*
+ POST	statuses/update_with_media
+ 
+ Updates the authenticating user's current status and attaches media for upload. In other words, it creates a Tweet with a picture attached.
+ 
+ Unlike POST statuses/update, this method expects raw multipart data. Your POST request's Content-Type should be set to multipart/form-data with the media[] parameter
+ 
+ The Tweet text will be rewritten to include the media URL(s), which will reduce the number of characters allowed in the Tweet text. If the URL(s) cannot be appended without text truncation, the tweet will be rejected and this method will return an HTTP 403 error.
+*/
+
+- (void)postStatusUpdate:(NSString *)status
+          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported
+       possiblySensitive:(NSNumber *)possiblySensitive
+       inReplyToStatusID:(NSString *)inReplyToStatusID
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
+                 placeID:(NSString *)placeID
+      displayCoordinates:(NSNumber *)displayCoordinates
+            successBlock:(void(^)(NSDictionary *status))successBlock
+              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)existingStatusID
                 mediaURL:(NSURL *)mediaURL
-                 placeID:(NSString *)placeID // wins over lat/lon
+                 placeID:(NSString *)placeID
                 latitude:(NSString *)latitude
                longitude:(NSString *)longitude
             successBlock:(void(^)(NSDictionary *status))successBlock
@@ -1370,7 +1406,7 @@
 - (void)getGeoSearchWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
                        longitude:(NSString *)longitude // eg. "-122.400612831116"
                            query:(NSString *)query // eg. "Twitter HQ"
-                              ip:(NSString *)ip // eg. 74.125.19.104
+                       ipAddress:(NSString *)ipAddress // eg. 74.125.19.104
                      granularity:(NSString *)granularity // eg. "city"
                         accuracy:(NSString *)accuracy // eg. "5ft"
                       maxResults:(NSString *)maxResults // eg. "3"

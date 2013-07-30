@@ -15,7 +15,7 @@
 #import "STHTTPRequest.h"
 
 @interface STTwitterAPIWrapper ()
-id removeNull(id rootObject);
+//id removeNull(id rootObject);
 @property (nonatomic, retain) NSObject <STTwitterOAuthProtocol> *oauth;
 @end
 
@@ -619,9 +619,41 @@ id removeNull(id rootObject);
 }
 
 - (void)postStatusUpdate:(NSString *)status
+          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported
+       possiblySensitive:(NSNumber *)possiblySensitive
+       inReplyToStatusID:(NSString *)inReplyToStatusID
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
+                 placeID:(NSString *)placeID
+      displayCoordinates:(NSNumber *)displayCoordinates
+            successBlock:(void(^)(NSDictionary *status))successBlock
+              errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(status);
+    NSAssert([mediaDataArray count] > 0, @"media data array must not be empty");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"status"] = status;
+    if(possiblySensitive) md[@"possibly_sensitive"] = [possiblySensitive boolValue] ? @"1" : @"0";
+    if(displayCoordinates) md[@"display_coordinates"] = [displayCoordinates boolValue] ? @"1" : @"0";
+    if(inReplyToStatusID) md[@"in_reply_to_status_id"] = inReplyToStatusID;
+    if(latitude) md[@"lat"] = latitude;
+    if(longitude) md[@"long"] = longitude;
+    if(placeID) md[@"place_id"] = placeID;
+    md[@"media[]"] = [mediaDataArray lastObject];
+    md[kSTPOSTDataKey] = @"media[]";
+    
+    [_oauth postResource:@"statuses/update_with_media.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+- (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)existingStatusID
                 mediaURL:(NSURL *)mediaURL
-                 placeID:(NSString *)placeID // wins over lat/lon
+                 placeID:(NSString *)placeID
                 latitude:(NSString *)latitude
                longitude:(NSString *)longitude
             successBlock:(void(^)(NSDictionary *status))successBlock
@@ -629,20 +661,41 @@ id removeNull(id rootObject);
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
     
-    NSMutableDictionary *md = [[ @{ @"status":status, @"media[]":data, @"postDataKey":@"media[]" } mutableCopy] autorelease];
-    
-    if(existingStatusID) md[@"in_reply_to_status_id"] = existingStatusID;
-    
-    if(placeID) {
-        md[@"place_id"] = placeID;
-        md[@"display_coordinates"] = @"true";
-    } else if(latitude && longitude) {
-        md[@"lat"] = latitude;
-        md[@"lon"] = longitude;
-        md[@"display_coordinates"] = @"true";
+    if(data == nil) {
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"data is nil"}];
+        errorBlock(error);
+        return;
     }
     
-    [_oauth postResource:@"statuses/update_with_media.json" parameters:md successBlock:^(id response) {
+    [self postStatusUpdate:status
+            mediaDataArray:@[data]
+         possiblySensitive:nil
+         inReplyToStatusID:existingStatusID
+                  latitude:latitude
+                 longitude:longitude
+                   placeID:placeID
+        displayCoordinates:@(YES)
+              successBlock:^(NSDictionary *status) {
+        successBlock(status);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST	statuses/retweet/:id
+- (void)postStatusRetweetWithID:(NSString *)statusID
+                       trimUser:(NSNumber *)trimUser
+                   successBlock:(void(^)(NSDictionary *status))successBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(statusID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(trimUser) md[@"trime_user"] = [trimUser boolValue] ? @"1" : @"0";
+    
+    NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
+    
+    [_oauth postResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -652,11 +705,11 @@ id removeNull(id rootObject);
 - (void)postStatusRetweetWithID:(NSString *)statusID
                    successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
-    
-    [_oauth postResource:resource parameters:nil successBlock:^(id response) {
-        successBlock(response);
+
+    [self postStatusRetweetWithID:statusID
+                         trimUser:nil
+                     successBlock:^(NSDictionary *status) {
+        successBlock(status);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -872,12 +925,12 @@ id removeNull(id rootObject);
 }
 
 - (void)getDirectMessagesSinceID:(NSString *)sinceID
-                               maxID:(NSString *)maxID
-                               count:(NSString *)count
-                                page:(NSString *)page
-                     includeEntities:(NSNumber *)includeEntities
-                        successBlock:(void(^)(NSArray *messages))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock {
+                           maxID:(NSString *)maxID
+                           count:(NSString *)count
+                            page:(NSString *)page
+                 includeEntities:(NSNumber *)includeEntities
+                    successBlock:(void(^)(NSArray *messages))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(sinceID) [md setObject:sinceID forKey:@"since_id"];
@@ -2856,7 +2909,7 @@ id removeNull(id rootObject);
 - (void)getGeoSearchWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
                        longitude:(NSString *)longitude // eg. "-122.400612831116"
                            query:(NSString *)query // eg. "Twitter HQ"
-                              ip:(NSString *)ip // eg. 74.125.19.104
+                       ipAddress:(NSString *)ipAddress // eg. 74.125.19.104
                      granularity:(NSString *)granularity // eg. "city"
                         accuracy:(NSString *)accuracy // eg. "5ft"
                       maxResults:(NSString *)maxResults // eg. "3"
@@ -2870,7 +2923,7 @@ id removeNull(id rootObject);
     if(latitude) md[@"lat"] = latitude;
     if(longitude) md[@"long"] = longitude;
     if(query) md[@"query"] = query;
-    if(ip) md[@"ip"] = ip;
+    if(ipAddress) md[@"ip"] = ipAddress;
     if(granularity) md[@"granularity"] = granularity;
     if(accuracy) md[@"accuracy"] = accuracy;
     if(maxResults) md[@"max_results"] = maxResults;
@@ -2900,7 +2953,7 @@ id removeNull(id rootObject);
     [self getGeoSearchWithLatitude:latitude
                          longitude:longitude
                              query:nil
-                                ip:nil
+                         ipAddress:nil
                        granularity:nil
                           accuracy:nil
                         maxResults:nil
@@ -2923,7 +2976,7 @@ id removeNull(id rootObject);
     [self getGeoSearchWithLatitude:nil
                          longitude:nil
                              query:nil
-                                ip:ipAddress
+                         ipAddress:ipAddress
                        granularity:nil
                           accuracy:nil
                         maxResults:nil
@@ -2946,7 +2999,7 @@ id removeNull(id rootObject);
     [self getGeoSearchWithLatitude:nil
                          longitude:nil
                              query:query
-                                ip:nil
+                         ipAddress:nil
                        granularity:nil
                           accuracy:nil
                         maxResults:nil
@@ -3065,41 +3118,41 @@ id removeNull(id rootObject);
         errorBlock(error);
     }];
 }
-
-id removeNull(id rootObject) {
-    if ([rootObject isKindOfClass:[NSDictionary class]]) {
-        NSMutableDictionary *sanitizedDictionary = [NSMutableDictionary dictionaryWithDictionary:rootObject];
-        [rootObject enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            id sanitized = removeNull(obj);
-            if (!sanitized) {
-                [sanitizedDictionary setObject:@"" forKey:key];
-            } else {
-                [sanitizedDictionary setObject:sanitized forKey:key];
-            }
-        }];
-        return [NSDictionary dictionaryWithDictionary:sanitizedDictionary];
-    }
-    
-    if ([rootObject isKindOfClass:[NSArray class]]) {
-        NSMutableArray *sanitizedArray = [NSMutableArray arrayWithArray:rootObject];
-        [rootObject enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            id sanitized = removeNull(obj);
-            if (!sanitized) {
-                [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:@""];
-            } else {
-                [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:sanitized];
-            }
-        }];
-        return [NSArray arrayWithArray:sanitizedArray];
-    }
-	
-    if ([rootObject isKindOfClass:[NSNull class]]) {
-        return (id)nil;
-    } else {
-        return rootObject;
-    }
-}
-
+/*
+ id removeNull(id rootObject) {
+ if ([rootObject isKindOfClass:[NSDictionary class]]) {
+ NSMutableDictionary *sanitizedDictionary = [NSMutableDictionary dictionaryWithDictionary:rootObject];
+ [rootObject enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+ id sanitized = removeNull(obj);
+ if (!sanitized) {
+ [sanitizedDictionary setObject:@"" forKey:key];
+ } else {
+ [sanitizedDictionary setObject:sanitized forKey:key];
+ }
+ }];
+ return [NSDictionary dictionaryWithDictionary:sanitizedDictionary];
+ }
+ 
+ if ([rootObject isKindOfClass:[NSArray class]]) {
+ NSMutableArray *sanitizedArray = [NSMutableArray arrayWithArray:rootObject];
+ [rootObject enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+ id sanitized = removeNull(obj);
+ if (!sanitized) {
+ [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:@""];
+ } else {
+ [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:sanitized];
+ }
+ }];
+ return [NSArray arrayWithArray:sanitizedArray];
+ }
+ 
+ if ([rootObject isKindOfClass:[NSNull class]]) {
+ return (id)nil;
+ } else {
+ return rootObject;
+ }
+ }
+ */
 @end
 
 @implementation NSString (STTwitterAPIWrapper)
