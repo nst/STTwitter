@@ -640,7 +640,7 @@
     if(latitude) md[@"lat"] = latitude;
     if(longitude) md[@"long"] = longitude;
     if(placeID) md[@"place_id"] = placeID;
-    md[@"media[]"] = [mediaDataArray lastObject];
+    md[@"media[]"] = [mediaDataArray objectAtIndex:0];
     md[kSTPOSTDataKey] = @"media[]";
     
     [_oauth postResource:@"statuses/update_with_media.json" parameters:md successBlock:^(id response) {
