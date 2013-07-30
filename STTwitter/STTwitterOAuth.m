@@ -12,6 +12,8 @@
 
 #include <CommonCrypto/CommonHMAC.h>
 
+NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
+
 @interface NSData (Base64)
 - (NSString *)base64Encoding; // private API
 @end
@@ -488,12 +490,12 @@
 
     r.POSTDictionary = params;
     
-	NSString *postKey = [params valueForKey:@"postDataKey"];
+	NSString *postKey = [params valueForKey:kSTPOSTDataKey];
     // https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
     NSData *postData = [params valueForKey:postKey];
     
     NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
-    [mutableParams removeObjectForKey:@"postDataKey"];
+    [mutableParams removeObjectForKey:kSTPOSTDataKey];
     if(postData) {
         [mutableParams removeObjectForKey:postKey];
 
