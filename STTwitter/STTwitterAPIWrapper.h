@@ -1446,6 +1446,9 @@
  Create a new saved search for the authenticated user. A user may only have 25 saved searches.
  */
 
+- (void)postSavedSearchCreateWithQuery:(NSString *)query
+                          successBlock:(void(^)(NSDictionary *createdSearch))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
  
 /*
  POST saved_searches/destroy/:id

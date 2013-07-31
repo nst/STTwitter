@@ -2946,7 +2946,22 @@
 
 // GET saved_searches/list
 // GET saved_searches/show/:id
+
 // POST saved_searches/create
+- (void)postSavedSearchCreateWithQuery:(NSString *)query
+                  successBlock:(void(^)(NSDictionary *createdSearch))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(query);
+    
+    NSDictionary *d = @{ @"query" : query };
+    
+    [_oauth postResource:@"saved_searches/create.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 // POST saved_searches/destroy/:id
 - (void)postSavedSearchDestroy:(NSString *)savedSearchID
