@@ -1433,6 +1433,8 @@
  Returns the authenticated user's saved search queries.
  */
 
+- (void)getSavedSearchesListWithSuccessBlock:(void(^)(NSArray *savedSearches))successBlock
+                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET saved_searches/show/:id
@@ -1440,7 +1442,7 @@
  Retrieve the information for the saved search represented by the given id. The authenticating user must be the owner of saved search ID being requested.
  */
 
-- (void)getSavedSearchShow:(NSString *)savedSearchID
+- (void)getSavedSearchesShow:(NSString *)savedSearchID
               successBlock:(void(^)(NSDictionary *savedSearch))successBlock
                 errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1450,7 +1452,7 @@
  Create a new saved search for the authenticated user. A user may only have 25 saved searches.
  */
 
-- (void)postSavedSearchCreateWithQuery:(NSString *)query
+- (void)postSavedSearchesCreateWithQuery:(NSString *)query
                           successBlock:(void(^)(NSDictionary *createdSearch))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
  
@@ -1460,7 +1462,7 @@
  Destroys a saved search for the authenticating user. The authenticating user must be the owner of saved search id being destroyed.
  */
 
-- (void)postSavedSearchDestroy:(NSString *)savedSearchID
+- (void)postSavedSearchesDestroy:(NSString *)savedSearchID
                   successBlock:(void(^)(NSDictionary *destroyedSearch))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 

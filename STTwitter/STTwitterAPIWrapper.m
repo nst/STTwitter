@@ -2945,11 +2945,20 @@
 #pragma mark Saved Searches
 
 // GET saved_searches/list
+- (void)getSavedSearchesListWithSuccessBlock:(void(^)(NSArray *savedSearches))successBlock
+                                  errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth postResource:@"saved_searches/list.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 // GET saved_searches/show/:id
-- (void)getSavedSearchShow:(NSString *)savedSearchID
-                          successBlock:(void(^)(NSDictionary *savedSearch))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getSavedSearchesShow:(NSString *)savedSearchID
+                successBlock:(void(^)(NSDictionary *savedSearch))successBlock
+                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(savedSearchID);
     
@@ -2963,9 +2972,9 @@
 }
 
 // POST saved_searches/create
-- (void)postSavedSearchCreateWithQuery:(NSString *)query
-                  successBlock:(void(^)(NSDictionary *createdSearch))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postSavedSearchesCreateWithQuery:(NSString *)query
+                            successBlock:(void(^)(NSDictionary *createdSearch))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(query);
     
@@ -2979,19 +2988,19 @@
 }
 
 // POST saved_searches/destroy/:id
-- (void)postSavedSearchDestroy:(NSString *)savedSearchID
-                  successBlock:(void(^)(NSDictionary *destroyedSearch))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock {
-
+- (void)postSavedSearchesDestroy:(NSString *)savedSearchID
+                    successBlock:(void(^)(NSDictionary *destroyedSearch))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
     NSParameterAssert(savedSearchID);
-
+    
     NSString *resource = [NSString stringWithFormat:@"saved_searches/destroy/%@.json", savedSearchID];
     
     [_oauth postResource:resource parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
-    }];    
+    }];
 }
 
 #pragma mark Places & Geo
@@ -3293,7 +3302,7 @@
 
 // GET help/privacy
 - (void)getHelpPrivacyWithSuccessBlock:(void(^)(NSString *tos))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock {
+                            errorBlock:(void(^)(NSError *error))errorBlock {
 	[_oauth getResource:@"help/privacy.json" parameters:nil successBlock:^(id response) {
         successBlock([response valueForKey:@"privacy"]);
     } errorBlock:^(NSError *error) {
