@@ -1619,6 +1619,11 @@
  A WOEID is a Yahoo! Where On Earth ID.
  */
 
+- (void)getTrendsClosestToLatitude:(NSString *)latitude
+                         longitude:(NSString *)longitude
+                      successBlock:(void(^)(NSArray *locations))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
+
 #pragma mark Spam Reporting
 
 /*

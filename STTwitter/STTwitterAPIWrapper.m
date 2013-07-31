@@ -3284,10 +3284,27 @@
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
-
 }
 
 // GET trends/closest
+- (void)getTrendsClosestToLatitude:(NSString *)latitude
+                         longitude:(NSString *)longitude
+                      successBlock:(void(^)(NSArray *locations))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(latitude);
+    NSParameterAssert(longitude);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"lat"] = latitude;
+    md[@"long"] = longitude;
+
+    [_oauth getResource:@"trends/closest.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 #pragma mark Spam Reporting
 
