@@ -3245,6 +3245,38 @@
 #pragma mark Trends
 
 // GET trends/place
+
+- (void)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID'
+          excludeHashtags:(NSNumber *)excludeHashtags
+             successBlock:(void(^)(NSString *asOf, NSString *createdAt, NSArray *locations, NSArray *trends))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(WOEID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"id"] = WOEID;
+    if(excludeHashtags) md[@"exclude"] = [excludeHashtags boolValue] ? @"1" : @"0";
+    
+    [_oauth getResource:@"trends/place.json" parameters:md successBlock:^(id response) {
+        
+        NSString *asOf = nil;
+        NSString *createdAt = nil;
+        NSArray *locations = nil;
+        NSArray *trends = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            asOf = [response valueForKey:@"as_of"]; // TODO: return NSDate instance
+            createdAt = [response valueForKey:@"created_at"]; // TODO: return NSDate instance
+            locations = [response valueForKey:@"locations"];
+            trends = [response valueForKey:@"trends"];
+        }
+        
+        successBlock(asOf, createdAt, locations, trends);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 // GET trends/available
 // GET trends/closest
 
