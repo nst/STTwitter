@@ -2945,7 +2945,22 @@
 #pragma mark Saved Searches
 
 // GET saved_searches/list
+
 // GET saved_searches/show/:id
+- (void)getSavedSearchShow:(NSString *)savedSearchID
+                          successBlock:(void(^)(NSDictionary *savedSearch))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(savedSearchID);
+    
+    NSString *resource = [NSString stringWithFormat:@"saved_searches/show/%@.json", savedSearchID];
+    
+    [_oauth postResource:resource parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 // POST saved_searches/create
 - (void)postSavedSearchCreateWithQuery:(NSString *)query

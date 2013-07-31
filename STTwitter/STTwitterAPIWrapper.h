@@ -1440,6 +1440,10 @@
  Retrieve the information for the saved search represented by the given id. The authenticating user must be the owner of saved search ID being requested.
  */
 
+- (void)getSavedSearchShow:(NSString *)savedSearchID
+              successBlock:(void(^)(NSDictionary *savedSearch))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST saved_searches/create
  
