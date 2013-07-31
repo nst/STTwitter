@@ -1427,6 +1427,36 @@
 
 #pragma mark Saved Searches
 
+/*
+ GET saved_searches/list
+ 
+ Returns the authenticated user's saved search queries.
+ */
+
+
+/*
+ GET saved_searches/show/:id
+ 
+ Retrieve the information for the saved search represented by the given id. The authenticating user must be the owner of saved search ID being requested.
+ */
+
+/*
+ POST saved_searches/create
+ 
+ Create a new saved search for the authenticated user. A user may only have 25 saved searches.
+ */
+
+ 
+/*
+ POST saved_searches/destroy/:id
+
+ Destroys a saved search for the authenticating user. The authenticating user must be the owner of saved search id being destroyed.
+ */
+
+- (void)postSavedSearchDestroy:(NSString *)savedSearchID
+                  successBlock:(void(^)(NSDictionary *destroyedSearch))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
+
 #pragma mark Places & Geo
 
 /*

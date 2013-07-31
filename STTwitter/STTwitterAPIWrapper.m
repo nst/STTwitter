@@ -2947,7 +2947,22 @@
 // GET saved_searches/list
 // GET saved_searches/show/:id
 // POST saved_searches/create
+
 // POST saved_searches/destroy/:id
+- (void)postSavedSearchDestroy:(NSString *)savedSearchID
+                  successBlock:(void(^)(NSDictionary *destroyedSearch))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(savedSearchID);
+
+    NSString *resource = [NSString stringWithFormat:@"saved_searches/destroy/%@.json", savedSearchID];
+    
+    [_oauth postResource:resource parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];    
+}
 
 #pragma mark Places & Geo
 
