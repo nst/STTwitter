@@ -682,6 +682,49 @@
     }];
 }
 
+// GET statuses/oembed
+
+- (void)getStatusesOEmbedForStatusID:(NSString *)statusID
+                           urlString:(NSString *)urlString
+                            maxWidth:(NSString *)maxWidth
+                           hideMedia:(NSNumber *)hideMedia
+                          hideThread:(NSNumber *)hideThread
+                          omitScript:(NSNumber *)omitScript
+                               align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
+                             related:(NSString *)related // eg. twitterapi,twittermedia,twitter
+                                lang:(NSString *)lang
+                        successBlock:(void(^)(NSDictionary *status))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(statusID);
+    NSParameterAssert(urlString);
+    
+    if(align) {
+        NSArray *validValues = @[@"left", @"right", @"center", @"none"];
+        NSAssert([validValues containsObject: align], @"");
+    }
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"id"] = statusID;
+    md[@"url"] = urlString;
+
+    if(maxWidth) md[@"maxwidth"] = maxWidth;
+
+    if(hideMedia) md[@"hide_media"] = [hideMedia boolValue] ? @"1" : @"0";
+    if(hideThread) md[@"hide_thread"] = [hideThread boolValue] ? @"1" : @"0";
+    if(omitScript) md[@"omit_script"] = [omitScript boolValue] ? @"1" : @"0";
+
+    if(align) md[@"align"] = align;
+    if(related) md[@"related"] = related;
+    if(lang) md[@"lang"] = lang;
+        
+    [_oauth getResource:@"statuses/oembed.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 // POST	statuses/retweet/:id
 - (void)postStatusRetweetWithID:(NSString *)statusID
                        trimUser:(NSNumber *)trimUser
@@ -691,7 +734,7 @@
     NSParameterAssert(statusID);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(trimUser) md[@"trime_user"] = [trimUser boolValue] ? @"1" : @"0";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     
     NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
     
@@ -717,7 +760,6 @@
 
 - (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
                                      cursor:(NSString *)cursor
-                         returnIDsAsStrings:(NSNumber *)returnIDsAsStrings
                                successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -727,7 +769,7 @@
     
     md[@"id"] = statusID;
     if(cursor) md[@"cursor"] = cursor;
-    if(returnIDsAsStrings) md[@"stringify_ids"] = [returnIDsAsStrings boolValue] ? @"1" : @"0";
+    md[@"stringify_ids"] = @"1";
     
     [_oauth getResource:@"statuses/retweeters/ids.json" parameters:md successBlock:^(id response) {
         

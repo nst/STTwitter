@@ -208,14 +208,37 @@
 
 #pragma mark Tweets
 
-//	GET		statuses/retweets/:id
+/*
+ GET    statuses/retweets/:id
+ 
+ Returns up to 100 of the first retweets of a given tweet.
+ */
 - (void)getStatusesRetweetsForID:(NSString *)statusID
                            count:(NSString *)count
                         trimUser:(NSNumber *)trimUser
                     successBlock:(void(^)(NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		statuses/show/:id
+/*
+ GET    statuses/show/:id
+ 
+ Returns a single Tweet, specified by the id parameter. The Tweet's author will also be embedded within the tweet.
+ 
+ See Embeddable Timelines, Embeddable Tweets, and GET statuses/oembed for tools to render Tweets according to Display Requirements.
+ 
+ # About Geo
+ 
+ If there is no geotag for a status, then there will be an empty <geo/> or "geo" : {}. This can only be populated if the user has used the Geotagging API to send a statuses/update.
+ 
+ The JSON response mostly uses conventions laid out in GeoJSON. Unfortunately, the coordinates that Twitter renders are reversed from the GeoJSON specification (GeoJSON specifies a longitude then a latitude, whereas we are currently representing it as a latitude then a longitude). Our JSON renders as: "geo": { "type":"Point", "coordinates":[37.78029, -122.39697] }
+ 
+ # Contributors
+ 
+ If there are no contributors for a Tweet, then there will be an empty or "contributors" : {}. This field will only be populated if the user has contributors enabled on his or her account -- this is a beta feature that is not yet generally available to all.
+ 
+ This object contains an array of user IDs for users who have contributed to this status (an example of a status that has been contributed to is this one). In practice, there is usually only one ID in this array. The JSON renders as such "contributors":[8285392].
+ */
+ 
 - (void)getStatusesShowID:(NSString *)statusID
                  trimUser:(NSNumber *)trimUser
          includeMyRetweet:(NSNumber *)includeMyRetweet
@@ -256,7 +279,7 @@
        inReplyToStatusID:(NSString *)existingStatusID
                 latitude:(NSString *)latitude
                longitude:(NSString *)longitude
-                 placeID:(NSString *)placeID // wins over lat/lon
+                 placeID:(NSString *)placeID
       displayCoordinates:(NSNumber *)displayCoordinates
                 trimUser:(NSNumber *)trimUser
             successBlock:(void(^)(NSDictionary *status))successBlock
@@ -315,12 +338,36 @@
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		statuses/oembed
+/*
+ GET    statuses/oembed
 
-//  GET     statuses/retweeters/ids
+ Returns information allowing the creation of an embedded representation of a Tweet on third party sites. See the oEmbed specification for information about the response format.
+ 
+ While this endpoint allows a bit of customization for the final appearance of the embedded Tweet, be aware that the appearance of the rendered Tweet may change over time to be consistent with Twitter's Display Requirements. Do not rely on any class or id parameters to stay constant in the returned markup.
+ */
+
+- (void)getStatusesOEmbedForStatusID:(NSString *)statusID
+                           urlString:(NSString *)urlString
+                            maxWidth:(NSString *)maxWidth
+                           hideMedia:(NSNumber *)hideMedia
+                          hideThread:(NSNumber *)hideThread
+                          omitScript:(NSNumber *)omitScript
+                               align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
+                             related:(NSString *)related // eg. twitterapi,twittermedia,twitter
+                                lang:(NSString *)lang
+                        successBlock:(void(^)(NSDictionary *status))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    statuses/retweeters/ids
+ 
+ Returns a collection of up to 100 user IDs belonging to users who have retweeted the tweet specified by the id parameter.
+ 
+ This method offers similar data to GET statuses/retweets/:id and replaces API v1's GET statuses/:id/retweeted_by/ids method.
+ */
+
 - (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
                                      cursor:(NSString *)cursor
-                         returnIDsAsStrings:(NSNumber *)returnIDsAsStrings
                                successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
