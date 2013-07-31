@@ -1963,6 +1963,35 @@
 
 #pragma mark Suggested Users
 
+// GET users/suggestions/:slug
+- (void)getUsersSuggestionsForSlug:(NSString *)slug // short name of list or a category, eg. "twitter"
+                              lang:(NSString *)lang
+                      successBlock:(void(^)(NSString *name, NSString *slug, NSArray *users))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSAssert(slug, @"slug is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"slug"] = slug;
+    if(lang) md[@"lang"] = lang;
+    
+    [_oauth getResource:@"users/suggestions/twitter.json" parameters:md successBlock:^(id response) {
+        NSString *name = nil;
+        NSString *slug = nil;
+        NSArray *users = nil;
+        
+        if([response isKindOfClass:[NSDictionary class]]) {
+            name = [response valueForKey:@"name"];
+            slug = [response valueForKey:@"slug"];
+            users = [response valueForKey:@"users"];
+        }
+        
+        successBlock(name,  slug, users);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 #pragma mark Favorites
 
 // GET favorites/list

@@ -983,7 +983,18 @@
 
 #pragma mark Suggested Users
 
-//	GET		users/suggestions/:slug
+/*
+ GET    users/suggestions/:slug
+
+ Access the users in a given category of the Twitter suggested user list.
+ 
+ It is recommended that applications cache this data for no more than one hour.
+ */
+
+- (void)getUsersSuggestionsForSlug:(NSString *)slug // short name of list or a category, eg. "twitter"
+                              lang:(NSString *)lang
+                      successBlock:(void(^)(NSString *name, NSString *slug, NSArray *users))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		users/suggestions
 
