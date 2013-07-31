@@ -922,6 +922,12 @@
 
 #pragma mark Streaming
 
+// POST statuses/filter
+// GET statuses/sample
+// GET statuses/firehose
+// GET user
+// GET site
+
 #pragma mark Direct Messages
 
 - (void)getDirectMessagesSinceID:(NSString *)sinceID
@@ -2938,6 +2944,11 @@
 
 #pragma mark Saved Searches
 
+// GET saved_searches/list
+// GET saved_searches/show/:id
+// POST saved_searches/create
+// POST saved_searches/destroy/:id
+
 #pragma mark Places & Geo
 
 // GET geo/id/:place_id
@@ -3179,24 +3190,25 @@
 
 #pragma mark Trends
 
+// GET trends/place
+// GET trends/available
+// GET trends/closest
+
 #pragma mark Spam Reporting
 
-- (void)postReportSpamWithScreenName:(NSString *)screenName
-                            orUserID:(NSString *)userID
-                        successBlock:(void(^)(id userProfile))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock {
+// POST users/report_spam
+- (void)postUsersReportSpamForScreenName:(NSString *)screenName
+                                orUserID:(NSString *)userID
+                            successBlock:(void(^)(id userProfile))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(screenName || userID);
     
-    NSDictionary *d = nil;
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"screen_name"] = screenName;
+    md[@"user_id"] = userID;
     
-    if(screenName) {
-        d = @{ @"screen_name" : screenName };
-    } else {
-        d = @{ @"user_id" : userID };
-    }
-    
-    [_oauth postResource:@"users/report_spam.json" parameters:d successBlock:^(id response) {
+    [_oauth postResource:@"users/report_spam.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3205,8 +3217,57 @@
 
 #pragma mark OAuth
 
+// GET oauth/authenticate
+// GET oauth/authorize
+// POST oauth/access_token
+// POST oauth/request_token
+// POST oauth2/token
+// POST oauth2/invalidate_token
+
 #pragma mark Help
-- (void)getRateLimitsForResources:(NSArray *)resources
+
+// GET help/configuration
+- (void)getHelpConfigurationWithSuccessBlock:(void(^)(NSDictionary *currentConfiguration))successBlock
+                                  errorBlock:(void(^)(NSError *error))errorBlock {
+	[_oauth getResource:@"help/configuration.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET help/languages
+- (void)getHelpLanguagesWithSuccessBlock:(void (^)(NSArray *languages))successBlock
+                              errorBlock:(void (^)(NSError *))errorBlock {
+	[_oauth getResource:@"help/languages.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET help/privacy
+- (void)getHelpPrivacyWithSuccessBlock:(void(^)(NSString *tos))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+	[_oauth getResource:@"help/privacy.json" parameters:nil successBlock:^(id response) {
+        successBlock([response valueForKey:@"privacy"]);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET help/tos
+- (void)getHelpTermsOfServiceWithSuccessBlock:(void(^)(NSString *tos))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+	[_oauth getResource:@"help/tos.json" parameters:nil successBlock:^(id response) {
+        successBlock([response valueForKey:@"tos"]);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET application/rate_limit_status
+- (void)getRateLimitsForResources:(NSArray *)resources // eg. statuses,friends,trends,help
 					 successBlock:(void(^)(NSDictionary *rateLimits))successBlock
 					   errorBlock:(void(^)(NSError *error))errorBlock {
 	NSDictionary *d = nil;
@@ -3218,6 +3279,7 @@
         errorBlock(error);
     }];
 }
+
 /*
  id removeNull(id rootObject) {
  if ([rootObject isKindOfClass:[NSDictionary class]]) {
