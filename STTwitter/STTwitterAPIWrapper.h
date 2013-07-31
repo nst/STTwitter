@@ -1606,6 +1606,9 @@
  A WOEID is a Yahoo! Where On Earth ID.
  */
 
+- (void)getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *locations))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  GET trends/closest
  

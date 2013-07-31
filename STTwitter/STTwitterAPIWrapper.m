@@ -3245,7 +3245,6 @@
 #pragma mark Trends
 
 // GET trends/place
-
 - (void)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID'
           excludeHashtags:(NSNumber *)excludeHashtags
              successBlock:(void(^)(NSString *asOf, NSString *createdAt, NSArray *locations, NSArray *trends))successBlock
@@ -3278,6 +3277,16 @@
 }
 
 // GET trends/available
+- (void)getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *locations))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    [_oauth getResource:@"trends/available.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+
+}
+
 // GET trends/closest
 
 #pragma mark Spam Reporting
