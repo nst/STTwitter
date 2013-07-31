@@ -676,10 +676,10 @@
                    placeID:placeID
         displayCoordinates:@(YES)
               successBlock:^(NSDictionary *status) {
-        successBlock(status);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                  successBlock(status);
+              } errorBlock:^(NSError *error) {
+                  errorBlock(error);
+              }];
 }
 
 // GET statuses/oembed
@@ -707,17 +707,17 @@
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"id"] = statusID;
     md[@"url"] = urlString;
-
+    
     if(maxWidth) md[@"maxwidth"] = maxWidth;
-
+    
     if(hideMedia) md[@"hide_media"] = [hideMedia boolValue] ? @"1" : @"0";
     if(hideThread) md[@"hide_thread"] = [hideThread boolValue] ? @"1" : @"0";
     if(omitScript) md[@"omit_script"] = [omitScript boolValue] ? @"1" : @"0";
-
+    
     if(align) md[@"align"] = align;
     if(related) md[@"related"] = related;
     if(lang) md[@"lang"] = lang;
-        
+    
     [_oauth getResource:@"statuses/oembed.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -748,14 +748,14 @@
 - (void)postStatusRetweetWithID:(NSString *)statusID
                    successBlock:(void(^)(NSDictionary *status))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     [self postStatusRetweetWithID:statusID
                          trimUser:nil
                      successBlock:^(NSDictionary *status) {
-        successBlock(status);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                         successBlock(status);
+                     } errorBlock:^(NSError *error) {
+                         errorBlock(error);
+                     }];
 }
 
 - (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
@@ -1034,12 +1034,11 @@
 
 #pragma mark Friends & Followers
 
-- (void)getFriendshipNoRetweetsIDsWithStringifyIDs:(NSNumber *)stringifyIDs
-                                      successBlock:(void(^)(NSArray *ids))successBlock
+- (void)getFriendshipNoRetweetsIDsWithSuccessBlock:(void(^)(NSArray *ids))successBlock
                                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"stringify_ids"] = stringifyIDs ? @"1" : @"0";
+    md[@"stringify_ids"] = @"1";
     
     [_oauth getResource:@"friendships/no_retweets/ids.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -1051,7 +1050,6 @@
 - (void)getFriendsIDsForUserID:(NSString *)userID
                   orScreenName:(NSString *)screenName
                         cursor:(NSString *)cursor
-                  stringifyIDs:(NSNumber *)stringifyIDs
                          count:(NSString *)count
                   successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
@@ -1062,7 +1060,7 @@
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
     if(cursor) md[@"cursor"] = cursor;
-    if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
+    md[@"stringify_ids"] = @"1";
     
     if(count) md[@"count"] = count;
     
@@ -1121,7 +1119,6 @@
     [self getFriendsIDsForUserID:nil
                     orScreenName:screenName
                           cursor:nil
-                    stringifyIDs:nil
                            count:nil
                     successBlock:^(NSArray *ids, NSString *previousCursor, NSString *nextCursor) {
                         successBlock(ids);
@@ -1133,7 +1130,6 @@
 - (void)getFollowersIDsForUserID:(NSString *)userID
                     orScreenName:(NSString *)screenName
                           cursor:(NSString *)cursor
-                    stringifyIDs:(NSNumber *)stringifyIDs
                            count:(NSString *)count
                     successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
@@ -1144,7 +1140,7 @@
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
     if(cursor) md[@"cursor"] = cursor;
-    if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
+    md[@"stringify_ids"] = @"1";
     if(count) md[@"count"] = count;
     
     [_oauth getResource:@"followers/ids.json" parameters:md successBlock:^(id response) {
@@ -1171,7 +1167,6 @@
     [self getFollowersIDsForUserID:nil
                       orScreenName:screenName
                             cursor:nil
-                      stringifyIDs:nil
                              count:nil
                       successBlock:^(NSArray *ids, NSString *previousCursor, NSString *nextCursor) {
                           successBlock(ids);
@@ -1203,12 +1198,11 @@
 }
 
 - (void)getFriendshipIncomingWithCursor:(NSString *)cursor
-                           stringifyIDs:(NSNumber *)stringifyIDs
                            successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(cursor) md[@"cursor"] = cursor;
-    if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
+    md[@"stringify_ids"] = @"1";
     
     [_oauth getResource:@"friendships/incoming.json" parameters:md successBlock:^(id response) {
         NSArray *ids = nil;
@@ -1228,12 +1222,11 @@
 }
 
 - (void)getFriendshipOutgoingWithCursor:(NSString *)cursor
-                           stringifyIDs:(NSNumber *)stringifyIDs
                            successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(cursor) md[@"cursor"] = cursor;
-    if(stringifyIDs) md[@"stringify_ids"] = [stringifyIDs boolValue] ? @"1" : @"0";
+    md[@"stringify_ids"] = @"1";
     
     [_oauth getResource:@"friendships/outgoing.json" parameters:md successBlock:^(id response) {
         NSArray *ids = nil;

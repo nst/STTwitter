@@ -238,7 +238,7 @@
  
  This object contains an array of user IDs for users who have contributed to this status (an example of a status that has been contributed to is this one). In practice, there is usually only one ID in this array. The JSON renders as such "contributors":[8285392].
  */
- 
+
 - (void)getStatusesShowID:(NSString *)statusID
                  trimUser:(NSNumber *)trimUser
          includeMyRetweet:(NSNumber *)includeMyRetweet
@@ -287,7 +287,7 @@
 
 /*
  POST	statuses/retweet/:id
-
+ 
  Retweets a tweet. Returns the original tweet with retweet details embedded.
  
  - This method is subject to update limits. A HTTP 403 will be returned if this limit as been hit.
@@ -315,7 +315,7 @@
  Unlike POST statuses/update, this method expects raw multipart data. Your POST request's Content-Type should be set to multipart/form-data with the media[] parameter
  
  The Tweet text will be rewritten to include the media URL(s), which will reduce the number of characters allowed in the Tweet text. If the URL(s) cannot be appended without text truncation, the tweet will be rejected and this method will return an HTTP 403 error.
-*/
+ */
 
 - (void)postStatusUpdate:(NSString *)status
           mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported
@@ -340,7 +340,7 @@
 
 /*
  GET    statuses/oembed
-
+ 
  Returns information allowing the creation of an embedded representation of a Tweet on third party sites. See the oEmbed specification for information about the response format.
  
  While this endpoint allows a bit of customization for the final appearance of the embedded Tweet, be aware that the appearance of the rendered Tweet may change over time to be consistent with Twitter's Display Requirements. Do not rely on any class or id parameters to stay constant in the returned markup.
@@ -477,8 +477,7 @@
  Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from. Use POST friendships/update to set the "no retweets" status for a given user account on behalf of the current user.
  */
 
-- (void)getFriendshipNoRetweetsIDsWithStringifyIDs:(NSNumber *)stringifyIDs
-                                      successBlock:(void(^)(NSArray *ids))successBlock
+- (void)getFriendshipNoRetweetsIDsWithSuccessBlock:(void(^)(NSArray *ids))successBlock
                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -495,7 +494,6 @@
 - (void)getFriendsIDsForUserID:(NSString *)userID
                   orScreenName:(NSString *)screenName
                         cursor:(NSString *)cursor
-                  stringifyIDs:(NSNumber *)stringifyIDs
                          count:(NSString *)count
                   successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
@@ -519,7 +517,6 @@
 - (void)getFollowersIDsForUserID:(NSString *)userID
                     orScreenName:(NSString *)screenName
                           cursor:(NSString *)cursor
-                    stringifyIDs:(NSNumber *)stringifyIDs
                            count:(NSString *)count
                     successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
@@ -547,7 +544,6 @@
  */
 
 - (void)getFriendshipIncomingWithCursor:(NSString *)cursor
-                           stringifyIDs:(NSNumber *)stringifyIDs
                            successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -558,7 +554,6 @@
  */
 
 - (void)getFriendshipOutgoingWithCursor:(NSString *)cursor
-                           stringifyIDs:(NSNumber *)stringifyIDs
                            successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock;
 
