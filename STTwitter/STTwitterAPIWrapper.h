@@ -996,7 +996,15 @@
                       successBlock:(void(^)(NSString *name, NSString *slug, NSArray *users))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		users/suggestions
+/*
+ GET    users/suggestions
+ 
+ Access to Twitter's suggested user list. This returns the list of suggested user categories. The category can be used in GET users/suggestions/:slug to get the users in that category.
+ */
+
+- (void)getUsersSuggestionsWithISO6391LanguageCode:(NSString *)ISO6391LanguageCode
+                                      successBlock:(void(^)(NSArray *suggestions))successBlock
+                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 //	GET		users/suggestions/:slug/members
 

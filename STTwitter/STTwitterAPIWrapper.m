@@ -1961,6 +1961,22 @@
     }];
 }
 
+// GET users/suggestions
+- (void)getUsersSuggestionsWithISO6391LanguageCode:(NSString *)ISO6391LanguageCode
+                                      successBlock:(void(^)(NSArray *suggestions))successBlock
+                                        errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(ISO6391LanguageCode) md[@"lang"] = ISO6391LanguageCode;
+    
+    [_oauth getResource:@"users/suggestions.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 #pragma mark Suggested Users
 
 // GET users/suggestions/:slug
