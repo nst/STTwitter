@@ -1977,6 +1977,26 @@
     }];
 }
 
+// GET users/suggestions/:slug/members
+- (void)getUsersSuggestionsForSlugMembers:(NSString *)slug // short name of list or a category, eg. "twitter"
+                             successBlock:(void(^)(NSArray *members))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert(slug, @"missing slug");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    md[@"slug"] = slug;
+    
+    NSString *resource = [NSString stringWithFormat:@"users/suggestions/%@/members.json", slug];
+    
+    [_oauth getResource:resource parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 #pragma mark Suggested Users
 
 // GET users/suggestions/:slug
@@ -1984,7 +2004,7 @@
                               lang:(NSString *)lang
                       successBlock:(void(^)(NSString *name, NSString *slug, NSArray *users))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSAssert(slug, @"slug is missing");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];

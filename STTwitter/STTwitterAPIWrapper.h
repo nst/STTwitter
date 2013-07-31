@@ -985,7 +985,7 @@
 
 /*
  GET    users/suggestions/:slug
-
+ 
  Access the users in a given category of the Twitter suggested user list.
  
  It is recommended that applications cache this data for no more than one hour.
@@ -1006,7 +1006,15 @@
                                       successBlock:(void(^)(NSArray *suggestions))successBlock
                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
-//	GET		users/suggestions/:slug/members
+/*
+ GET    users/suggestions/:slug/members
+ 
+ Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user.
+ */
+
+- (void)getUsersSuggestionsForSlugMembers:(NSString *)slug // short name of list or a category, eg. "twitter"
+                             successBlock:(void(^)(NSArray *members))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Favorites
 
