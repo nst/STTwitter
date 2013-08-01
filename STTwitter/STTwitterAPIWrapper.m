@@ -924,6 +924,35 @@
 
 // POST statuses/filter
 
+- (void)postStatusesFilterUserIDs:(NSArray *)userIDs
+                  keywordsToTrack:(NSArray *)keywordsToTrack
+            locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                        delimited:(NSNumber *)delimited
+                    stallWarnings:(NSNumber *)stallWarnings
+                     successBlock:(void(^)(id response))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSString *follow = [userIDs componentsJoinedByString:@","];
+    NSString *keywords = [keywordsToTrack componentsJoinedByString:@","];
+    NSString *locations = [locationBoundingBoxes componentsJoinedByString:@","];
+    
+    NSAssert(([follow length] || [keywords length] || [locations length]), @"At least one predicate parameter (follow, locations, or track) must be specified.");
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    
+    if([follow length]) md[@"follow"] = follow;
+    if([keywords length]) md[@"keywords"] = keywords;
+    if([locations length]) md[@"locations"] = locations;
+    
+    [_oauth getStreamResource:@"statuses/sample.json" parameters:md progressBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 // GET statuses/sample
 - (void)getStatusesSampleDelimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
@@ -3266,7 +3295,7 @@
           excludeHashtags:(NSNumber *)excludeHashtags
              successBlock:(void(^)(NSString *asOf, NSString *createdAt, NSArray *locations, NSArray *trends))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(WOEID);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -3315,7 +3344,7 @@
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"lat"] = latitude;
     md[@"long"] = longitude;
-
+    
     [_oauth getResource:@"trends/closest.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
