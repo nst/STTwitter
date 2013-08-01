@@ -404,7 +404,7 @@
  The track, follow, and locations fields should be considered to be combined with an OR operator. track=foo&follow=1234 returns Tweets matching "foo" OR created by user 1234.
  
  The default access level allows up to 400 track keywords, 5,000 follow userids and 25 0.1-360 degree location boxes. If you need elevated access to the Streaming API, you should explore our partner providers of Twitter data here: https://dev.twitter.com/programs/twitter-certified-products/products#Certified-Data-Products
-
+ 
  At least one predicate parameter (follow, locations, or track) must be specified.
  */
 
@@ -413,7 +413,7 @@
             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                         delimited:(NSNumber *)delimited
                     stallWarnings:(NSNumber *)stallWarnings
-                     successBlock:(void(^)(id response))successBlock
+                    progressBlock:(void(^)(id response))progressBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -424,7 +424,7 @@
 
 - (void)getStatusesSampleDelimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
-                      successBlock:(void(^)(id response))successBlock
+                     progressBlock:(void(^)(id response))progressBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -438,7 +438,7 @@
 - (void)getStatusesFirehorseWithCount:(NSString *)count
                             delimited:(NSNumber *)delimited
                         stallWarnings:(NSNumber *)stallWarnings
-                         successBlock:(void(^)(id response))successBlock
+                        progressBlock:(void(^)(id response))progressBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -447,11 +447,28 @@
  Streams messages for a single user, as described in User streams https://dev.twitter.com/docs/streaming-apis/streams/user
  */
 
+- (void)getUserStreamDelimited:(NSNumber *)delimited
+                 stallWarnings:(NSNumber *)stallWarnings
+includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                includeReplies:(NSNumber *)includeReplies
+               keywordsToTrack:(NSArray *)keywordsToTrack
+         locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                 progressBlock:(void(^)(id response))progressBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  GET    site
  
  Streams messages for a set of users, as described in Site streams https://dev.twitter.com/docs/streaming-apis/streams/site
  */
+
+- (void)getSiteStreamForUserIDs:(NSArray *)userIDs
+                      delimited:(NSNumber *)delimited
+                  stallWarnings:(NSNumber *)stallWarnings
+         restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                 includeReplies:(NSNumber *)includeReplies
+                  progressBlock:(void(^)(id response))progressBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Direct Messages
 

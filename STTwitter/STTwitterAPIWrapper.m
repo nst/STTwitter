@@ -922,6 +922,8 @@
 
 #pragma mark Streaming
 
+#warning TODO: implement stall warnings callbacks
+
 // POST statuses/filter
 
 - (void)postStatusesFilterUserIDs:(NSArray *)userIDs
@@ -929,7 +931,7 @@
             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                         delimited:(NSNumber *)delimited
                     stallWarnings:(NSNumber *)stallWarnings
-                     successBlock:(void(^)(id response))successBlock
+                    progressBlock:(void(^)(id response))progressBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *follow = [userIDs componentsJoinedByString:@","];
@@ -947,7 +949,7 @@
     if([locations length]) md[@"locations"] = locations;
     
     [_oauth postStreamResource:@"statuses/sample.json" parameters:md progressBlock:^(id response) {
-        successBlock(response);
+        progressBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -956,7 +958,7 @@
 // GET statuses/sample
 - (void)getStatusesSampleDelimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
-                      successBlock:(void(^)(id response))successBlock
+                     progressBlock:(void(^)(id response))progressBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -964,18 +966,17 @@
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
     [_oauth getStreamResource:@"statuses/sample.json" parameters:md progressBlock:^(id response) {
-        successBlock(response);
+        progressBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
 }
 
 // GET statuses/firehose
-
 - (void)getStatusesFirehorseWithCount:(NSString *)count
                             delimited:(NSNumber *)delimited
                         stallWarnings:(NSNumber *)stallWarnings
-                         successBlock:(void(^)(id response))successBlock
+                        progressBlock:(void(^)(id response))progressBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -984,14 +985,65 @@
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
     [_oauth getStreamResource:@"statuses/firehose.json" parameters:md progressBlock:^(id response) {
-        successBlock(response);
+        progressBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
 }
 
 // GET user
+- (void)getUserStreamDelimited:(NSNumber *)delimited
+                 stallWarnings:(NSNumber *)stallWarnings
+includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                includeReplies:(NSNumber *)includeReplies
+               keywordsToTrack:(NSArray *)keywordsToTrack
+         locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                 progressBlock:(void(^)(id response))progressBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    if(includeMessagesFromFollowedAccounts) md[@"with"] = @"user"; // default is 'followings'
+    if(includeReplies && [includeReplies boolValue]) md[@"replies"] = @"all";
+    
+    NSString *keywords = [keywordsToTrack componentsJoinedByString:@","];
+    NSString *locations = [locationBoundingBoxes componentsJoinedByString:@","];
+    
+    if([keywords length]) md[@"keywords"] = keywords;
+    if([locations length]) md[@"locations"] = locations;
+    
+    [_oauth getUserStreamResource:@"user.json" parameters:md progressBlock:^(id response) {
+        progressBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 // GET site
+- (void)getSiteStreamForUserIDs:(NSArray *)userIDs
+                      delimited:(NSNumber *)delimited
+                  stallWarnings:(NSNumber *)stallWarnings
+         restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                 includeReplies:(NSNumber *)includeReplies
+                  progressBlock:(void(^)(id response))progressBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    if(restrictToUserMessages) md[@"with"] = @"user"; // default is 'followings'
+    if(includeReplies && [includeReplies boolValue]) md[@"replies"] = @"all";
+    
+    NSString *follow = [userIDs componentsJoinedByString:@","];
+    if([follow length]) md[@"follow"] = follow;
+    
+    [_oauth getSiteStreamResource:@"site.json" parameters:md progressBlock:^(id response) {
+        progressBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 
 #pragma mark Direct Messages
 
