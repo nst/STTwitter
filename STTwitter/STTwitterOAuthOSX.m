@@ -172,7 +172,7 @@
                 errorBlock:errorBlock];
 }
 
-- (void)getStreamResource:(NSString *)resource parameters:(NSDictionary *)params successBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
+- (void)getStreamResource:(NSString *)resource parameters:(NSDictionary *)params progressBlock:(STTE_completionBlock_t)progressBlock errorBlock:(STTE_errorBlock_t)errorBlock {
     
     int HTTPMethod = SLRequestMethodGET;
 
@@ -180,7 +180,7 @@
              baseURLString:@"https://stream.twitter.com/1.1"
                 httpMethod:HTTPMethod
                 parameters:params
-           completionBlock:completionBlock
+           completionBlock:progressBlock
                 errorBlock:errorBlock];
 }
 

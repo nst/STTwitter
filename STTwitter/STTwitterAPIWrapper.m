@@ -934,7 +934,7 @@
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    [_oauth getStreamResource:@"statuses/sample.json" parameters:md successBlock:^(id response) {
+    [_oauth getStreamResource:@"statuses/sample.json" parameters:md progressBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

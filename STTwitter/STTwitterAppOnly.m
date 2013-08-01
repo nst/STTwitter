@@ -204,9 +204,9 @@
 
 - (void)getStreamResource:(NSString *)resource
          parameters:(NSDictionary *)params
-       successBlock:(void(^)(id json))successBlock
+       progressBlock:(void(^)(id json))progressBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
-    [self getResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
+    [self getResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params successBlock:progressBlock errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource

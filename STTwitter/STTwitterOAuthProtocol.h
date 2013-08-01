@@ -21,7 +21,7 @@
 
 - (void)getStreamResource:(NSString *)resource
          parameters:(NSDictionary *)params
-       successBlock:(void(^)(id response))successBlock
+       progressBlock:(void(^)(id response))progressBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postResource:(NSString *)resource
