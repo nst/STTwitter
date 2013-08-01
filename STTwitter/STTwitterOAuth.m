@@ -450,10 +450,10 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
     [self signRequest:r];
     
-    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
+    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
         NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
             errorBlock(jsonError);
@@ -462,9 +462,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         
         successBlock(json);
     };
-    
-    r.downloadProgressBlock = ^(NSInteger bytesReceived, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
-        NSLog(@"-- received %ld bytes", (long)bytesReceived);
+
+    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
