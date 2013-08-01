@@ -62,20 +62,20 @@
     
     /**/
     
-//    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"" consumerSecret:@""];
-//    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
-//        
-//        NSLog(@"-- bearer: %@", bearerToken);
-//        
-//        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
-//            NSLog(@"***** %@", statuses);
-//        } errorBlock:^(NSError *error) {
-//            NSLog(@"***** %@", error);
-//        }];
-//        
-//    } errorBlock:^(NSError *error) {
-//        NSLog(@"-- error: %@", error);
-//    }];
+    //    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"" consumerSecret:@""];
+    //    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+    //
+    //        NSLog(@"-- bearer: %@", bearerToken);
+    //
+    //        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
+    //            NSLog(@"***** %@", statuses);
+    //        } errorBlock:^(NSError *error) {
+    //            NSLog(@"***** %@", error);
+    //        }];
+    //
+    //    } errorBlock:^(NSError *error) {
+    //        NSLog(@"-- error: %@", error);
+    //    }];
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
@@ -268,9 +268,9 @@
 
 // Application Only
 - (IBAction)fetchBearer:(id)sender {
-
+    
     self.bearerStatus = @"-";
-
+    
     self.twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
@@ -282,7 +282,7 @@
 }
 
 - (IBAction)invalidateBearer:(id)sender {
-
+    
     self.bearerStatus = @"-";
     
     [_twitter invalidateBearerTokenWithSuccessBlock:^() {
@@ -379,25 +379,43 @@
     self.twitterPostTweetStatus = @"-";
     
     if(_twitterPostMediaURL) {
-        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil mediaURL:_twitterPostMediaURL placeID:nil latitude:_twitterPostLatitude longitude:_twitterPostLongitude successBlock:^(NSDictionary *status) {
-            self.twitterPostTweetText = @"";
-            self.twitterPostTweetStatus = @"OK";
-            self.twitterPostLatitude = nil;
-            self.twitterPostLongitude = nil;
-            self.twitterPostMediaURL = nil;
-        } errorBlock:^(NSError *error) {
-            self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
-        }];
+        
+        [_twitter postStatusUpdate:_twitterPostTweetText
+                 inReplyToStatusID:nil
+                          mediaURL:_twitterPostMediaURL
+                           placeID:nil
+                          latitude:_twitterPostLatitude
+                         longitude:_twitterPostLongitude
+                      successBlock:^(NSDictionary *status) {
+                          
+                          self.twitterPostTweetText = @"";
+                          self.twitterPostTweetStatus = @"OK";
+                          self.twitterPostLatitude = nil;
+                          self.twitterPostLongitude = nil;
+                          self.twitterPostMediaURL = nil;
+                      } errorBlock:^(NSError *error) {
+                          self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
+                      }];
+        
     } else {
-        [_twitter postStatusUpdate:_twitterPostTweetText inReplyToStatusID:nil latitude:_twitterPostLatitude longitude:_twitterPostLongitude placeID:nil displayCoordinates:@(YES) trimUser:nil successBlock:^(NSDictionary *status) {
-            self.twitterPostTweetText = @"";
-            self.twitterPostTweetStatus = @"OK";
-            self.twitterPostLatitude = nil;
-            self.twitterPostLongitude = nil;
-            self.twitterPostMediaURL = nil;
-        } errorBlock:^(NSError *error) {
-            self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
-        }];
+        
+        [_twitter postStatusUpdate:_twitterPostTweetText
+                 inReplyToStatusID:nil
+                          latitude:_twitterPostLatitude
+                         longitude:_twitterPostLongitude
+                           placeID:nil
+                displayCoordinates:@(YES)
+                          trimUser:nil
+                      successBlock:^(NSDictionary *status) {
+                          
+                          self.twitterPostTweetText = @"";
+                          self.twitterPostTweetStatus = @"OK";
+                          self.twitterPostLatitude = nil;
+                          self.twitterPostLongitude = nil;
+                          self.twitterPostMediaURL = nil;
+                      } errorBlock:^(NSError *error) {
+                          self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
+                      }];
     }
 }
 
