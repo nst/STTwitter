@@ -492,20 +492,16 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
 }
 
-- (void)getStreamResource:(NSString *)resource
-               parameters:(NSDictionary *)params
-            progressBlock:(void(^)(id response))progressBlock
-               errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [self getResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params successBlock:progressBlock errorBlock:errorBlock];
-}
-
-- (void)getResource:(NSString *)resource
+- (void)getAPIResource:(NSString *)resource
          parameters:(NSDictionary *)params
        successBlock:(void(^)(id response))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getResource:resource baseURLString:@"https://api.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
+    [self getResource:resource
+        baseURLString:kBaseURLStringAPI
+           parameters:params
+         successBlock:successBlock
+           errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource
@@ -595,42 +591,16 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
             errorBlock:errorBlock];
 }
 
-- (void)postResource:(NSString *)resource
-          parameters:(NSDictionary *)params
-       oauthCallback:(NSString *)oauthCallback
-        successBlock:(void(^)(id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [self postResource:resource
-         baseURLString:@"https://api.twitter.com/1.1"
-            parameters:params
-         oauthCallback:oauthCallback
-          successBlock:successBlock
-            errorBlock:errorBlock];
-}
-
-- (void)postResource:(NSString *)resource
+- (void)postAPIResource:(NSString *)resource
           parameters:(NSDictionary *)params
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:resource
+         baseURLString:kBaseURLStringAPI
             parameters:params
          oauthCallback:nil
           successBlock:successBlock
-            errorBlock:errorBlock];
-}
-
-- (void)postStreamResource:(NSString *)resource
-                parameters:(NSDictionary *)params
-             progressBlock:(void(^)(id response))progressBlock
-                errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [self postResource:resource
-         baseURLString:@"https://stream.twitter.com/1.1"
-            parameters:params
-         oauthCallback:nil
-          successBlock:progressBlock
             errorBlock:errorBlock];
 }
 

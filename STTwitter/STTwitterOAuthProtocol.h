@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#define kBaseURLStringAPI @"https://api.twitter.com/1.1/"
+#define kBaseURLStringStream @"https://stream.twitter.com/1.1/"
+#define kBaseURLStringUserStream @"https://userstream.twitter.com/1.1/"
+#define kBaseURLStringSiteStream @"https://sitestream.twitter.com/1.1/"
+
 @protocol STTwitterOAuthProtocol <NSObject>
 
 - (BOOL)canVerifyCredentials;
@@ -15,24 +20,26 @@
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getResource:(NSString *)resource
+      baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
        successBlock:(void(^)(id response))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getStreamResource:(NSString *)resource
-               parameters:(NSDictionary *)params
-            progressBlock:(void(^)(id response))progressBlock
-               errorBlock:(void(^)(NSError *error))errorBlock;
-
 - (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)params
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postStreamResource:(NSString *)resource
-                parameters:(NSDictionary *)params
-             progressBlock:(void(^)(id response))progressBlock
-                errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)getAPIResource:(NSString *)resource
+            parameters:(NSDictionary *)params
+          successBlock:(void(^)(id response))successBlock
+            errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postAPIResource:(NSString *)resource
+             parameters:(NSDictionary *)params
+           successBlock:(void(^)(id response))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock;
 
 @optional
 

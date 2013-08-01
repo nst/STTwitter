@@ -195,18 +195,11 @@
     [r startAsynchronous];
 }
 
-- (void)getResource:(NSString *)resource
+- (void)getAPIResource:(NSString *)resource
          parameters:(NSDictionary *)params
        successBlock:(void(^)(id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     [self getResource:resource baseURLString:@"https://api.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
-}
-
-- (void)getStreamResource:(NSString *)resource
-         parameters:(NSDictionary *)params
-       progressBlock:(void(^)(id json))progressBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
-    [self getResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params successBlock:progressBlock errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource
@@ -278,18 +271,30 @@
 }
 
 - (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)params
         successBlock:(void(^)(id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self postResource:resource baseURLString:@"https://api.twitter.com/1.1/" parameters:params useBasicAuth:NO successBlock:successBlock errorBlock:errorBlock];
+    [self postResource:resource
+         baseURLString:baseURLString
+            parameters:params
+          useBasicAuth:NO
+          successBlock:successBlock
+            errorBlock:errorBlock];
 }
 
-- (void)postStreamResource:(NSString *)resource
-                parameters:(NSDictionary *)params
-              progressBlock:(void(^)(id response))progressBlock
-                errorBlock:(void(^)(NSError *error))errorBlock {
-    [self postResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params useBasicAuth:NO successBlock:progressBlock errorBlock:errorBlock];
+- (void)postAPIResource:(NSString *)resource
+             parameters:(NSDictionary *)params
+           successBlock:(void(^)(id json))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:resource
+         baseURLString:@"https://api.twitter.com/1.1/"
+            parameters:params
+          useBasicAuth:NO
+          successBlock:successBlock
+            errorBlock:errorBlock];
 }
 
 @end

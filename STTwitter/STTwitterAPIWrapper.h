@@ -81,11 +81,13 @@
 #pragma mark Generic methods to GET and POST
 
 - (void)getResource:(NSString *)resource
+      baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)parameters
        successBlock:(void(^)(id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)parameters
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock;
