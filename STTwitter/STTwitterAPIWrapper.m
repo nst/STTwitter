@@ -923,7 +923,25 @@
 #pragma mark Streaming
 
 // POST statuses/filter
+
 // GET statuses/sample
+- (void)getStatusesSampleDelimited:(NSNumber *)delimited
+                     stallWarnings:(NSNumber *)stallWarnings
+                      successBlock:(void(^)(id response))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    
+    [_oauth getResource:@"statuses/sample.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+
+}
+
 // GET statuses/firehose
 // GET user
 // GET site
