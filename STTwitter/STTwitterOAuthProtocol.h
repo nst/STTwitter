@@ -20,14 +20,19 @@
          errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getStreamResource:(NSString *)resource
-         parameters:(NSDictionary *)params
-       progressBlock:(void(^)(id response))progressBlock
-         errorBlock:(void(^)(NSError *error))errorBlock;
+               parameters:(NSDictionary *)params
+            progressBlock:(void(^)(id response))progressBlock
+               errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postResource:(NSString *)resource
           parameters:(NSDictionary *)params
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)postStreamResource:(NSString *)resource
+                parameters:(NSDictionary *)params
+             progressBlock:(void(^)(id response))progressBlock
+                errorBlock:(void(^)(NSError *error))errorBlock;
 
 @optional
 

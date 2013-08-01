@@ -285,4 +285,11 @@
     [self postResource:resource baseURLString:@"https://api.twitter.com/1.1/" parameters:params useBasicAuth:NO successBlock:successBlock errorBlock:errorBlock];
 }
 
+- (void)postStreamResource:(NSString *)resource
+                parameters:(NSDictionary *)params
+              progressBlock:(void(^)(id response))progressBlock
+                errorBlock:(void(^)(NSError *error))errorBlock {
+    [self postResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params useBasicAuth:NO successBlock:progressBlock errorBlock:errorBlock];
+}
+
 @end

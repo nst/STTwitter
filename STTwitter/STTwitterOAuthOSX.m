@@ -160,7 +160,10 @@
     return YES;
 }
 
-- (void)getResource:(NSString *)resource parameters:(NSDictionary *)params successBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
+- (void)getResource:(NSString *)resource
+         parameters:(NSDictionary *)params
+       successBlock:(STTE_completionBlock_t)completionBlock
+         errorBlock:(STTE_errorBlock_t)errorBlock {
     
     int HTTPMethod = SLRequestMethodGET;
     
@@ -172,7 +175,10 @@
                 errorBlock:errorBlock];
 }
 
-- (void)getStreamResource:(NSString *)resource parameters:(NSDictionary *)params progressBlock:(STTE_completionBlock_t)progressBlock errorBlock:(STTE_errorBlock_t)errorBlock {
+- (void)getStreamResource:(NSString *)resource
+               parameters:(NSDictionary *)params
+            progressBlock:(STTE_completionBlock_t)progressBlock
+               errorBlock:(STTE_errorBlock_t)errorBlock {
     
     int HTTPMethod = SLRequestMethodGET;
 
@@ -184,13 +190,28 @@
                 errorBlock:errorBlock];
 }
 
-- (void)postResource:(NSString *)resource parameters:(NSDictionary *)params successBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
+- (void)postResource:(NSString *)resource
+          parameters:(NSDictionary *)params
+        successBlock:(STTE_completionBlock_t)completionBlock
+          errorBlock:(STTE_errorBlock_t)errorBlock {
     
     int HTTPMethod = SLRequestMethodPOST;
     
     NSDictionary *d = params ? params : @{};
     
     [self fetchAPIResource:resource baseURLString:@"https://api.twitter.com/1.1" httpMethod:HTTPMethod parameters:d completionBlock:completionBlock errorBlock:errorBlock];
+}
+
+- (void)postStreamResource:(NSString *)resource
+                parameters:(NSDictionary *)params
+             progressBlock:(void(^)(id response))progressBlock
+                errorBlock:(void(^)(NSError *error))errorBlock {
+
+    int HTTPMethod = SLRequestMethodPOST;
+    
+    NSDictionary *d = params ? params : @{};
+    
+    [self fetchAPIResource:resource baseURLString:@"https://stream.twitter.com/1.1" httpMethod:HTTPMethod parameters:d completionBlock:progressBlock errorBlock:errorBlock];
 }
 
 @end

@@ -435,6 +435,12 @@
  Returns all public statuses. Few applications require this level of access. Creative use of a combination of other resources and various access levels can satisfy nearly every application use case.
  */
 
+- (void)getStatusesFirehorseWithCount:(NSString *)count
+                            delimited:(NSNumber *)delimited
+                        stallWarnings:(NSNumber *)stallWarnings
+                         successBlock:(void(^)(id response))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  GET    user
  

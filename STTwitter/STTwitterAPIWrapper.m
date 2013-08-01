@@ -931,13 +931,13 @@
                     stallWarnings:(NSNumber *)stallWarnings
                      successBlock:(void(^)(id response))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSString *follow = [userIDs componentsJoinedByString:@","];
     NSString *keywords = [keywordsToTrack componentsJoinedByString:@","];
     NSString *locations = [locationBoundingBoxes componentsJoinedByString:@","];
     
     NSAssert(([follow length] || [keywords length] || [locations length]), @"At least one predicate parameter (follow, locations, or track) must be specified.");
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
@@ -946,7 +946,7 @@
     if([keywords length]) md[@"keywords"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [_oauth getStreamResource:@"statuses/sample.json" parameters:md progressBlock:^(id response) {
+    [_oauth postStreamResource:@"statuses/sample.json" parameters:md progressBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -971,6 +971,25 @@
 }
 
 // GET statuses/firehose
+
+- (void)getStatusesFirehorseWithCount:(NSString *)count
+                            delimited:(NSNumber *)delimited
+                        stallWarnings:(NSNumber *)stallWarnings
+                         successBlock:(void(^)(id response))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(count) md[@"count"] = count;
+    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    
+    [_oauth getStreamResource:@"statuses/firehose.json" parameters:md progressBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 // GET user
 // GET site
 
