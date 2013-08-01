@@ -228,6 +228,19 @@
     
     r.POSTDictionary = mutableParams ? mutableParams : @{};
     
+    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
+        
+        NSError *jsonError = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&jsonError];
+        
+        if(json == nil) {
+            errorBlock(jsonError);
+            return;
+        }
+        
+        successBlock(json);
+    };
+    
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         successBlock(body);
     };
