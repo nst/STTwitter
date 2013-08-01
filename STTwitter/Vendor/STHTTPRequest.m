@@ -6,12 +6,17 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
+#if __has_feature(objc_arc)
+// see http://www.codeography.com/2011/10/10/making-arc-and-non-arc-play-nice.html
+#error This file cannot be compiled with ARC. Either turn off ARC for the project or use -fno-objc-arc flag
+#endif
+
 #import "STHTTPRequest.h"
 
-#define DEBUG 0
+//#define DEBUG 1
 
 NSUInteger const kSTHTTPRequestCancellationError = 1;
-NSUInteger const kSTHTTPRequestDefaultTimeout = 5;
+NSUInteger const kSTHTTPRequestDefaultTimeout = 30;
 
 static NSMutableDictionary *sharedCredentialsStorage = nil;
 
@@ -21,6 +26,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 @property (nonatomic, retain) NSMutableData *responseData;
 @property (nonatomic, retain) NSString *responseStringEncodingName;
 @property (nonatomic, retain) NSDictionary *responseHeaders;
+@property (nonatomic) NSInteger responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) NSError *error;
 @property (nonatomic, retain) NSString *POSTFilePath;
@@ -72,6 +78,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     if(_completionBlock) [_completionBlock release];
     if(_errorBlock) [_errorBlock release];
     if(_uploadProgressBlock) [_uploadProgressBlock release];
+    if(_downloadProgressBlock) [_downloadProgressBlock release];
     
     [_connection release];
     [_responseStringEncodingName release];
@@ -626,15 +633,18 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     
+    NSString *authenticationMethod = [[challenge protectionSpace] authenticationMethod];
+    
     // Server Trust authentication
-    if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+    if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         NSURLCredential *serverTrustCredential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
         [challenge.sender useCredential:serverTrustCredential forAuthenticationChallenge:challenge];
         return;
     }
     
-    // Digest authentication
-    else if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodHTTPDigest]) {
+    // Digest and Basic authentication
+    else if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPDigest] ||
+             [authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPBasic]) {
         
         if([challenge previousFailureCount] == 0) {
             NSURLCredential *credential = [self credentialForCurrentHost];
@@ -646,22 +656,10 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         }
     }
     
-    // Basic authentication
-    else if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodHTTPBasic]) {
-        
-        // We proactively add authentication into headers.
-        // At this point, the credentials we provided are wrong,
-        // so we delete them and cancel the connection.
-        [[[self class] sharedCredentialsStorage] removeObjectForKey:[_url host]];
-        [connection cancel];
-        [[challenge sender] cancelAuthenticationChallenge:challenge];
-        
-    }
-    
     // Unhandled
     else
     {
-        NSLog(@"Unhandled authentication challenge type - %@", [[challenge protectionSpace] authenticationMethod]);
+        NSLog(@"Unhandled authentication challenge type - %@", authenticationMethod);
         [connection cancel];
         [[challenge sender] cancelAuthenticationChallenge:challenge];
     }
@@ -681,13 +679,19 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         self.responseHeaders = [r allHeaderFields];
         self.responseStatus = [r statusCode];
         self.responseStringEncodingName = [r textEncodingName];
+        self.responseExpectedContentLength = [r expectedContentLength];
     }
     
     [_responseData setLength:0];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)theData {
+    
     [_responseData appendData:theData];
+    
+    if (_downloadProgressBlock) {
+        _downloadProgressBlock([theData length], [_responseData length], self.responseExpectedContentLength);
+    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
