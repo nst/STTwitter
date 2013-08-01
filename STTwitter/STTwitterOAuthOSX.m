@@ -61,7 +61,7 @@
     }];
 }
 
-- (void)fetchAPIResource:(NSString *)resource httpMethod:(int)httpMethod parameters:(NSDictionary *)params completionBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
+- (void)fetchAPIResource:(NSString *)resource baseURLString:(NSString *)baseURLString httpMethod:(int)httpMethod parameters:(NSDictionary *)params completionBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
 
     NSData *mediaData = [params valueForKey:@"media[]"];
     
@@ -69,7 +69,7 @@
     [paramsWithoutMedia removeObjectForKey:@"media[]"];
     
     [self requestAccessWithCompletionBlock:^(ACAccount *twitterAccount) {
-        NSString *urlString = [@"https://api.twitter.com/1.1/" stringByAppendingString:resource];
+        NSString *urlString = [baseURLString stringByAppendingString:resource];
         NSURL *url = [NSURL URLWithString:urlString];
         SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
         request.account = twitterAccount;
@@ -164,7 +164,24 @@
     
     int HTTPMethod = SLRequestMethodGET;
     
-    [self fetchAPIResource:resource httpMethod:HTTPMethod parameters:params completionBlock:completionBlock errorBlock:errorBlock];
+    [self fetchAPIResource:resource
+             baseURLString:@"https://api.twitter.com/1.1"
+                httpMethod:HTTPMethod
+                parameters:params
+           completionBlock:completionBlock
+                errorBlock:errorBlock];
+}
+
+- (void)getStreamResource:(NSString *)resource parameters:(NSDictionary *)params successBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
+    
+    int HTTPMethod = SLRequestMethodGET;
+
+    [self fetchAPIResource:resource
+             baseURLString:@"https://stream.twitter.com/1.1"
+                httpMethod:HTTPMethod
+                parameters:params
+           completionBlock:completionBlock
+                errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource parameters:(NSDictionary *)params successBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
@@ -173,7 +190,7 @@
     
     NSDictionary *d = params ? params : @{};
     
-    [self fetchAPIResource:resource httpMethod:HTTPMethod parameters:d completionBlock:completionBlock errorBlock:errorBlock];
+    [self fetchAPIResource:resource baseURLString:@"https://api.twitter.com/1.1" httpMethod:HTTPMethod parameters:d completionBlock:completionBlock errorBlock:errorBlock];
 }
 
 @end

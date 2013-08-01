@@ -19,6 +19,11 @@
        successBlock:(void(^)(id response))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
+- (void)getStreamResource:(NSString *)resource
+         parameters:(NSDictionary *)params
+       successBlock:(void(^)(id response))successBlock
+         errorBlock:(void(^)(NSError *error))errorBlock;
+
 - (void)postResource:(NSString *)resource
           parameters:(NSDictionary *)params
         successBlock:(void(^)(id response))successBlock

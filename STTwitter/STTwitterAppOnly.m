@@ -136,9 +136,10 @@
 }
 
 - (void)getResource:(NSString *)resource
+      baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-       successBlock:(void(^)(id json))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
+       successBlock:(void (^)(id))successBlock
+         errorBlock:(void (^)(NSError *))errorBlock {
     
     /*
      GET /1.1/statuses/user_timeline.json?count=100&screen_name=twitterapi HTTP/1.1
@@ -149,7 +150,7 @@
      Accept-Encoding: gzip
      */
     
-    NSMutableString *urlString = [NSMutableString stringWithFormat:@"https://api.twitter.com/1.1/%@", resource];
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@%@", baseURLString, resource];
     
     NSMutableArray *parameters = [NSMutableArray array];
     
@@ -192,6 +193,20 @@
     }
     
     [r startAsynchronous];
+}
+
+- (void)getResource:(NSString *)resource
+         parameters:(NSDictionary *)params
+       successBlock:(void(^)(id json))successBlock
+         errorBlock:(void(^)(NSError *error))errorBlock {
+    [self getResource:resource baseURLString:@"https://api.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
+}
+
+- (void)getStreamResource:(NSString *)resource
+         parameters:(NSDictionary *)params
+       successBlock:(void(^)(id json))successBlock
+         errorBlock:(void(^)(NSError *error))errorBlock {
+    [self getResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource

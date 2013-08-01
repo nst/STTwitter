@@ -426,11 +426,12 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 }
 
 - (void)getResource:(NSString *)resource
+      baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-       successBlock:(void(^)(id response))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
+       successBlock:(void (^)(id))successBlock
+         errorBlock:(void (^)(NSError *))errorBlock {
     
-    NSMutableString *urlString = [NSMutableString stringWithFormat:@"https://api.twitter.com/1.1/%@", resource];
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@%@", baseURLString, resource];
     
     NSMutableArray *parameters = [NSMutableArray array];
     
@@ -462,8 +463,22 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         successBlock(json);
     };
     
+    r.downloadProgressBlock = ^(NSInteger bytesReceived, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
+        NSLog(@"-- received %ld bytes", (long)bytesReceived);
+        
+        NSError *jsonError = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+        
+        if(json == nil) {
+            errorBlock(jsonError);
+            return;
+        }
+        
+        successBlock(json);
+    };
+    
     r.errorBlock = ^(NSError *error) {
-
+        
         NSError *e = [self errorFromResponseData:r.responseData];
         
         if(e) {
@@ -475,6 +490,23 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     };
     
     [r startAsynchronous];
+
+}
+
+- (void)getStreamResource:(NSString *)resource
+               parameters:(NSDictionary *)params
+             successBlock:(void(^)(id response))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self getResource:resource baseURLString:@"https://stream.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
+}
+
+- (void)getResource:(NSString *)resource
+         parameters:(NSDictionary *)params
+       successBlock:(void(^)(id response))successBlock
+         errorBlock:(void(^)(NSError *error))errorBlock {
+
+    [self getResource:resource baseURLString:@"https://api.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource
