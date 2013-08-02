@@ -195,13 +195,6 @@
     [r startAsynchronous];
 }
 
-- (void)getAPIResource:(NSString *)resource
-         parameters:(NSDictionary *)params
-       successBlock:(void(^)(id json))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
-    [self getResource:resource baseURLString:@"https://api.twitter.com/1.1/" parameters:params successBlock:successBlock errorBlock:errorBlock];
-}
-
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString // no trailing slash
           parameters:(NSDictionary *)params
@@ -278,19 +271,6 @@
     
     [self postResource:resource
          baseURLString:baseURLString
-            parameters:params
-          useBasicAuth:NO
-          successBlock:successBlock
-            errorBlock:errorBlock];
-}
-
-- (void)postAPIResource:(NSString *)resource
-             parameters:(NSDictionary *)params
-           successBlock:(void(^)(id json))successBlock
-             errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [self postResource:resource
-         baseURLString:@"https://api.twitter.com/1.1/"
             parameters:params
           useBasicAuth:NO
           successBlock:successBlock

@@ -22,7 +22,7 @@
 #import <Foundation/Foundation.h>
 
 /*
- Partial Objective-C front-end for https://dev.twitter.com/docs/api/1.1
+ Full Objective-C front-end for https://dev.twitter.com/docs/api/1.1
  */
 
 /*

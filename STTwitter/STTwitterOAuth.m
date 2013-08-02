@@ -453,7 +453,42 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
         NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&jsonError];
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+        /*
+        if(json == nil) {
+            NSString *s = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+            
+//            NSArray *jsonChunks = [s componentsSeparatedByString:@"}{"];
+//            
+//            for (NSString *s in jsonChunks) {
+//                
+//            }
+            
+            NSRange range = [s rangeOfString:@"}{"];
+            
+            if(range.location != NSNotFound) {
+                NSString *s1 = [s substringToIndex:range.location + 1];
+                NSString *s2 = [s substringFromIndex:range.location + 1];
+                
+                NSLog(@"-> s1 %@", s1);
+                NSLog(@"-> s2 %@", s2);
+                
+                NSData *data1 = [s1 dataUsingEncoding:NSUTF8StringEncoding];
+                NSData *data2 = [s2 dataUsingEncoding:NSUTF8StringEncoding];
+                
+                id json1 = [NSJSONSerialization JSONObjectWithData:data1 options:NSJSONReadingAllowFragments error:&jsonError];
+                successBlock(json1);
+
+                id json2 = [NSJSONSerialization JSONObjectWithData:data2 options:NSJSONReadingAllowFragments error:&jsonError];
+                successBlock(json2);
+                return;
+                
+            } else {
+                errorBlock(jsonError);
+                return;
+            }
+        }
+        */
         
         if(json == nil) {
             errorBlock(jsonError);
@@ -464,7 +499,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     };
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        
+
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
@@ -490,18 +525,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
     [r startAsynchronous];
     
-}
-
-- (void)getAPIResource:(NSString *)resource
-         parameters:(NSDictionary *)params
-       successBlock:(void(^)(id response))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [self getResource:resource
-        baseURLString:kBaseURLStringAPI
-           parameters:params
-         successBlock:successBlock
-           errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource
@@ -585,19 +608,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
     [self postResource:resource
          baseURLString:baseURLString
-            parameters:params
-         oauthCallback:nil
-          successBlock:successBlock
-            errorBlock:errorBlock];
-}
-
-- (void)postAPIResource:(NSString *)resource
-          parameters:(NSDictionary *)params
-        successBlock:(void(^)(id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [self postResource:resource
-         baseURLString:kBaseURLStringAPI
             parameters:params
          oauthCallback:nil
           successBlock:successBlock

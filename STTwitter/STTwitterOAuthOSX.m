@@ -163,7 +163,7 @@
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-       successBlock:(void(^)(id response))successBlock
+       successBlock:(STTE_completionBlock_t)successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     
     int HTTPMethod = SLRequestMethodGET;
@@ -179,7 +179,7 @@
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)params
-        successBlock:(void(^)(id response))successBlock
+        successBlock:(STTE_completionBlock_t)successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     int HTTPMethod = SLRequestMethodPOST;
@@ -192,32 +192,6 @@
                 parameters:d
            completionBlock:successBlock
                 errorBlock:errorBlock];
-}
-
-- (void)getAPIResource:(NSString *)resource
-            parameters:(NSDictionary *)params
-          successBlock:(STTE_completionBlock_t)completionBlock
-            errorBlock:(STTE_errorBlock_t)errorBlock {
-    
-    NSDictionary *d = params ? params : @{};
-
-    [self getResource:resource
-        baseURLString:@"https://api.twitter.com/1.1"
-           parameters:d
-         successBlock:completionBlock
-           errorBlock:errorBlock];
-}
-
-- (void)postAPIResource:(NSString *)resource
-             parameters:(NSDictionary *)params
-           successBlock:(STTE_completionBlock_t)completionBlock
-             errorBlock:(STTE_errorBlock_t)errorBlock {
-    
-    [self postResource:resource
-         baseURLString:@"https://api.twitter.com/1.1"
-            parameters:params
-          successBlock:completionBlock
-            errorBlock:errorBlock];
 }
 
 @end

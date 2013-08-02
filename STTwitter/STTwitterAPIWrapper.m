@@ -14,6 +14,11 @@
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
 
+static NSString *kBaseURLStringAPI = @"https://api.twitter.com/1.1/";
+static NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1/";
+static NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1/";
+static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1/";
+
 @interface STTwitterAPIWrapper ()
 //id removeNull(id rootObject);
 @property (nonatomic, retain) NSObject <STTwitterOAuthProtocol> *oauth;
@@ -208,6 +213,30 @@
               errorBlock:errorBlock];
 }
 
+- (void)getAPIResource:(NSString *)resource
+         parameters:(NSDictionary *)parameters
+       successBlock:(void(^)(id json))successBlock
+         errorBlock:(void(^)(NSError *error))errorBlock {
+
+    [self getResource:resource
+        baseURLString:kBaseURLStringAPI
+           parameters:parameters
+         successBlock:successBlock
+           errorBlock:errorBlock];
+}
+
+- (void)postAPIResource:(NSString *)resource
+            parameters:(NSDictionary *)parameters
+          successBlock:(void(^)(id json))successBlock
+            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:resource
+        baseURLString:kBaseURLStringAPI
+           parameters:parameters
+         successBlock:successBlock
+           errorBlock:errorBlock];
+}
+
 /**/
 
 - (void)profileImageFor:(NSString *)screenName
@@ -265,7 +294,7 @@
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -317,7 +346,7 @@
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"statuses/user_timeline.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"statuses/user_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -345,7 +374,7 @@
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -394,7 +423,7 @@
  }
  }
  
- [_oauth getAPIResource:timeline parameters:mparams
+ [self getAPIResource:timeline parameters:mparams
  successBlock:requestHandler
  errorBlock:errorBlock];
  } else {
@@ -494,7 +523,7 @@
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"statuses/retweets_of_me.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"statuses/retweets_of_me.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -534,7 +563,7 @@
     if(count) md[@"count"] = count;
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:resource parameters:md successBlock:^(id response) {
+    [self getAPIResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -557,7 +586,7 @@
     if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"statuses/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"statuses/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -577,7 +606,7 @@
     md[@"id"] = statusID;
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:resource parameters:md successBlock:^(id response) {
+    [self postAPIResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -615,7 +644,7 @@
         md[@"display_coordinates"] = @"true";
     }
     
-    [_oauth postAPIResource:@"statuses/update.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"statuses/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -647,7 +676,7 @@
     md[@"media[]"] = [mediaDataArray objectAtIndex:0];
     md[kSTPOSTDataKey] = @"media[]";
     
-    [_oauth postAPIResource:@"statuses/update_with_media.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"statuses/update_with_media.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -722,7 +751,7 @@
     if(related) md[@"related"] = related;
     if(lang) md[@"lang"] = lang;
     
-    [_oauth getAPIResource:@"statuses/oembed.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"statuses/oembed.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -742,7 +771,7 @@
     
     NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
     
-    [_oauth postAPIResource:resource parameters:md successBlock:^(id response) {
+    [self postAPIResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -775,7 +804,7 @@
     if(cursor) md[@"cursor"] = cursor;
     md[@"stringify_ids"] = @"1";
     
-    [_oauth getAPIResource:@"statuses/retweeters/ids.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"statuses/retweeters/ids.json" parameters:md successBlock:^(id response) {
         
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -814,7 +843,7 @@
     if(count) md[@"count"] = count;
     if(cursor) md[@"cursor"] = cursor;
     
-    [_oauth getAPIResource:@"lists/subscriptions.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/subscriptions.json" parameters:md successBlock:^(id response) {
         
         NSArray *lists = [response valueForKey:@"lists"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
@@ -847,7 +876,7 @@
     if(count) md[@"count"] = count;
     if(cursor) md[@"cursor"] = cursor;
     
-    [_oauth getAPIResource:@"lists/ownerships.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/ownerships.json" parameters:md successBlock:^(id response) {
         
         NSArray *lists = [response valueForKey:@"lists"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
@@ -891,7 +920,7 @@
     
     md[@"q"] = [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [_oauth getAPIResource:@"search/tweets.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"search/tweets.json" parameters:md successBlock:^(id response) {
         
         NSDictionary *searchMetadata = [response valueForKey:@"search_metadata"];
         NSArray *statuses = [response valueForKey:@"statuses"];
@@ -1066,7 +1095,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"direct_messages.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"direct_messages.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1108,7 +1137,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(page) [md setObject:page forKey:@"page"];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"direct_messages/sent.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"direct_messages/sent.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1121,7 +1150,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSDictionary *d = @{@"id" : messageID};
     
-    [_oauth getAPIResource:@"direct_messages/show.json" parameters:d successBlock:^(id response) {
+    [self getAPIResource:@"direct_messages/show.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1138,7 +1167,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"id"] = messageID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"direct_messages/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"direct_messages/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1152,7 +1181,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 	NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"text"];
     [md setObject:screenName forKey:@"screen_name"];
     
-    [_oauth postAPIResource:@"direct_messages/new.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"direct_messages/new.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1167,7 +1196,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"stringify_ids"] = @"1";
     
-    [_oauth getAPIResource:@"friendships/no_retweets/ids.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"friendships/no_retweets/ids.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1191,7 +1220,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     if(count) md[@"count"] = count;
     
-    [_oauth getAPIResource:@"friends/ids.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"friends/ids.json" parameters:md successBlock:^(id response) {
         NSArray *ids = nil;
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -1230,7 +1259,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 //			[ids release]; ids = nil;
 //			[cursor release]; cursor = nil;
 //		} else {
-//			[_oauth getAPIResource:resource parameters:d successBlock:requestHandler
+//			[self getAPIResource:resource parameters:d successBlock:requestHandler
 //					 errorBlock:errorBlock];
 //		}
 //	} copy] autorelease];
@@ -1270,7 +1299,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"stringify_ids"] = @"1";
     if(count) md[@"count"] = count;
     
-    [_oauth getAPIResource:@"followers/ids.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"followers/ids.json" parameters:md successBlock:^(id response) {
         NSArray *ids = nil;
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -1317,7 +1346,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(commaSeparatedScreenNames) md[@"screen_name"] = commaSeparatedScreenNames;
     if(commaSeparatedUserIDs) md[@"user_id"] = commaSeparatedUserIDs;
     
-    [_oauth getAPIResource:@"friendships/lookup.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"friendships/lookup.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1331,7 +1360,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(cursor) md[@"cursor"] = cursor;
     md[@"stringify_ids"] = @"1";
     
-    [_oauth getAPIResource:@"friendships/incoming.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"friendships/incoming.json" parameters:md successBlock:^(id response) {
         NSArray *ids = nil;
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -1355,7 +1384,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(cursor) md[@"cursor"] = cursor;
     md[@"stringify_ids"] = @"1";
     
-    [_oauth getAPIResource:@"friendships/outgoing.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"friendships/outgoing.json" parameters:md successBlock:^(id response) {
         NSArray *ids = nil;
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -1384,7 +1413,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
     
-    [_oauth postAPIResource:@"friendships/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"friendships/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1413,7 +1442,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(screenName) md[@"screen_name"] = screenName;
     if(userID) md[@"user_id"] = userID;
     
-    [_oauth postAPIResource:@"friendships/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"friendships/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1444,7 +1473,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(enableDeviceNotifications) md[@"device"] = [enableDeviceNotifications boolValue] ? @"1" : @"0";
     if(enableRetweets) md[@"retweets"] = [enableRetweets boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"friendships/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1500,7 +1529,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(targetID) md[@"target_id"] = targetID;
     if(targetScreenName) md[@"target_screen_name"] = targetScreenName;
     
-    [_oauth getAPIResource:@"friendships/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"friendships/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1524,7 +1553,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"friends/list.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"friends/list.json" parameters:md successBlock:^(id response) {
         NSArray *users = nil;
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -1574,7 +1603,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"followers/list.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"followers/list.json" parameters:md successBlock:^(id response) {
         NSArray *users = nil;
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
@@ -1613,7 +1642,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET account/settings
 - (void)getAccountSettingsWithSuccessBlock:(void(^)(NSDictionary *settings))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
-    [_oauth getAPIResource:@"account/settings.json" parameters:nil successBlock:^(id response) {
+    [self getAPIResource:@"account/settings.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1630,7 +1659,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"account/verify_credentials.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"account/verify_credentials.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1665,7 +1694,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(timezone) md[@"time_zone"] = timezone;
     if(language) md[@"lang"] = language;
     
-    [_oauth postAPIResource:@"account/settings.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"account/settings.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1682,7 +1711,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"device"] = deliveryDeviceSMS ? @"sms" : @"none";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"account/update_delivery_device.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"account/update_delivery_device.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1709,7 +1738,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";;
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"account/update_profile.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"account/update_profile.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1719,7 +1748,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postUpdateProfile:(NSDictionary *)profileData
 			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
 			   errorBlock:(void(^)(NSError *error))errorBlock {
-	[_oauth postAPIResource:@"account/update_profile.json" parameters:profileData successBlock:^(id response) {
+	[self postAPIResource:@"account/update_profile.json" parameters:profileData successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1744,7 +1773,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(use) md[@"use"] = [use boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"account/update_profile_background_image.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"account/update_profile_background_image.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1772,7 +1801,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"account/update_profile_colors.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"account/update_profile_colors.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1794,7 +1823,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"account/update_profile_image.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"account/update_profile_image.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1813,7 +1842,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(cursor) md[@"cursor"] = cursor;
     
-    [_oauth getAPIResource:@"blocks/list.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"blocks/list.json" parameters:md successBlock:^(id response) {
         
         NSArray *users = nil;
         NSString *previousCursor = nil;
@@ -1839,7 +1868,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"stringify_ids"] = @"1";
     if(cursor) md[@"cursor"] = cursor;
     
-    [_oauth getAPIResource:@"blocks/ids.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"blocks/ids.json" parameters:md successBlock:^(id response) {
         
         NSArray *ids = nil;
         NSString *previousCursor = nil;
@@ -1873,7 +1902,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"blocks/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"blocks/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1896,7 +1925,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"blocks/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"blocks/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1918,7 +1947,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(userID) md[@"user_id"] = userID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"users/lookup.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/lookup.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1940,7 +1969,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(screenName) md[@"screen_name"] = screenName;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"users/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1975,7 +2004,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(count) md[@"count"] = count;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"users/search.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/search.json" parameters:md successBlock:^(id response) {
         successBlock(response); // NSArray of users dictionaries
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -1998,7 +2027,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"users/contributees.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/contributees.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2021,7 +2050,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"users/contributors.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/contributors.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2031,7 +2060,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST account/remove_profile_banner
 - (void)postAccountRemoveProfileBannerWithSuccessBlock:(void(^)(id response))successBlock
                                             errorBlock:(void(^)(NSError *error))errorBlock {
-    [_oauth postAPIResource:@"account/remove_profile_banner.json" parameters:nil successBlock:^(id response) {
+    [self postAPIResource:@"account/remove_profile_banner.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2061,7 +2090,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(offsetLeft) md[@"offset_left"] = offsetLeft;
     if(offsetTop) md[@"offset_top"] = offsetTop;
     
-    [_oauth postAPIResource:@"account/update_profile_banner.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"account/update_profile_banner.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2081,7 +2110,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
     
-    [_oauth getAPIResource:@"users/profile_banner.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/profile_banner.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2097,7 +2126,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     if(ISO6391LanguageCode) md[@"lang"] = ISO6391LanguageCode;
     
-    [_oauth getAPIResource:@"users/suggestions.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/suggestions.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2117,7 +2146,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSString *resource = [NSString stringWithFormat:@"users/suggestions/%@/members.json", slug];
     
-    [_oauth getAPIResource:resource parameters:md successBlock:^(id response) {
+    [self getAPIResource:resource parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2138,7 +2167,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"slug"] = slug;
     if(lang) md[@"lang"] = lang;
     
-    [_oauth getAPIResource:@"users/suggestions/twitter.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"users/suggestions/twitter.json" parameters:md successBlock:^(id response) {
         NSString *name = nil;
         NSString *slug = nil;
         NSArray *users = nil;
@@ -2175,7 +2204,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(maxID) md[@"max_id"] = maxID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"favorites/list.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"favorites/list.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2197,7 +2226,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             errorBlock(error);
                         }];
     
-    [_oauth getAPIResource:@"favorites/list.json" parameters:nil successBlock:^(id response) {
+    [self getAPIResource:@"favorites/list.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2216,7 +2245,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(statusID) md[@"id"] = statusID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"favorites/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"favorites/destroy.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2235,7 +2264,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(statusID) md[@"id"] = statusID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
-    [_oauth postAPIResource:@"favorites/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"favorites/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2253,7 +2282,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSDictionary *d = @{@"id" : statusID};
     
-    [_oauth postAPIResource:resource parameters:d successBlock:^(id response) {
+    [self postAPIResource:resource parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2281,7 +2310,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     if(reverse) md[@"reverse"] = [reverse boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/list.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/list.json" parameters:md successBlock:^(id response) {
         
         NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
         
@@ -2316,7 +2345,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = includeRetweets ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
         
         NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
         
@@ -2353,7 +2382,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/statuses.json" parameters:md successBlock:^(id response) {
         
         NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
         
@@ -2373,7 +2402,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSDictionary *d = @{ @"list_id" : listID };
     
-    [_oauth postAPIResource:@"lists/members/destroy" parameters:d successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/destroy" parameters:d successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2398,7 +2427,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerScreenName) md[@"owner_id"] = ownerID;
     
-    [_oauth postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2422,7 +2451,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(cursor) md[@"cursor"] = cursor;
     if(filterToOwnedLists) md[@"filter_to_owned_lists"] = [filterToOwnedLists boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/memberships" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/memberships" parameters:md successBlock:^(id response) {
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
         NSArray *lists = nil;
@@ -2465,7 +2494,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
@@ -2490,7 +2519,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/subscribers.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
@@ -2511,7 +2540,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
     
-    [_oauth postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2532,7 +2561,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     
-    [_oauth postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2558,7 +2587,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2587,7 +2616,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2605,7 +2634,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
     
-    [_oauth postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2626,7 +2655,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     
-    [_oauth postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2652,7 +2681,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
         md[@"screen_name"] = [screenNames componentsJoinedByString:@","];
     }
     
-    [_oauth postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2685,7 +2714,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
         md[@"screen_name"] = [screenNames componentsJoinedByString:@","];
     }
     
-    [_oauth postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2710,7 +2739,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2738,7 +2767,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/members/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2762,7 +2791,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/members.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/members.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
@@ -2793,7 +2822,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"lists/members.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/members.json" parameters:md successBlock:^(id response) {
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
@@ -2820,7 +2849,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"user_id"] = userID;
     md[@"screen_name"] = screenName;
     
-    [_oauth postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2845,7 +2874,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"user_id"] = userID;
     md[@"screen_name"] = screenName;
     
-    [_oauth postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2863,7 +2892,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
     
-    [_oauth postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2884,7 +2913,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     
-    [_oauth postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2908,7 +2937,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"mode"] = isPrivate ? @"private" : @"public";
     if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [_oauth postAPIResource:@"lists/update.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2935,7 +2964,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"mode"] = isPrivate ? @"private" : @"public";
     if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [_oauth postAPIResource:@"lists/update.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/update.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2956,7 +2985,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"mode"] = isPrivate ? @"private" : @"public";
     if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    [_oauth postAPIResource:@"lists/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2974,7 +3003,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
     
-    [_oauth getAPIResource:@"lists/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -2995,7 +3024,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     
-    [_oauth getAPIResource:@"lists/show.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/show.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3022,7 +3051,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
         md[@"screen_name"] = [screenNames componentsJoinedByString:@","];
     }
     
-    [_oauth postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3056,7 +3085,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
         md[@"screen_name"] = [screenNames componentsJoinedByString:@","];
     }
     
-    [_oauth postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3069,7 +3098,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)getSavedSearchesListWithSuccessBlock:(void(^)(NSArray *savedSearches))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [_oauth postAPIResource:@"saved_searches/list.json" parameters:nil successBlock:^(id response) {
+    [self postAPIResource:@"saved_searches/list.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3085,7 +3114,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSString *resource = [NSString stringWithFormat:@"saved_searches/show/%@.json", savedSearchID];
     
-    [_oauth postAPIResource:resource parameters:nil successBlock:^(id response) {
+    [self postAPIResource:resource parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3101,7 +3130,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSDictionary *d = @{ @"query" : query };
     
-    [_oauth postAPIResource:@"saved_searches/create.json" parameters:d successBlock:^(id response) {
+    [self postAPIResource:@"saved_searches/create.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3117,7 +3146,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSString *resource = [NSString stringWithFormat:@"saved_searches/destroy/%@.json", savedSearchID];
     
-    [_oauth postAPIResource:resource parameters:nil successBlock:^(id response) {
+    [self postAPIResource:resource parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3133,7 +3162,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSString *resource = [NSString stringWithFormat:@"geo/id/%@.json", placeID];
     
-    [_oauth getAPIResource:resource parameters:nil successBlock:^(id response) {
+    [self getAPIResource:resource parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3161,7 +3190,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(maxResults) md[@"max_results"] = maxResults;
     if(callback) md[@"callback"] = callback;
     
-    [_oauth getAPIResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
         NSDictionary *query = [response valueForKeyPath:@"query"];
         NSDictionary *result = [response valueForKeyPath:@"result"];
@@ -3217,7 +3246,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(attributeStreetAddress) md[@"attribute:street_address"] = attributeStreetAddress;
     if(callback) md[@"callback"] = callback;
     
-    [_oauth getAPIResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
         NSDictionary *query = [response valueForKeyPath:@"query"];
         NSDictionary *result = [response valueForKeyPath:@"result"];
@@ -3322,7 +3351,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(attributeStreetAddress) md[@"attribute:street_address"] = attributeStreetAddress;
     if(callback) md[@"callback"] = callback;
     
-    [_oauth getAPIResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"geo/reverse_geocode.json" parameters:md successBlock:^(id response) {
         
         NSDictionary *query = [response valueForKey:@"query"];
         NSDictionary *result = [response valueForKey:@"result"];
@@ -3356,7 +3385,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(attributeStreetAddress) md[@"attribute:street_address"] = attributeStreetAddress;
     if(callback) md[@"callback"] = callback;
     
-    [_oauth postAPIResource:@"get/create.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"get/create.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3377,7 +3406,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"id"] = WOEID;
     if(excludeHashtags) md[@"exclude"] = [excludeHashtags boolValue] ? @"1" : @"0";
     
-    [_oauth getAPIResource:@"trends/place.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"trends/place.json" parameters:md successBlock:^(id response) {
         
         NSString *asOf = nil;
         NSString *createdAt = nil;
@@ -3400,7 +3429,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET trends/available
 - (void)getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *locations))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
-    [_oauth getAPIResource:@"trends/available.json" parameters:nil successBlock:^(id response) {
+    [self getAPIResource:@"trends/available.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3420,7 +3449,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"lat"] = latitude;
     md[@"long"] = longitude;
     
-    [_oauth getAPIResource:@"trends/closest.json" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"trends/closest.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3441,7 +3470,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"screen_name"] = screenName;
     md[@"user_id"] = userID;
     
-    [_oauth postAPIResource:@"users/report_spam.json" parameters:md successBlock:^(id response) {
+    [self postAPIResource:@"users/report_spam.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3462,7 +3491,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET help/configuration
 - (void)getHelpConfigurationWithSuccessBlock:(void(^)(NSDictionary *currentConfiguration))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
-	[_oauth getAPIResource:@"help/configuration.json" parameters:nil successBlock:^(id response) {
+	[self getAPIResource:@"help/configuration.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3472,7 +3501,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET help/languages
 - (void)getHelpLanguagesWithSuccessBlock:(void (^)(NSArray *languages))successBlock
                               errorBlock:(void (^)(NSError *))errorBlock {
-	[_oauth getAPIResource:@"help/languages.json" parameters:nil successBlock:^(id response) {
+	[self getAPIResource:@"help/languages.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3482,7 +3511,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET help/privacy
 - (void)getHelpPrivacyWithSuccessBlock:(void(^)(NSString *tos))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
-	[_oauth getAPIResource:@"help/privacy.json" parameters:nil successBlock:^(id response) {
+	[self getAPIResource:@"help/privacy.json" parameters:nil successBlock:^(id response) {
         successBlock([response valueForKey:@"privacy"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3492,7 +3521,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET help/tos
 - (void)getHelpTermsOfServiceWithSuccessBlock:(void(^)(NSString *tos))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
-	[_oauth getAPIResource:@"help/tos.json" parameters:nil successBlock:^(id response) {
+	[self getAPIResource:@"help/tos.json" parameters:nil successBlock:^(id response) {
         successBlock([response valueForKey:@"tos"]);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3506,7 +3535,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 	NSDictionary *d = nil;
 	if (resources)
 		d = @{ @"resources" : [resources componentsJoinedByString:@","] };
-	[_oauth getAPIResource:@"application/rate_limit_status.json" parameters:d successBlock:^(id response) {
+	[self getAPIResource:@"application/rate_limit_status.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
