@@ -471,7 +471,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         
         NSString *s2 = [NSString stringWithFormat:@"[%@]", s];
         
-        NSData *arrayOData = [s2 dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *fixedData = [s2 dataUsingEncoding:NSUTF8StringEncoding];
         
         NSError *jsonError2 = nil;
         id fixedJSON = [NSJSONSerialization JSONObjectWithData:fixedData options:NSJSONReadingAllowFragments error:&jsonError2];
