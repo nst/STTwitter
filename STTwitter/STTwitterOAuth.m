@@ -463,6 +463,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         // we can receive several dictionaries in the same data chunk
         // such as '{..}{..}' which is not valid JSON
         // so we artificially put them into an array like [{..},{..}]
+        // note: using NSInputStream triggers the same issue
         
         NSMutableString *s = [[[NSMutableString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
         
