@@ -1401,11 +1401,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
-
-
 - (void)postFriendshipsCreateForScreenName:(NSString *)screenName
                                   orUserID:(NSString *)userID
-                              successBlock:(void(^)(NSDictionary *user))successBlock
+                              successBlock:(void(^)(NSDictionary *befriendedUser))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
     NSAssert((screenName || userID), @"screenName or userID is missing");
     
@@ -1433,7 +1431,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 - (void)postFriendshipsDestroyScreenName:(NSString *)screenName
                                 orUserID:(NSString *)userID
-                            successBlock:(void(^)(NSDictionary *user))successBlock
+                            successBlock:(void(^)(NSDictionary *unfollowedUser))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert((screenName || userID), @"screenName or userID is missing");
