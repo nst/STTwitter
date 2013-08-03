@@ -542,7 +542,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark Friends & Followers
 
 /*
- GET friendships/no_retweets/ids
+ GET    friendships/no_retweets/ids
  
  Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from. Use POST friendships/update to set the "no retweets" status for a given user account on behalf of the current user.
  */
@@ -628,7 +628,6 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 /*
  POST   friendships/create
- Returns Users (1: the followed user)
  
  Allows the authenticating users to follow the user specified in the ID parameter.
  
@@ -639,7 +638,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 - (void)postFriendshipsCreateForScreenName:(NSString *)screenName
                                   orUserID:(NSString *)userID
-                              successBlock:(void(^)(NSDictionary *user))successBlock
+                              successBlock:(void(^)(NSDictionary *befriendedUser))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
@@ -649,7 +648,6 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 /*
  POST	friendships/destroy
- Returns Users (1: the unfollowed user)
  
  Allows the authenticating user to unfollow the user specified in the ID parameter.
  
@@ -660,7 +658,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 - (void)postFriendshipsDestroyScreenName:(NSString *)screenName
                                 orUserID:(NSString *)userID
-                            successBlock:(void(^)(NSDictionary *user))successBlock
+                            successBlock:(void(^)(NSDictionary *unfollowedUser))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
@@ -967,7 +965,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET		users/search
+ GET    users/search
  
  Provides a simple, relevance-based search interface to public user accounts on Twitter. Try querying by topical interest, full name, company name, location, or other criteria. Exact match searches are not supported.
  
@@ -982,7 +980,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET		users/contributees
+ GET    users/contributees
  
  Returns a collection of users that the specified user can "contribute" to.
  */
@@ -995,7 +993,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET		users/contributors
+ GET    users/contributors
  
  Returns a collection of users who can contribute to the specified account.
  */
@@ -1008,7 +1006,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- POST    account/remove_profile_banner
+ POST   account/remove_profile_banner
  
  Removes the uploaded profile banner for the authenticating user. Returns HTTP 200 upon success.
  */
@@ -1040,7 +1038,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET     users/profile_banner
+ GET    users/profile_banner
  
  Returns a map of the available size variations of the specified user's profile banner. If the user has not uploaded a profile banner, a HTTP 404 will be served instead. This method can be used instead of string manipulation on the profile_banner_url returned in user objects as described in User Profile Images and Banners.
  */
@@ -1203,7 +1201,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET lists/memberships
+ GET    lists/memberships
  
  Returns the lists the specified user has been added to. If user_id or screen_name are not provided the memberships for the authenticating user are returned.
  */
@@ -1399,6 +1397,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 /*
  POST	lists/update
+ 
  Updates the specified list. The authenticated user must own the list to be able to update it.
  */
 
@@ -1497,7 +1496,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark Saved Searches
 
 /*
- GET saved_searches/list
+ GET    saved_searches/list
  
  Returns the authenticated user's saved search queries.
  */
@@ -1506,7 +1505,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET saved_searches/show/:id
+ GET    saved_searches/show/:id
  
  Retrieve the information for the saved search represented by the given id. The authenticating user must be the owner of saved search ID being requested.
  */
@@ -1516,7 +1515,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- POST saved_searches/create
+ POST   saved_searches/create
  
  Create a new saved search for the authenticated user. A user may only have 25 saved searches.
  */
@@ -1526,7 +1525,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- POST saved_searches/destroy/:id
+ POST   saved_searches/destroy/:id
  
  Destroys a saved search for the authenticating user. The authenticating user must be the owner of saved search id being destroyed.
  */
@@ -1610,7 +1609,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET geo/similar_places
+ GET    geo/similar_places
  
  Locates places near the given coordinates which are similar in name.
  
@@ -1651,7 +1650,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark Trends
 
 /*
- GET trends/place
+ GET    trends/place
  
  Returns the top 10 trending topics for a specific WOEID, if trending information is available for it.
  
@@ -1666,7 +1665,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET trends/available
+ GET    trends/available
  
  Returns the locations that Twitter has trending topic information for.
  
@@ -1679,7 +1678,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET trends/closest
+ GET    trends/closest
  
  Returns the locations that Twitter has trending topic information for, closest to a specified location.
  
@@ -1696,7 +1695,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark Spam Reporting
 
 /*
- POST users/report_spam
+ POST   users/report_spam
  
  Report the specified user as a spam account to Twitter. Additionally performs the equivalent of POST blocks/create on behalf of the authenticated user.
  */
@@ -1711,7 +1710,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark Help
 
 /*
- GET help/configuration
+ GET    help/configuration
  
  Returns the current configuration used by Twitter including twitter.com slugs which are not usernames, maximum photo resolutions, and t.co URL lengths.
  
@@ -1722,7 +1721,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET help/languages
+ GET    help/languages
  
  Returns the list of languages supported by Twitter along with their ISO 639-1 code. The ISO 639-1 code is the two letter value to use if you include lang with any of your requests.
  */
@@ -1731,7 +1730,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET help/privacy
+ GET    help/privacy
  
  Returns Twitter's Privacy Policy.
  */
@@ -1740,7 +1739,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET help/tos
+ GET    help/tos
  
  Returns the Twitter Terms of Service in the requested format. These are not the same as the Developer Rules of the Road.
  */
@@ -1749,7 +1748,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
- GET application/rate_limit_status
+ GET    application/rate_limit_status
  
  Returns the current rate limits for methods belonging to the specified resource families.
  
