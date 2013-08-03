@@ -166,6 +166,7 @@
 
 /*
  GET	statuses/home_timeline
+ 
  Returns Tweets (*: tweets from people the user follows)
  
  Returns a collection of the most recent Tweets and retweets posted by the authenticating user and the users they follow. The home timeline is central to how most users interact with the Twitter service.
@@ -391,7 +392,6 @@
 					  errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-//	Returns Tweets (*: tweets matching the query)
 - (void)getSearchTweetsWithQuery:(NSString *)q
 					successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
@@ -498,6 +498,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  
  Returns the 20 most recent direct messages sent by the authenticating user. Includes detailed information about the sender and recipient user. You can request up to 200 direct messages per call, up to a maximum of 800 outgoing DMs.
  */
+
 - (void)getDirectMessagesSinceID:(NSString *)sinceID
                            maxID:(NSString *)maxID
                            count:(NSString *)count
@@ -511,6 +512,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  
  Returns a single direct message, specified by an id parameter. Like the /1.1/direct_messages.format request, this method will include the user objects of the sender and recipient.
  */
+
 - (void)getDirectMessagesShowWithID:(NSString *)messageID
                        successBlock:(void(^)(NSArray *statuses))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
@@ -520,6 +522,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  
  Destroys the direct message specified in the required ID parameter. The authenticating user must be the recipient of the specified direct message.
  */
+
 - (void)postDestroyDirectMessageWithID:(NSString *)messageID
                        includeEntities:(NSNumber *)includeEntities
 						  successBlock:(void(^)(NSDictionary *message))successBlock
@@ -530,6 +533,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  
  Sends a new direct message to the specified user from the authenticating user. Requires both the user and text parameters and must be a POST. Returns the sent message in the requested format if successful.
  */
+
 - (void)postDirectMessage:(NSString *)status
 					   to:(NSString *)screenName
              successBlock:(void(^)(NSDictionary *message))successBlock
@@ -571,7 +575,6 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 /*
  GET    followers/ids
- Returns Users (*: user IDs for followers)
  
  Returns a cursored collection of user IDs for every user following the specified user.
  
@@ -584,7 +587,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                     orScreenName:(NSString *)screenName
                           cursor:(NSString *)cursor
                            count:(NSString *)count
-                    successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                    successBlock:(void(^)(NSArray *followersIDs, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience

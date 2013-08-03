@@ -1287,7 +1287,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                     orScreenName:(NSString *)screenName
                           cursor:(NSString *)cursor
                            count:(NSString *)count
-                    successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                    successBlock:(void(^)(NSArray *followersIDs, NSString *previousCursor, NSString *nextCursor))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert((userID || screenName), @"userID or screenName is missing");
@@ -1300,17 +1300,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(count) md[@"count"] = count;
     
     [self getAPIResource:@"followers/ids.json" parameters:md successBlock:^(id response) {
-        NSArray *ids = nil;
+        NSArray *followersIDs = nil;
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
         
         if([response isKindOfClass:[NSDictionary class]]) {
-            ids = [response valueForKey:@"ids"];
+            followersIDs = [response valueForKey:@"ids"];
             previousCursor = [response valueForKey:@"previous_cursor_str"];
             nextCursor = [response valueForKey:@"next_cursor_str"];
         }
         
-        successBlock(ids, previousCursor, nextCursor);
+        successBlock(followersIDs, previousCursor, nextCursor);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
