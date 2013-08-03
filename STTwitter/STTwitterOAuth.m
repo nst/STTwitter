@@ -454,52 +454,39 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-        /*
-        if(json == nil) {
-            NSString *s = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-            
-//            NSArray *jsonChunks = [s componentsSeparatedByString:@"}{"];
-//            
-//            for (NSString *s in jsonChunks) {
-//                
-//            }
-            
-            NSRange range = [s rangeOfString:@"}{"];
-            
-            if(range.location != NSNotFound) {
-                NSString *s1 = [s substringToIndex:range.location + 1];
-                NSString *s2 = [s substringFromIndex:range.location + 1];
-                
-                NSLog(@"-> s1 %@", s1);
-                NSLog(@"-> s2 %@", s2);
-                
-                NSData *data1 = [s1 dataUsingEncoding:NSUTF8StringEncoding];
-                NSData *data2 = [s2 dataUsingEncoding:NSUTF8StringEncoding];
-                
-                id json1 = [NSJSONSerialization JSONObjectWithData:data1 options:NSJSONReadingAllowFragments error:&jsonError];
-                successBlock(json1);
-
-                id json2 = [NSJSONSerialization JSONObjectWithData:data2 options:NSJSONReadingAllowFragments error:&jsonError];
-                successBlock(json2);
-                return;
-                
-            } else {
-                errorBlock(jsonError);
-                return;
-            }
-        }
-        */
         
-        if(json == nil) {
-            errorBlock(jsonError);
+        if(json) {
+            successBlock(json);
             return;
         }
         
-        successBlock(json);
+        // we can receive several dictionaries in the same data chunk
+        // such as '{..}{..}' which is not valid JSON
+        // so we artificially put them into an array like [{..},{..}]
+        
+        NSMutableString *s = [[[NSMutableString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        
+        [s replaceOccurrencesOfString:@"}\r\n{" withString:@"},{" options:0 range:NSMakeRange(0, [s length])];
+        
+        NSString *s2 = [NSString stringWithFormat:@"[%@]", s];
+        
+        NSData *arrayOData = [s2 dataUsingEncoding:NSUTF8StringEncoding];
+        
+        NSError *jsonError2 = nil;
+        id fixedJSON = [NSJSONSerialization JSONObjectWithData:fixedData options:NSJSONReadingAllowFragments error:&jsonError2];
+        
+        if(fixedJSON) {
+            successBlock(fixedJSON);
+            return;
+        } else {
+            errorBlock(jsonError2);
+            return;
+        }
+        
     };
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-
+        
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
