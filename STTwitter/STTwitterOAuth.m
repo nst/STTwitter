@@ -461,29 +461,24 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         }
         
         // we can receive several dictionaries in the same data chunk
-        // such as '{..}{..}' which is not valid JSON
-        // so we artificially put them into an array like [{..},{..}]
-        // note: using NSInputStream triggers the same issue
+        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
+        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
         
-        NSMutableString *s = [[[NSMutableString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+
+        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
         
-        [s replaceOccurrencesOfString:@"}\r\n{" withString:@"},{" options:0 range:NSMakeRange(0, [s length])];
-        
-        NSString *s2 = [NSString stringWithFormat:@"[%@]", s];
-        
-        NSData *fixedData = [s2 dataUsingEncoding:NSUTF8StringEncoding];
-        
-        NSError *jsonError2 = nil;
-        id fixedJSON = [NSJSONSerialization JSONObjectWithData:fixedData options:NSJSONReadingAllowFragments error:&jsonError2];
-        
-        if(fixedJSON) {
-            successBlock(fixedJSON);
-            return;
-        } else {
-            errorBlock(jsonError2);
-            return;
+        for(NSString *jsonChunk in jsonChunks) {
+            if([jsonChunk length] == 0) continue;
+            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *jsonError = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+            if(json == nil) {
+                errorBlock(jsonError);
+                return;
+            }
+            successBlock(json);
         }
-        
     };
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
