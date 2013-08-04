@@ -55,7 +55,15 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
 
 ##### 3. Get the timeline statuses
 
-    [twitter getHomeTimelineSinceID:nil count:@"20" successBlock:^(NSArray *statuses) {
+    [twitter getHomeTimelineSinceID:nil count:nil successBlock:^(NSArray *statuses) {
+        // ...
+    } errorBlock:^(NSError *error) {
+        // ...
+    }];
+
+### Streaming API
+
+    [twitter getStatusesSampleDelimited:nil stallWarnings:nil progressBlock:^(id response) {
         // ...
     } errorBlock:^(NSError *error) {
         // ...
