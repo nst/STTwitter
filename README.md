@@ -43,8 +43,12 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
 
 ##### 1. Instantiate `STTwitterAPIWrapper`
 
-    // here, we use the credentials from OS X Preferences
-    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIWithOAuthOSX];
+    STTwitterAPIWrapper *twitter =
+        [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:@""
+                                                 consumerKey:@""
+                                              consumerSecret:@""
+                                                    username:@""
+                                                    password:@""];
 
 ##### 2. Verify the credentials
 
@@ -56,7 +60,9 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
 
 ##### 3. Get the timeline statuses
 
-    [twitter getHomeTimelineSinceID:nil count:nil successBlock:^(NSArray *statuses) {
+    [twitter getHomeTimelineSinceID:nil
+                              count:100
+                       successBlock:^(NSArray *statuses) {
         // ...
     } errorBlock:^(NSError *error) {
         // ...
@@ -64,9 +70,12 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
 
 ### Streaming API
 
-    [twitter getStatusesSampleDelimited:nil stallWarnings:nil progressBlock:^(id response) {
+    [twitter getStatusesSampleDelimited:nil
+                          stallWarnings:nil
+                          progressBlock:^(id response) {
         // ...
-    } errorBlock:^(NSError *error) {
+    } stallWarningBlock:nil
+             errorBlock:^(NSError *error) {
         // ...
     }];
 

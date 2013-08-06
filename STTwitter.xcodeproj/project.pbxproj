@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0301818E1602C9DD006B91AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 030181891602C9DD006B91AB /* InfoPlist.strings */; };
 		030181901602C9DD006B91AB /* STOAuthServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301818D1602C9DD006B91AB /* STOAuthServiceTests.m */; };
+		03077AF517B14CBF00832782 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03077AF417B14CBF00832782 /* README.md */; };
 		030ECC591616B6A50057C236 /* STHTTPRequest+UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC541616B6A50057C236 /* STHTTPRequest+UnitTests.m */; };
 		030ECC5A1616B6A50057C236 /* STHTTPRequestTestResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC561616B6A50057C236 /* STHTTPRequestTestResponse.m */; };
 		030ECC5B1616B6A50057C236 /* STHTTPRequestTestResponseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 030ECC581616B6A50057C236 /* STHTTPRequestTestResponseQueue.m */; };
@@ -61,6 +62,7 @@
 		0301818B1602C9DD006B91AB /* STTwitterTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "STTwitterTests-Info.plist"; sourceTree = "<group>"; };
 		0301818C1602C9DD006B91AB /* STOAuthServiceTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STOAuthServiceTests.h; sourceTree = "<group>"; };
 		0301818D1602C9DD006B91AB /* STOAuthServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STOAuthServiceTests.m; sourceTree = "<group>"; };
+		03077AF417B14CBF00832782 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		030ECC531616B6A50057C236 /* STHTTPRequest+UnitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "STHTTPRequest+UnitTests.h"; path = "UnitTests/STHTTPRequestUnitTestAdditions/STHTTPRequest+UnitTests.h"; sourceTree = SOURCE_ROOT; };
 		030ECC541616B6A50057C236 /* STHTTPRequest+UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "STHTTPRequest+UnitTests.m"; path = "UnitTests/STHTTPRequestUnitTestAdditions/STHTTPRequest+UnitTests.m"; sourceTree = SOURCE_ROOT; };
 		030ECC551616B6A50057C236 /* STHTTPRequestTestResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STHTTPRequestTestResponse.h; path = UnitTests/STHTTPRequestUnitTestAdditions/STHTTPRequestTestResponse.h; sourceTree = SOURCE_ROOT; };
@@ -223,6 +225,7 @@
 		03C7AA8C15F76C8A0092A5E6 = {
 			isa = PBXGroup;
 			children = (
+				03077AF417B14CBF00832782 /* README.md */,
 				030ECC901616B7E30057C236 /* STTwitter */,
 				030ECCA71616B98B0057C236 /* STTwitterDemo */,
 				030181881602C9DD006B91AB /* UnitTests */,
@@ -349,6 +352,7 @@
 			files = (
 				030ECCB51616B98B0057C236 /* Credits.rtf in Resources */,
 				030ECCB61616B98B0057C236 /* InfoPlist.strings in Resources */,
+				03077AF517B14CBF00832782 /* README.md in Resources */,
 				030ECCB71616B98B0057C236 /* MainMenu.xib in Resources */,
 				030ECCBA1616B98B0057C236 /* TwitterClients.plist in Resources */,
 			);
