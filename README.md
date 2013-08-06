@@ -153,6 +153,10 @@ Once you got the OAuth tokens, you can get your timeline and post a new status.
 
 Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So if you get an error like `NSURLErrorDomain Code=-1012, Unhandled authentication challenge type - NSURLAuthenticationMethodOAuth2` while accessing `https://api.twitter.com/oauth/access_token` then your consumer tokens are probably not xAuth-enabled. You can read more on this on Twitter website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
 
+##### Anything Else
+
+Please [fill an issue](https://github.com/nst/STTwitter/issues) on GitHub.
+
 ### Architecture
 
 Your code only interacts with `STTwitterAPIWrapper`.
@@ -162,26 +166,68 @@ Your code only interacts with `STTwitterAPIWrapper`.
 Add more if you need to, or use these generic methods directly:
 
     - (void)getResource:(NSString *)resource
-             parameters:(NSDictionary *)parameters
+          baseURLString:(NSString *)baseURLString
+             parameters:(NSDictionary *)params
+          progressBlock:(void(^)(id json))progressBlock
            successBlock:(void(^)(id json))successBlock
              errorBlock:(void(^)(NSError *error))errorBlock;
-    
+
     - (void)postResource:(NSString *)resource
-              parameters:(NSDictionary *)parameters
-            successBlock:(void(^)(id response))successBlock
+           baseURLString:(NSString *)baseURLString
+              parameters:(NSDictionary *)params
+           progressBlock:(void(^)(id json))progressBlock
+            successBlock:(void(^)(id json))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
-`STTwitterAPIWrapper` uses `STAuthOSX`, `STTwitterOAuth` or `STTwitterAppOnly` to actually connect to Twitter.
+##### Layer Model
+     
+     +-------------------------------------------------------+
+     |                   YourApplication                     |
+     +-------------------------------------------------------+
+                                 v
+     +-------------------------------------------------------+
+     |                  STTwitterAPIWrapper                  |
+     +-------------------------------------------------------+
+                                 v
+     + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+     |                STTwitterOAuthProtocol                 |
+     + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+               v                 v                 v
+     +-------------------+----------------+------------------+
+     | STTwitterOAuthOSX | STTwitterOAuth | STTwitterAppOnly |
+     |                   +----------------+------------------+
+     |                   |          STHTTPRequest            |
+     +-------------------+-----------------------------------+
+      |
+      + Accounts.framework
+      + Social.framework
+     
+##### Summary
+     
+     * STTwitterAPIWrapper
+        - can be instantiated with the authentication mode you want
+        - provides methods to interact with each Twitter API endpoint
 
-`STTwitterOSX` uses OS X 10.8 `Accounts.framework` and `Social.framework`.
+     * STTwitterOAuthProtocol
+        - provides generic methods to POST and GET resources on Twitter hosts
+     
+     * STTwitterOAuthOSX
+        - uses Twitter accounts defined in OS X Preferences
+        - uses OS X frameworks to interact with Twitter API
+        - is not compiled when targeting iOS
+     
+     * STTwitterOAuth
+        - implements OAuth and xAuth authentication
+        - can be used on both OS X and iOS
 
-`STTwitterOAuth` implements the OAuth procotol, specifically for Twitter.
+     * STTwitterAppOnly
+        - implements the 'app only' authentication
+        - https://dev.twitter.com/docs/auth/application-only-auth
+        - can be used on both OS X and iOS
 
-`STTwitterAppOnly` implements the [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) OAuth 2.0 authentication for Twitter.
-
-`STTwitterOAuth` and `STTwitterAppOnly` both relies on [STHTTPRequest](https://github.com/nst/STHTTPRequest) to POST and GET asynchronous HTTP requests.
-
-![STTwitter](Art/architecture.png "STTwitter Architecture")
+     * STHTTPRequest
+        - block-based wrapper around NSURLConnection
+        - https://github.com/nst/STHTTPRequest
 
 ### BSD 3-Clause License
 

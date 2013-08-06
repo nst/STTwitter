@@ -26,6 +26,60 @@
  */
 
 /*
+
+ ### Layer Model
+ 
+ +-------------------------------------------------------+
+ |                   YourApplication                     |
+ +-------------------------------------------------------+
+                             v
+ +-------------------------------------------------------+
+ |                  STTwitterAPIWrapper                  |
+ +-------------------------------------------------------+
+                             v
+ + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+ |                STTwitterOAuthProtocol                 |
+ + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+           v                 v                 v
+ +-------------------+----------------+------------------+
+ | STTwitterOAuthOSX | STTwitterOAuth | STTwitterAppOnly |
+ |                   +----------------+------------------+
+ |                   |          STHTTPRequest            |
+ +-------------------+-----------------------------------+
+  |
+  + Accounts.framework
+  + Social.framework
+ 
+ ### Summary
+ 
+ * STTwitterAPIWrapper
+    - can be instantiated with the authentication mode you want
+    - provides methods to interact with each Twitter API endpoint
+
+ * STTwitterOAuthProtocol
+    - provides generic methods to POST and GET resources on Twitter hosts
+ 
+ * STTwitterOAuthOSX
+    - uses Twitter accounts defined in OS X Preferences
+    - uses OS X frameworks to interact with Twitter API
+    - is not compiled when targeting iOS
+ 
+ * STTwitterOAuth
+    - implements OAuth and xAuth authentication
+    - can be used on both OS X and iOS
+
+ * STTwitterAppOnly
+    - implements the 'app only' authentication
+    - https://dev.twitter.com/docs/auth/application-only-auth
+    - can be used on both OS X and iOS
+
+ * STHTTPRequest
+    - block-based wrapper around NSURLConnection
+    - https://github.com/nst/STHTTPRequest
+ 
+ */
+
+/*
  Tweet fields contents
  https://dev.twitter.com/docs/platform-objects/tweets
  https://dev.twitter.com/blog/new-withheld-content-fields-api-responses
