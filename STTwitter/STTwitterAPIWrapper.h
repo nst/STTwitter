@@ -418,6 +418,7 @@
                         delimited:(NSNumber *)delimited
                     stallWarnings:(NSNumber *)stallWarnings
                     progressBlock:(void(^)(id response))progressBlock
+                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -429,6 +430,7 @@
 - (void)getStatusesSampleDelimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
                      progressBlock:(void(^)(id response))progressBlock
+                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -443,6 +445,7 @@
                             delimited:(NSNumber *)delimited
                         stallWarnings:(NSNumber *)stallWarnings
                         progressBlock:(void(^)(id response))progressBlock
+                    stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -458,6 +461,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                keywordsToTrack:(NSArray *)keywordsToTrack
          locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                  progressBlock:(void(^)(id response))progressBlock
+             stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -472,6 +476,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
          restrictToUserMessages:(NSNumber *)restrictToUserMessages
                  includeReplies:(NSNumber *)includeReplies
                   progressBlock:(void(^)(id response))progressBlock
+              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Direct Messages

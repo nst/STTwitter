@@ -999,7 +999,10 @@ static NSDateFormatter *dateFormatter = nil;
 
 #pragma mark Streaming
 
-// TODO: implement stall warnings callbacks
++ (NSDictionary *)stallWarningDictionaryFromJSON:(NSString *)json {
+    if([json isKindOfClass:[NSDictionary class]]) return nil;
+    return [json valueForKey:@"warning"];
+}
 
 // POST statuses/filter
 
@@ -1009,6 +1012,7 @@ static NSDateFormatter *dateFormatter = nil;
                         delimited:(NSNumber *)delimited
                     stallWarnings:(NSNumber *)stallWarnings
                     progressBlock:(void(^)(id response))progressBlock
+                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *follow = [userIDs componentsJoinedByString:@","];
@@ -1029,7 +1033,16 @@ static NSDateFormatter *dateFormatter = nil;
            baseURLString:kBaseURLStringStream
               parameters:md
            progressBlock:^(id json) {
-               progressBlock(json);
+               
+               NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+               if(stallWarning) {
+                   stallWarningBlock([stallWarning valueForKey:@"code"],
+                                     [stallWarning valueForKey:@"message"],
+                                     [[stallWarning valueForKey:@"percent_full"] integerValue]);
+               } else {
+                   progressBlock(json);
+               }
+               
            } successBlock:nil
               errorBlock:^(NSError *error) {
                   errorBlock(error);
@@ -1040,6 +1053,7 @@ static NSDateFormatter *dateFormatter = nil;
 - (void)getStatusesSampleDelimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
                      progressBlock:(void(^)(id response))progressBlock
+                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1050,7 +1064,16 @@ static NSDateFormatter *dateFormatter = nil;
           baseURLString:kBaseURLStringStream
              parameters:md
           progressBlock:^(id json) {
-              progressBlock(json);
+              
+              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+              if(stallWarning) {
+                  stallWarningBlock([stallWarning valueForKey:@"code"],
+                                    [stallWarning valueForKey:@"message"],
+                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
+              } else {
+                  progressBlock(json);
+              }
+              
           } successBlock:nil
              errorBlock:^(NSError *error) {
                  errorBlock(error);
@@ -1062,6 +1085,7 @@ static NSDateFormatter *dateFormatter = nil;
                             delimited:(NSNumber *)delimited
                         stallWarnings:(NSNumber *)stallWarnings
                         progressBlock:(void(^)(id response))progressBlock
+                    stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1073,7 +1097,16 @@ static NSDateFormatter *dateFormatter = nil;
           baseURLString:kBaseURLStringStream
              parameters:md
           progressBlock:^(id json) {
-              progressBlock(json);
+              
+              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+              if(stallWarning) {
+                  stallWarningBlock([stallWarning valueForKey:@"code"],
+                                    [stallWarning valueForKey:@"message"],
+                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
+              } else {
+                  progressBlock(json);
+              }
+              
           } successBlock:nil errorBlock:^(NSError *error) {
               errorBlock(error);
           }];
@@ -1087,6 +1120,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                keywordsToTrack:(NSArray *)keywordsToTrack
          locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                  progressBlock:(void(^)(id response))progressBlock
+             stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1105,7 +1139,16 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
           baseURLString:kBaseURLStringUserStream
              parameters:md
           progressBlock:^(id json) {
-              progressBlock(json);
+              
+              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+              if(stallWarning) {
+                  stallWarningBlock([stallWarning valueForKey:@"code"],
+                                    [stallWarning valueForKey:@"message"],
+                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
+              } else {
+                  progressBlock(json);
+              }
+              
           } successBlock:nil
              errorBlock:^(NSError *error) {
                  errorBlock(error);
@@ -1119,6 +1162,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
          restrictToUserMessages:(NSNumber *)restrictToUserMessages
                  includeReplies:(NSNumber *)includeReplies
                   progressBlock:(void(^)(id response))progressBlock
+              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1134,10 +1178,20 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
           baseURLString:kBaseURLStringSiteStream
              parameters:md
           progressBlock:^(id json) {
-              progressBlock(json);
-          } successBlock:nil errorBlock:^(NSError *error) {
-              errorBlock(error);
-          }];
+              
+              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+              if(stallWarning) {
+                  stallWarningBlock([stallWarning valueForKey:@"code"],
+                                    [stallWarning valueForKey:@"message"],
+                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
+              } else {
+                  progressBlock(json);
+              }
+              
+          } successBlock:nil
+             errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
 }
 
 #pragma mark Direct Messages
