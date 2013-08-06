@@ -4,6 +4,7 @@ _A lightweight Objective-C library for Twitter REST API 1.1_
 
 ### Project News
 
+[2013-08] All Twitter API endpoints are implemented, including the streaming ones (see an example below). Also, STTwitter will be presented at [SoftShake](http://soft-shake.ch) 2013, Geneva, on October 24th.  
 [2013-06] STTwitter 0.0.2 is [available on CocoaPods](https://github.com/CocoaPods/Specs/tree/master/STTwitter) thanks to Evan Roth (bug fixes, implemented all 'Lists' API endpoints)  
 [2013-05] STTwitter 0.0.1 is [available on CocoaPods](https://github.com/CocoaPods/Specs/tree/master/STTwitter) thanks to Evan Roth  
 [2013-04] [nightly build](http://seriot.ch/resources/abusing_twitter_api/STTwitter.app.zip) 114 KB (signed)  
