@@ -1734,7 +1734,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
-// TODO
+// convenience
 - (void)getFollowersForScreenName:(NSString *)screenName
 					 successBlock:(void(^)(NSArray *followers))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
