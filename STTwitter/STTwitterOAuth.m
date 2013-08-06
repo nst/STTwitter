@@ -419,7 +419,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
        successBlock:(void (^)(id))successBlock
          errorBlock:(void (^)(NSError *))errorBlock {
     
-    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@%@", baseURLString, resource];
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, resource];
     
     NSMutableArray *parameters = [NSMutableArray array];
     

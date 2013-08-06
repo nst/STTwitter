@@ -131,7 +131,7 @@
 }
 
 - (void)getResource:(NSString *)resource
-      baseURLString:(NSString *)baseURLString
+      baseURLString:(NSString *)baseURLString // no trailing slash
          parameters:(NSDictionary *)params
       progressBlock:(void(^)(id json))progressBlock
        successBlock:(void (^)(id))successBlock
@@ -146,7 +146,7 @@
      Accept-Encoding: gzip
      */
     
-    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@%@", baseURLString, resource];
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, resource];
     
     NSMutableArray *parameters = [NSMutableArray array];
     

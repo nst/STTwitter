@@ -421,6 +421,11 @@
                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
+// convenience
+- (void)postStatusesFilterKeyword:(NSString *)keyword
+                    progressBlock:(void(^)(id response))progressBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  GET    statuses/sample
  

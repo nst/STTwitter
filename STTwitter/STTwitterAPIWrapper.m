@@ -14,10 +14,10 @@
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
 
-static NSString *kBaseURLStringAPI = @"https://api.twitter.com/1.1/";
-static NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1/";
-static NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1/";
-static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1/";
+static NSString *kBaseURLStringAPI = @"https://api.twitter.com/1.1";
+static NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1";
+static NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1";
+static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1";
 
 static NSDateFormatter *dateFormatter = nil;
 
@@ -1035,7 +1035,7 @@ static NSDateFormatter *dateFormatter = nil;
            progressBlock:^(id json) {
                
                NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-               if(stallWarning) {
+               if(stallWarning && stallWarningBlock) {
                    stallWarningBlock([stallWarning valueForKey:@"code"],
                                      [stallWarning valueForKey:@"message"],
                                      [[stallWarning valueForKey:@"percent_full"] integerValue]);
@@ -1047,6 +1047,23 @@ static NSDateFormatter *dateFormatter = nil;
               errorBlock:^(NSError *error) {
                   errorBlock(error);
               }];
+}
+
+// convenience
+- (void)postStatusesFilterKeyword:(NSString *)keyword
+                    progressBlock:(void(^)(id response))progressBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(keyword);
+    
+    [self postStatusesFilterUserIDs:nil
+                    keywordsToTrack:@[keyword]
+              locationBoundingBoxes:nil
+                          delimited:nil
+                      stallWarnings:nil
+                      progressBlock:progressBlock
+                  stallWarningBlock:nil
+                         errorBlock:errorBlock];
 }
 
 // GET statuses/sample
@@ -1066,7 +1083,7 @@ static NSDateFormatter *dateFormatter = nil;
           progressBlock:^(id json) {
               
               NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning) {
+              if(stallWarning && stallWarningBlock) {
                   stallWarningBlock([stallWarning valueForKey:@"code"],
                                     [stallWarning valueForKey:@"message"],
                                     [[stallWarning valueForKey:@"percent_full"] integerValue]);
@@ -1099,7 +1116,7 @@ static NSDateFormatter *dateFormatter = nil;
           progressBlock:^(id json) {
               
               NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning) {
+              if(stallWarning && stallWarningBlock) {
                   stallWarningBlock([stallWarning valueForKey:@"code"],
                                     [stallWarning valueForKey:@"message"],
                                     [[stallWarning valueForKey:@"percent_full"] integerValue]);
@@ -1141,7 +1158,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
           progressBlock:^(id json) {
               
               NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning) {
+              if(stallWarning && stallWarningBlock) {
                   stallWarningBlock([stallWarning valueForKey:@"code"],
                                     [stallWarning valueForKey:@"message"],
                                     [[stallWarning valueForKey:@"percent_full"] integerValue]);
@@ -1180,7 +1197,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
           progressBlock:^(id json) {
               
               NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning) {
+              if(stallWarning && stallWarningBlock) {
                   stallWarningBlock([stallWarning valueForKey:@"code"],
                                     [stallWarning valueForKey:@"message"],
                                     [[stallWarning valueForKey:@"percent_full"] integerValue]);
