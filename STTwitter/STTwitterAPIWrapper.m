@@ -988,7 +988,7 @@ static NSDateFormatter *dateFormatter = nil;
                              until:nil
                            sinceID:nil
                              maxID:nil
-                   includeEntities:YES
+                   includeEntities:@(YES)
                           callback:nil
                       successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
                           successBlock(searchMetadata, statuses);
