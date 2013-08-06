@@ -30,8 +30,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (copy) completionBlock_t completionBlock;
 @property (copy) errorBlock_t errorBlock;
 @property (nonatomic) NSStringEncoding postDataEncoding;
-@property (nonatomic, retain) NSDictionary *POSTDictionary;
-@property (nonatomic, retain) NSData *POSTData;
+@property (nonatomic, retain) NSDictionary *POSTDictionary; // keys and values are NSString objects
 @property (nonatomic, retain) NSMutableDictionary *requestHeaders;
 @property (nonatomic, readonly) NSInteger responseStatus;
 @property (nonatomic, retain, readonly) NSString *responseStringEncodingName;
@@ -44,7 +43,6 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
 @property (nonatomic, assign) NSUInteger timeoutSeconds;
 @property (nonatomic) BOOL addCredentialsToURL; // default NO
-//@property (nonatomic, strong) NSString *requestMethod;
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString;
@@ -73,9 +71,9 @@ typedef void (^errorBlock_t)(NSError *error);
 - (NSDictionary *)responseHeaders;
 
 // Upload
-- (void)setFileToUpload:(NSString *)path parameterName:(NSString *)param;
-- (void)setDataToUpload:(NSData *)data parameterName:(NSString *)param;
-- (void)setDataToUpload:(NSData *)data parameterName:(NSString *)param mimeType:(NSString *)mimeType fileName:(NSString *)fileName;
+- (void)addFileToUpload:(NSString *)path parameterName:(NSString *)param;
+- (void)addDataToUpload:(NSData *)data parameterName:(NSString *)param;
+- (void)addDataToUpload:(NSData *)data parameterName:(NSString *)param mimeType:(NSString *)mimeType fileName:(NSString *)fileName;
 
 // Session
 + (void)clearSession; // delete all credentials and cookies

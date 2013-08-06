@@ -20,6 +20,27 @@ NSUInteger const kSTHTTPRequestDefaultTimeout = 30;
 
 static NSMutableDictionary *sharedCredentialsStorage = nil;
 
+/**/
+
+@interface STHTTPRequestFileUpload : NSObject
+@property (nonatomic, retain) NSString *path;
+@property (nonatomic, retain) NSString *parameterName;
+@property (nonatomic, retain) NSString *mimeType;
+
++ (instancetype)fileUploadWithPath:(NSString *)path parameterName:(NSString *)parameterName mimeType:(NSString *)mimeType;
++ (instancetype)fileUploadWithPath:(NSString *)path parameterName:(NSString *)parameterName;
+@end
+
+@interface STHTTPRequestDataUpload : NSObject
+@property (nonatomic, retain) NSData *data;
+@property (nonatomic, retain) NSString *parameterName;
+@property (nonatomic, retain) NSString *mimeType; // can be nil
+@property (nonatomic, retain) NSString *fileName; // can be nil
++ (instancetype)dataUploadWithData:(NSData *)data parameterName:(NSString *)parameterName mimeType:(NSString *)mimeType fileName:(NSString *)fileName;
+@end
+
+/**/
+
 @interface STHTTPRequest ()
 @property (nonatomic) NSInteger responseStatus;
 @property (nonatomic, retain) NSURLConnection *connection;
@@ -29,11 +50,8 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 @property (nonatomic) NSInteger responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) NSError *error;
-@property (nonatomic, retain) NSString *POSTFilePath;
-@property (nonatomic, retain) NSData *POSTFileData;
-@property (nonatomic, retain) NSString *POSTFileMimeType;
-@property (nonatomic, retain) NSString *POSTFileName;
-@property (nonatomic, retain) NSString *POSTFileParameter;
+@property (nonatomic, retain) NSMutableArray *filesToUpload; // STHTTPRequestFileUpload instances
+@property (nonatomic, retain) NSMutableArray *dataToUpload; // STHTTPRequestDataUpload instances
 @end
 
 @interface NSData (Base64)
@@ -64,6 +82,8 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         _encodePOSTDictionary = YES;
         _addCredentialsToURL = NO;
         _timeoutSeconds = kSTHTTPRequestDefaultTimeout;
+        _filesToUpload = [[NSMutableArray alloc] init];
+        _dataToUpload = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -88,13 +108,9 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     [_responseHeaders release];
     [_responseString release];
     [_POSTDictionary release];
-    [_POSTData release];
-    [_POSTFilePath release];
-    [_POSTFileData release];
-    [_POSTFileMimeType release];
-    [_POSTFileName release];
-    [_POSTFileParameter release];
     [_error release];
+    [_filesToUpload release];
+    [_dataToUpload release];
     
     [super dealloc];
 }
@@ -236,6 +252,38 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     return [NSURL URLWithString:urlString];
 }
 
+// {k2:v2, k1:v1} -> [{k1:v1}, {k2:v2}]
++ (NSArray *)dictionariesSortedByKey:(NSDictionary *)dictionary {
+    NSMutableArray *sortedDictionaries = [NSMutableArray arrayWithCapacity:[dictionary count]];
+    NSArray *sortedKeys = [dictionary keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [obj2 compare:obj1];
+    }];
+    for(NSString *key in sortedKeys) {
+        NSDictionary *d = @{ key : dictionary[key] };
+        [sortedDictionaries addObject:d];
+    }
+    return sortedDictionaries;
+}
+
++ (NSData *)multipartContentWithBoundary:(NSString *)boundary data:(NSData *)someData fileName:(NSString *)fileName parameterName:(NSString *)parameterName mimeType:(NSString *)aMimeType {
+    
+    NSString *mimeType = aMimeType ? aMimeType : @"application/octet-stream";
+    
+    NSMutableData *data = [[NSMutableData alloc] init];
+    
+    [data appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSString *fileNameContentDisposition = fileName ? [NSString stringWithFormat:@"filename=\"%@\"", fileName] : @"";
+    NSString *contentDisposition = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; %@\r\n", parameterName, fileNameContentDisposition];
+    
+    [data appendData:[contentDisposition dataUsingEncoding:NSUTF8StringEncoding]];
+    [data appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+    [data appendData:someData];
+    [data appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    return [data autorelease];
+}
+
 - (NSURLRequest *)requestByAddingCredentialsToURL:(BOOL)useCredentialsInURL {
     
     NSURL *theURL = nil;
@@ -251,10 +299,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:theURL];
     
-    // Set properties
     request.timeoutInterval = self.timeoutSeconds;
-    //    if (self.requestMethod)
-    //        request.HTTPMethod = self.requestMethod;
     
     // escape POST dictionary keys and values if needed
     if(_encodePOSTDictionary) {
@@ -267,30 +312,10 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         self.POSTDictionary = escapedPOSTDictionary;
     }
     
-    if(_POSTFileParameter && (_POSTFilePath || _POSTFileData)) {
-        
-        if(_POSTDictionary == nil) self.POSTDictionary = @{};
-        
-        NSData *fileData = nil;
-        NSString *mimeType = nil;
-        NSString *fileName = nil;
-        
-        if (_POSTFilePath) {
-            NSError *readingError = nil;
-            fileData = [NSData dataWithContentsOfFile:_POSTFilePath options:0 error:&readingError];
-            if(fileData == nil ) {
-                return nil;
-            }
-            
-            fileName = [_POSTFilePath lastPathComponent];
-        } else {
-            fileData = _POSTFileData;
-            if (_POSTFileName) {
-                fileName = _POSTFileName;
-            }
-        }
-        
-        mimeType = _POSTFileMimeType ? _POSTFileMimeType : @"application/octet-stream";
+    // sort POST parameters in order to get deterministic, unit testable requests
+    NSArray *sortedPOSTDictionaries = [[self class] dictionariesSortedByKey:_POSTDictionary];
+    
+    if([self.filesToUpload count] > 0 || [self.dataToUpload count] > 0) {
         
         NSString *boundary = @"----------kStHtTpReQuEsTbOuNdArY";
         
@@ -299,20 +324,47 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         
         NSMutableData *body = [NSMutableData data];
         
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        /**/
         
-        NSString *fileNameContentDisposition = fileName ? [NSString stringWithFormat:@"filename=\"%@\"", fileName] : @"";
-        NSString *contentDisposition = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; %@\r\n", _POSTFileParameter, fileNameContentDisposition];
+        for(STHTTPRequestFileUpload *fileToUpload in self.filesToUpload) {
+            
+            NSData *data = [NSData dataWithContentsOfFile:fileToUpload.path];
+            if(data == nil) continue;
+            NSString *fileName = [fileToUpload.path lastPathComponent];
+            
+            NSData *multipartData = [[self class] multipartContentWithBoundary:boundary
+                                                                          data:data
+                                                                      fileName:fileName
+                                                                 parameterName:fileToUpload.parameterName
+                                                                      mimeType:fileToUpload.mimeType];
+            [body appendData:multipartData];
+        }
         
-        [body appendData:[contentDisposition dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:fileData];
+        /**/
         
-        [_POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        for(STHTTPRequestDataUpload *dataToUpload in self.dataToUpload) {
+            NSData *multipartData = [[self class] multipartContentWithBoundary:boundary
+                                                                          data:dataToUpload.data
+                                                                      fileName:dataToUpload.fileName
+                                                                 parameterName:dataToUpload.parameterName
+                                                                      mimeType:dataToUpload.mimeType];
+            
+            [body appendData:multipartData];
+        }
+        
+        /**/
+        
+        [sortedPOSTDictionaries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSDictionary *d = (NSDictionary *)obj;
+            NSString *key = [[d allKeys] lastObject];
+            NSObject *value = [[d allValues] lastObject];
+            
             [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[obj description] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[value description] dataUsingEncoding:NSUTF8StringEncoding]];
         }];
+        
+        /**/
         
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
@@ -335,14 +387,13 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         
         NSMutableArray *ma = [NSMutableArray arrayWithCapacity:[_POSTDictionary count]];
         
-        for(NSString *k in _POSTDictionary) {
-            NSString *kv = [NSString stringWithFormat:@"%@=%@", k, [_POSTDictionary objectForKey:k]];
+        [sortedPOSTDictionaries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSDictionary *d = (NSDictionary *)obj;
+            NSString *key = [[d allKeys] lastObject];
+            NSObject *value = [[d allValues] lastObject];
+            
+            NSString *kv = [NSString stringWithFormat:@"%@=%@", key, value];
             [ma addObject:kv];
-        }
-        
-        // we sort POST parameters in order to get deterministric requests, hence unit testable
-        [ma sortUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-            return [obj1 compare:obj2];
         }];
         
         NSString *s = [ma componentsJoinedByString:@"&"];
@@ -352,10 +403,6 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         [request setHTTPMethod:@"POST"];
         [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[data length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:data];
-    } else if (_POSTData != nil) {
-        [request setHTTPMethod:@"POST"];
-        [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[_POSTData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPBody:_POSTData];
     }
     
     [_requestHeaders enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -384,22 +431,20 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 
 #pragma mark Upload
 
-- (void)setFileToUpload:(NSString *)path parameterName:(NSString *)param {
-    self.POSTFilePath = path;
-    self.POSTFileParameter = param;
+- (void)addFileToUpload:(NSString *)path parameterName:(NSString *)parameterName {
+    
+    STHTTPRequestFileUpload *fu = [STHTTPRequestFileUpload fileUploadWithPath:path parameterName:parameterName];
+    [self.filesToUpload addObject:fu];
 }
 
-- (void)setDataToUpload:(NSData *)data parameterName:(NSString *)param {
-    self.POSTFileData = data;
-    self.POSTFileParameter = param;
+- (void)addDataToUpload:(NSData *)data parameterName:(NSString *)param {
+    STHTTPRequestDataUpload *du = [STHTTPRequestDataUpload dataUploadWithData:data parameterName:param mimeType:nil fileName:nil];
+    [self.dataToUpload addObject:du];
 }
 
-- (void)setDataToUpload:(NSData *)data parameterName:(NSString *)param mimeType:(NSString *)mimeType fileName:(NSString *)fileName
-{
-    self.POSTFileData = data;
-    self.POSTFileParameter = param;
-    self.POSTFileMimeType = mimeType;
-    self.POSTFileName = fileName;
+- (void)addDataToUpload:(NSData *)data parameterName:(NSString *)param mimeType:(NSString *)mimeType fileName:(NSString *)fileName {
+    STHTTPRequestDataUpload *du = [STHTTPRequestDataUpload dataUploadWithData:data parameterName:param mimeType:mimeType fileName:fileName];
+    [self.dataToUpload addObject:du];
 }
 
 #pragma mark Response
@@ -455,14 +500,8 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     // -F "coolfiles=@fil1.gif;type=image/gif,fil2.txt,fil3.html"   // file upload
     
-    if(_POSTFileParameter && _POSTFilePath) {
-        
-        NSString *s = [NSString stringWithFormat:@"%@@%@", _POSTFileParameter, _POSTFilePath];
-        
-        if(_POSTFileMimeType) {
-            s = [s stringByAppendingFormat:@";type=%@", _POSTFileMimeType];
-        }
-        
+    for(STHTTPRequestFileUpload *f in _filesToUpload) {
+        NSString *s = [NSString stringWithFormat:@"%@=@%@", f.parameterName, f.path];
         [ma addObject:[NSString stringWithFormat:@"-F \"%@\"", s]];
     }
     
@@ -507,7 +546,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     NSLog(@"--------------------------------------");
     
-    NSString *method = _POSTDictionary ? @"POST" : @"GET";
+    NSString *method = (self.POSTDictionary || [self.filesToUpload count] || [self.dataToUpload count]) ? @"POST" : @"GET";
     
     NSLog(@"%@ %@", method, [request URL]);
     
@@ -529,23 +568,24 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         NSLog(@"\t %@ = %@", [cookie name], [cookie value]);
     }
     
-    NSDictionary *d = [self POSTDictionary];
+    NSArray *kvDictionaries = [[self class] dictionariesSortedByKey:_POSTDictionary];
     
-    if([d count]) NSLog(@"POST DATA");
+    if([kvDictionaries count]) NSLog(@"POST DATA");
     
-    [d enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSLog(@"\t %@ = %@", key, obj);
-    }];
+    for(NSDictionary *kv in kvDictionaries) {
+        NSString *k = [[kv allKeys] lastObject];
+        NSString *v = [[kv allValues] lastObject];
+        NSLog(@"\t %@ = %@", k, v);
+    }
     
-    if (_POSTFileParameter && _POSTFilePath) {
+    for(STHTTPRequestFileUpload *f in self.filesToUpload) {
         NSLog(@"UPLOAD FILE");
-        NSLog(@"\t %@ = %@", _POSTFileParameter, _POSTFilePath);
-    } else if (_POSTFileParameter && _POSTFileData) {
+        NSLog(@"\t %@ = %@", f.parameterName, f.path);
+    }
+    
+    for(STHTTPRequestDataUpload *d in self.dataToUpload) {
         NSLog(@"UPLOAD DATA");
-        NSLog(@"\t %@ = [%u bytes]", _POSTFileParameter, (unsigned int)[_POSTFileData length]);
-    } else if (_POSTData) {
-        NSLog(@"UPLOAD DATA");
-        NSLog(@"\t [%u bytes]", (unsigned int)[_POSTData length]);
+        NSLog(@"\t %@ = [%u bytes]", d.parameterName, (unsigned int)[d.data length]);
     }
     
     NSLog(@"--");
@@ -695,6 +735,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    
     self.responseString = [self stringWithData:_responseData encodingName:_responseStringEncodingName];
     
     if(_responseStatus >= 400) {
@@ -754,3 +795,49 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 
 @end
 #endif
+
+/**/
+
+@implementation STHTTPRequestFileUpload
+
++ (instancetype)fileUploadWithPath:(NSString *)path parameterName:(NSString *)parameterName mimeType:(NSString *)mimeType {
+    STHTTPRequestFileUpload *fu = [[self alloc] init];
+    fu.path = path;
+    fu.parameterName = parameterName;
+    fu.mimeType = mimeType;
+    return [fu autorelease];
+}
+
++ (instancetype)fileUploadWithPath:(NSString *)path parameterName:(NSString *)fileName {
+    return [self fileUploadWithPath:path parameterName:fileName mimeType:@"application/octet-stream"];
+}
+
+- (void)dealloc {
+    [_path release];
+    [_parameterName release];
+    [_mimeType release];
+    [super dealloc];
+}
+
+@end
+
+@implementation STHTTPRequestDataUpload
+
++ (instancetype)dataUploadWithData:(NSData *)data parameterName:(NSString *)parameterName mimeType:(NSString *)mimeType fileName:(NSString *)fileName {
+    STHTTPRequestDataUpload *du = [[self alloc] init];
+    du.data = data;
+    du.parameterName = parameterName;
+    du.mimeType = mimeType;
+    du.fileName = fileName;
+    return [du autorelease];
+}
+
+- (void)dealloc {
+    [_data release];
+    [_parameterName release];
+    [_mimeType release];
+    [_fileName release];
+    [super dealloc];
+}
+
+@end
