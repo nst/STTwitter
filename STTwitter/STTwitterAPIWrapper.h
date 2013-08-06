@@ -89,20 +89,20 @@
 
 #if TARGET_OS_IPHONE
 #else
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX;
++ (instancetype)twitterAPIWithOAuthOSX;
 #endif
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
                                           consumerSecret:(NSString *)consumerSecret;
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
                                           consumerSecret:(NSString *)consumerSecret
                                                 username:(NSString *)username
                                                 password:(NSString *)password;
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
                                           consumerSecret:(NSString *)consumerSecret
                                               oauthToken:(NSString *)oauthToken

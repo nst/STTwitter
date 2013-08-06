@@ -24,17 +24,17 @@ extern NSString * const kSTPOSTDataKey;
 
 @interface STTwitterOAuth : NSObject <STTwitterOAuthProtocol>
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
++ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
                                        consumerKey:(NSString *)consumerKey
                                     consumerSecret:(NSString *)consumerSecret;
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
++ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
                                        consumerKey:(NSString *)consumerKey
                                     consumerSecret:(NSString *)consumerSecret
                                         oauthToken:(NSString *)oauthToken
                                   oauthTokenSecret:(NSString *)oauthTokenSecret;
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
++ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
                                        consumerKey:(NSString *)consumerKey
                                     consumerSecret:(NSString *)consumerSecret
                                           username:(NSString *)username

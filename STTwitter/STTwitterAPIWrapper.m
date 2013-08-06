@@ -45,7 +45,7 @@ static NSDateFormatter *dateFormatter = nil;
     return self;
 }
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX {
++ (instancetype)twitterAPIWithOAuthOSX {
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
     twitter.oauth = [[[STTwitterOAuthOSX alloc] init] autorelease];
     return [twitter autorelease];
@@ -53,7 +53,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 #endif
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
                                           consumerSecret:(NSString *)consumerSecret
                                                 username:(NSString *)username
@@ -69,7 +69,7 @@ static NSDateFormatter *dateFormatter = nil;
     return [twitter autorelease];
 }
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
                                           consumerSecret:(NSString *)consumerSecret
                                               oauthToken:(NSString *)oauthToken
@@ -85,7 +85,7 @@ static NSDateFormatter *dateFormatter = nil;
     return [twitter autorelease];
 }
 
-+ (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                              consumerKey:(NSString *)consumerKey
                                           consumerSecret:(NSString *)consumerSecret {
     
@@ -96,7 +96,7 @@ static NSDateFormatter *dateFormatter = nil;
                                         password:nil];
 }
 
-+ (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
++ (instancetype)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
                                                    consumerSecret:(NSString *)consumerSecret {
     
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];

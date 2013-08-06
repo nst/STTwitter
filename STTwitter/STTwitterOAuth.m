@@ -67,7 +67,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     [super dealloc];
 }
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
++ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
                                        consumerKey:(NSString *)consumerKey
                                     consumerSecret:(NSString *)consumerSecret {
     
@@ -80,7 +80,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return [to autorelease];
 }
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
++ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
                                        consumerKey:(NSString *)consumerKey
                                     consumerSecret:(NSString *)consumerSecret
                                         oauthToken:(NSString *)oauthToken
@@ -94,7 +94,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return to;
 }
 
-+ (STTwitterOAuth *)twitterServiceWithConsumerName:(NSString *)consumerName
++ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
                                        consumerKey:(NSString *)consumerKey
                                     consumerSecret:(NSString *)consumerSecret
                                           username:(NSString *)username
