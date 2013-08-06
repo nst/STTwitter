@@ -19,6 +19,8 @@ static NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1/";
 static NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1/";
 static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1/";
 
+static NSDateFormatter *dateFormatter = nil;
+
 @interface STTwitterAPIWrapper ()
 //id removeNull(id rootObject);
 @property (nonatomic, retain) NSObject <STTwitterOAuthProtocol> *oauth;
@@ -105,6 +107,14 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
     
     twitter.oauth = appOnly;
     return twitter;
+}
+
+- (NSDateFormatter *)dateFormatter {
+    if(dateFormatter == nil) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:SS'Z'"];
+    }
+    return dateFormatter;
 }
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
@@ -3445,9 +3455,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark Trends
 
 // GET trends/place
-- (void)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID'
+- (void)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID', Paris is "615702"
           excludeHashtags:(NSNumber *)excludeHashtags
-             successBlock:(void(^)(NSString *asOf, NSString *createdAt, NSArray *locations, NSArray *trends))successBlock
+             successBlock:(void(^)(NSDate *asOf, NSDate *createdAt, NSArray *locations, NSArray *trends))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(WOEID);
@@ -3458,16 +3468,22 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     [self getAPIResource:@"trends/place.json" parameters:md successBlock:^(id response) {
         
-        NSString *asOf = nil;
-        NSString *createdAt = nil;
+        NSDictionary *d = [response lastObject];
+        
+        NSDate *asOf = nil;
+        NSDate *createdAt = nil;
         NSArray *locations = nil;
         NSArray *trends = nil;
         
-        if([response isKindOfClass:[NSDictionary class]]) {
-            asOf = [response valueForKey:@"as_of"]; // TODO: return NSDate instance
-            createdAt = [response valueForKey:@"created_at"]; // TODO: return NSDate instance
-            locations = [response valueForKey:@"locations"];
-            trends = [response valueForKey:@"trends"];
+        if([d isKindOfClass:[NSDictionary class]]) {
+            NSString *asOfString = [d valueForKey:@"as_of"];
+            NSString *createdAtString = [d valueForKey:@"created_at"];
+            
+            asOf = [[self dateFormatter] dateFromString:asOfString];
+            createdAt = [[self dateFormatter] dateFromString:createdAtString];
+            
+            locations = [d valueForKey:@"locations"];
+            trends = [d valueForKey:@"trends"];
         }
         
         successBlock(asOf, createdAt, locations, trends);

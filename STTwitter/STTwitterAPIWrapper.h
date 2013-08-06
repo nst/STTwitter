@@ -1661,9 +1661,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This information is cached for 5 minutes. Requesting more frequently than that will not return any more data, and will count against your rate limit usage.
  */
 
-- (void)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID'
+- (void)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID', Paris is "615702"
           excludeHashtags:(NSNumber *)excludeHashtags
-             successBlock:(void(^)(NSString *asOf, NSString *createdAt, NSArray *locations, NSArray *trends))successBlock
+             successBlock:(void(^)(NSDate *asOf, NSDate *createdAt, NSArray *locations, NSArray *trends))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
