@@ -168,7 +168,7 @@
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-      progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock
+      progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock?
        successBlock:(void (^)(id))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -185,7 +185,7 @@
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)params
-       progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock
+       progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock?
         successBlock:(void (^)(id))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     

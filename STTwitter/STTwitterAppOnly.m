@@ -9,6 +9,7 @@
 #import "STTwitterAppOnly.h"
 #import "STHTTPRequest.h"
 #import "NSString+STTwitter.h"
+#import "STHTTPRequest+STTwitter.h"
 
 @interface NSData (Base64)
 - (NSString *)base64Encoding; // private API
@@ -41,7 +42,8 @@
                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     if(_bearerToken == nil) {
-        errorBlock(nil);
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"Cannot invalidate missing bearer token"}];
+        errorBlock(error);
         return;
     }
     
@@ -110,21 +112,12 @@
             parameters:@{ @"grant_type" : @"client_credentials" }
           useBasicAuth:YES
          progressBlock:nil
-          successBlock:^(NSString *body) {
-              
-              NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
-              
-              NSError *error = nil;
-              id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
-              
-              if([json isKindOfClass:[NSDictionary class]] == NO) {
-                  errorBlock(error);
-                  return;
-              }
+          successBlock:^(id json) {
               
               NSString *tokenType = [json valueForKey:@"token_type"];
               if([tokenType isEqualToString:@"bearer"] == NO) {
-                  errorBlock(nil);
+                  NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"Cannot find bearer token in server response"}];
+                  errorBlock(error);
                   return;
               }
               
@@ -168,62 +161,10 @@
         [urlString appendFormat:@"?%@", parameterString];
     }
     
-    __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
-    
-    // TODO: remove code duplication for downloadProgressBlock in STTwitterAppOnly and STTwitterOAuth
-    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
-        
-        if(progressBlock == nil) return;
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-        
-        if(json) {
-            progressBlock(json);
-            return;
-        }
-        
-        // we can receive several dictionaries in the same data chunk
-        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
-        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
-        
-        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        
-        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
-        
-        for(NSString *jsonChunk in jsonChunks) {
-            if([jsonChunk length] == 0) continue;
-            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *jsonError = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-            if(json == nil) {
-                errorBlock(jsonError);
-                return;
-            }
-            progressBlock(json);
-        }
-    };
-    
-    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-        STLog(@"-- jsonError: %@", [jsonError localizedDescription]);
-        
-        if(json == nil) {
-            errorBlock(jsonError);
-            return;
-        }
-        
-        STLog(@"** %@", json);
-        
-        successBlock(json);
-    };
-    
-    r.errorBlock = ^(NSError *error) {
-        STLog(@"-- body: %@", r.responseString);
-        errorBlock(error);
-    };
+    __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                   stTwitterProgressBlock:progressBlock
+                                                    stTwitterSuccessBlock:successBlock
+                                                      stTwitterErrorBlock:errorBlock];
     
     if(_bearerToken) {
         [r setHeaderWithName:@"Authorization" value:[NSString stringWithFormat:@"Bearer %@", _bearerToken]];
@@ -237,12 +178,15 @@
           parameters:(NSDictionary *)params
         useBasicAuth:(BOOL)useBasicAuth
        progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(NSString *body))successBlock
+        successBlock:(void(^)(id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
-    __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
+    __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                   stTwitterProgressBlock:progressBlock
+                                                    stTwitterSuccessBlock:successBlock
+                                                      stTwitterErrorBlock:errorBlock];
     
     r.POSTDictionary = params;
     
@@ -251,63 +195,6 @@
     r.encodePOSTDictionary = NO;
     
     r.POSTDictionary = mutableParams ? mutableParams : @{};
-    
-    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
-        
-        if(progressBlock == nil) return;
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-        
-        if(json) {
-            progressBlock(json);
-            return;
-        }
-        
-        // we can receive several dictionaries in the same data chunk
-        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
-        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
-        
-        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        
-        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
-        
-        for(NSString *jsonChunk in jsonChunks) {
-            if([jsonChunk length] == 0) continue;
-            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *jsonError = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-            if(json == nil) {
-                errorBlock(jsonError);
-                return;
-            }
-            progressBlock(json);
-        }
-    };
-    
-    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        successBlock(body);
-    };
-    
-    r.errorBlock = ^(NSError *error) {
-        
-        // do our best to extract Twitter error message from responseString
-        
-        NSError *regexError = nil;
-        NSString *errorString = [r.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
-        if(errorString == nil) {
-            STLog(@"-- regexError: %@", [regexError localizedDescription]);
-        }
-        
-        if(errorString) {
-            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-        } else if ([r.responseString length] > 0 && [r.responseString length] < 64) {
-            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
-        }
-        
-        STLog(@"-- body: %@", r.responseString);
-        errorBlock(error);
-    };
     
     if(useBasicAuth) {
         NSString *base64EncodedTokens = [[self class] base64EncodedBearerTokenCredentialsWithConsumerKey:_consumerKey consumerSecret:_consumerSecret];

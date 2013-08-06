@@ -9,8 +9,15 @@
 #import "STTwitterOAuth.h"
 #import "STHTTPRequest.h"
 #import "NSString+STTwitter.h"
+#import "STHTTPRequest+STTwitter.h"
 
 #include <CommonCrypto/CommonHMAC.h>
+
+#if DEBUG
+#   define STLog(...) NSLog(__VA_ARGS__)
+#else
+#   define STLog(...)
+#endif
 
 NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 
@@ -405,27 +412,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     [self signRequest:r isMediaUpload:NO];
 }
 
-- (NSError *)errorFromResponseData:(NSData *)responseData {
-    // assume error message such as: {"errors":[{"message":"Bad Authentication data","code":215}]}
-    
-    NSError *jsonError = nil;
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-    if([json isKindOfClass:[NSDictionary class]]) {
-        NSArray *errors = [json valueForKey:@"errors"];
-        if([errors isKindOfClass:[NSArray class]] && [errors count] > 0) {
-            NSDictionary *errorDictionary = [errors lastObject];
-            if([errorDictionary isKindOfClass:[NSDictionary class]]) {
-                NSString *message = errorDictionary[@"message"];
-                NSInteger code = [errorDictionary[@"code"] integerValue];
-                NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:@{NSLocalizedDescriptionKey : message}];
-                return error;
-            }
-        }
-    }
-    
-    return nil;
-}
-
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
@@ -448,71 +434,14 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         [urlString appendFormat:@"?%@", parameterString];
     }
     
-    __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
+    __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                   stTwitterProgressBlock:progressBlock
+                                                    stTwitterSuccessBlock:successBlock
+                                                      stTwitterErrorBlock:errorBlock];
     
     [self signRequest:r];
-    
-    // TODO: remove code duplication for downloadProgressBlock in STTwitterAppOnly and STTwitterOAuth
-    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
-        if(progressBlock == nil) return;
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-        
-        if(json) {
-            progressBlock(json);
-            return;
-        }
-        
-        // we can receive several dictionaries in the same data chunk
-        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
-        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
-        
-        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        
-        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
-        
-        for(NSString *jsonChunk in jsonChunks) {
-            if([jsonChunk length] == 0) continue;
-            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *jsonError = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-            if(json == nil) {
-                errorBlock(jsonError);
-                return;
-            }
-            progressBlock(json);
-        }
-    };
-    
-    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-        
-        if(json == nil) {
-            errorBlock(jsonError);
-            return;
-        }
-        
-        successBlock(json);
-    };
-    
-    r.errorBlock = ^(NSError *error) {
-        
-        NSError *e = [self errorFromResponseData:r.responseData];
-        
-        if(e) {
-            errorBlock(e);
-            return;
-        }
-        
-        errorBlock(error);
-    };
-    
     [r startAsynchronous];
-    
 }
 
 - (void)postResource:(NSString *)resource
@@ -525,7 +454,10 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
-    __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
+    __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                   stTwitterProgressBlock:progressBlock
+                                                    stTwitterSuccessBlock:successBlock
+                                                      stTwitterErrorBlock:errorBlock];
     
     r.POSTDictionary = params;
     
@@ -547,77 +479,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     r.encodePOSTDictionary = (postData == nil);
     
     r.POSTDictionary = mutableParams ? mutableParams : @{};
-    
-    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
-        
-        if(progressBlock == nil) return;
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-        
-        if(json) {
-            progressBlock(json);
-            return;
-        }
-        
-        // we can receive several dictionaries in the same data chunk
-        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
-        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
-        
-        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        
-        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
-        
-        for(NSString *jsonChunk in jsonChunks) {
-            if([jsonChunk length] == 0) continue;
-            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *jsonError = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-            if(json == nil) {
-                errorBlock(jsonError);
-                return;
-            }
-            progressBlock(json);
-        }
-    };
-    
-    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-        
-        if(json == nil) {
-            successBlock(body); // response is not necessarily json, eg. https://api.twitter.com/oauth/request_token
-            return;
-        }
-        
-        successBlock(json);
-    };
-    
-    r.errorBlock = ^(NSError *error) {
-        
-        // do our best to extract Twitter error message from responseString
-        
-        NSError *regexError = nil;
-        NSString *errorString = [r.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
-        
-        if(errorString) {
-            NSError *e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-            errorBlock(e);
-            return;
-        }
-        
-        /**/
-        
-        NSError *e = [self errorFromResponseData:r.responseData];
-        
-        if(e) {
-            errorBlock(e);
-            return;
-        }
-        
-        errorBlock(error);
-    };
     
     [r startAsynchronous];
 }

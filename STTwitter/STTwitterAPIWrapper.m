@@ -989,7 +989,7 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
 
 #pragma mark Streaming
 
-#warning TODO: implement stall warnings callbacks
+// TODO: implement stall warnings callbacks
 
 // POST statuses/filter
 
