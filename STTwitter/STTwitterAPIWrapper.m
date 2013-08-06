@@ -190,12 +190,14 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)parameters
+      progressBlock:(void(^)(id json))progressBlock
        successBlock:(void(^)(id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     
     [_oauth getResource:resource
-          baseURLString:(NSString *)baseURLString
+          baseURLString:baseURLString
              parameters:parameters
+          progressBlock:progressBlock
            successBlock:successBlock
              errorBlock:errorBlock];
 }
@@ -203,38 +205,70 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)parameters
+       progressBlock:(void(^)(id json))progressBlock
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     [_oauth postResource:resource
            baseURLString:(NSString *)baseURLString
               parameters:parameters
+           progressBlock:progressBlock
             successBlock:successBlock
               errorBlock:errorBlock];
 }
 
 - (void)getAPIResource:(NSString *)resource
-         parameters:(NSDictionary *)parameters
-       successBlock:(void(^)(id json))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
-
+            parameters:(NSDictionary *)parameters
+         progressBlock:(void(^)(id json))progressBlock
+          successBlock:(void(^)(id json))successBlock
+            errorBlock:(void(^)(NSError *error))errorBlock {
+    
     [self getResource:resource
         baseURLString:kBaseURLStringAPI
            parameters:parameters
+        progressBlock:progressBlock
+         successBlock:successBlock
+           errorBlock:errorBlock];
+}
+
+- (void)getAPIResource:(NSString *)resource
+            parameters:(NSDictionary *)parameters
+          successBlock:(void(^)(id json))successBlock
+            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self getResource:resource
+        baseURLString:kBaseURLStringAPI
+           parameters:parameters
+        progressBlock:nil
          successBlock:successBlock
            errorBlock:errorBlock];
 }
 
 - (void)postAPIResource:(NSString *)resource
-            parameters:(NSDictionary *)parameters
-          successBlock:(void(^)(id json))successBlock
-            errorBlock:(void(^)(NSError *error))errorBlock {
+             parameters:(NSDictionary *)parameters
+          progressBlock:(void(^)(id json))progressBlock
+           successBlock:(void(^)(id json))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:resource
-        baseURLString:kBaseURLStringAPI
-           parameters:parameters
-         successBlock:successBlock
-           errorBlock:errorBlock];
+         baseURLString:kBaseURLStringAPI
+            parameters:parameters
+         progressBlock:progressBlock
+          successBlock:successBlock
+            errorBlock:errorBlock];
+}
+
+- (void)postAPIResource:(NSString *)resource
+             parameters:(NSDictionary *)parameters
+           successBlock:(void(^)(id json))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:resource
+         baseURLString:kBaseURLStringAPI
+            parameters:parameters
+         progressBlock:nil
+          successBlock:successBlock
+            errorBlock:errorBlock];
 }
 
 /**/
@@ -448,7 +482,7 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
     [self getStatusesUserTimelineForUserID:nil
                                 screenName:screenName
                                    sinceID:sinceID
-                                     count:count
+                                     count:(count == NSNotFound ? nil : [@(count) description])
                                      maxID:maxID
                                   trimUser:nil
                             excludeReplies:nil
@@ -478,7 +512,7 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getUserTimelineWithScreenName:screenName count:NSNotFound successBlock:successBlock errorBlock:errorBlock];
+    [self getUserTimelineWithScreenName:screenName count:nil successBlock:successBlock errorBlock:errorBlock];
 }
 
 - (void)getHomeTimelineSinceID:(NSString *)sinceID
@@ -981,11 +1015,15 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
     if([keywords length]) md[@"keywords"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [_oauth postResource:@"statuses/sample.json" baseURLString:kBaseURLStringStream parameters:md successBlock:^(id response) {
-        progressBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [_oauth postResource:@"statuses/sample.json"
+           baseURLString:kBaseURLStringStream
+              parameters:md
+           progressBlock:^(id json) {
+               progressBlock(json);
+           } successBlock:nil
+              errorBlock:^(NSError *error) {
+                  errorBlock(error);
+              }];
 }
 
 // GET statuses/sample
@@ -998,11 +1036,15 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    [_oauth getResource:@"statuses/sample.json" baseURLString:kBaseURLStringStream parameters:md successBlock:^(id response) {
-        progressBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [_oauth getResource:@"statuses/sample.json"
+          baseURLString:kBaseURLStringStream
+             parameters:md
+          progressBlock:^(id json) {
+              progressBlock(json);
+          } successBlock:nil
+             errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
 }
 
 // GET statuses/firehose
@@ -1017,11 +1059,14 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    [_oauth getResource:@"statuses/firehose.json" baseURLString:kBaseURLStringStream parameters:md successBlock:^(id response) {
-        progressBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [_oauth getResource:@"statuses/firehose.json"
+          baseURLString:kBaseURLStringStream
+             parameters:md
+          progressBlock:^(id json) {
+              progressBlock(json);
+          } successBlock:nil errorBlock:^(NSError *error) {
+              errorBlock(error);
+          }];
 }
 
 // GET user
@@ -1046,11 +1091,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if([keywords length]) md[@"keywords"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [_oauth getResource:@"user.json" baseURLString:kBaseURLStringUserStream parameters:md successBlock:^(id response) {
-        progressBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [_oauth getResource:@"user.json"
+          baseURLString:kBaseURLStringUserStream
+             parameters:md
+          progressBlock:^(id json) {
+              progressBlock(json);
+          } successBlock:nil
+             errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
 }
 
 // GET site
@@ -1071,11 +1120,14 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSString *follow = [userIDs componentsJoinedByString:@","];
     if([follow length]) md[@"follow"] = follow;
     
-    [_oauth getResource:@"site.json" baseURLString:kBaseURLStringSiteStream parameters:md successBlock:^(id response) {
-        progressBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    [_oauth getResource:@"site.json"
+          baseURLString:kBaseURLStringSiteStream
+             parameters:md
+          progressBlock:^(id json) {
+              progressBlock(json);
+          } successBlock:nil errorBlock:^(NSError *error) {
+              errorBlock(error);
+          }];
 }
 
 #pragma mark Direct Messages

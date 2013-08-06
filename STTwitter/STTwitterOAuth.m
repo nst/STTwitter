@@ -270,6 +270,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
          baseURLString:@"https://api.twitter.com"
             parameters:@{}
          oauthCallback:theOAuthCallback
+         progressBlock:nil
           successBlock:^(id body) {
               
               NSDictionary *d = [body parametersDictionary];
@@ -428,6 +429,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
+      progressBlock:(void (^)(id))progressBlock
        successBlock:(void (^)(id))successBlock
          errorBlock:(void (^)(NSError *))errorBlock {
     
@@ -450,13 +452,16 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
     [self signRequest:r];
     
+    // TODO: remove code duplication for downloadProgressBlock in STTwitterAppOnly and STTwitterOAuth
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
+        
+        if(progressBlock == nil) return;
         
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
         
         if(json) {
-            successBlock(json);
+            progressBlock(json);
             return;
         }
         
@@ -465,7 +470,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
         
         NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-
+        
         NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
         
         for(NSString *jsonChunk in jsonChunks) {
@@ -477,7 +482,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                 errorBlock(jsonError);
                 return;
             }
-            successBlock(json);
+            progressBlock(json);
         }
     };
     
@@ -514,6 +519,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
        baseURLString:(NSString *)baseURLString // no trailing slash
           parameters:(NSDictionary *)params
        oauthCallback:(NSString *)oauthCallback
+       progressBlock:(void(^)(id json))progressBlock
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -541,6 +547,39 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     r.encodePOSTDictionary = (postData == nil);
     
     r.POSTDictionary = mutableParams ? mutableParams : @{};
+    
+    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
+        
+        if(progressBlock == nil) return;
+        
+        NSError *jsonError = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+        
+        if(json) {
+            progressBlock(json);
+            return;
+        }
+        
+        // we can receive several dictionaries in the same data chunk
+        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
+        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
+        
+        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        
+        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
+        
+        for(NSString *jsonChunk in jsonChunks) {
+            if([jsonChunk length] == 0) continue;
+            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *jsonError = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+            if(json == nil) {
+                errorBlock(jsonError);
+                return;
+            }
+            progressBlock(json);
+        }
+    };
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         
@@ -593,6 +632,23 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
          baseURLString:baseURLString
             parameters:params
          oauthCallback:nil
+         progressBlock:nil
+          successBlock:successBlock
+            errorBlock:errorBlock];
+}
+
+- (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString // no trailing slash
+          parameters:(NSDictionary *)params
+       progressBlock:(void (^)(id))progressBlock
+        successBlock:(void(^)(id response))successBlock
+          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:resource
+         baseURLString:baseURLString
+            parameters:params
+         oauthCallback:nil
+         progressBlock:progressBlock
           successBlock:successBlock
             errorBlock:errorBlock];
 }

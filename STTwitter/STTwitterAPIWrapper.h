@@ -83,12 +83,14 @@
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)parameters
+      progressBlock:(void(^)(id json))progressBlock
        successBlock:(void(^)(id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)parameters
+       progressBlock:(void(^)(id json))progressBlock
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock;
 

@@ -49,6 +49,7 @@
          baseURLString:@"https://api.twitter.com"
             parameters:@{ @"access_token" : _bearerToken }
           useBasicAuth:YES
+         progressBlock:nil
           successBlock:^(NSString *body) {
               
               NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -108,6 +109,7 @@
          baseURLString:@"https://api.twitter.com"
             parameters:@{ @"grant_type" : @"client_credentials" }
           useBasicAuth:YES
+         progressBlock:nil
           successBlock:^(NSString *body) {
               
               NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -138,6 +140,7 @@
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
+      progressBlock:(void(^)(id json))progressBlock
        successBlock:(void (^)(id))successBlock
          errorBlock:(void (^)(NSError *))errorBlock {
     
@@ -166,6 +169,40 @@
     }
     
     __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
+    
+    // TODO: remove code duplication for downloadProgressBlock in STTwitterAppOnly and STTwitterOAuth
+    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
+        
+        if(progressBlock == nil) return;
+        
+        NSError *jsonError = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+        
+        if(json) {
+            progressBlock(json);
+            return;
+        }
+        
+        // we can receive several dictionaries in the same data chunk
+        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
+        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
+        
+        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        
+        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
+        
+        for(NSString *jsonChunk in jsonChunks) {
+            if([jsonChunk length] == 0) continue;
+            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *jsonError = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+            if(json == nil) {
+                errorBlock(jsonError);
+                return;
+            }
+            progressBlock(json);
+        }
+    };
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         
@@ -199,6 +236,7 @@
        baseURLString:(NSString *)baseURLString // no trailing slash
           parameters:(NSDictionary *)params
         useBasicAuth:(BOOL)useBasicAuth
+       progressBlock:(void(^)(id json))progressBlock
         successBlock:(void(^)(NSString *body))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -216,15 +254,35 @@
     
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&jsonError];
+        if(progressBlock == nil) return;
         
-        if(json == nil) {
-            errorBlock(jsonError);
+        NSError *jsonError = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+        
+        if(json) {
+            progressBlock(json);
             return;
         }
         
-        successBlock(json);
+        // we can receive several dictionaries in the same data chunk
+        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
+        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
+        
+        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        
+        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
+        
+        for(NSString *jsonChunk in jsonChunks) {
+            if([jsonChunk length] == 0) continue;
+            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *jsonError = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+            if(json == nil) {
+                errorBlock(jsonError);
+                return;
+            }
+            progressBlock(json);
+        }
     };
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
@@ -266,6 +324,7 @@
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)params
+       progressBlock:(void(^)(id json))progressBlock
         successBlock:(void(^)(id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -273,6 +332,7 @@
          baseURLString:baseURLString
             parameters:params
           useBasicAuth:NO
+         progressBlock:progressBlock
           successBlock:successBlock
             errorBlock:errorBlock];
 }

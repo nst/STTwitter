@@ -61,7 +61,12 @@
     }];
 }
 
-- (void)fetchAPIResource:(NSString *)resource baseURLString:(NSString *)baseURLString httpMethod:(int)httpMethod parameters:(NSDictionary *)params completionBlock:(STTE_completionBlock_t)completionBlock errorBlock:(STTE_errorBlock_t)errorBlock {
+- (void)fetchAPIResource:(NSString *)resource
+           baseURLString:(NSString *)baseURLString
+              httpMethod:(int)httpMethod
+              parameters:(NSDictionary *)params
+         completionBlock:(void (^)(id json))completionBlock
+              errorBlock:(void (^)(NSError *error))errorBlock {
     
     NSData *mediaData = [params valueForKey:@"media[]"];
     
@@ -163,7 +168,8 @@
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-       successBlock:(STTE_completionBlock_t)successBlock
+      progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock
+       successBlock:(void (^)(id))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     
     int HTTPMethod = SLRequestMethodGET;
@@ -179,13 +185,14 @@
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)params
-        successBlock:(STTE_completionBlock_t)successBlock
+       progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock
+        successBlock:(void (^)(id))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     int HTTPMethod = SLRequestMethodPOST;
     
     NSDictionary *d = params ? params : @{};
-
+    
     [self fetchAPIResource:resource
              baseURLString:baseURLString
                 httpMethod:HTTPMethod
