@@ -538,7 +538,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     if(postData) {
         [mutableParams removeObjectForKey:postKey];
         
-        [r setDataToUpload:postData parameterName:postKey mimeType:@"application/octet-stream" fileName:@"media.jpg"];
+        [r addDataToUpload:postData parameterName:postKey mimeType:@"application/octet-stream" fileName:@"media.jpg"];
     }
     
     [self signRequest:r isMediaUpload:(postData != nil) oauthCallback:oauthCallback];

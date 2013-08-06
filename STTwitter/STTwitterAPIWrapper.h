@@ -323,7 +323,7 @@
  */
 
 - (void)postStatusUpdate:(NSString *)status
-          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported
+          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
        possiblySensitive:(NSNumber *)possiblySensitive
        inReplyToStatusID:(NSString *)inReplyToStatusID
                 latitude:(NSString *)latitude
