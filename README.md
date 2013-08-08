@@ -1,6 +1,6 @@
 ## STTwitter
 
-_A lightweight Objective-C library for Twitter REST API 1.1_
+_A comprehensive Objective-C library for Twitter REST API 1.1_
 
 ### Project News
 
@@ -13,7 +13,7 @@ _A lightweight Objective-C library for Twitter REST API 1.1_
 
 ### Short Description
 
-`STTwitter` is lightweight Objective-C library for Twitter REST API 1.1.
+`STTwitter` is comprehensive Objective-C library for Twitter REST API 1.1.
 
 It works on iOS 5+ and OS X 10.7+.
 

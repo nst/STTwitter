@@ -68,8 +68,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 }
 
 + (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                       consumerKey:(NSString *)consumerKey
-                                    consumerSecret:(NSString *)consumerSecret {
+                                   consumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret {
     
     STTwitterOAuth *to = [[STTwitterOAuth alloc] init];
     
@@ -81,10 +81,10 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 }
 
 + (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                       consumerKey:(NSString *)consumerKey
-                                    consumerSecret:(NSString *)consumerSecret
-                                        oauthToken:(NSString *)oauthToken
-                                  oauthTokenSecret:(NSString *)oauthTokenSecret {
+                                   consumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret
+                                    oauthToken:(NSString *)oauthToken
+                              oauthTokenSecret:(NSString *)oauthTokenSecret {
     
     STTwitterOAuth *to = [self twitterServiceWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
@@ -95,10 +95,10 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 }
 
 + (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                       consumerKey:(NSString *)consumerKey
-                                    consumerSecret:(NSString *)consumerSecret
-                                          username:(NSString *)username
-                                          password:(NSString *)password {
+                                   consumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret
+                                      username:(NSString *)username
+                                      password:(NSString *)password {
     
     STTwitterOAuth *to = [self twitterServiceWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
@@ -440,8 +440,38 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                                                       stTwitterErrorBlock:errorBlock];
     
     [self signRequest:r];
-        
+    
     [r startAsynchronous];
+}
+
+- (void)fetchResource:(NSString *)resource
+           HTTPMethod:(NSString *)HTTPMethod
+        baseURLString:(NSString *)baseURLString
+           parameters:(NSDictionary *)params
+        progressBlock:(void(^)(id json))progressBlock
+         successBlock:(void(^)(id json))successBlock
+           errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    if([HTTPMethod isEqualToString:@"GET"]) {
+        
+        [self getResource:resource baseURLString:baseURLString
+               parameters:params
+            progressBlock:progressBlock
+             successBlock:successBlock
+               errorBlock:errorBlock];
+        
+    } else if ([HTTPMethod isEqualToString:@"POST"]) {
+        
+        [self postResource:resource
+             baseURLString:baseURLString
+                parameters:params
+             progressBlock:progressBlock
+              successBlock:successBlock
+                errorBlock:errorBlock];
+        
+    } else {
+        NSAssert(NO, @"unsupported HTTP method");
+    }
 }
 
 - (void)postResource:(NSString *)resource
@@ -486,22 +516,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString // no trailing slash
           parameters:(NSDictionary *)params
-        successBlock:(void(^)(id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [self postResource:resource
-         baseURLString:baseURLString
-            parameters:params
-         oauthCallback:nil
-         progressBlock:nil
-          successBlock:successBlock
-            errorBlock:errorBlock];
-}
-
-- (void)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString // no trailing slash
-          parameters:(NSDictionary *)params
-       progressBlock:(void (^)(id))progressBlock
+       progressBlock:(void(^)(id json))progressBlock
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -510,6 +525,37 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
             parameters:params
          oauthCallback:nil
          progressBlock:progressBlock
+          successBlock:successBlock
+            errorBlock:errorBlock];
+}
+
+- (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString // no trailing slash
+          parameters:(NSDictionary *)params
+       oauthCallback:(NSString *)oauthCallback
+        successBlock:(void(^)(id response))successBlock
+          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:resource
+         baseURLString:baseURLString
+            parameters:params
+         oauthCallback:oauthCallback
+         progressBlock:nil
+          successBlock:successBlock
+            errorBlock:errorBlock];
+}
+
+- (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString // no trailing slash
+          parameters:(NSDictionary *)params
+        successBlock:(void(^)(id response))successBlock
+          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:resource
+         baseURLString:baseURLString
+            parameters:params
+         oauthCallback:nil
+         progressBlock:nil
           successBlock:successBlock
             errorBlock:errorBlock];
 }

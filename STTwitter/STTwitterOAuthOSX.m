@@ -63,7 +63,7 @@
 
 - (void)fetchAPIResource:(NSString *)resource
            baseURLString:(NSString *)baseURLString
-              httpMethod:(int)httpMethod
+              httpMethod:(NSInteger)httpMethod
               parameters:(NSDictionary *)params
          completionBlock:(void (^)(id json))completionBlock
               errorBlock:(void (^)(NSError *error))errorBlock {
@@ -95,6 +95,10 @@
             NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
             
             if(json == nil) {
+                
+//                NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+//                NSLog(@"-- %@", s);
+                
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     errorBlock(jsonError);
                 }];
@@ -165,37 +169,33 @@
     return YES;
 }
 
-- (void)getResource:(NSString *)resource
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)params
-      progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock?
-       successBlock:(void (^)(id))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)fetchResource:(NSString *)resource
+           HTTPMethod:(NSString *)HTTPMethod
+        baseURLString:(NSString *)baseURLString
+           parameters:(NSDictionary *)params
+        progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock?
+         successBlock:(void (^)(id))successBlock
+           errorBlock:(void(^)(NSError *error))errorBlock {
     
-    int HTTPMethod = SLRequestMethodGET;
-    
-    [self fetchAPIResource:resource
-             baseURLString:baseURLString
-                httpMethod:HTTPMethod
-                parameters:params
-           completionBlock:successBlock
-                errorBlock:errorBlock];
-}
+    NSAssert(([ @[@"GET", @"POST"] containsObject:HTTPMethod]), @"unsupported HTTP method");
 
-- (void)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString
-          parameters:(NSDictionary *)params
-       progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock?
-        successBlock:(void (^)(id))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
+    NSInteger slRequestMethod = SLRequestMethodGET;
+
+    NSDictionary *d = params;
     
-    int HTTPMethod = SLRequestMethodPOST;
+    if([HTTPMethod isEqualToString:@"POST"]) {
+        if (d == nil) d = @{};
+        slRequestMethod = SLRequestMethodPOST;
+    }
     
-    NSDictionary *d = params ? params : @{};
+    NSString *baseURLStringWithTrailingSlash = baseURLString;
+    if([baseURLString hasSuffix:@"/"] == NO) {
+        baseURLStringWithTrailingSlash = [baseURLString stringByAppendingString:@"/"];
+    }
     
     [self fetchAPIResource:resource
-             baseURLString:baseURLString
-                httpMethod:HTTPMethod
+             baseURLString:baseURLStringWithTrailingSlash
+                httpMethod:slRequestMethod
                 parameters:d
            completionBlock:successBlock
                 errorBlock:errorBlock];

@@ -22,7 +22,6 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
 static NSDateFormatter *dateFormatter = nil;
 
 @interface STTwitterAPIWrapper ()
-//id removeNull(id rootObject);
 @property (nonatomic, retain) NSObject <STTwitterOAuthProtocol> *oauth;
 @end
 
@@ -54,10 +53,10 @@ static NSDateFormatter *dateFormatter = nil;
 #endif
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
-                                             consumerKey:(NSString *)consumerKey
-                                          consumerSecret:(NSString *)consumerSecret
-                                                username:(NSString *)username
-                                                password:(NSString *)password {
+                                    consumerKey:(NSString *)consumerKey
+                                 consumerSecret:(NSString *)consumerSecret
+                                       username:(NSString *)username
+                                       password:(NSString *)password {
     
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
     
@@ -70,10 +69,10 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
-                                             consumerKey:(NSString *)consumerKey
-                                          consumerSecret:(NSString *)consumerSecret
-                                              oauthToken:(NSString *)oauthToken
-                                        oauthTokenSecret:(NSString *)oauthTokenSecret {
+                                    consumerKey:(NSString *)consumerKey
+                                 consumerSecret:(NSString *)consumerSecret
+                                     oauthToken:(NSString *)oauthToken
+                               oauthTokenSecret:(NSString *)oauthTokenSecret {
     
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
     
@@ -86,8 +85,8 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
-                                             consumerKey:(NSString *)consumerKey
-                                          consumerSecret:(NSString *)consumerSecret {
+                                    consumerKey:(NSString *)consumerKey
+                                 consumerSecret:(NSString *)consumerSecret {
     
     return [self twitterAPIWithOAuthConsumerName:consumerName
                                      consumerKey:consumerKey
@@ -97,7 +96,7 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (instancetype)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
-                                                   consumerSecret:(NSString *)consumerSecret {
+                                          consumerSecret:(NSString *)consumerSecret {
     
     STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
     
@@ -204,12 +203,13 @@ static NSDateFormatter *dateFormatter = nil;
        successBlock:(void(^)(id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [_oauth getResource:resource
-          baseURLString:baseURLString
-             parameters:parameters
-          progressBlock:progressBlock
-           successBlock:successBlock
-             errorBlock:errorBlock];
+    [_oauth fetchResource:resource
+               HTTPMethod:@"GET"
+            baseURLString:baseURLString
+               parameters:parameters
+            progressBlock:progressBlock
+             successBlock:successBlock
+               errorBlock:errorBlock];
 }
 
 - (void)postResource:(NSString *)resource
@@ -219,12 +219,43 @@ static NSDateFormatter *dateFormatter = nil;
         successBlock:(void(^)(id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [_oauth postResource:resource
-           baseURLString:(NSString *)baseURLString
-              parameters:parameters
-           progressBlock:progressBlock
-            successBlock:successBlock
-              errorBlock:errorBlock];
+    [_oauth fetchResource:resource
+               HTTPMethod:@"POST"
+            baseURLString:baseURLString
+               parameters:parameters
+            progressBlock:progressBlock
+             successBlock:successBlock
+               errorBlock:errorBlock];
+}
+
+- (void)postResource:(NSString *)resource
+       baseURLString:(NSString *)baseURLString
+          parameters:(NSDictionary *)parameters
+       progressBlock:(void(^)(id json))progressBlock
+          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth fetchResource:resource
+               HTTPMethod:@"POST"
+            baseURLString:baseURLString
+               parameters:parameters
+            progressBlock:progressBlock
+             successBlock:nil
+               errorBlock:errorBlock];
+}
+
+- (void)getResource:(NSString *)resource
+      baseURLString:(NSString *)baseURLString
+         parameters:(NSDictionary *)parameters
+      progressBlock:(void(^)(id json))progressBlock
+         errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth fetchResource:resource
+               HTTPMethod:@"GET"
+            baseURLString:baseURLString
+               parameters:parameters
+            progressBlock:progressBlock
+             successBlock:nil
+               errorBlock:errorBlock];
 }
 
 - (void)getAPIResource:(NSString *)resource
@@ -1029,24 +1060,24 @@ static NSDateFormatter *dateFormatter = nil;
     if([keywords length]) md[@"keywords"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [_oauth postResource:@"statuses/sample.json"
-           baseURLString:kBaseURLStringStream
-              parameters:md
-           progressBlock:^(id json) {
-               
-               NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-               if(stallWarning && stallWarningBlock) {
-                   stallWarningBlock([stallWarning valueForKey:@"code"],
-                                     [stallWarning valueForKey:@"message"],
-                                     [[stallWarning valueForKey:@"percent_full"] integerValue]);
-               } else {
-                   progressBlock(json);
-               }
-               
-           } successBlock:nil
-              errorBlock:^(NSError *error) {
-                  errorBlock(error);
-              }];
+    [self postResource:@"statuses/sample.json"
+         baseURLString:kBaseURLStringStream
+            parameters:md
+         progressBlock:^(id json) {
+             
+             NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+             if(stallWarning && stallWarningBlock) {
+                 stallWarningBlock([stallWarning valueForKey:@"code"],
+                                   [stallWarning valueForKey:@"message"],
+                                   [[stallWarning valueForKey:@"percent_full"] integerValue]);
+             } else {
+                 progressBlock(json);
+             }
+             
+         } successBlock:nil
+            errorBlock:^(NSError *error) {
+                errorBlock(error);
+            }];
 }
 
 // convenience
@@ -1077,24 +1108,24 @@ static NSDateFormatter *dateFormatter = nil;
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    [_oauth getResource:@"statuses/sample.json"
-          baseURLString:kBaseURLStringStream
-             parameters:md
-          progressBlock:^(id json) {
-              
-              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning && stallWarningBlock) {
-                  stallWarningBlock([stallWarning valueForKey:@"code"],
-                                    [stallWarning valueForKey:@"message"],
-                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
-              } else {
-                  progressBlock(json);
-              }
-              
-          } successBlock:nil
-             errorBlock:^(NSError *error) {
-                 errorBlock(error);
-             }];
+    [self getResource:@"statuses/sample.json"
+        baseURLString:kBaseURLStringStream
+           parameters:md
+        progressBlock:^(id json) {
+            
+            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+            if(stallWarning && stallWarningBlock) {
+                stallWarningBlock([stallWarning valueForKey:@"code"],
+                                  [stallWarning valueForKey:@"message"],
+                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
+            } else {
+                progressBlock(json);
+            }
+            
+        } successBlock:nil
+           errorBlock:^(NSError *error) {
+               errorBlock(error);
+           }];
 }
 
 // GET statuses/firehose
@@ -1110,23 +1141,23 @@ static NSDateFormatter *dateFormatter = nil;
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    [_oauth getResource:@"statuses/firehose.json"
-          baseURLString:kBaseURLStringStream
-             parameters:md
-          progressBlock:^(id json) {
-              
-              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning && stallWarningBlock) {
-                  stallWarningBlock([stallWarning valueForKey:@"code"],
-                                    [stallWarning valueForKey:@"message"],
-                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
-              } else {
-                  progressBlock(json);
-              }
-              
-          } successBlock:nil errorBlock:^(NSError *error) {
-              errorBlock(error);
-          }];
+    [self getResource:@"statuses/firehose.json"
+        baseURLString:kBaseURLStringStream
+           parameters:md
+        progressBlock:^(id json) {
+            
+            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+            if(stallWarning && stallWarningBlock) {
+                stallWarningBlock([stallWarning valueForKey:@"code"],
+                                  [stallWarning valueForKey:@"message"],
+                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
+            } else {
+                progressBlock(json);
+            }
+            
+        } successBlock:nil errorBlock:^(NSError *error) {
+            errorBlock(error);
+        }];
 }
 
 // GET user
@@ -1152,24 +1183,24 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if([keywords length]) md[@"keywords"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [_oauth getResource:@"user.json"
-          baseURLString:kBaseURLStringUserStream
-             parameters:md
-          progressBlock:^(id json) {
-              
-              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning && stallWarningBlock) {
-                  stallWarningBlock([stallWarning valueForKey:@"code"],
-                                    [stallWarning valueForKey:@"message"],
-                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
-              } else {
-                  progressBlock(json);
-              }
-              
-          } successBlock:nil
-             errorBlock:^(NSError *error) {
-                 errorBlock(error);
-             }];
+    [self getResource:@"user.json"
+        baseURLString:kBaseURLStringUserStream
+           parameters:md
+        progressBlock:^(id json) {
+            
+            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+            if(stallWarning && stallWarningBlock) {
+                stallWarningBlock([stallWarning valueForKey:@"code"],
+                                  [stallWarning valueForKey:@"message"],
+                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
+            } else {
+                progressBlock(json);
+            }
+            
+        } successBlock:nil
+           errorBlock:^(NSError *error) {
+               errorBlock(error);
+           }];
 }
 
 // GET site
@@ -1191,24 +1222,24 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSString *follow = [userIDs componentsJoinedByString:@","];
     if([follow length]) md[@"follow"] = follow;
     
-    [_oauth getResource:@"site.json"
-          baseURLString:kBaseURLStringSiteStream
-             parameters:md
-          progressBlock:^(id json) {
-              
-              NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-              if(stallWarning && stallWarningBlock) {
-                  stallWarningBlock([stallWarning valueForKey:@"code"],
-                                    [stallWarning valueForKey:@"message"],
-                                    [[stallWarning valueForKey:@"percent_full"] integerValue]);
-              } else {
-                  progressBlock(json);
-              }
-              
-          } successBlock:nil
-             errorBlock:^(NSError *error) {
-                 errorBlock(error);
-             }];
+    [self getResource:@"site.json"
+        baseURLString:kBaseURLStringSiteStream
+           parameters:md
+        progressBlock:^(id json) {
+            
+            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+            if(stallWarning && stallWarningBlock) {
+                stallWarningBlock([stallWarning valueForKey:@"code"],
+                                  [stallWarning valueForKey:@"message"],
+                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
+            } else {
+                progressBlock(json);
+            }
+            
+        } successBlock:nil
+           errorBlock:^(NSError *error) {
+               errorBlock(error);
+           }];
 }
 
 #pragma mark Direct Messages
