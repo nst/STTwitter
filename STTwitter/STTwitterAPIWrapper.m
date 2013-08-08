@@ -553,7 +553,7 @@ static NSDateFormatter *dateFormatter = nil;
                          successBlock:(void(^)(NSArray *statuses))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self getUserTimelineWithScreenName:screenName count:nil successBlock:successBlock errorBlock:errorBlock];
+    [self getUserTimelineWithScreenName:screenName count:20 successBlock:successBlock errorBlock:errorBlock];
 }
 
 - (void)getHomeTimelineSinceID:(NSString *)sinceID
@@ -1740,7 +1740,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                      orScreenName:screenName
                            cursor:nil
                        skipStatus:NO
-              includeUserEntities:YES
+              includeUserEntities:@(YES)
                      successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
                          successBlock(users);
                      } errorBlock:^(NSError *error) {
