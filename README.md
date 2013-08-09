@@ -4,6 +4,15 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 
 > STTwitter will be presented at [SoftShake](http://soft-shake.ch) 2013, Geneva, on October 24th.
 
+1. [Installation](#installation)
+2. [Code Snippets](#code-snippets)
+3. [Various Kinds of OAuth Connections](#various-kinds-of-oauth-connections)
+4. [OAuth Consumer Tokens](#oauth-consumer-tokens)
+5. [Demo / Test Project](#demo--test-project)
+6. [Troubleshooting](#troubleshooting)
+7. [Developers](#developpers)
+7. [BSD 3-Clause License](#bsd-3-clause-license)
+
 ### Installation
 
 Drag and drop STTwitter directory into your project and that's it.
@@ -17,7 +26,7 @@ If you want to use CocoaPods, include the STTwitter pod in your project's podfil
 
 Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
-### Sample Usage
+### Code Snippets
 
 ##### Instantiate STTwitterAPI
 
@@ -133,9 +142,9 @@ Twitter restricts the xAuth authentication process to xAuth-enabled consumer tok
 
 Please [fill an issue](https://github.com/nst/STTwitter/issues) on GitHub.
 
-### Architecture
+### Developers
 
-Your code only interacts with `STTwitterAPIWrapper`.
+The application only interacts with `STTwitterAPIWrapper`.
 
 `STTwitterAPIWrapper` maps Objective-C methods with all documented Twitter API endpoints.
 
