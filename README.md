@@ -31,12 +31,11 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
 ##### Instantiate STTwitterAPI
 
-    STTwitterAPI *twitter =
-        [STTwitterAPI twitterAPIWithOAuthConsumerName:@""
-                                          consumerKey:@""
-                                       consumerSecret:@""
-                                             username:@""
-                                             password:@""];
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:@""
+                                                              consumerKey:@""
+                                                           consumerSecret:@""
+                                                                 username:@""
+                                                                 password:@""];
 
 ##### Verify the credentials
 
@@ -69,9 +68,8 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
 ##### App Only Authentication
 
-    STTwitterAPI *twitter =
-        [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
-                                        consumerSecret:@""];
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
+                                                            consumerSecret:@""];
     
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
         
@@ -162,13 +160,13 @@ You can create your own convenience methods with fewer parameters. You can also 
 ##### Layer Model
      
      +-------------------------------------------------------+
-     |                   YourApplication                     |
+     |                   Your Application                     |
      +-------------------------------------------------------+
                                  v
      +-------------------------------------------------------+
      |                     STTwitterAPI                      |
      +-------------------------------------------------------+
-                                 v
+               v                 v                 v
      + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
      |                STTwitterOAuthProtocol                 |
      + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
