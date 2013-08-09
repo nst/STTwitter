@@ -44,11 +44,11 @@
 
 - (void)testSignatureWithEscapedGETParameters {
     
-    STTwitterOAuth *os = [STTwitterOAuth twitterServiceWithConsumerName:@"test"
-                                                            consumerKey:@"6YBPrScvh1RIThrWYveGg"
-                                                         consumerSecret:@"SMO1vDYJGA0xfOe5RyWNjhTUS2sNqsa7ae15gOZnw" // fake
-                                                             oauthToken:@"1294332967-UsaIUBcsC4JcHv9TIYxk5ektsVIsAtClNV8KghP"
-                                                       oauthTokenSecret:@"PnfTbKJ59jjwmq9xzt2FmKhWP5tH1yGqnnikLVSOs"]; // fake
+    STTwitterOAuth *os = [STTwitterOAuth twitterOAuthWithConsumerName:@"test"
+                                                          consumerKey:@"6YBPrScvh1RIThrWYveGg"
+                                                       consumerSecret:@"SMO1vDYJGA0xfOe5RyWNjhTUS2sNqsa7ae15gOZnw" // fake
+                                                           oauthToken:@"1294332967-UsaIUBcsC4JcHv9TIYxk5ektsVIsAtClNV8KghP"
+                                                     oauthTokenSecret:@"PnfTbKJ59jjwmq9xzt2FmKhWP5tH1yGqnnikLVSOs"]; // fake
     
     os.testOauthNonce = @"0175D70F-85D7-4B5E-BAB1-F849229B";
     os.testOauthTimestamp = @"1372078509";
@@ -85,12 +85,12 @@
     // https://dev.twitter.com/docs/auth/authorizing-request
     
     NSArray *parameters = @[@{@"oauth_consumer_key"     : @"xvz1evFS4wEEPTGEFPHBog"},
-    @{@"oauth_nonce"            : @"kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg"},
-    @{@"oauth_signature"        : @"tnnArxj06cWHq44gCs1OSKk/jLY="},
-    @{@"oauth_signature_method" : @"HMAC-SHA1"},
-    @{@"oauth_timestamp"        : @"1318622958"},
-    @{@"oauth_token"            : @"370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb"},
-    @{@"oauth_version"          : @"1.0"}];
+                            @{@"oauth_nonce"            : @"kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg"},
+                            @{@"oauth_signature"        : @"tnnArxj06cWHq44gCs1OSKk/jLY="},
+                            @{@"oauth_signature_method" : @"HMAC-SHA1"},
+                            @{@"oauth_timestamp"        : @"1318622958"},
+                            @{@"oauth_token"            : @"370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb"},
+                            @{@"oauth_version"          : @"1.0"}];
     
     NSString *s1 = [STTwitterOAuth oauthHeaderValueWithParameters:parameters];
     
@@ -134,7 +134,7 @@
 }
 
 - (void)testGeoSearchBaseString {
-
+    
     NSArray *allParamsUnsorted = [NSArray arrayWithObjects:
                                   @{@"query" : @"Toronto"},
                                   @{@"oauth_consumer_key" : @"30d7ECqcJDGx8pBEMqxCxg"},
@@ -165,12 +165,12 @@
 - (void)testGeoSearchAuthorizationHeader {
     
     NSArray *parameters = @[@{@"oauth_consumer_key"     : @"30d7ECqcJDGx8pBEMqxCxg"},
-    @{@"oauth_nonce"            : @"ea95faa8097f4aeca24f77be0b6923a1"},
-    @{@"oauth_signature"        : @"eMPFYN/QqvrbQISuKOiq2I9vQpk="},
-    @{@"oauth_signature_method" : @"HMAC-SHA1"},
-    @{@"oauth_timestamp"        : @"1351964056"},
-    @{@"oauth_token"            : @"15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8"},
-    @{@"oauth_version"          : @"1.0"}];
+                            @{@"oauth_nonce"            : @"ea95faa8097f4aeca24f77be0b6923a1"},
+                            @{@"oauth_signature"        : @"eMPFYN/QqvrbQISuKOiq2I9vQpk="},
+                            @{@"oauth_signature_method" : @"HMAC-SHA1"},
+                            @{@"oauth_timestamp"        : @"1351964056"},
+                            @{@"oauth_token"            : @"15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8"},
+                            @{@"oauth_version"          : @"1.0"}];
     
     NSString *s1 = [STTwitterOAuth oauthHeaderValueWithParameters:parameters];
     
@@ -193,7 +193,7 @@
     
     // https://dev.twitter.com/docs/oauth/xauth
     
-    STTwitterOAuth *os = [STTwitterOAuth twitterServiceWithConsumerName:@"test" consumerKey:@"JvyS7DO2qd6NNTsXJ4E7zA" consumerSecret:@"9z6157pUbOBqtbm0A0q4r29Y2EYzIHlUwbF4Cl9c" username:@"oauth_test_exec" password:@"twitter-xauth"];
+    STTwitterOAuth *os = [STTwitterOAuth twitterOAuthWithConsumerName:@"test" consumerKey:@"JvyS7DO2qd6NNTsXJ4E7zA" consumerSecret:@"9z6157pUbOBqtbm0A0q4r29Y2EYzIHlUwbF4Cl9c" username:@"oauth_test_exec" password:@"twitter-xauth"];
     
     os.testOauthNonce = @"6AN2dKRzxyGhmIXUKSmp1JcB4pckM8rD3frKMTmVAo";
     os.testOauthTimestamp = @"1284565601";
@@ -210,7 +210,7 @@
     // https://dev.twitter.com/docs/auth/application-only-auth
     
     NSString *base64EncodedCredentials = [STTwitterAppOnly base64EncodedBearerTokenCredentialsWithConsumerKey:@"xvz1evFS4wEEPTGEFPHBog" consumerSecret:@"L8qq9PZyRg6ieKGEKhZolGC0vJWLw8iEJ88DRdyOg"];
-
+    
     STAssertEqualObjects(base64EncodedCredentials, @"eHZ6MWV2RlM0d0VFUFRHRUZQSEJvZzpMOHFxOVBaeVJnNmllS0dFS2hab2xHQzB2SldMdzhpRUo4OERSZHlPZw==", nil);
 }
 

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol STTwitterOAuthProtocol <NSObject>
+@protocol STTwitterProtocol <NSObject>
 
 - (BOOL)canVerifyCredentials;
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock

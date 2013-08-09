@@ -6,14 +6,14 @@
 //  Copyright 2010 seriot.ch. All rights reserved.
 //
 
-#import "STTwitterOAuthOSX.h"
+#import "STTwitterOSX.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
 #if TARGET_OS_IPHONE
 #else
 
-@implementation STTwitterOAuthOSX
+@implementation STTwitterOSX
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     [self requestAccessWithCompletionBlock:^(ACAccount *twitterAccount) {
@@ -53,7 +53,7 @@
                 NSError *e = error;
                 if(e == nil) {
                     NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"Cannot access OS X Twitter account." };
-                    e = [NSError errorWithDomain:@"STTwitterOAuthOSX" code:0 userInfo:userInfo];
+                    e = [NSError errorWithDomain:@"STTwitterOSX" code:0 userInfo:userInfo];
                 }
                 errorBlock(e);
             }
@@ -96,8 +96,8 @@
             
             if(json == nil) {
                 
-//                NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
-//                NSLog(@"-- %@", s);
+                //                NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+                //                NSLog(@"-- %@", s);
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     errorBlock(jsonError);
@@ -178,9 +178,9 @@
            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert(([ @[@"GET", @"POST"] containsObject:HTTPMethod]), @"unsupported HTTP method");
-
+    
     NSInteger slRequestMethod = SLRequestMethodGET;
-
+    
     NSDictionary *d = params;
     
     if([HTTPMethod isEqualToString:@"POST"]) {

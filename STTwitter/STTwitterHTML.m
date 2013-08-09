@@ -17,16 +17,16 @@
     STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://twitter.com/login"];
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-
+        
         NSError *error = nil;
-//        NSString *token = [body firstMatchWithRegex:@"<input type=\"hidden\" value=\"(\\S+)\" name=\"authenticity_token\"/>" error:&error];        
+        //        NSString *token = [body firstMatchWithRegex:@"<input type=\"hidden\" value=\"(\\S+)\" name=\"authenticity_token\"/>" error:&error];
         NSString *token = [body firstMatchWithRegex:@"formAuthenticityToken&quot;:&quot;(\\S+?)&quot" error:&error];
-
+        
         if(token == nil) {
             errorBlock(error);
             return;
         }
-
+        
         successBlock(token);
     };
     
@@ -38,10 +38,10 @@
 }
 
 - (void)postLoginFormWithUsername:(NSString *)username
-                                 password:(NSString *)password
-                        authenticityToken:(NSString *)authenticityToken
-                             successBlock:(void(^)())successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock {
+                         password:(NSString *)password
+                authenticityToken:(NSString *)authenticityToken
+                     successBlock:(void(^)())successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     if([username length] == 0 || [password length] == 0) {
         NSString *errorDescription = [NSString stringWithFormat:@"Missing credentials"];
@@ -70,15 +70,15 @@
 }
 
 - (void)getAuthorizeFormAtURL:(NSURL *)url successBlock:(void(^)(NSString *authenticityToken, NSString *oauthToken))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     STHTTPRequest *r = [STHTTPRequest requestWithURL:url];
-        
+    
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         /*
-        <form action="https://api.twitter.com/oauth/authorize" id="oauth_form" method="post"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="dacd811cf06655518633ad93e950132614eab7f4" /></div>
-        
-        <input id="oauth_token" name="oauth_token" type="hidden" value="3qp5r3Ya65aVks8lNZEZm7313080zTdMQTOplalzQI" />
-        */
+         <form action="https://api.twitter.com/oauth/authorize" id="oauth_form" method="post"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="dacd811cf06655518633ad93e950132614eab7f4" /></div>
+         
+         <input id="oauth_token" name="oauth_token" type="hidden" value="3qp5r3Ya65aVks8lNZEZm7313080zTdMQTOplalzQI" />
+         */
         
         NSError *error1 = nil;
         NSString *authenticityToken = [body firstMatchWithRegex:@"<input name=\"authenticity_token\" type=\"hidden\" value=\"(\\S+)\" />" error:&error1];
@@ -112,7 +112,7 @@
 }
 
 - (void)postAuthorizeFormResultsAtURL:(NSURL *)url authenticityToken:(NSString *)authenticityToken oauthToken:(NSString *)oauthToken successBlock:(void(^)(NSString *PIN))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     STHTTPRequest *r = [STHTTPRequest requestWithURL:url];
     
     r.POSTDictionary = @{@"authenticity_token" : authenticityToken,

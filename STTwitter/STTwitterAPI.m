@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Nicolas Seriot. All rights reserved.
 //
 
-#import "STTwitterAPIWrapper.h"
-#import "STTwitterOAuthOSX.h"
+#import "STTwitterAPI.h"
+#import "STTwitterOSX.h"
 #import "STTwitterOAuth.h"
 #import "NSString+STTwitter.h"
 #import "STTwitterAppOnly.h"
@@ -21,11 +21,11 @@ static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1
 
 static NSDateFormatter *dateFormatter = nil;
 
-@interface STTwitterAPIWrapper ()
-@property (nonatomic, retain) NSObject <STTwitterOAuthProtocol> *oauth;
+@interface STTwitterAPI ()
+@property (nonatomic, retain) NSObject <STTwitterProtocol> *oauth;
 @end
 
-@implementation STTwitterAPIWrapper
+@implementation STTwitterAPI
 
 #if TARGET_OS_IPHONE
 #else
@@ -36,7 +36,7 @@ static NSDateFormatter *dateFormatter = nil;
     [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         // OS X account must be considered invalid
         
-        if([self.oauth isKindOfClass:[STTwitterOAuthOSX class]]) {
+        if([self.oauth isKindOfClass:[STTwitterOSX class]]) {
             self.oauth = nil;//[[[STTwitterOAuthOSX alloc] init] autorelease];
         }
     }];
@@ -44,9 +44,9 @@ static NSDateFormatter *dateFormatter = nil;
     return self;
 }
 
-+ (instancetype)twitterAPIWithOAuthOSX {
-    STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
-    twitter.oauth = [[[STTwitterOAuthOSX alloc] init] autorelease];
++ (instancetype)twitterAPIOSX {
+    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
+    twitter.oauth = [[[STTwitterOSX alloc] init] autorelease];
     return [twitter autorelease];
 }
 
@@ -58,13 +58,13 @@ static NSDateFormatter *dateFormatter = nil;
                                        username:(NSString *)username
                                        password:(NSString *)password {
     
-    STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
+    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     
-    twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerName:consumerName
-                                                       consumerKey:consumerKey
-                                                    consumerSecret:consumerSecret
-                                                          username:username
-                                                          password:password];
+    twitter.oauth = [STTwitterOAuth twitterOAuthWithConsumerName:consumerName
+                                                     consumerKey:consumerKey
+                                                  consumerSecret:consumerSecret
+                                                        username:username
+                                                        password:password];
     return [twitter autorelease];
 }
 
@@ -74,13 +74,13 @@ static NSDateFormatter *dateFormatter = nil;
                                      oauthToken:(NSString *)oauthToken
                                oauthTokenSecret:(NSString *)oauthTokenSecret {
     
-    STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
+    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     
-    twitter.oauth = [STTwitterOAuth twitterServiceWithConsumerName:consumerName
-                                                       consumerKey:consumerKey
-                                                    consumerSecret:consumerSecret
-                                                        oauthToken:oauthToken
-                                                  oauthTokenSecret:oauthTokenSecret];
+    twitter.oauth = [STTwitterOAuth twitterOAuthWithConsumerName:consumerName
+                                                     consumerKey:consumerKey
+                                                  consumerSecret:consumerSecret
+                                                      oauthToken:oauthToken
+                                                oauthTokenSecret:oauthTokenSecret];
     return [twitter autorelease];
 }
 
@@ -95,17 +95,16 @@ static NSDateFormatter *dateFormatter = nil;
                                         password:nil];
 }
 
-+ (instancetype)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
-                                          consumerSecret:(NSString *)consumerSecret {
++ (instancetype)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
+                                  consumerSecret:(NSString *)consumerSecret {
     
-    STTwitterAPIWrapper *twitter = [[STTwitterAPIWrapper alloc] init];
+    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     
-    STTwitterAppOnly *appOnly = [[[STTwitterAppOnly alloc] init] autorelease];
-    appOnly.consumerKey = consumerKey;
-    appOnly.consumerSecret = consumerSecret;
+    STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerKey:consumerKey consumerSecret:consumerSecret];
     
     twitter.oauth = appOnly;
-    return twitter;
+    
+    return [twitter autorelease];
 }
 
 - (NSDateFormatter *)dateFormatter {
@@ -176,8 +175,8 @@ static NSDateFormatter *dateFormatter = nil;
     
 #if TARGET_OS_IPHONE
 #else
-    if([_oauth isKindOfClass:[STTwitterOAuthOSX class]]) {
-        STTwitterOAuthOSX *oAuthOSX = (STTwitterOAuthOSX *)_oauth;
+    if([_oauth isKindOfClass:[STTwitterOSX class]]) {
+        STTwitterOSX *oAuthOSX = (STTwitterOSX *)_oauth;
         return oAuthOSX.username;
     }
 #endif
@@ -3702,7 +3701,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 					   errorBlock:(void(^)(NSError *error))errorBlock {
 	NSDictionary *d = nil;
 	if (resources)
-		d = @{ @"resources" : [resources componentsJoinedByString:@","] };
+        d = @{ @"resources" : [resources componentsJoinedByString:@","] };
 	[self getAPIResource:@"application/rate_limit_status.json" parameters:d successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -3747,7 +3746,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 @end
 
-@implementation NSString (STTwitterAPIWrapper)
+@implementation NSString (STTwitterAPI)
 
 - (NSString *)htmlLinkName {
     NSString *ahref = [self firstMatchWithRegex:@"<a href=\".*\">(.*)</a>" error:nil];

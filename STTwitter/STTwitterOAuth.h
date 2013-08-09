@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STTwitterOAuthProtocol.h"
+#import "STTwitterProtocol.h"
 
 extern NSString * const kSTPOSTDataKey;
 
@@ -22,23 +22,23 @@ extern NSString * const kSTPOSTDataKey;
  ...
  */
 
-@interface STTwitterOAuth : NSObject <STTwitterOAuthProtocol>
+@interface STTwitterOAuth : NSObject <STTwitterProtocol>
 
-+ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                       consumerKey:(NSString *)consumerKey
-                                    consumerSecret:(NSString *)consumerSecret;
++ (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
+                                 consumerKey:(NSString *)consumerKey
+                              consumerSecret:(NSString *)consumerSecret;
 
-+ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                       consumerKey:(NSString *)consumerKey
-                                    consumerSecret:(NSString *)consumerSecret
-                                        oauthToken:(NSString *)oauthToken
-                                  oauthTokenSecret:(NSString *)oauthTokenSecret;
++ (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
+                                 consumerKey:(NSString *)consumerKey
+                              consumerSecret:(NSString *)consumerSecret
+                                  oauthToken:(NSString *)oauthToken
+                            oauthTokenSecret:(NSString *)oauthTokenSecret;
 
-+ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                       consumerKey:(NSString *)consumerKey
-                                    consumerSecret:(NSString *)consumerSecret
-                                          username:(NSString *)username
-                                          password:(NSString *)password;
++ (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
+                                 consumerKey:(NSString *)consumerKey
+                              consumerSecret:(NSString *)consumerSecret
+                                    username:(NSString *)username
+                                    password:(NSString *)password;
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
            oauthCallback:(NSString *)oauthCallback

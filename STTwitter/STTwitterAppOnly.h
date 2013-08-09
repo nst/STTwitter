@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STTwitterOAuthProtocol.h"
+#import "STTwitterProtocol.h"
 
 #if DEBUG
 #   define STLog(...) NSLog(__VA_ARGS__)
@@ -15,13 +15,15 @@
 #   define STLog(...)
 #endif
 
-@interface STTwitterAppOnly : NSObject <STTwitterOAuthProtocol> {
+@interface STTwitterAppOnly : NSObject <STTwitterProtocol> {
     
 }
 
 @property (nonatomic, retain) NSString *consumerKey;
 @property (nonatomic, retain) NSString *consumerSecret;
 @property (nonatomic, retain) NSString *bearerToken;
+
++ (instancetype)twitterAppOnlyWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 
 + (NSString *)base64EncodedBearerTokenCredentialsWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 

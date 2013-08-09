@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STTwitterOAuthProtocol.h"
+#import "STTwitterProtocol.h"
 
 #if TARGET_OS_IPHONE
 #else
 
 @class ACAccount;
 
-@interface STTwitterOAuthOSX : NSObject <STTwitterOAuthProtocol> {
+@interface STTwitterOSX : NSObject <STTwitterProtocol> {
     
 }
 

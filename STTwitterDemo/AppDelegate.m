@@ -7,8 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "STTwitterAPIWrapper.h"
-#import "STTwitterHTML.h"
+#import "STTwitter.h"
 
 @implementation AppDelegate
 
@@ -62,20 +61,22 @@
     
     /**/
     
-    //    STTwitterAPIWrapper *twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"" consumerSecret:@""];
-    //    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
-    //
-    //        NSLog(@"-- bearer: %@", bearerToken);
-    //
-    //        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
-    //            NSLog(@"***** %@", statuses);
-    //        } errorBlock:^(NSError *error) {
-    //            NSLog(@"***** %@", error);
-    //        }];
-    //
-    //    } errorBlock:^(NSError *error) {
-    //        NSLog(@"-- error: %@", error);
-    //    }];
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
+                                                            consumerSecret:@""];
+    
+    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+        
+        NSLog(@"-- bearer: %@", bearerToken);
+        
+        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
+            NSLog(@"***** %@", statuses);
+        } errorBlock:^(NSError *error) {
+            NSLog(@"***** %@", error);
+        }];
+        
+    } errorBlock:^(NSError *error) {
+        NSLog(@"-- error: %@", error);
+    }];
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
@@ -128,7 +129,7 @@
 
 // OS X Twitter account
 - (IBAction)loginOSX:(id)sender {
-    self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthOSX];
+    self.twitter = [STTwitterAPI twitterAPIOSX];
     
     self.osxStatus = @"-";
     
@@ -148,9 +149,9 @@
     self.pinStatus1 = @"-";
     self.pinStatus2 = @"-";
     
-    self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:nil
-                                                            consumerKey:_consumerKeyTextField.stringValue
-                                                         consumerSecret:_consumerSecretTextField.stringValue];
+    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                     consumerKey:_consumerKeyTextField.stringValue
+                                                  consumerSecret:_consumerSecretTextField.stringValue];
     
     [_twitter postTokenRequest:^(NSURL *url, NSString *oauthToken) {
         self.pinURL = url;
@@ -247,11 +248,11 @@
     NSAssert(_xAuthUsername, @"");
     NSAssert(_xAuthPassword, @"");
     
-    self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:nil
-                                                            consumerKey:_consumerKeyTextField.stringValue
-                                                         consumerSecret:_consumerSecretTextField.stringValue
-                                                               username:_xAuthUsername
-                                                               password:_xAuthPassword];
+    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                     consumerKey:_consumerKeyTextField.stringValue
+                                                  consumerSecret:_consumerSecretTextField.stringValue
+                                                        username:_xAuthUsername
+                                                        password:_xAuthPassword];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         
@@ -271,7 +272,7 @@
     
     self.bearerStatus = @"-";
     
-    self.twitter = [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
+    self.twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
         self.bearerToken = [_twitter bearerToken];
@@ -299,11 +300,11 @@
     
     self.oauthTokensStatus = @"-";
     
-    self.twitter = [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:nil
-                                                            consumerKey:_consumerKeyTextField.stringValue
-                                                         consumerSecret:_consumerSecretTextField.stringValue
-                                                             oauthToken:_oauthToken
-                                                       oauthTokenSecret:_oauthTokenSecret];
+    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                     consumerKey:_consumerKeyTextField.stringValue
+                                                  consumerSecret:_consumerSecretTextField.stringValue
+                                                      oauthToken:_oauthToken
+                                                oauthTokenSecret:_oauthTokenSecret];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         

@@ -67,9 +67,9 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     [super dealloc];
 }
 
-+ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                   consumerKey:(NSString *)consumerKey
-                                consumerSecret:(NSString *)consumerSecret {
++ (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
+                                 consumerKey:(NSString *)consumerKey
+                              consumerSecret:(NSString *)consumerSecret {
     
     STTwitterOAuth *to = [[STTwitterOAuth alloc] init];
     
@@ -80,13 +80,13 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return [to autorelease];
 }
 
-+ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                   consumerKey:(NSString *)consumerKey
-                                consumerSecret:(NSString *)consumerSecret
-                                    oauthToken:(NSString *)oauthToken
-                              oauthTokenSecret:(NSString *)oauthTokenSecret {
++ (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
+                                 consumerKey:(NSString *)consumerKey
+                              consumerSecret:(NSString *)consumerSecret
+                                  oauthToken:(NSString *)oauthToken
+                            oauthTokenSecret:(NSString *)oauthTokenSecret {
     
-    STTwitterOAuth *to = [self twitterServiceWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
+    STTwitterOAuth *to = [self twitterOAuthWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     to.oauthAccessToken = oauthToken;
     to.oauthAccessTokenSecret = oauthTokenSecret;
@@ -94,13 +94,13 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return to;
 }
 
-+ (instancetype)twitterServiceWithConsumerName:(NSString *)consumerName
-                                   consumerKey:(NSString *)consumerKey
-                                consumerSecret:(NSString *)consumerSecret
-                                      username:(NSString *)username
-                                      password:(NSString *)password {
++ (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
+                                 consumerKey:(NSString *)consumerKey
+                              consumerSecret:(NSString *)consumerSecret
+                                    username:(NSString *)username
+                                    password:(NSString *)password {
     
-    STTwitterOAuth *to = [self twitterServiceWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
+    STTwitterOAuth *to = [self twitterOAuthWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     to.username = username;
     to.password = password;

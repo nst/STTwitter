@@ -31,12 +31,12 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
 ##### Instantiate STTwitterAPI
 
-    STTwitterAPIWrapper *twitter =
-        [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:@""
-                                                 consumerKey:@""
-                                              consumerSecret:@""
-                                                    username:@""
-                                                    password:@""];
+    STTwitterAPI *twitter =
+        [STTwitterAPI twitterAPIWithOAuthConsumerName:@""
+                                          consumerKey:@""
+                                       consumerSecret:@""
+                                             username:@""
+                                             password:@""];
 
 ##### Verify the credentials
 
@@ -69,9 +69,9 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
 ##### App Only Authentication
 
-    STTwitterAPIWrapper *twitter =
-        [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"CONSUMER_KEY"
-                                                       consumerSecret:@"CONSUMER_SECRET"];
+    STTwitterAPI *twitter =
+        [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
+                                        consumerSecret:@""];
     
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
         
@@ -88,7 +88,7 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
     
 ### Various Kinds of OAuth Connections
 
-You can instantiate `STTwitterAPIWrapper` in three ways:
+You can instantiate `STTwitterAPI` in three ways:
 
 - use the Twitter account set in OS X Preferences
 - use a custom `consumer key` and `consumer secret` (three flavors)
@@ -99,23 +99,23 @@ You can instantiate `STTwitterAPIWrapper` in three ways:
 
 So there are five cases altogether, hence these five methods:
 
-    + (STTwitterAPIWrapper *)twitterAPIWithOAuthOSX;
+    + (STTwitterAPI *)twitterAPIOSX;
 
-    + (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                             consumerSecret:(NSString *)consumerSecret;
+    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                      consumerSecret:(NSString *)consumerSecret;
 
-    + (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                             consumerSecret:(NSString *)consumerSecret
-                                                   username:(NSString *)username
-                                                   password:(NSString *)password;
+    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                      consumerSecret:(NSString *)consumerSecret
+                                            username:(NSString *)username
+                                            password:(NSString *)password;
 
-    + (STTwitterAPIWrapper *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                             consumerSecret:(NSString *)consumerSecret
-                                                 oauthToken:(NSString *)oauthToken
-                                           oauthTokenSecret:(NSString *)oauthTokenSecret;
+    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                      consumerSecret:(NSString *)consumerSecret
+                                          oauthToken:(NSString *)oauthToken
+                                    oauthTokenSecret:(NSString *)oauthTokenSecret;
                    
-    + (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
-                                                       consumerSecret:(NSString *)consumerSecret;               
+    + (STTwitterAPI *)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
+                                        consumerSecret:(NSString *)consumerSecret;
                                            
 ### OAuth Consumer Tokens
 
@@ -145,9 +145,9 @@ Please [fill an issue](https://github.com/nst/STTwitter/issues) on GitHub.
 
 ### Developers
 
-The application only interacts with `STTwitterAPIWrapper`.
+The application only interacts with `STTwitterAPI`.
 
-`STTwitterAPIWrapper` maps Objective-C methods with all documented Twitter API endpoints.
+`STTwitterAPI` maps Objective-C methods with all documented Twitter API endpoints.
 
 You can create your own convenience methods with fewer parameters. You can also use this generic methods directly:
 
@@ -166,7 +166,7 @@ You can create your own convenience methods with fewer parameters. You can also 
      +-------------------------------------------------------+
                                  v
      +-------------------------------------------------------+
-     |                  STTwitterAPIWrapper                  |
+     |                     STTwitterAPI                      |
      +-------------------------------------------------------+
                                  v
      + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
@@ -184,7 +184,7 @@ You can create your own convenience methods with fewer parameters. You can also 
      
 ##### Summary
      
-     * STTwitterAPIWrapper
+     * STTwitterAPI
         - can be instantiated with the authentication mode you want
         - provides methods to interact with each Twitter API endpoint
 

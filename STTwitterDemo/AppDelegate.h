@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class STTwitterAPIWrapper;
+@class STTwitterAPI;
 
 typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
@@ -16,7 +16,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 @property (assign) IBOutlet NSWindow *window;
 
-@property (nonatomic, retain) STTwitterAPIWrapper *twitter;
+@property (nonatomic, retain) STTwitterAPI *twitter;
 
 @property (nonatomic, retain) NSArray *twitterClients;
 @property (nonatomic, retain) IBOutlet NSArrayController *twitterClientsController;

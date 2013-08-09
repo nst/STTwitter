@@ -32,6 +32,13 @@
     return self;
 }
 
++ (instancetype)twitterAppOnlyWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
+    STTwitterAppOnly *twitterAppOnly = [[[self class] alloc] init];
+    twitterAppOnly.consumerKey = consumerKey;
+    twitterAppOnly.consumerSecret = consumerSecret;
+    return [twitterAppOnly autorelease];
+}
+
 #pragma mark STTwitterOAuthProtocol
 
 - (BOOL)canVerifyCredentials {
@@ -201,7 +208,7 @@
         
     } else {
         NSAssert(NO, @"unsupported HTTP method");
-    }    
+    }
 }
 
 - (void)postResource:(NSString *)resource
