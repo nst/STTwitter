@@ -10,8 +10,9 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 4. [OAuth Consumer Tokens](#oauth-consumer-tokens)
 5. [Demo / Test Project](#demo--test-project)
 6. [Troubleshooting](#troubleshooting)
-7. [Developers](#developpers)
-7. [BSD 3-Clause License](#bsd-3-clause-license)
+7. [Developers](#developers)
+8. [Applications Using STTwitter](#applications-using-sttwitter)
+9. [BSD 3-Clause License](#bsd-3-clause-license)
 
 ### Installation
 
