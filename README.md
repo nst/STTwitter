@@ -2,47 +2,24 @@
 
 _A comprehensive Objective-C library for Twitter REST API 1.1_
 
-### Project News
-
-[2013-08] STTwitter 0.0.3 is [available on CocoaPods](https://github.com/CocoaPods/Specs/tree/master/STTwitter). All Twitter API endpoints are implemented, including the streaming ones (see an example below).  
-Also, STTwitter will be presented at [SoftShake](http://soft-shake.ch) 2013, Geneva, on October 24th.  
-[2013-06] STTwitter 0.0.2 is [available on CocoaPods](https://github.com/CocoaPods/Specs/tree/master/STTwitter) thanks to Evan Roth (bug fixes, implemented all 'Lists' API endpoints)  
-[2013-05] STTwitter 0.0.1 is [available on CocoaPods](https://github.com/CocoaPods/Specs/tree/master/STTwitter) thanks to Evan Roth  
-[2013-04] [nightly build](http://seriot.ch/resources/abusing_twitter_api/STTwitter.app.zip) 114 KB (signed)  
-[2013-03] STTwitter can use [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication  
-[2013-03] [Adium](http://adium.im/) developers have [chosen](http://permalink.gmane.org/gmane.network.instant-messaging.adium.devel/2332) to use STTwitter to handle Twitter connectivity in Adium, starting from version 1.5.7.
-
-### Short Description
-
-`STTwitter` is comprehensive Objective-C library for Twitter REST API 1.1.
-
-It works on iOS 5+ and OS X 10.7+.
+> STTwitter will be presented at [SoftShake](http://soft-shake.ch) 2013, Geneva, on October 24th.
 
 ### Installation
 
-##### Standard Way
+Drag and drop STTwitter directory into your project and that's it.
 
-Just copy the `STTwitter` directory into your project and that's it.
+STTwitter compiles without modification with non-ARC projects. If the project uses ARC, add the `-fno-objc-arc` flag to STTwitter files [details here](http://stackoverflow.com/questions/6646052/how-can-i-disable-arc-for-a-single-file-in-a-project).
 
-##### CocoaPods
-
-Iif you are using CocoaPods, include the `STTwitter` pod in your project's podfile:
+If you want to use CocoaPods, include the STTwitter pod in your project's podfile and install it:
 
     pod 'STTwitter'
+    pod install
 
-and install it:
-
-	pod install
-
-##### ARC
-
-`STTwitter` compiles without modification with non-ARC projects.
-
-If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([explanations here](http://stackoverflow.com/questions/6646052/how-can-i-disable-arc-for-a-single-file-in-a-project)).
+Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
 ### Sample Usage
 
-##### 1. Instantiate `STTwitterAPIWrapper`
+##### Instantiate STTwitterAPI
 
     STTwitterAPIWrapper *twitter =
         [STTwitterAPIWrapper twitterAPIWithOAuthConsumerName:@""
@@ -51,7 +28,7 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
                                                     username:@""
                                                     password:@""];
 
-##### 2. Verify the credentials
+##### Verify the credentials
 
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         // ...
@@ -59,7 +36,7 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
         // ...
     }];
 
-##### 3. Get the timeline statuses
+##### Get the timeline statuses
 
     [twitter getHomeTimelineSinceID:nil
                               count:100
@@ -69,7 +46,7 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
         // ...
     }];
 
-### Streaming API
+##### Streaming API
 
     [twitter getStatusesSampleDelimited:nil
                           stallWarnings:nil
@@ -80,9 +57,7 @@ If the project uses ARC, add the `-fno-objc-arc` flag to `STTwitter` files ([exp
         // ...
     }];
 
-### App Only Authentication
-
-In this mode, the user doesn't need to provide user authentication.
+##### App Only Authentication
 
     STTwitterAPIWrapper *twitter =
         [STTwitterAPIWrapper twitterAPIApplicationOnlyWithConsumerKey:@"CONSUMER_KEY"
@@ -101,7 +76,7 @@ In this mode, the user doesn't need to provide user authentication.
         // ...
     }];
     
-### Several Kinds of OAuth Connections
+### Various Kinds of OAuth Connections
 
 You can instantiate `STTwitterAPIWrapper` in three ways:
 
@@ -132,7 +107,7 @@ So there are five cases altogether, hence these five methods:
     + (STTwitterAPIWrapper *)twitterAPIApplicationOnlyWithConsumerKey:(NSString *)consumerKey
                                                        consumerSecret:(NSString *)consumerSecret;               
                                            
-### OAuth Consumer Key / Consumer Secret
+### OAuth Consumer Tokens
 
 In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
 
@@ -162,24 +137,18 @@ Please [fill an issue](https://github.com/nst/STTwitter/issues) on GitHub.
 
 Your code only interacts with `STTwitterAPIWrapper`.
 
-`STTwitterAPIWrapper` maps Objective-C methods with most common Twitter API endpoints.
+`STTwitterAPIWrapper` maps Objective-C methods with all documented Twitter API endpoints.
 
-Add more if you need to, or use these generic methods directly:
+You can create your own convenience methods with fewer parameters. You can also use this generic methods directly:
 
-    - (void)getResource:(NSString *)resource
-          baseURLString:(NSString *)baseURLString
-             parameters:(NSDictionary *)params
-          progressBlock:(void(^)(id json))progressBlock
-           successBlock:(void(^)(id json))successBlock
-             errorBlock:(void(^)(NSError *error))errorBlock;
-
-    - (void)postResource:(NSString *)resource
-           baseURLString:(NSString *)baseURLString
-              parameters:(NSDictionary *)params
-           progressBlock:(void(^)(id json))progressBlock
-            successBlock:(void(^)(id json))successBlock
-              errorBlock:(void(^)(NSError *error))errorBlock;
-
+	- (void)fetchResource:(NSString *)resource
+	           HTTPMethod:(NSString *)HTTPMethod
+	        baseURLString:(NSString *)baseURLString
+	           parameters:(NSDictionary *)params
+	        progressBlock:(void(^)(id json))progressBlock
+	         successBlock:(void(^)(id json))successBlock
+	           errorBlock:(void(^)(NSError *error))errorBlock;
+           
 ##### Layer Model
      
      +-------------------------------------------------------+
@@ -229,6 +198,10 @@ Add more if you need to, or use these generic methods directly:
      * STHTTPRequest
         - block-based wrapper around NSURLConnection
         - https://github.com/nst/STHTTPRequest
+
+### Applications Using STTwitter
+
+* [Adium](http://adium.im/) developers have [chosen](http://permalink.gmane.org/gmane.network.instant-messaging.adium.devel/2332) to use STTwitter to handle Twitter connectivity in Adium, starting from version 1.5.7.
 
 ### BSD 3-Clause License
 
