@@ -7,7 +7,7 @@
 //
 
 #import "STTwitterAPI.h"
-#import "STTwitterOSX.h"
+#import "STTwitterOS.h"
 #import "STTwitterOAuth.h"
 #import "NSString+STTwitter.h"
 #import "STTwitterAppOnly.h"
@@ -27,16 +27,13 @@ static NSDateFormatter *dateFormatter = nil;
 
 @implementation STTwitterAPI
 
-#if TARGET_OS_IPHONE
-#else
-
 - (id)init {
     self = [super init];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         // OS X account must be considered invalid
         
-        if([self.oauth isKindOfClass:[STTwitterOSX class]]) {
+        if([self.oauth isKindOfClass:[STTwitterOS class]]) {
             self.oauth = nil;//[[[STTwitterOAuthOSX alloc] init] autorelease];
         }
     }];
@@ -44,9 +41,19 @@ static NSDateFormatter *dateFormatter = nil;
     return self;
 }
 
+#if TARGET_OS_IPHONE
+
++ (instancetype)twitterAPIIOS {
+    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
+    twitter.oauth = [[[STTwitterOS alloc] init] autorelease];
+    return [twitter autorelease];
+}
+
+#else
+
 + (instancetype)twitterAPIOSX {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
-    twitter.oauth = [[[STTwitterOSX alloc] init] autorelease];
+    twitter.oauth = [[[STTwitterOS alloc] init] autorelease];
     return [twitter autorelease];
 }
 
@@ -175,9 +182,9 @@ static NSDateFormatter *dateFormatter = nil;
     
 #if TARGET_OS_IPHONE
 #else
-    if([_oauth isKindOfClass:[STTwitterOSX class]]) {
-        STTwitterOSX *oAuthOSX = (STTwitterOSX *)_oauth;
-        return oAuthOSX.username;
+    if([_oauth isKindOfClass:[STTwitterOS class]]) {
+        STTwitterOS *twitterOS = (STTwitterOS *)_oauth;
+        return twitterOS.username;
     }
 #endif
     

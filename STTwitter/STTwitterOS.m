@@ -6,21 +6,22 @@
 //  Copyright 2010 seriot.ch. All rights reserved.
 //
 
-#import "STTwitterOSX.h"
+#import "STTwitterOS.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
+@implementation STTwitterOS
+
+- (BOOL)canVerifyCredentials {
+    return YES;
+}
+
+- (BOOL)hasAccessToTwitter {
 #if TARGET_OS_IPHONE
+    return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
 #else
-
-@implementation STTwitterOSX
-
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
-    [self requestAccessWithCompletionBlock:^(ACAccount *twitterAccount) {
-        successBlock(twitterAccount.username);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    return YES; // error will be detected later..
+#endif
 }
 
 - (NSString *)username {
@@ -29,6 +30,34 @@
     NSArray *accounts = [accountStore accountsWithAccountType:accountType];
     ACAccount *twitterAccount = [accounts lastObject];
     return twitterAccount.username;
+}
+
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+    if([self hasAccessToTwitter] == NO) {
+        NSString *message = @"Twitter is not available.";
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+        errorBlock(error);
+        return;
+    }
+    
+    ACAccountStore *accountStore = [[ACAccountStore alloc] init];
+    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    
+    [accountStore requestAccessToAccountsWithType:accountType
+                                          options:NULL
+                                       completion:^(BOOL granted, NSError *error) {
+                                           
+                                           if(granted) {
+                                               
+                                               NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+                                               ACAccount *twitterAccount = [accounts lastObject];
+                                               
+                                               successBlock(twitterAccount.username);
+                                           } else {
+                                               errorBlock(error);
+                                           }
+                                           
+                                       }];
 }
 
 - (void)requestAccessWithCompletionBlock:(void(^)(ACAccount *twitterAccount))completionBlock errorBlock:(void(^)(NSError *))errorBlock {
@@ -129,7 +158,7 @@
                 jsonErrors = [NSArray arrayWithObject:@{@"message":jsonErrors, @"code" : @(0)}];
             }
             
-            if([jsonErrors count] > 0 && [[jsonErrors lastObject] isEqualTo:[NSNull null]] == NO) {
+            if([jsonErrors count] > 0 && [jsonErrors lastObject] != [NSNull null]) {
                 
                 NSDictionary *jsonErrorDictionary = [jsonErrors lastObject];
                 NSString *message = jsonErrorDictionary[@"message"];
@@ -165,10 +194,6 @@
     }];
 }
 
-- (BOOL)canVerifyCredentials {
-    return YES;
-}
-
 - (void)fetchResource:(NSString *)resource
            HTTPMethod:(NSString *)HTTPMethod
         baseURLString:(NSString *)baseURLString
@@ -202,5 +227,3 @@
 }
 
 @end
-
-#endif

@@ -61,17 +61,16 @@
     
     /**/
     
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
-                                                            consumerSecret:@""];
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:@"" consumerKey:@"3rJOl1ODzm9yZy63FACdg" consumerSecret:@"5jPoQ5kQvMJFDYRNE8bQ4rHuds4xJqhvgNJM4awaE8" username:@"nst021" password:@"TW2012gringrin"];
     
-    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+    [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         
-        NSLog(@"-- bearer: %@", bearerToken);
+        NSLog(@"-- username: %@", username);
         
-        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
-            NSLog(@"***** %@", statuses);
+        [twitter getDirectMessagesSinceID:nil count:10 successBlock:^(NSArray *messages) {
+            NSLog(@"-- messages: %@", messages);
         } errorBlock:^(NSError *error) {
-            NSLog(@"***** %@", error);
+            NSLog(@"-- error: %@", error);
         }];
         
     } errorBlock:^(NSError *error) {

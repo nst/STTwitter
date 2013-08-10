@@ -30,6 +30,7 @@
 @interface STTwitterAPI : NSObject
 
 #if TARGET_OS_IPHONE
++ (instancetype)twitterAPIIOS;
 #else
 + (instancetype)twitterAPIOSX;
 #endif
