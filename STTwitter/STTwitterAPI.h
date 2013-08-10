@@ -34,17 +34,17 @@
 + (instancetype)twitterAPIOSX;
 #endif
 
-+ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret;
 
-+ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret
                                        username:(NSString *)username
                                        password:(NSString *)password;
 
-+ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
++ (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret
                                      oauthToken:(NSString *)oauthToken
