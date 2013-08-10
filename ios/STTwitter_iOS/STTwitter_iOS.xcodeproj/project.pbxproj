@@ -28,6 +28,7 @@
 		03F7CE4417B6E1AE00A3534B /* STTwitterOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 03F7CE4317B6E1AE00A3534B /* STTwitterOS.m */; };
 		03F7CE4A17B6E1C900A3534B /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F7CE4917B6E1C900A3534B /* Accounts.framework */; };
 		03F7CE4C17B6E1CE00A3534B /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F7CE4B17B6E1CE00A3534B /* Social.framework */; };
+		03F7CE4E17B6E3A200A3534B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03F7CE4D17B6E3A200A3534B /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		03F7CE4317B6E1AE00A3534B /* STTwitterOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterOS.m; sourceTree = "<group>"; };
 		03F7CE4917B6E1C900A3534B /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		03F7CE4B17B6E1CE00A3534B /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		03F7CE4D17B6E3A200A3534B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 		037F87FF16D3A8ED00FE36C8 = {
 			isa = PBXGroup;
 			children = (
+				03F7CE4D17B6E3A200A3534B /* README.md */,
 				037F882E16D3A8FB00FE36C8 /* STTwitter */,
 				037F881116D3A8ED00FE36C8 /* STTwitter_iOS */,
 				037F880A16D3A8ED00FE36C8 /* Frameworks */,
@@ -227,6 +230,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03F7CE4E17B6E3A200A3534B /* README.md in Resources */,
 				037F881616D3A8ED00FE36C8 /* InfoPlist.strings in Resources */,
 				037F881E16D3A8ED00FE36C8 /* Default.png in Resources */,
 				037F882016D3A8ED00FE36C8 /* Default@2x.png in Resources */,

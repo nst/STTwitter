@@ -88,7 +88,7 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
 You can instantiate `STTwitterAPI` in three ways:
 
-- use the Twitter account set in OS X Preferences
+- use the Twitter account set in OS X Preferences or iOS Settings
 - use a custom `consumer key` and `consumer secret` (three flavors)
   - get an URL, fetch a PIN, enter it in your app, get oauth access tokens  
   - set `username` and `password`, get oauth access tokens with XAuth, if the app is entitled to
@@ -97,7 +97,7 @@ You can instantiate `STTwitterAPI` in three ways:
 
 So there are five cases altogether, hence these five methods:
 
-    + (STTwitterAPI *)twitterAPIOSX;
+    + (STTwitterAPI *)twitterAPIOS;
 
     + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
                                       consumerSecret:(NSString *)consumerSecret;
@@ -159,23 +159,23 @@ You can create your own convenience methods with fewer parameters. You can also 
            
 ##### Layer Model
      
-     +-------------------------------------------------------+
-     |                   Your Application                     |
-     +-------------------------------------------------------+
-                                 v
-     +-------------------------------------------------------+
-     |                     STTwitterAPI                      |
-     +-------------------------------------------------------+
-               v                 v                 v
-     + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
-     |                STTwitterOAuthProtocol                 |
-     + - - - - - - - - - - - - - - - - - - - - - - - - - - - +
-               v                 v                 v
-     +-------------------+----------------+------------------+
-     | STTwitterOAuthOSX | STTwitterOAuth | STTwitterAppOnly |
-     |                   +----------------+------------------+
-     |                   |          STHTTPRequest            |
-     +-------------------+-----------------------------------+
+     +-------------------------------------------------+
+     |                Your Application                 |
+     +-------------------------------------------------+
+                             v
+     +-------------------------------------------------+
+     |                  STTwitterAPI                   |
+     +-------------------------------------------------+
+            v              v                 v
+     + - - - - - - - - - - - - - - - - - - - - - - - - +
+     |              STTwitterOAuthProtocol             |
+     + - - - - - - - - - - - - - - - - - - - - - - - - +
+            v              v                 v
+     +-------------+----------------+------------------+
+     | STTwitterOS | STTwitterOAuth | STTwitterAppOnly |
+     |             +----------------+------------------+
+     |             |          STHTTPRequest            |
+     +-------------+-----------------------------------+
       |
       + Accounts.framework
       + Social.framework
@@ -189,19 +189,16 @@ You can create your own convenience methods with fewer parameters. You can also 
      * STTwitterOAuthProtocol
         - provides generic methods to POST and GET resources on Twitter hosts
      
-     * STTwitterOAuthOSX
-        - uses Twitter accounts defined in OS X Preferences
-        - uses OS X frameworks to interact with Twitter API
-        - is not compiled when targeting iOS
+     * STTwitterOS
+        - uses Twitter accounts defined in OS X Preferences or iOS Settings
+        - uses OS X / iOS frameworks to interact with Twitter API
      
      * STTwitterOAuth
         - implements OAuth and xAuth authentication
-        - can be used on both OS X and iOS
 
      * STTwitterAppOnly
         - implements the 'app only' authentication
         - https://dev.twitter.com/docs/auth/application-only-auth
-        - can be used on both OS X and iOS
 
      * STHTTPRequest
         - block-based wrapper around NSURLConnection
