@@ -61,12 +61,11 @@
     
     /**/
     
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
-                                                            consumerSecret:@""];
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIOS];
     
-    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+    [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         
-        NSLog(@"-- bearer: %@", bearerToken);
+        NSLog(@"-- username: %@", username);
         
         [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
             NSLog(@"***** %@", statuses);
@@ -129,7 +128,7 @@
 
 // OS X Twitter account
 - (IBAction)loginOSX:(id)sender {
-    self.twitter = [STTwitterAPI twitterAPIOSX];
+    self.twitter = [STTwitterAPI twitterAPIOS];
     
     self.osxStatus = @"-";
     

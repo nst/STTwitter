@@ -29,10 +29,7 @@
 
 @interface STTwitterAPI : NSObject
 
-#if TARGET_OS_IPHONE
-#else
-+ (instancetype)twitterAPIOSX;
-#endif
++ (instancetype)twitterAPIOS;
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey

@@ -9,12 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterProtocol.h"
 
-#if TARGET_OS_IPHONE
-#else
-
 @class ACAccount;
 
-@interface STTwitterOSX : NSObject <STTwitterProtocol> {
+@interface STTwitterOS : NSObject <STTwitterProtocol> {
     
 }
 
@@ -24,5 +21,3 @@
 - (NSString *)username;
 
 @end
-
-#endif
