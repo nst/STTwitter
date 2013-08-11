@@ -22,6 +22,9 @@
          successBlock:(void(^)(id json))successBlock
            errorBlock:(void(^)(NSError *error))errorBlock;
 
+- (NSString *)oauthAccessToken;
+- (NSString *)oauthAccessTokenSecret;
+
 @optional
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
@@ -34,9 +37,6 @@
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
-
-- (NSString *)oauthAccessToken;
-- (NSString *)oauthAccessTokenSecret;
 
 - (NSString *)bearerToken;
 

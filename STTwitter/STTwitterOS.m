@@ -12,6 +12,8 @@
 
 @interface STTwitterOS ()
 @property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
+@property (nonatomic, retain) NSString *oauthAccessToken;
+@property (nonatomic, retain) NSString *oauthAccessTokenSecret;
 @end
 
 @implementation STTwitterOS
@@ -24,11 +26,21 @@
 
 - (void)dealloc {
     [_accountStore release];
+    [_oauthAccessToken release];
+    [_oauthAccessTokenSecret release];
     [super dealloc];
 }
 
 - (BOOL)canVerifyCredentials {
     return YES;
+}
+
+- (NSString *)oauthAccessToken {
+    return nil;
+}
+
+- (NSString *)oauthAccessTokenSecret {
+    return nil;
 }
 
 - (BOOL)hasAccessToTwitter {

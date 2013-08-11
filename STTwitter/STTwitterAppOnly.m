@@ -45,6 +45,14 @@
     return YES;
 }
 
+- (NSString *)oauthAccessToken {
+    return nil;
+}
+
+- (NSString *)oauthAccessTokenSecret {
+    return nil;
+}
+
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
