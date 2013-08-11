@@ -296,6 +296,22 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
           }];
 }
 
+- (void)postReverseOAuthTokenRequest:(void(^)(NSString *body))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postResource:@"oauth/request_token"
+         baseURLString:@"https://api.twitter.com"
+            parameters:@{@"x_auth_mode" : @"reverse_auth"}
+         oauthCallback:nil
+         progressBlock:nil
+          successBlock:^(id body) {
+              
+              successBlock(body);
+              
+          } errorBlock:^(NSError *error) {
+              errorBlock(error);
+          }];
+}
+
 - (void)postXAuthAccessTokenRequestWithUsername:(NSString *)username
                                        password:(NSString *)password
                                    successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
