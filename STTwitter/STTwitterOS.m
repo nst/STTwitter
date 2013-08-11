@@ -47,16 +47,19 @@
                                           options:NULL
                                        completion:^(BOOL granted, NSError *error) {
                                            
-                                           if(granted) {
+                                           [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                                                
-                                               NSArray *accounts = [accountStore accountsWithAccountType:accountType];
-                                               ACAccount *twitterAccount = [accounts lastObject];
+                                               if(granted) {
+                                                   
+                                                   NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+                                                   ACAccount *twitterAccount = [accounts lastObject];
+                                                   
+                                                   successBlock(twitterAccount.username);
+                                               } else {
+                                                   errorBlock(error);
+                                               }
                                                
-                                               successBlock(twitterAccount.username);
-                                           } else {
-                                               errorBlock(error);
-                                           }
-                                           
+                                           }];
                                        }];
 }
 
