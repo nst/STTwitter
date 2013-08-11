@@ -10,7 +10,22 @@
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
+@interface STTwitterOS ()
+@property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
+@end
+
 @implementation STTwitterOS
+
+- (id)init {
+    self = [super init];
+    self.accountStore = [[[ACAccountStore alloc] init] autorelease];
+    return self;
+}
+
+- (void)dealloc {
+    [_accountStore release];
+    [super dealloc];
+}
 
 - (BOOL)canVerifyCredentials {
     return YES;
@@ -25,9 +40,8 @@
 }
 
 - (NSString *)username {
-    ACAccountStore *accountStore = [[[ACAccountStore alloc] init] autorelease];
-    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+    ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
     ACAccount *twitterAccount = [accounts lastObject];
     return twitterAccount.username;
 }
@@ -40,10 +54,9 @@
         return;
     }
     
-    ACAccountStore *accountStore = [[ACAccountStore alloc] init];
-    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
-    [accountStore requestAccessToAccountsWithType:accountType
+    [self.accountStore requestAccessToAccountsWithType:accountType
                                           options:NULL
                                        completion:^(BOOL granted, NSError *error) {
                                            
@@ -51,7 +64,7 @@
                                                
                                                if(granted) {
                                                    
-                                                   NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+                                                   NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
                                                    ACAccount *twitterAccount = [accounts lastObject];
                                                    
                                                    successBlock(twitterAccount.username);
@@ -65,15 +78,14 @@
 
 - (void)requestAccessWithCompletionBlock:(void(^)(ACAccount *twitterAccount))completionBlock errorBlock:(void(^)(NSError *))errorBlock {
     
-    ACAccountStore *accountStore = [[ACAccountStore alloc] init];
-    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
-    [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
+    [self.accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if(granted) {
                 
-                NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+                NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
                 
                 // TODO: let the user choose the account he wants
                 ACAccount *twitterAccount = [accounts lastObject];
