@@ -96,8 +96,8 @@
             } else {
                 NSError *e = error;
                 if(e == nil) {
-                    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"Cannot access OS X Twitter account." };
-                    e = [NSError errorWithDomain:@"STTwitterOSX" code:0 userInfo:userInfo];
+                    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"Cannot access OS X or iOS Twitter account." };
+                    e = [NSError errorWithDomain:@"STTwitterOS" code:0 userInfo:userInfo];
                 }
                 errorBlock(e);
             }
