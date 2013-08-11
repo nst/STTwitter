@@ -57,6 +57,12 @@ static NSDateFormatter *dateFormatter = nil;
     return [twitter autorelease];
 }
 
++ (instancetype)twitterAPIWithAccount:(ACAccount *)account {
+    STTwitterAPI *twitter = [STTwitterAPI new];
+    twitter.oauth = [[STTwitterOSWithAccount twitterWithAccount:account] autorelease];
+    return [twitter autorelease];
+}
+
 #endif
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName

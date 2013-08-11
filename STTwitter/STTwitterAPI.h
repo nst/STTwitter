@@ -27,12 +27,15 @@
  https://dev.twitter.com/blog/new-withheld-content-fields-api-responses
  */
 
+@class ACAccount;
+
 @interface STTwitterAPI : NSObject
 
 #if TARGET_OS_IPHONE
 + (instancetype)twitterAPIIOS;
 #else
 + (instancetype)twitterAPIOSX;
++ (instancetype)twitterAPIWithAccount: (ACAccount *) account;
 #endif
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything

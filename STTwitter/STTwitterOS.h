@@ -11,13 +11,21 @@
 
 @class ACAccount;
 
-@interface STTwitterOS : NSObject <STTwitterProtocol> {
-    
-}
+@interface STTwitterOS : NSObject <STTwitterProtocol>
 
 - (BOOL)canVerifyCredentials;
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSString *)username;
+
+
+@end
+
+@interface STTwitterOSWithAccount : STTwitterOS
+
+@property (readonly) ACAccount* twitterAccount;
+
+- (instancetype) initWithAccount: (ACAccount *) account;
++ (instancetype) twitterWithAccount: (ACAccount *) account;
 
 @end

@@ -227,3 +227,27 @@
 }
 
 @end
+
+@implementation STTwitterOSWithAccount
+
+- (instancetype) initWithAccount: (ACAccount *) account {
+    self = [self init];
+    if (self) {
+        _twitterAccount = account;
+    }
+    return self;
+}
+
++ (instancetype) twitterWithAccount:(ACAccount *)account {
+    return [[STTwitterOSWithAccount alloc] initWithAccount: account];
+}
+
+- (NSString *)username {
+    return self.twitterAccount.username;
+}
+
+- (void)requestAccessWithCompletionBlock:(void(^)(ACAccount *twitterAccount))completionBlock errorBlock:(void(^)(NSError *))errorBlock {
+    completionBlock(self.twitterAccount);
+}
+
+@end
