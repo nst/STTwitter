@@ -18,8 +18,8 @@
            HTTPMethod:(NSString *)HTTPMethod
         baseURLString:(NSString *)baseURLString
            parameters:(NSDictionary *)params
-        progressBlock:(void(^)(id json))progressBlock
-         successBlock:(void(^)(id json))successBlock
+        progressBlock:(void(^)(id response))progressBlock
+         successBlock:(void(^)(id response))successBlock
            errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSString *)oauthAccessToken;
@@ -39,5 +39,14 @@
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSString *)bearerToken;
+
+// reverse auth phase 1, implemented only in STTwitterOAuth
+- (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
+
+// reverse auth phase 2, implemented only in STTwitterOS
+- (void)postReverseAuthAccessTokenWithAuthenticationHeader:(NSString *)authenticationHeader
+                                              successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end

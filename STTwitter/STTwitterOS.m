@@ -252,4 +252,75 @@
                 errorBlock:errorBlock];
 }
 
++ (NSDictionary *)parametersDictionaryFromCommaSeparatedParametersString:(NSString *)s {
+    
+    NSArray *parameters = [s componentsSeparatedByString:@", "];
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    for(NSString *parameter in parameters) {
+        // transform k="v" into {'k':'v'}
+
+        NSArray *keyValue = [parameter componentsSeparatedByString:@"="];
+        if([keyValue count] != 2) {
+            continue;
+        }
+        
+        NSString *value = [keyValue[1] stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+        
+        [md setObject:value forKey:keyValue[0]];
+    }
+    
+    return md;
+}
+
+// TODO: this code is duplicated from STTwitterOAuth
++ (NSDictionary *)parametersDictionaryFromAmpersandSeparatedParameterString:(NSString *)s {
+    
+    NSArray *parameters = [s componentsSeparatedByString:@"&"];
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    for(NSString *parameter in parameters) {
+        NSArray *keyValue = [parameter componentsSeparatedByString:@"="];
+        if([keyValue count] != 2) {
+            continue;
+        }
+        
+        [md setObject:keyValue[1] forKey:keyValue[0]];
+    }
+    
+    return md;
+}
+
+// reverse auth phase 2
+- (void)postReverseAuthAccessTokenWithAuthenticationHeader:(NSString *)authenticationHeader
+                                              successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(authenticationHeader);
+    
+    NSDictionary *authenticationHeaderDictionary = [[self class] parametersDictionaryFromCommaSeparatedParametersString:authenticationHeader];
+    
+    NSString *consumerKey = [authenticationHeaderDictionary valueForKey:@"oauth_consumer_key"];
+    
+    NSAssert((consumerKey != nil), @"cannot find out consumerKey");
+    
+    NSDictionary *d = @{@"x_reverse_auth_target" : consumerKey,
+                        @"x_reverse_auth_parameters" : authenticationHeader};
+    
+    [self fetchResource:@"oauth/access_token" HTTPMethod:@"GET" baseURLString:@"https://api.twitter.com" parameters:d progressBlock:nil successBlock:^(id response) {
+        
+        NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
+        
+        NSString *oAuthToken = [d valueForKey:@"oauth_token"];
+        NSString *oAuthTokenSecret = [d valueForKey:@"oauth_token_secret"];
+        NSString *userID = [d valueForKey:@"user_id"];
+        NSString *screenName = [d valueForKey:@"screen_name"];
+        
+        successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
 @end

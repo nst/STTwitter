@@ -296,7 +296,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
           }];
 }
 
-- (void)postReverseOAuthTokenRequest:(void(^)(NSString *body))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:@"oauth/request_token"
          baseURLString:@"https://api.twitter.com"

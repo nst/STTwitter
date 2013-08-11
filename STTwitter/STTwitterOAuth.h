@@ -53,8 +53,8 @@ extern NSString * const kSTPOSTDataKey;
                                    successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-// https://dev.twitter.com/docs/ios/using-reverse-auth
-- (void)postReverseOAuthTokenRequest:(void(^)(NSString *body))successBlock
+// reverse auth phase 1
+- (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (BOOL)canVerifyCredentials;

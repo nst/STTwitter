@@ -84,6 +84,31 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
         // ...
     }];
     
+##### Reverse Authentication
+
+See [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
+
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                              consumerKey:@""
+                                                           consumerSecret:@""
+                                                                 username:@""
+                                                                 password:@""];
+
+    [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
+        
+        STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOS];
+        
+        [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
+                                                            successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
+            // ...
+        } errorBlock:^(NSError *error) {
+            // ...
+        }];
+         
+    } errorBlock:^(NSError *error) {
+        // ...
+    }];
+
 ### Various Kinds of OAuth Connections
 
 You can instantiate `STTwitterAPI` in three ways:

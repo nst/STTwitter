@@ -308,6 +308,33 @@ static NSDateFormatter *dateFormatter = nil;
 
 /**/
 
+// reverse auth step 1
+
+- (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
+        successBlock(authenticationHeader);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// reverse auth step 2
+
+- (void)postReverseAuthAccessTokenWithAuthenticationHeader:(NSString *)authenticationHeader
+                                              successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
+        successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+/**/
+
 - (void)profileImageFor:(NSString *)screenName
 
 #if TARGET_OS_IPHONE

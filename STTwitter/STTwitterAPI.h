@@ -59,6 +59,17 @@
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
+// https://dev.twitter.com/docs/ios/using-reverse-auth
+
+// reverse auth step 1
+- (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
+
+// reverse auth step 2
+- (void)postReverseAuthAccessTokenWithAuthenticationHeader:(NSString *)authenticationHeader
+                                              successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
+
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
