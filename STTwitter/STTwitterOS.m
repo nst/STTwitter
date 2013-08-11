@@ -97,7 +97,7 @@
            baseURLString:(NSString *)baseURLString
               httpMethod:(NSInteger)httpMethod
               parameters:(NSDictionary *)params
-         completionBlock:(void (^)(id json))completionBlock
+         completionBlock:(void (^)(id response))completionBlock
               errorBlock:(void (^)(NSError *error))errorBlock {
     
     NSData *mediaData = [params valueForKey:@"media[]"];
@@ -127,12 +127,11 @@
             NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
             
             if(json == nil) {
-                
-                //                NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
-                //                NSLog(@"-- %@", s);
-                
+
+                NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(jsonError);
+                    completionBlock(s);
                 }];
                 return;
             }
