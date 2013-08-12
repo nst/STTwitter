@@ -317,8 +317,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                                    successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSDictionary *d = @{@"x_auth_username" : [username urlEncodedString],
-                        @"x_auth_password" : [password urlEncodedString],
+    NSDictionary *d = @{@"x_auth_username" : username,
+                        @"x_auth_password" : password,
                         @"x_auth_mode"     : @"client_auth"};
     
     [self postResource:@"oauth/access_token"
