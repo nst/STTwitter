@@ -58,24 +58,6 @@
     self.twitterClients = ma;
     
     [_twitterClientsController setSelectedObjects:@[customClient]];
-    
-    /**/
-    
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIOS];
-    
-    [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
-        
-        NSLog(@"-- username: %@", username);
-        
-        [twitter getUserTimelineWithScreenName:@"twitterapi" successBlock:^(NSArray *statuses) {
-            NSLog(@"***** %@", statuses);
-        } errorBlock:^(NSError *error) {
-            NSLog(@"***** %@", error);
-        }];
-        
-    } errorBlock:^(NSError *error) {
-        NSLog(@"-- error: %@", error);
-    }];
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
@@ -128,7 +110,7 @@
 
 // OS X Twitter account
 - (IBAction)loginOSX:(id)sender {
-    self.twitter = [STTwitterAPI twitterAPIOS];
+    self.twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
     
     self.osxStatus = @"-";
     

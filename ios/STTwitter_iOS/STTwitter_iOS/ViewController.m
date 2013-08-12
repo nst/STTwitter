@@ -21,7 +21,8 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     // see http://rndc.or.id/wiki/index.php/(Ab)Using_Twitter_Client
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIOS];
+
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
     
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         

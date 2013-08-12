@@ -41,9 +41,19 @@ static NSDateFormatter *dateFormatter = nil;
     return self;
 }
 
-+ (instancetype)twitterAPIOS {
++ (instancetype)twitterAPIOSWithFirstAccount {
+
+    STTwitterOS *twitterOS = [STTwitterOS twitterAPIOSWithFirstAccount];
+    if(twitterOS == nil) return nil;
+
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
-    twitter.oauth = [[[STTwitterOS alloc] init] autorelease];
+    twitter.oauth = twitterOS;
+    return [twitter autorelease];
+}
+
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
+    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
+    twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:account];
     return [twitter autorelease];
 }
 

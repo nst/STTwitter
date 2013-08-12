@@ -22,10 +22,6 @@
          successBlock:(void(^)(id response))successBlock
            errorBlock:(void(^)(NSError *error))errorBlock;
 
-// access tokens are available only with plain OAuth authentication, and also with iOS / OS X accounts after reverse auth.
-- (NSString *)oauthAccessToken;
-- (NSString *)oauthAccessTokenSecret;
-
 @optional
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
@@ -38,6 +34,10 @@
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
+
+// access tokens are available only with plain OAuth authentication
+- (NSString *)oauthAccessToken;
+- (NSString *)oauthAccessTokenSecret;
 
 - (NSString *)bearerToken;
 

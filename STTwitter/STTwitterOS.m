@@ -12,8 +12,7 @@
 
 @interface STTwitterOS ()
 @property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
-@property (nonatomic, retain) NSString *oauthAccessToken;
-@property (nonatomic, retain) NSString *oauthAccessTokenSecret;
+@property (nonatomic, retain) ACAccount *account;
 @end
 
 @implementation STTwitterOS
@@ -26,9 +25,36 @@
 
 - (void)dealloc {
     [_accountStore release];
-    [_oauthAccessToken release];
-    [_oauthAccessTokenSecret release];
+    [_account release];
     [super dealloc];
+}
+
+- (instancetype)initWithAccount:(ACAccount *) account {
+    self = [super init];
+    self.account = account;
+    return self;
+}
+
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
+    return [[[self alloc] initWithAccount:account] autorelease];
+}
+
++ (instancetype)twitterAPIOSWithFirstAccount {
+    
+    ACAccountStore *accountStore = [[[ACAccountStore alloc] init] autorelease];
+    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+    if([accounts count] == 0) {
+        NSLog(@"-- error: cannot find any local Twitter account");
+        return nil;
+    }
+
+    ACAccount *account = [accounts objectAtIndex:0];
+    return [self twitterAPIOSWithAccount:account];
+}
+
+- (NSString *)username {
+    return self.account.username;
 }
 
 - (BOOL)canVerifyCredentials {
@@ -41,13 +67,6 @@
 #else
     return YES; // error will be detected later..
 #endif
-}
-
-- (NSString *)username {
-    ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
-    ACAccount *twitterAccount = [accounts lastObject];
-    return twitterAccount.username;
 }
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
@@ -310,12 +329,10 @@
         NSString *userID = [d valueForKey:@"user_id"];
         NSString *screenName = [d valueForKey:@"screen_name"];
         
-        self.oauthAccessToken = oAuthToken;
-        self.oauthAccessTokenSecret = oAuthTokenSecret;
-        
         successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
 }
+
 @end

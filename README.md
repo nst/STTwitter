@@ -96,7 +96,7 @@ See [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.co
 
     [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
         
-        STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOS];
+        STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
         
         [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
                                                             successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
@@ -122,7 +122,7 @@ You can instantiate `STTwitterAPI` in three ways:
 
 So there are five cases altogether, hence these five methods:
 
-    + (STTwitterAPI *)twitterAPIOS;
+    + (STTwitterAPI *)twitterAPIOSWithFirstAccount;
 
     + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
                                       consumerSecret:(NSString *)consumerSecret;
