@@ -35,14 +35,6 @@
     return YES;
 }
 
-- (NSString *)oauthAccessToken {
-    return nil;
-}
-
-- (NSString *)oauthAccessTokenSecret {
-    return nil;
-}
-
 - (BOOL)hasAccessToTwitter {
 #if TARGET_OS_IPHONE
     return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
@@ -317,6 +309,9 @@
         NSString *oAuthTokenSecret = [d valueForKey:@"oauth_token_secret"];
         NSString *userID = [d valueForKey:@"user_id"];
         NSString *screenName = [d valueForKey:@"screen_name"];
+        
+        self.oauthAccessToken = oAuthToken;
+        self.oauthAccessTokenSecret = oAuthTokenSecret;
         
         successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
     } errorBlock:^(NSError *error) {

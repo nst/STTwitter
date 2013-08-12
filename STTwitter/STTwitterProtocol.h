@@ -22,6 +22,7 @@
          successBlock:(void(^)(id response))successBlock
            errorBlock:(void(^)(NSError *error))errorBlock;
 
+// access tokens are available only with plain OAuth authentication, and also with iOS / OS X accounts after reverse auth.
 - (NSString *)oauthAccessToken;
 - (NSString *)oauthAccessTokenSecret;
 
