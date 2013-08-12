@@ -23,21 +23,18 @@
     // see http://rndc.or.id/wiki/index.php/(Ab)Using_Twitter_Client
 
     STTwitterAPI *twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
-    
+
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
-        
-        NSLog(@"Access granted for %@", username);
-        
+
         [twitter getUserTimelineWithScreenName:@"barackobama" successBlock:^(NSArray *statuses) {
             NSLog(@"-- statuses: %@", statuses);
         } errorBlock:^(NSError *error) {
             NSLog(@"-- error: %@", error);
         }];
-        
+
     } errorBlock:^(NSError *error) {
-        NSLog(@"-- error %@", error);
+        NSLog(@"-- error: %@", error);
     }];
-    
 }
 
 - (void)didReceiveMemoryWarning

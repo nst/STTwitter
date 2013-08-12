@@ -15,8 +15,8 @@
     
 }
 
-+ (instancetype)twitterAPIOSWithFirstAccount;
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account;
++ (instancetype)twitterAPIOSWithFirstAccount;
 
 - (BOOL)canVerifyCredentials;
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;

@@ -31,8 +31,8 @@
 
 @interface STTwitterAPI : NSObject
 
-+ (instancetype)twitterAPIOSWithFirstAccount;
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *) account;
++ (instancetype)twitterAPIOSWithFirstAccount;
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey

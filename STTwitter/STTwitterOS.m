@@ -12,7 +12,7 @@
 
 @interface STTwitterOS ()
 @property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
-@property (nonatomic, retain) ACAccount *account;
+@property (nonatomic, retain) ACAccount *account; // if nil, will be set to first account available
 @end
 
 @implementation STTwitterOS
@@ -31,6 +31,7 @@
 
 - (instancetype)initWithAccount:(ACAccount *) account {
     self = [super init];
+    self.accountStore = [[[ACAccountStore alloc] init] autorelease];
     self.account = account;
     return self;
 }
@@ -40,17 +41,7 @@
 }
 
 + (instancetype)twitterAPIOSWithFirstAccount {
-    
-    ACAccountStore *accountStore = [[[ACAccountStore alloc] init] autorelease];
-    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    NSArray *accounts = [accountStore accountsWithAccountType:accountType];
-    if([accounts count] == 0) {
-        NSLog(@"-- error: cannot find any local Twitter account");
-        return nil;
-    }
-
-    ACAccount *account = [accounts objectAtIndex:0];
-    return [self twitterAPIOSWithAccount:account];
+    return [self twitterAPIOSWithAccount:nil];
 }
 
 - (NSString *)username {
@@ -71,7 +62,7 @@
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     if([self hasAccessToTwitter] == NO) {
-        NSString *message = @"Twitter is not available.";
+        NSString *message = @"No Twitter Account is set up.";
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
         errorBlock(error);
         return;
@@ -80,52 +71,34 @@
     ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
     [self.accountStore requestAccessToAccountsWithType:accountType
-                                          options:NULL
-                                       completion:^(BOOL granted, NSError *error) {
-                                           
-                                           [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                               
-                                               if(granted) {
-                                                   
-                                                   NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
-                                                   ACAccount *twitterAccount = [accounts lastObject];
-                                                   
-                                                   successBlock(twitterAccount.username);
-                                               } else {
-                                                   errorBlock(error);
-                                               }
-                                               
-                                           }];
-                                       }];
-}
-
-- (void)requestAccessWithCompletionBlock:(void(^)(ACAccount *twitterAccount))completionBlock errorBlock:(void(^)(NSError *))errorBlock {
-    
-    ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    
-    [self.accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error) {
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            if(granted) {
-                
-                NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
-                
-                // TODO: let the user choose the account he wants
-                ACAccount *twitterAccount = [accounts lastObject];
-                
-                //                id cred = [twitterAccount credential];
-                
-                completionBlock(twitterAccount);
-            } else {
-                NSError *e = error;
-                if(e == nil) {
-                    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"Cannot access OS X or iOS Twitter account." };
-                    e = [NSError errorWithDomain:@"STTwitterOS" code:0 userInfo:userInfo];
-                }
-                errorBlock(e);
-            }
-        }];
-    }];
+                                               options:NULL
+                                            completion:^(BOOL granted, NSError *error) {
+                                                
+                                                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                                    
+                                                    
+                                                    if(granted == NO) {
+                                                        errorBlock(error);
+                                                        return;
+                                                    }
+                                                    
+                                                    if(self.account == nil) {
+                                                        NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
+                                                        
+                                                        if([accounts count] == 0) {
+                                                            NSString *message = @"No Twitter account available.";
+                                                            NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+                                                            errorBlock(error);
+                                                            return;
+                                                        }
+                                                        
+                                                        self.account = [accounts objectAtIndex:0];
+                                                        successBlock(self.account.username);
+                                                    }
+                                                    
+                                                }];
+                                                
+                                            }];
 }
 
 - (void)fetchAPIResource:(NSString *)resource
@@ -140,95 +113,91 @@
     NSMutableDictionary *paramsWithoutMedia = [[params mutableCopy] autorelease];
     [paramsWithoutMedia removeObjectForKey:@"media[]"];
     
-    [self requestAccessWithCompletionBlock:^(ACAccount *twitterAccount) {
-        NSString *urlString = [baseURLString stringByAppendingString:resource];
-        NSURL *url = [NSURL URLWithString:urlString];
-        SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
-        request.account = twitterAccount;
-        
-        if(mediaData) {
-            [request addMultipartData:mediaData withName:@"media[]" type:@"application/octet-stream" filename:@"media.jpg"];
+    NSString *urlString = [baseURLString stringByAppendingString:resource];
+    NSURL *url = [NSURL URLWithString:urlString];
+    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
+    request.account = self.account;
+    
+    if(mediaData) {
+        [request addMultipartData:mediaData withName:@"media[]" type:@"application/octet-stream" filename:@"media.jpg"];
+    }
+    
+    [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+        if(responseData == nil) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                errorBlock(nil);
+            }];
+            return;
         }
         
-        [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-            if(responseData == nil) {
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(nil);
-                }];
-                return;
-            }
-            
-            NSError *jsonError = nil;
-            NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-            
-            if(json == nil) {
-
-                NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
-
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    completionBlock(s);
-                }];
-                return;
-            }
-            
-            /**/
-            
-            if([json isKindOfClass:[NSArray class]] == NO && [json valueForKey:@"error"]) {
-                
-                NSString *message = [json valueForKey:@"error"];
-                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
-                NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:userInfo];
-                
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(jsonErrorFromResponse);
-                }];
-                
-                return;
-            }
-            
-            /**/
-            
-            id jsonErrors = [json valueForKey:@"errors"];
-            
-            if(jsonErrors != nil && [jsonErrors isKindOfClass:[NSArray class]] == NO) {
-                if(jsonErrors == nil) jsonErrors = @"";
-                jsonErrors = [NSArray arrayWithObject:@{@"message":jsonErrors, @"code" : @(0)}];
-            }
-            
-            if([jsonErrors count] > 0 && [jsonErrors lastObject] != [NSNull null]) {
-                
-                NSDictionary *jsonErrorDictionary = [jsonErrors lastObject];
-                NSString *message = jsonErrorDictionary[@"message"];
-                NSInteger code = [jsonErrorDictionary[@"code"] intValue];
-                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
-                NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:userInfo];
-                
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(jsonErrorFromResponse);
-                }];
-                
-                return;
-            }
-            
-            /**/
-            
-            if(json) {
-                
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    completionBlock((NSArray *)json);
-                }];
-                
-            } else {
-                
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(jsonError);
-                }];
-            }
-        }];
+        NSError *jsonError = nil;
+        NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        if(json == nil) {
+            
+            NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(s);
+            }];
+            return;
+        }
+        
+        /**/
+        
+        if([json isKindOfClass:[NSArray class]] == NO && [json valueForKey:@"error"]) {
+            
+            NSString *message = [json valueForKey:@"error"];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
+            NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:userInfo];
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                errorBlock(jsonErrorFromResponse);
+            }];
+            
+            return;
+        }
+        
+        /**/
+        
+        id jsonErrors = [json valueForKey:@"errors"];
+        
+        if(jsonErrors != nil && [jsonErrors isKindOfClass:[NSArray class]] == NO) {
+            if(jsonErrors == nil) jsonErrors = @"";
+            jsonErrors = [NSArray arrayWithObject:@{@"message":jsonErrors, @"code" : @(0)}];
+        }
+        
+        if([jsonErrors count] > 0 && [jsonErrors lastObject] != [NSNull null]) {
+            
+            NSDictionary *jsonErrorDictionary = [jsonErrors lastObject];
+            NSString *message = jsonErrorDictionary[@"message"];
+            NSInteger code = [jsonErrorDictionary[@"code"] intValue];
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
+            NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:userInfo];
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                errorBlock(jsonErrorFromResponse);
+            }];
+            
+            return;
+        }
+        
+        /**/
+        
+        if(json) {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock((NSArray *)json);
+            }];
+            
+        } else {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                errorBlock(jsonError);
+            }];
+        }
     }];
+    
 }
 
 - (void)fetchResource:(NSString *)resource
@@ -271,7 +240,7 @@
     
     for(NSString *parameter in parameters) {
         // transform k="v" into {'k':'v'}
-
+        
         NSArray *keyValue = [parameter componentsSeparatedByString:@"="];
         if([keyValue count] != 2) {
             continue;

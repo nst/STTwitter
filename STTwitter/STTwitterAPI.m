@@ -31,29 +31,25 @@ static NSDateFormatter *dateFormatter = nil;
     self = [super init];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        // OS X account must be considered invalid
+        // account must be considered invalid
         
         if([self.oauth isKindOfClass:[STTwitterOS class]]) {
-            self.oauth = nil;//[[[STTwitterOAuthOSX alloc] init] autorelease];
+            self.oauth = nil;
         }
     }];
     
     return self;
 }
 
-+ (instancetype)twitterAPIOSWithFirstAccount {
-
-    STTwitterOS *twitterOS = [STTwitterOS twitterAPIOSWithFirstAccount];
-    if(twitterOS == nil) return nil;
-
-    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
-    twitter.oauth = twitterOS;
-    return [twitter autorelease];
-}
-
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:account];
+    return [twitter autorelease];
+}
+
++ (instancetype)twitterAPIOSWithFirstAccount {
+    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
+    twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:nil];
     return [twitter autorelease];
 }
 
