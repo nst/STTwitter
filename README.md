@@ -83,44 +83,6 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
     } errorBlock:^(NSError *error) {
         // ...
     }];
-    
-##### Reverse Authentication
-
-Reference: [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
-
-The most common use case of reverse auth. is letting users register/login to your remote service with their OS X or iOS Twitter account.
-
-    iOS/OSX     Twitter     Server
-    -------------->                 reverse auth.
-    < - - - - - - -                 access tokens
-        
-    ----------------------------->  access tokens
-        
-    <------------------             access Twitter on user's behalf
-    - - - - - - - - - >
-
-Here is how to use reverse auth. with STTwitter:
-
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
-                                                              consumerKey:@""
-                                                           consumerSecret:@""
-                                                                 username:@""
-                                                                 password:@""];
-
-    [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
-        
-        STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
-        
-        [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
-                                                            successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
-            // ...
-        } errorBlock:^(NSError *error) {
-            // ...
-        }];
-         
-    } errorBlock:^(NSError *error) {
-        // ...
-    }];
 
 ### Various Kinds of OAuth Connections
 
@@ -152,7 +114,45 @@ So there are five cases altogether, hence these five methods:
                    
     + (STTwitterAPI *)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
                                         consumerSecret:(NSString *)consumerSecret;
-                                           
+
+##### Reverse Authentication
+
+Reference: [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
+
+The most common use case of reverse authentication is letting users register/login to a remote service with their OS X or iOS Twitter account.
+
+    iOS/OSX     Twitter     Server
+    -------------->                 reverse auth.
+    < - - - - - - -                 access tokens
+        
+    ----------------------------->  access tokens
+        
+                   <--------------  access Twitter on user's behalf
+                    - - - - - - ->
+
+Here is how to use reverse authentication with STTwitter:
+
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                              consumerKey:@""
+                                                           consumerSecret:@""
+                                                                 username:@""
+                                                                 password:@""];
+
+    [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
+        
+        STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
+        
+        [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
+                                                            successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
+            // ...
+        } errorBlock:^(NSError *error) {
+            // ...
+        }];
+         
+    } errorBlock:^(NSError *error) {
+        // ...
+    }];
+
 ### OAuth Consumer Tokens
 
 In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
