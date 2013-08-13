@@ -86,7 +86,20 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
     
 ##### Reverse Authentication
 
-See [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
+Reference: [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
+
+The most common use case of reverse auth. is letting users register/login to your remote service with their OS X or iOS Twitter account.
+
+    iOS/OSX     Twitter     Server
+    -------------->                 reverse auth.
+    < - - - - - - -                 access tokens
+        
+    ----------------------------->  access tokens
+        
+    <------------------             access Twitter on user's behalf
+    - - - - - - - - - >
+
+Here is how to use reverse auth. with STTwitter:
 
     STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
                                                               consumerKey:@""
