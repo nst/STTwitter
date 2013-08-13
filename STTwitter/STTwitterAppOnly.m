@@ -27,7 +27,7 @@
 - (id)init {
     self = [super init];
     
-    [STHTTPRequest clearSession]; // former cookies may result in mixed-up kind of authentication
+    // TODO: remove cookies from Twitter if needed
     
     return self;
 }
