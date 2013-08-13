@@ -164,17 +164,27 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 
 + (NSArray *)sessionCookies {
     NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    return [cookieStorage cookies];
+    NSArray *allCookies = [cookieStorage cookies];
+    
+    NSArray *sessionCookies = [allCookies filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        NSHTTPCookie *cookie = (NSHTTPCookie *)evaluatedObject;
+        return [cookie isSessionOnly];
+    }]];
+    
+    return sessionCookies;
 }
 
 + (void)deleteSessionCookies {
+    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage]
+    
     for(NSHTTPCookie *cookie in [self sessionCookies]) {
-        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+        [cookieStorage deleteCookie:cookie];
     }
 }
 
 + (void)deleteAllCookies {
     NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    
     NSArray *cookies = [cookieStorage cookies];
     for (NSHTTPCookie *cookie in cookies) {
         [cookieStorage deleteCookie:cookie];
