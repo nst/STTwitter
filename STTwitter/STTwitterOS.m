@@ -9,17 +9,31 @@
 #import "STTwitterOS.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
+#if TARGET_OS_IPHONE
+#import <Twitter/Twitter.h> // iOS 5
+#endif
 
 @interface STTwitterOS ()
 @property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
 @property (nonatomic, retain) ACAccount *account; // if nil, will be set to first account available
 @end
 
+// for iOS 5 support
+BOOL useTWRequests(void) {
+#if TARGET_OS_IPHONE
+    return NSClassFromString(@"SLRequest") == nil;
+#else
+    return NO;
+#endif
+}
+
 @implementation STTwitterOS
 
 - (id)init {
     self = [super init];
+    
     self.accountStore = [[[ACAccountStore alloc] init] autorelease];
+    
     return self;
 }
 
@@ -53,16 +67,21 @@
 }
 
 - (BOOL)hasAccessToTwitter {
+    
 #if TARGET_OS_IPHONE
-    return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
+    if(NSClassFromString(@"SLComposeViewController")) { // since iOS 6
+        return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
+    } else {
+        return YES; // error will be detected later
+    }
 #else
-    return YES; // error will be detected later..
+    return YES; // error will be detected later
 #endif
 }
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     if([self hasAccessToTwitter] == NO) {
-        NSString *message = @"No Twitter Account is set up.";
+        NSString *message = @"This system cannot access Twitter.";
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
         errorBlock(error);
         return;
@@ -70,12 +89,18 @@
     
     ACAccountType *accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
+    if(accountType == nil) {
+        NSString *message = @"Cannot find Twitter account.";
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+        errorBlock(error);
+        return;
+    }
+    
     [self.accountStore requestAccessToAccountsWithType:accountType
                                                options:NULL
                                             completion:^(BOOL granted, NSError *error) {
                                                 
                                                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                                    
                                                     
                                                     if(granted == NO) {
                                                         errorBlock(error);
@@ -115,8 +140,19 @@
     
     NSString *urlString = [baseURLString stringByAppendingString:resource];
     NSURL *url = [NSURL URLWithString:urlString];
-    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
-    request.account = self.account;
+    
+    id request = nil;
+    
+    if(useTWRequests()) {
+#if TARGET_OS_IPHONE
+        TWRequestMethod method = (httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
+        request = [[[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method] autorelease];
+#endif
+    } else {
+        request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
+    }
+    
+    [request setAccount:self.account];
     
     if(mediaData) {
         [request addMultipartData:mediaData withName:@"media[]" type:@"application/octet-stream" filename:@"media.jpg"];
