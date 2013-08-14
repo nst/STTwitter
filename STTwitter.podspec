@@ -11,8 +11,8 @@ Pod::Spec.new do |s|
     LICENSE
   }
 
- s.authors       = 'Nicolas Seriot', 'Frank Dowsett', 'xnyhps'
- s.source       = { :git => "https://github.com/nst/STTwitter.git", :tag => '0.0.3' }
+ s.authors       = 'Nicolas Seriot', 'Frank Dowsett', 'xnyhps', 'pawelniewie'
+ s.source       = { :git => "https://github.com/nst/STTwitter.git", :tag => '0.0.4' }
 
 
   s.ios.deployment_target = '5.0'
@@ -20,6 +20,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'STTwitter/*.{h,m}', 'STTwitter/Vendor/*.{h,m}'
 
-  s.ios.frameworks  = 'CoreGraphics', 'Foundation', 'QuartzCore', 'UIKit'
+  s.ios.frameworks  = 'CoreGraphics', 'Foundation', 'QuartzCore', 'UIKit', 'Accounts', 'Social', 'Twitter'
   s.requires_arc = false
 end
