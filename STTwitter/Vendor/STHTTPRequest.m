@@ -175,7 +175,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 }
 
 + (void)deleteSessionCookies {
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage]
+    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     
     for(NSHTTPCookie *cookie in [self sessionCookies]) {
         [cookieStorage deleteCookie:cookie];
