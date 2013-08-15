@@ -316,7 +316,9 @@ BOOL useTWRequests(void) {
     
     NSParameterAssert(authenticationHeader);
     
-    NSDictionary *authenticationHeaderDictionary = [[self class] parametersDictionaryFromCommaSeparatedParametersString:authenticationHeader];
+    NSString *shortHeader = [authenticationHeader stringByReplacingOccurrencesOfString:@"OAuth " withString:@""];
+    
+    NSDictionary *authenticationHeaderDictionary = [[self class] parametersDictionaryFromCommaSeparatedParametersString:shortHeader];
     
     NSString *consumerKey = [authenticationHeaderDictionary valueForKey:@"oauth_consumer_key"];
     
@@ -325,7 +327,7 @@ BOOL useTWRequests(void) {
     NSDictionary *d = @{@"x_reverse_auth_target" : consumerKey,
                         @"x_reverse_auth_parameters" : authenticationHeader};
     
-    [self fetchResource:@"oauth/access_token" HTTPMethod:@"GET" baseURLString:@"https://api.twitter.com" parameters:d progressBlock:nil successBlock:^(id response) {
+    [self fetchResource:@"oauth/access_token" HTTPMethod:@"POST" baseURLString:@"https://api.twitter.com" parameters:d progressBlock:nil successBlock:^(id response) {
         
         NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
         
