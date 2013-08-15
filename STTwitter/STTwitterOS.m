@@ -72,7 +72,7 @@ BOOL useTWRequests(void) {
     if(NSClassFromString(@"SLComposeViewController")) { // since iOS 6
         return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
     } else {
-        return YES; // error will be detected later
+        return [TWTweetComposeViewController canSendTweet]; // iOS 5
     }
 #else
     return YES; // error will be detected later
