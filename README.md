@@ -132,26 +132,39 @@ The most common use case of reverse authentication is letting users register/log
 
 Here is how to use reverse authentication with STTwitter:
 
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:@""
                                                               consumerKey:@""
                                                            consumerSecret:@""
                                                                  username:@""
                                                                  password:@""];
-
+    
     [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
         
         STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
         
-        [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
-                                                            successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
-            // ...
+        [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
+            
+            [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
+                                                                successBlock:^(NSString *oAuthToken,
+                                                                               NSString *oAuthTokenSecret,
+                                                                               NSString *userID,
+                                                                               NSString *screenName) {
+                                                                    
+                                                                    // use the tokens...
+
+                                                                } errorBlock:^(NSError *error) {
+                                                                    // ...
+                                                                }];
+            
         } errorBlock:^(NSError *error) {
             // ...
         }];
-         
+        
+        
     } errorBlock:^(NSError *error) {
         // ...
     }];
+
 
 ### OAuth Consumer Tokens
 

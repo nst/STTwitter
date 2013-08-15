@@ -327,8 +327,13 @@ BOOL useTWRequests(void) {
     NSDictionary *d = @{@"x_reverse_auth_target" : consumerKey,
                         @"x_reverse_auth_parameters" : authenticationHeader};
     
-    [self fetchResource:@"oauth/access_token" HTTPMethod:@"POST" baseURLString:@"https://api.twitter.com" parameters:d progressBlock:nil successBlock:^(id response) {
-        
+    [self fetchResource:@"oauth/access_token"
+             HTTPMethod:@"POST"
+          baseURLString:@"https://api.twitter.com"
+             parameters:d
+          progressBlock:nil
+           successBlock:^(id response) {
+                
         NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
         
         NSString *oAuthToken = [d valueForKey:@"oauth_token"];
