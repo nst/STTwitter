@@ -177,7 +177,7 @@ BOOL useTWRequests(void) {
             // do our best to extract Twitter error message from responseString
             
             NSError *regexError = nil;
-            NSString *errorString = [s firstMatchWithRegex:@"<error .*?>(.*)</error>" error:&regexError];
+            NSString *errorString = [s firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
             
             if(errorString) {
                 error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
