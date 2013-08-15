@@ -7,6 +7,7 @@
 //
 
 #import "STTwitterOS.h"
+#import "NSString+STTwitter.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 #if TARGET_OS_IPHONE
@@ -172,6 +173,19 @@ BOOL useTWRequests(void) {
         if(json == nil) {
             
             NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+
+            // do our best to extract Twitter error message from responseString
+            
+            NSError *regexError = nil;
+            NSString *errorString = [s firstMatchWithRegex:@"<error .*?>(.*)</error>" error:&regexError];
+            
+            if(errorString) {
+                error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    errorBlock(error);
+                }];
+                return;
+            }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 completionBlock(s);
@@ -314,6 +328,8 @@ BOOL useTWRequests(void) {
                                               successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
+    NSAssert(self.account, @"no account is set, try to call -verifyCredentialsWithSuccessBlock:errorBlock: first");
+    
     NSParameterAssert(authenticationHeader);
     
     NSString *shortHeader = [authenticationHeader stringByReplacingOccurrencesOfString:@"OAuth " withString:@""];
@@ -333,14 +349,18 @@ BOOL useTWRequests(void) {
              parameters:d
           progressBlock:nil
            successBlock:^(id response) {
-                
+               
+        NSLog(@"-- phase 2 response: %@", response);
+               
         NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
-        
+               
         NSString *oAuthToken = [d valueForKey:@"oauth_token"];
         NSString *oAuthTokenSecret = [d valueForKey:@"oauth_token_secret"];
         NSString *userID = [d valueForKey:@"user_id"];
         NSString *screenName = [d valueForKey:@"screen_name"];
         
+               
+               
         successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
