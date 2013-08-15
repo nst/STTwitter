@@ -132,11 +132,9 @@ The most common use case of reverse authentication is letting users register/log
 
 Here is how to use reverse authentication with STTwitter:
 
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:@""
-                                                              consumerKey:@""
-                                                           consumerSecret:@""
-                                                                 username:@""
-                                                                 password:@""];
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                              consumerKey:@"CONSUMER_KEY"
+                                                           consumerSecret:@"CONSUMER_SECRET"];
     
     [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
         
@@ -151,7 +149,7 @@ Here is how to use reverse authentication with STTwitter:
                                                                                NSString *screenName) {
                                                                     
                                                                     // use the tokens...
-
+                                                                    
                                                                 } errorBlock:^(NSError *error) {
                                                                     // ...
                                                                 }];
@@ -160,11 +158,9 @@ Here is how to use reverse authentication with STTwitter:
             // ...
         }];
         
-        
     } errorBlock:^(NSError *error) {
         // ...
     }];
-
 
 ### OAuth Consumer Tokens
 
