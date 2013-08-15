@@ -350,8 +350,6 @@ BOOL useTWRequests(void) {
           progressBlock:nil
            successBlock:^(id response) {
                
-        NSLog(@"-- phase 2 response: %@", response);
-               
         NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
                
         NSString *oAuthToken = [d valueForKey:@"oauth_token"];
@@ -359,8 +357,6 @@ BOOL useTWRequests(void) {
         NSString *userID = [d valueForKey:@"user_id"];
         NSString *screenName = [d valueForKey:@"screen_name"];
         
-               
-               
         successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
