@@ -123,8 +123,10 @@ BOOL useTWRequests(void) {
     };
 
     if(useTWRequests()) {
+#if TARGET_OS_IPHONE
         [self.accountStore requestAccessToAccountsWithType:accountType
                                      withCompletionHandler:accountStoreRequestCompletionHandler];
+#endif
     } else {
         [self.accountStore requestAccessToAccountsWithType:accountType
                                                    options:NULL
