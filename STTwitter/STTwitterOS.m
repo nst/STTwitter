@@ -97,34 +97,40 @@ BOOL useTWRequests(void) {
         return;
     }
     
-    [self.accountStore requestAccessToAccountsWithType:accountType
-                                               options:NULL
-                                            completion:^(BOOL granted, NSError *error) {
-                                                
-                                                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                                    
-                                                    if(granted == NO) {
-                                                        errorBlock(error);
-                                                        return;
-                                                    }
-                                                    
-                                                    if(self.account == nil) {
-                                                        NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
-                                                        
-                                                        if([accounts count] == 0) {
-                                                            NSString *message = @"No Twitter account available.";
-                                                            NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
-                                                            errorBlock(error);
-                                                            return;
-                                                        }
-                                                        
-                                                        self.account = [accounts objectAtIndex:0];
-                                                        successBlock(self.account.username);
-                                                    }
-                                                    
-                                                }];
-                                                
-                                            }];
+    ACAccountStoreRequestAccessCompletionHandler accountStoreRequestCompletionHandler = ^(BOOL granted, NSError *error) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            if(granted == NO) {
+                errorBlock(error);
+                return;
+            }
+            
+            if(self.account == nil) {
+                NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
+                
+                if([accounts count] == 0) {
+                    NSString *message = @"No Twitter account available.";
+                    NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+                    errorBlock(error);
+                    return;
+                }
+                
+                self.account = [accounts objectAtIndex:0];
+                successBlock(self.account.username);
+            }
+            
+        }];
+    };
+
+    if(useTWRequests()) {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                     withCompletionHandler:accountStoreRequestCompletionHandler];
+    } else {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                                   options:NULL
+                                                completion:accountStoreRequestCompletionHandler];
+    }
+    
 }
 
 - (void)fetchAPIResource:(NSString *)resource
