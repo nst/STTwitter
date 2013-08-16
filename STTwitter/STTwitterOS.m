@@ -116,9 +116,9 @@ BOOL useTWRequests(void) {
                 }
                 
                 self.account = [accounts objectAtIndex:0];
-                successBlock(self.account.username);
             }
-            
+
+            successBlock(self.account.username);
         }];
     };
 
