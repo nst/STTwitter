@@ -590,20 +590,18 @@ static NSDateFormatter *dateFormatter = nil;
     
     NSString *countString = count > 0 ? [@(count) description] : nil;
     
-    [self getStatusesUserTimelineForUserID:nil
-                                screenName:nil
+    [self getStatusesHomeTimelineWithCount:countString
                                    sinceID:sinceID
-                                     count:countString
                                      maxID:nil
                                   trimUser:nil
                             excludeReplies:nil
                         contributorDetails:nil
                            includeRetweets:nil
                               successBlock:^(NSArray *statuses) {
-                                  successBlock(statuses);
-                              } errorBlock:^(NSError *error) {
-                                  errorBlock(error);
-                              }];
+        successBlock(statuses);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
 }
 
 - (void)getStatusesRetweetsOfMeWithCount:(NSString *)count
