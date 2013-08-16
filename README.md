@@ -170,13 +170,15 @@ STTwitter demo project comes with `TwitterClients.plist` where you can enter you
 
 ### Demo / Test Project
 
-STTwitter demo (or test) project lets you choose how to get the OAuth tokens (see below).
+There is a demo project for OS X in `demo_osx`, which lets you choose how to get the OAuth tokens (see below).
 
 Once you got the OAuth tokens, you can get your timeline and post a new status.
 
-![STTwitter](Art/STTwitter.png "STTwitter Demo Project")
+There is also a simple iOS demo project in `demo_ios`.
 
-![STTweet](Art/STTweet.png "STTwitter Demo Tweet")
+![STTwitter](Art/STTwitter.png "STTwitter Demo OS X") 
+<img border="1" src="Art/ios.png" alt="STTwitter Demo iOS"></img> 
+<img border="1" src="Art/STTweet.png" alt="STTwitter Demo Tweet"></img> 
 
 ### Troubleshooting
 
