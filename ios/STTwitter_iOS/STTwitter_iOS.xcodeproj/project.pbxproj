@@ -28,7 +28,7 @@
 		03C4E13417BA3F8F0007C362 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C4E13317BA3F8F0007C362 /* Twitter.framework */; };
 		03D3C29E17B8E74400442FD5 /* STTwitterOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D3C29D17B8E74400442FD5 /* STTwitterOS.m */; };
 		03F7CE4A17B6E1C900A3534B /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F7CE4917B6E1C900A3534B /* Accounts.framework */; };
-		03F7CE4C17B6E1CE00A3534B /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F7CE4B17B6E1CE00A3534B /* Social.framework */; };
+		03F7CE4C17B6E1CE00A3534B /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F7CE4B17B6E1CE00A3534B /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		03F7CE4E17B6E3A200A3534B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03F7CE4D17B6E3A200A3534B /* README.md */; };
 /* End PBXBuildFile section */
 
