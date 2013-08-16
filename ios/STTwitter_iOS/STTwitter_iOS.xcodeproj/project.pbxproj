@@ -22,8 +22,8 @@
 		037F881E16D3A8ED00FE36C8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 037F881D16D3A8ED00FE36C8 /* Default.png */; };
 		037F882016D3A8ED00FE36C8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 037F881F16D3A8ED00FE36C8 /* Default@2x.png */; };
 		037F882216D3A8ED00FE36C8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 037F882116D3A8ED00FE36C8 /* Default-568h@2x.png */; };
-		037F882516D3A8ED00FE36C8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 037F882416D3A8ED00FE36C8 /* ViewController.m */; };
-		037F882816D3A8ED00FE36C8 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 037F882616D3A8ED00FE36C8 /* ViewController.xib */; };
+		037F882516D3A8ED00FE36C8 /* STTwitterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 037F882416D3A8ED00FE36C8 /* STTwitterVC.m */; };
+		037F882816D3A8ED00FE36C8 /* STTwitterVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 037F882616D3A8ED00FE36C8 /* STTwitterVC.xib */; };
 		037F884216D3A8FB00FE36C8 /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 037F883C16D3A8FB00FE36C8 /* STHTTPRequest.m */; };
 		03C4E13417BA3F8F0007C362 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C4E13317BA3F8F0007C362 /* Twitter.framework */; };
 		03D3C29E17B8E74400442FD5 /* STTwitterOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D3C29D17B8E74400442FD5 /* STTwitterOS.m */; };
@@ -60,9 +60,9 @@
 		037F881D16D3A8ED00FE36C8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		037F881F16D3A8ED00FE36C8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		037F882116D3A8ED00FE36C8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		037F882316D3A8ED00FE36C8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		037F882416D3A8ED00FE36C8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		037F882716D3A8ED00FE36C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		037F882316D3A8ED00FE36C8 /* STTwitterVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTwitterVC.h; sourceTree = "<group>"; };
+		037F882416D3A8ED00FE36C8 /* STTwitterVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STTwitterVC.m; sourceTree = "<group>"; };
+		037F882716D3A8ED00FE36C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/STTwitterVC.xib; sourceTree = "<group>"; };
 		037F883B16D3A8FB00FE36C8 /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		037F883C16D3A8FB00FE36C8 /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
 		03C4E13317BA3F8F0007C362 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
@@ -129,9 +129,9 @@
 			children = (
 				037F881A16D3A8ED00FE36C8 /* AppDelegate.h */,
 				037F881B16D3A8ED00FE36C8 /* AppDelegate.m */,
-				037F882316D3A8ED00FE36C8 /* ViewController.h */,
-				037F882416D3A8ED00FE36C8 /* ViewController.m */,
-				037F882616D3A8ED00FE36C8 /* ViewController.xib */,
+				037F882316D3A8ED00FE36C8 /* STTwitterVC.h */,
+				037F882416D3A8ED00FE36C8 /* STTwitterVC.m */,
+				037F882616D3A8ED00FE36C8 /* STTwitterVC.xib */,
 				037F881216D3A8ED00FE36C8 /* Supporting Files */,
 			);
 			path = STTwitter_iOS;
@@ -241,7 +241,7 @@
 				037F881E16D3A8ED00FE36C8 /* Default.png in Resources */,
 				037F882016D3A8ED00FE36C8 /* Default@2x.png in Resources */,
 				037F882216D3A8ED00FE36C8 /* Default-568h@2x.png in Resources */,
-				037F882816D3A8ED00FE36C8 /* ViewController.xib in Resources */,
+				037F882816D3A8ED00FE36C8 /* STTwitterVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +258,7 @@
 				037F881816D3A8ED00FE36C8 /* main.m in Sources */,
 				031D341E17B5312500C817F5 /* STTwitterAppOnly.m in Sources */,
 				037F881C16D3A8ED00FE36C8 /* AppDelegate.m in Sources */,
-				037F882516D3A8ED00FE36C8 /* ViewController.m in Sources */,
+				037F882516D3A8ED00FE36C8 /* STTwitterVC.m in Sources */,
 				031D342017B5312500C817F5 /* NSString+STTwitter.m in Sources */,
 				031D341F17B5312500C817F5 /* STTwitterHTML.m in Sources */,
 				031D341B17B5312500C817F5 /* STTwitterAPI.m in Sources */,
@@ -277,12 +277,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		037F882616D3A8ED00FE36C8 /* ViewController.xib */ = {
+		037F882616D3A8ED00FE36C8 /* STTwitterVC.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				037F882716D3A8ED00FE36C8 /* en */,
 			);
-			name = ViewController.xib;
+			name = STTwitterVC.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -341,11 +341,13 @@
 		037F882C16D3A8ED00FE36C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nicolas Seriot (9V2U949PMC)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "STTwitter_iOS/STTwitter_iOS-Prefix.pch";
 				INFOPLIST_FILE = "STTwitter_iOS/STTwitter_iOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "DCADE238-CDED-41FA-A11A-867E6A4C7CBF";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -353,11 +355,13 @@
 		037F882D16D3A8ED00FE36C8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nicolas Seriot (9V2U949PMC)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "STTwitter_iOS/STTwitter_iOS-Prefix.pch";
 				INFOPLIST_FILE = "STTwitter_iOS/STTwitter_iOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "DCADE238-CDED-41FA-A11A-867E6A4C7CBF";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
