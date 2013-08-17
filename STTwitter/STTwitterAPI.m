@@ -44,13 +44,13 @@ static NSDateFormatter *dateFormatter = nil;
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:account];
-    return [twitter autorelease];
+    return twitter;
 }
 
 + (instancetype)twitterAPIOSWithFirstAccount {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:nil];
-    return [twitter autorelease];
+    return twitter;
 }
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
@@ -66,7 +66,7 @@ static NSDateFormatter *dateFormatter = nil;
                                                   consumerSecret:consumerSecret
                                                         username:username
                                                         password:password];
-    return [twitter autorelease];
+    return twitter;
 }
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
@@ -82,7 +82,7 @@ static NSDateFormatter *dateFormatter = nil;
                                                   consumerSecret:consumerSecret
                                                       oauthToken:oauthToken
                                                 oauthTokenSecret:oauthTokenSecret];
-    return [twitter autorelease];
+    return twitter;
 }
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
@@ -105,7 +105,7 @@ static NSDateFormatter *dateFormatter = nil;
     
     twitter.oauth = appOnly;
     
-    return [twitter autorelease];
+    return twitter;
 }
 
 - (NSDateFormatter *)dateFormatter {
@@ -183,13 +183,6 @@ static NSDateFormatter *dateFormatter = nil;
 #endif
     
     return _userName;
-}
-
-- (void)dealloc {
-    [_userName release];
-    [_consumerName release];
-    [_oauth release];
-    [super dealloc];
 }
 
 /**/
@@ -355,16 +348,16 @@ static NSDateFormatter *dateFormatter = nil;
 				   successBlock:^(NSDictionary *response) {
 					   NSString *imageURLString = [response objectForKey:@"profile_image_url"];
                        
-                       __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
+                       __block __weak STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
                        
                        r.completionBlock = ^(NSDictionary *headers, NSString *body) {
                            
                            NSData *imageData = r.responseData;
                            
 #if TARGET_OS_IPHONE
-                           successBlock([[[UIImage alloc] initWithData:imageData] autorelease]);
+                           successBlock([[UIImage alloc] initWithData:imageData]);
 #else
-                           successBlock([[[NSImage alloc] initWithData:imageData] autorelease]);
+                           successBlock([[NSImage alloc] initWithData:imageData]);
 #endif
                        };
                        

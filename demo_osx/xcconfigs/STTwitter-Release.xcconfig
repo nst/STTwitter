@@ -1,4 +1,0 @@
-#include "STTwitter.xcconfig"
-COPY_PHASE_STRIP = YES
-DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"
-

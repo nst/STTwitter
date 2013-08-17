@@ -40,7 +40,7 @@
 
 + (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString stTwitterProgressBlock:(void(^)(id json))progressBlock stTwitterSuccessBlock:(void(^)(id json))successBlock stTwitterErrorBlock:(void(^)(NSError *error))errorBlock {
     
-    STHTTPRequest *r = [self requestWithURLString:urlString];
+    __block __weak STHTTPRequest *r = [self requestWithURLString:urlString];
     
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
@@ -58,7 +58,7 @@
         // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
         // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
         
-        NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
         NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
         

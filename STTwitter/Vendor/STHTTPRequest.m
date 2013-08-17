@@ -7,8 +7,9 @@
 //
 
 #if __has_feature(objc_arc)
+#else
 // see http://www.codeography.com/2011/10/10/making-arc-and-non-arc-play-nice.html
-#error This file cannot be compiled with ARC. Either turn off ARC for the project or use -fno-objc-arc flag
+#error This file must be compiled with ARC. Either turn on ARC for the project or use -fobjc-arc flag
 #endif
 
 #import "STHTTPRequest.h"
@@ -64,7 +65,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url {
     if(url == nil) return nil;
-    return [[(STHTTPRequest *)[self alloc] initWithURL:url] autorelease];
+    return [(STHTTPRequest *)[self alloc] initWithURL:url];
 }
 
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString {
@@ -75,15 +76,15 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 - (STHTTPRequest *)initWithURL:(NSURL *)theURL {
     
     if (self = [super init]) {
-        _url = [theURL retain];
+        _url = theURL;
         _responseData = [[NSMutableData alloc] init];
-        _requestHeaders = [[NSMutableDictionary dictionary] retain];
+        _requestHeaders = [NSMutableDictionary dictionary];
         _postDataEncoding = NSUTF8StringEncoding;
         _encodePOSTDictionary = YES;
         _addCredentialsToURL = NO;
         _timeoutSeconds = kSTHTTPRequestDefaultTimeout;
-        _filesToUpload = [[NSMutableArray alloc] init];
-        _dataToUpload = [[NSMutableArray alloc] init];
+        _filesToUpload = [NSMutableArray array];
+        _dataToUpload = [NSMutableArray array];
     }
     
     return self;
@@ -94,32 +95,11 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     [self deleteAllCredentials];
 }
 
-- (void)dealloc {
-    if(_completionBlock) [_completionBlock release];
-    if(_errorBlock) [_errorBlock release];
-    if(_uploadProgressBlock) [_uploadProgressBlock release];
-    if(_downloadProgressBlock) [_downloadProgressBlock release];
-    
-    [_connection release];
-    [_responseStringEncodingName release];
-    [_requestHeaders release];
-    [_url release];
-    [_responseData release];
-    [_responseHeaders release];
-    [_responseString release];
-    [_POSTDictionary release];
-    [_error release];
-    [_filesToUpload release];
-    [_dataToUpload release];
-    
-    [super dealloc];
-}
-
 #pragma mark Credentials
 
 + (NSMutableDictionary *)sharedCredentialsStorage {
     if(sharedCredentialsStorage == nil) {
-        sharedCredentialsStorage = [[NSMutableDictionary dictionary] retain];
+        sharedCredentialsStorage = [NSMutableDictionary dictionary];
     }
     return sharedCredentialsStorage;
 }
@@ -129,8 +109,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 }
 
 + (void)deleteAllCredentials {
-    [sharedCredentialsStorage autorelease];
-    sharedCredentialsStorage = [[NSMutableDictionary dictionary] retain];
+    sharedCredentialsStorage = [NSMutableDictionary dictionary];
 }
 
 - (void)setCredentialForCurrentHost:(NSURLCredential *)c {
@@ -249,7 +228,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     BOOL hostAlreadyContainsCredentials = [host rangeOfString:@"@"].location != NSNotFound;
     if(hostAlreadyContainsCredentials) return url;
     
-    NSMutableString *resourceSpecifier = [[[url resourceSpecifier] mutableCopy] autorelease];
+    NSMutableString *resourceSpecifier = [[url resourceSpecifier] mutableCopy];
     
     if([resourceSpecifier hasPrefix:@"//"] == NO) return nil;
     
@@ -291,7 +270,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     [data appendData:someData];
     [data appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
-    return [data autorelease];
+    return data;
 }
 
 - (NSURLRequest *)requestByAddingCredentialsToURL:(BOOL)useCredentialsInURL {
@@ -463,7 +442,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     if(data == nil) return nil;
     
     if(_forcedResponseEncoding > 0) {
-        return [[[NSString alloc] initWithData:data encoding:_forcedResponseEncoding] autorelease];
+        return [[NSString alloc] initWithData:data encoding:_forcedResponseEncoding];
     }
     
     NSStringEncoding encoding = NSUTF8StringEncoding;
@@ -479,7 +458,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         }
     }
     
-    return [[[NSString alloc] initWithData:data encoding:encoding] autorelease];
+    return [[NSString alloc] initWithData:data encoding:encoding];
 }
 
 #if DEBUG
@@ -531,7 +510,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     // -H "X-you-and-me: yes"                                       // extra headers
     
-    NSMutableDictionary *headers = [[[self requestHeaders] mutableCopy] autorelease];
+    NSMutableDictionary *headers = [[self requestHeaders] mutableCopy];
     
     [headers addEntriesFromDictionary:[self.request allHTTPHeaderFields]];
     
@@ -560,7 +539,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     NSLog(@"%@ %@", method, [request URL]);
     
-    NSMutableDictionary *headers = [[[self requestHeaders] mutableCopy] autorelease];
+    NSMutableDictionary *headers = [[self requestHeaders] mutableCopy];
     
     [headers addEntriesFromDictionary:[request allHTTPHeaderFields]];
     
@@ -616,7 +595,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     // NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:self];
     // http://www.pixeldock.com/blog/how-to-avoid-blocked-downloads-during-scrolling/
-    self.connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO] autorelease];
+    self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
     [_connection start];
     
@@ -785,12 +764,12 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 @implementation NSString (RFC3986)
 - (NSString *)st_stringByAddingRFC3986PercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     
-    NSString *s = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                      (CFStringRef)self,
-                                                                      NULL,
-                                                                      CFSTR("!*'();:@&=+$,/?%#[]"),
-                                                                      kCFStringEncodingUTF8);
-    return [s autorelease];
+    NSString *s = (__bridge_transfer NSString *)(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                         (CFStringRef)self,
+                                                                                         NULL,
+                                                                                         CFSTR("!*'();:@&=+$,/?%#[]"),
+                                                                                         kCFStringEncodingUTF8));
+    return s;
 }
 @end
 
@@ -815,18 +794,11 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     fu.path = path;
     fu.parameterName = parameterName;
     fu.mimeType = mimeType;
-    return [fu autorelease];
+    return fu;
 }
 
 + (instancetype)fileUploadWithPath:(NSString *)path parameterName:(NSString *)fileName {
     return [self fileUploadWithPath:path parameterName:fileName mimeType:@"application/octet-stream"];
-}
-
-- (void)dealloc {
-    [_path release];
-    [_parameterName release];
-    [_mimeType release];
-    [super dealloc];
 }
 
 @end
@@ -839,15 +811,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     du.parameterName = parameterName;
     du.mimeType = mimeType;
     du.fileName = fileName;
-    return [du autorelease];
-}
-
-- (void)dealloc {
-    [_data release];
-    [_parameterName release];
-    [_mimeType release];
-    [_fileName release];
-    [super dealloc];
+    return du;
 }
 
 @end

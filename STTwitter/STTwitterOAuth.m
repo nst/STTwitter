@@ -47,26 +47,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 
 @implementation STTwitterOAuth
 
-- (void)dealloc {
-    [_username release];
-    [_password release];
-    
-    [_oauthConsumerName release];
-    [_oauthConsumerKey release];
-    [_oauthConsumerSecret release];
-    
-    [_oauthRequestToken release];
-    [_oauthRequestTokenSecret release];
-    
-    [_oauthAccessToken release];
-    [_oauthAccessTokenSecret release];
-    
-    [_testOauthNonce release];
-    [_testOauthTimestamp release];
-    
-    [super dealloc];
-}
-
 + (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
                                  consumerKey:(NSString *)consumerKey
                               consumerSecret:(NSString *)consumerSecret {
@@ -77,7 +57,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     to.oauthConsumerKey = consumerKey;
     to.oauthConsumerSecret = consumerSecret;
     
-    return [to autorelease];
+    return to;
 }
 
 + (instancetype)twitterOAuthWithConsumerName:(NSString *)consumerName
@@ -410,9 +390,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                                                       consumerSecret:_oauthConsumerSecret
                                                          tokenSecret:_oauthAccessTokenSecret];
     
-    [oauthAndPOSTParameters release];
-    [oauthAndPOSTandGETParameters release];
-    
     [oauthParameters addObject:@{@"oauth_signature" : signature}];
     
     NSString *s = [[self class] oauthHeaderValueWithParameters:oauthParameters];
@@ -511,7 +488,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     // https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
     NSData *postData = [params valueForKey:postKey];
     
-    NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
+    NSMutableDictionary *mutableParams = [params mutableCopy];
     [mutableParams removeObjectForKey:kSTPOSTDataKey];
     if(postData) {
         [mutableParams removeObjectForKey:postKey];
@@ -609,9 +586,9 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 
 + (NSString *)randomString {
     CFUUIDRef cfuuid = CFUUIDCreate (kCFAllocatorDefault);
-    NSString *uuid = (NSString *)CFUUIDCreateString (kCFAllocatorDefault, cfuuid);
+    NSString *uuid = (__bridge_transfer NSString *)(CFUUIDCreateString (kCFAllocatorDefault, cfuuid));
     CFRelease (cfuuid);
-    return [uuid autorelease];
+    return uuid;
 }
 
 + (NSString *)random32Characters {
@@ -669,18 +646,18 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     SecTransformRef encodeTrans = SecEncodeTransformCreate(kSecBase64Encoding, NULL);
     if (encodeTrans == NULL) return nil;
     
-    if (SecTransformSetAttribute(encodeTrans, kSecTransformInputAttributeName, (CFDataRef)self, NULL)) {
+    if (SecTransformSetAttribute(encodeTrans, kSecTransformInputAttributeName, (__bridge CFTypeRef)self, NULL)) {
         retval = SecTransformExecute(encodeTrans, NULL);
     }
     CFRelease(encodeTrans);
     
-    NSString *s = [[NSString alloc] initWithData:(NSData *)retval encoding:NSUTF8StringEncoding];
+    NSString *s = [[NSString alloc] initWithData:(__bridge NSData *)retval encoding:NSUTF8StringEncoding];
     
     if(retval) {
         CFRelease(retval);
     }
     
-    return [s autorelease];
+    return s;
     
 #endif
     

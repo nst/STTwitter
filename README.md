@@ -18,8 +18,6 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 
 Drag and drop STTwitter directory into your project and that's it.
 
-STTwitter compiles without modification with non-ARC projects. If the project uses ARC, add the `-fno-objc-arc` flag to STTwitter files [details here](http://stackoverflow.com/questions/6646052/how-can-i-disable-arc-for-a-single-file-in-a-project).
-
 If you want to use CocoaPods, include the STTwitter pod in your project's podfile and install it:
 
     pod 'STTwitter'

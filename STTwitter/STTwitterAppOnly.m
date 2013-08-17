@@ -17,13 +17,6 @@
 
 @implementation STTwitterAppOnly
 
-- (void)dealloc {
-    [_consumerKey release];
-    [_consumerSecret release];
-    [_bearerToken release];
-    [super dealloc];
-}
-
 - (id)init {
     self = [super init];
     
@@ -36,7 +29,7 @@
     STTwitterAppOnly *twitterAppOnly = [[[self class] alloc] init];
     twitterAppOnly.consumerKey = consumerKey;
     twitterAppOnly.consumerSecret = consumerSecret;
-    return [twitterAppOnly autorelease];
+    return twitterAppOnly;
 }
 
 #pragma mark STTwitterOAuthProtocol
@@ -236,7 +229,7 @@
     
     r.POSTDictionary = params;
     
-    NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
+    NSMutableDictionary *mutableParams = [params mutableCopy];
     
     r.encodePOSTDictionary = NO;
     

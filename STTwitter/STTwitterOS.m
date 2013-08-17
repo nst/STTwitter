@@ -33,26 +33,20 @@ BOOL useTWRequests(void) {
 - (id)init {
     self = [super init];
     
-    self.accountStore = [[[ACAccountStore alloc] init] autorelease];
+    self.accountStore = [[ACAccountStore alloc] init];
     
     return self;
 }
 
-- (void)dealloc {
-    [_accountStore release];
-    [_account release];
-    [super dealloc];
-}
-
 - (instancetype)initWithAccount:(ACAccount *) account {
     self = [super init];
-    self.accountStore = [[[ACAccountStore alloc] init] autorelease];
+    self.accountStore = [[ACAccountStore alloc] init];
     self.account = account;
     return self;
 }
 
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
-    return [[[self alloc] initWithAccount:account] autorelease];
+    return [[self alloc] initWithAccount:account];
 }
 
 + (instancetype)twitterAPIOSWithFirstAccount {
@@ -144,7 +138,7 @@ BOOL useTWRequests(void) {
     
     NSData *mediaData = [params valueForKey:@"media[]"];
     
-    NSMutableDictionary *paramsWithoutMedia = [[params mutableCopy] autorelease];
+    NSMutableDictionary *paramsWithoutMedia = [params mutableCopy];
     [paramsWithoutMedia removeObjectForKey:@"media[]"];
     
     NSString *urlString = [baseURLString stringByAppendingString:resource];
@@ -155,7 +149,7 @@ BOOL useTWRequests(void) {
     if(useTWRequests()) {
 #if TARGET_OS_IPHONE
         TWRequestMethod method = (httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
-        request = [[[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method] autorelease];
+        request = [[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method];
 #endif
     } else {
         request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
@@ -180,7 +174,7 @@ BOOL useTWRequests(void) {
         
         if(json == nil) {
             
-            NSString *s = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+            NSString *s = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
 
             // do our best to extract Twitter error message from responseString
             
