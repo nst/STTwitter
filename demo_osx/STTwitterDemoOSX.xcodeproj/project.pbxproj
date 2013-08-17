@@ -32,7 +32,6 @@
 		03191EAB17BF704C0001C06D /* STTwitterOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9917BF704C0001C06D /* STTwitterOS.m */; };
 		03191EAC17BF704C0001C06D /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9D17BF704C0001C06D /* STHTTPRequest.m */; };
 		03191EAD17BF704C0001C06D /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9D17BF704C0001C06D /* STHTTPRequest.m */; };
-		03191EAF17BF70520001C06D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03191EAE17BF70520001C06D /* README.md */; };
 		03191EB117BF71620001C06D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB017BF71620001C06D /* Accounts.framework */; };
 		03191EB317BF71670001C06D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB217BF71670001C06D /* Social.framework */; };
 		03191EB517BF718A0001C06D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB417BF718A0001C06D /* Security.framework */; };
@@ -343,7 +342,6 @@
 				03191E6117BF700A0001C06D /* InfoPlist.strings in Resources */,
 				03191E6717BF700A0001C06D /* Credits.rtf in Resources */,
 				03191E6D17BF700A0001C06D /* MainMenu.xib in Resources */,
-				03191EAF17BF70520001C06D /* README.md in Resources */,
 				03191EB717BF722D0001C06D /* TwitterClients.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

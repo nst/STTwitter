@@ -69,6 +69,7 @@
 		03191E1B17BF6BF20001C06D /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		03191E1D17BF6BF70001C06D /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		03191E1F17BF6BFB0001C06D /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		03606B4017BF7A7A00105D85 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +92,7 @@
 		03191DD017BF6A160001C06D = {
 			isa = PBXGroup;
 			children = (
+				03606B4017BF7A7A00105D85 /* README.md */,
 				03191DFF17BF6A320001C06D /* STTwitter */,
 				03191DE217BF6A160001C06D /* STTwitterDemoIOS */,
 				03191DDB17BF6A160001C06D /* Frameworks */,
