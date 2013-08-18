@@ -3653,8 +3653,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSParameterAssert(screenName || userID);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"screen_name"] = screenName;
-    md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
     
     [self postAPIResource:@"users/report_spam.json" parameters:md successBlock:^(id response) {
         successBlock(response);
