@@ -348,11 +348,12 @@ static NSDateFormatter *dateFormatter = nil;
 				   successBlock:^(NSDictionary *response) {
 					   NSString *imageURLString = [response objectForKey:@"profile_image_url"];
                        
-                       __block __weak STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
+                       __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
+                       __weak STHTTPRequest *wr = r;
                        
                        r.completionBlock = ^(NSDictionary *headers, NSString *body) {
                            
-                           NSData *imageData = r.responseData;
+                           NSData *imageData = wr.responseData;
                            
 #if TARGET_OS_IPHONE
                            successBlock([[UIImage alloc] initWithData:imageData]);

@@ -40,7 +40,8 @@
 
 + (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString stTwitterProgressBlock:(void(^)(id json))progressBlock stTwitterSuccessBlock:(void(^)(id json))successBlock stTwitterErrorBlock:(void(^)(NSError *error))errorBlock {
     
-    __block __weak STHTTPRequest *r = [self requestWithURLString:urlString];
+    __block STHTTPRequest *r = [self requestWithURLString:urlString];
+    __weak STHTTPRequest *wr = r;
     
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
@@ -78,7 +79,7 @@
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         
         NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:r.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+        id json = [NSJSONSerialization JSONObjectWithData:wr.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
             successBlock(body); // response is not necessarily json
@@ -90,7 +91,7 @@
     
     r.errorBlock = ^(NSError *error) {
         
-        NSError *e = [self errorFromResponseData:r.responseData];
+        NSError *e = [self errorFromResponseData:wr.responseData];
         
         if(e) {
             errorBlock(e);
@@ -100,18 +101,18 @@
         // do our best to extract Twitter error message from responseString
         
         NSError *regexError = nil;
-        NSString *errorString = [r.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
+        NSString *errorString = [wr.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
         if(errorString == nil) {
             STLog(@"-- regexError: %@", [regexError localizedDescription]);
         }
         
         if(errorString) {
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-        } else if ([r.responseString length] > 0 && [r.responseString length] < 64) {
-            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : r.responseString}];
+        } else if ([wr.responseString length] > 0 && [wr.responseString length] < 64) {
+            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
         }
         
-        STLog(@"-- body: %@", r.responseString);
+        STLog(@"-- body: %@", wr.responseString);
         errorBlock(error);
     };
     

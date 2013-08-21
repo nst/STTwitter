@@ -14,7 +14,7 @@
 
 - (void)getLoginForm:(void(^)(NSString *authenticityToken))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
-    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://twitter.com/login"];
+    __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://twitter.com/login"];
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         
@@ -50,7 +50,7 @@
         return;
     }
     
-    STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://twitter.com/sessions"];
+    __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:@"https://twitter.com/sessions"];
     
     r.POSTDictionary = @{@"authenticity_token" : authenticityToken,
                          @"session[username_or_email]" : username,
