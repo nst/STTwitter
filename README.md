@@ -27,6 +27,11 @@ Note that STTwitter requires iOS 5+ or OS X 10.7+.
 
 ### Code Snippets
 
+Notes:
+
+- STTwitter must be used from the main thread
+- all callbacks are called on the main thread
+
 ##### Instantiate STTwitterAPI
 
     STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:@""
