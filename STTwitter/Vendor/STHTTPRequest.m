@@ -593,10 +593,8 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     [self logRequest:request];
 #endif
     
-    // NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:self];
-    // http://www.pixeldock.com/blog/how-to-avoid-blocked-downloads-during-scrolling/
     self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-    [_connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     [_connection start];
     
     if(_connection == nil) {
@@ -605,7 +603,10 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         self.error = [NSError errorWithDomain:NSStringFromClass([self class])
                                          code:0
                                      userInfo:userInfo];
-        _errorBlock(_error);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _errorBlock(_error);
+        });
     }
 }
 
@@ -649,7 +650,10 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     self.error = [NSError errorWithDomain:NSStringFromClass([self class])
                                      code:kSTHTTPRequestCancellationError
                                  userInfo:userInfo];
-    _errorBlock(_error);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _errorBlock(_error);
+    });
 }
 
 #pragma mark NSURLConnectionDelegate
