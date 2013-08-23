@@ -9,10 +9,11 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 3. [Various Kinds of OAuth Connections](#various-kinds-of-oauth-connections)
 4. [OAuth Consumer Tokens](#oauth-consumer-tokens)
 5. [Demo / Test Project](#demo--test-project)
-6. [Troubleshooting](#troubleshooting)
-7. [Developers](#developers)
-8. [Applications Using STTwitter](#applications-using-sttwitter)
-9. [BSD 3-Clause License](#bsd-3-clause-license)
+6. [Integration Tips](#integration-tips)
+7. [Troubleshooting](#troubleshooting)
+8. [Developers](#developers)
+9. [Applications Using STTwitter](#applications-using-sttwitter)
+10. [BSD 3-Clause License](#bsd-3-clause-license)
 
 ### Installation
 
@@ -183,11 +184,65 @@ There is also a simple iOS demo project in `demo_ios`.
 <img border="1" src="Art/ios.png" alt="STTwitter Demo iOS"></img> 
 <img border="1" src="Art/STTweet.png" alt="STTwitter Demo Tweet"></img> 
 
+### Integration Tips
+
+##### Boolean Parameters
+
+There are a lot of optional parameters In Twitter API. In STTwitter, you can ignore such parameters by passing `nil`. Regarding boolean parameters, STTwitter can't just use Objective-C `YES` and `NO` because `NO` has the same value as `nil` (zero). So boolean parameters are wrapped into `NSNumber` objects, which are pretty easy to use with boolean values thanks to Objective-C literals. So, with STTwitter, you will give an optional parameter of Twitter API either `@(YES)`, `@(NO)` or `nil`.
+
+##### Long Methods
+
+STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST API. It often results in long methd names with many parameters. In your application, you may want to add your own simplified methods on top of STTwitterAPI. A good idea is to create an Objective-C category for your application, such as shown in the following code.
+
+`STTwitterAPI+MyApp.h`
+
+    #import "STTwitterAPI.h"
+
+    @interface STTwitterAPI (MyApp)
+    
+    - (void)getStatusesShowID:(NSString *)statusID
+                 successBlock:(void(^)(NSDictionary *status))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock;
+    
+    @end
+
+`STTwitterAPI+MyApp.m`
+    
+    #import "STTwitterAPI+MyApp.h"
+
+    @implementation STTwitterAPI (MyApp)
+    
+    - (void)getStatusesShowID:(NSString *)statusID
+                 successBlock:(void(^)(NSDictionary *status))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+        [self getStatusesShowID:statusID
+                       trimUser:@(YES)
+               includeMyRetweet:nil
+                includeEntities:@(NO)
+                   successBlock:^(NSDictionary *status) {
+    
+                       successBlock(status);
+    
+                   } errorBlock:^(NSError *error) {
+            
+                       errorBlock(error);
+    
+                   }];
+    }
+    
+    @end
+
+
 ### Troubleshooting
 
 ##### xAuth
 
 Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So if you get an error like `NSURLErrorDomain Code=-1012, Unhandled authentication challenge type - NSURLAuthenticationMethodOAuth2` while accessing `https://api.twitter.com/oauth/access_token` then your consumer tokens are probably not xAuth-enabled. You can read more on this on Twitter website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
+
+##### Concurrency
+
+STTwitter is supposed to be used from main thread. The network requests are performed anychronously and the callbacks are guaranteed to be called on main thread.
 
 ##### Anything Else
 
