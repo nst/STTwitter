@@ -1191,6 +1191,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"stringify_friend_ids"] = @"1";
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     if(includeMessagesFromFollowedAccounts) md[@"with"] = @"user"; // default is 'followings'
@@ -1233,6 +1234,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"stringify_friend_ids"] = @"1";
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     if(restrictToUserMessages) md[@"with"] = @"user"; // default is 'followings'
