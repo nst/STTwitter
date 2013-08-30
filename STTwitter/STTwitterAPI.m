@@ -2408,12 +2408,6 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                         } errorBlock:^(NSError *error) {
                             errorBlock(error);
                         }];
-    
-    [self getAPIResource:@"favorites/list.json" parameters:nil successBlock:^(id response) {
-        successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
 }
 
 // POST favorites/destroy
