@@ -1807,4 +1807,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                   successBlock:(void(^)(NSArray *statuses))successBlock
                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
+// GET discover/highlight.json
+- (void)_getDiscoverHighlightWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end

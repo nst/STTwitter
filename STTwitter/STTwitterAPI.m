@@ -3788,6 +3788,21 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// GET discover/highlight.json
+- (void)_getDiscoverHighlightWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+
+	[self getAPIResource:@"discover/highlight.json" parameters:nil successBlock:^(id response) {
+        
+        NSDictionary *metadata = [response valueForKey:@"metadata"];
+        NSArray *modules = [response valueForKey:@"modules"];
+        
+        successBlock(metadata, modules);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)
