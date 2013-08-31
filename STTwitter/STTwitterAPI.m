@@ -3803,6 +3803,21 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// GET discover/universal.json
+- (void)_getDiscoverUniversalWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+	[self getAPIResource:@"discover/universal.json" parameters:nil successBlock:^(id response) {
+        
+        NSDictionary *metadata = [response valueForKey:@"metadata"];
+        NSArray *modules = [response valueForKey:@"modules"];
+        
+        successBlock(metadata, modules);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)

@@ -1811,4 +1811,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)_getDiscoverHighlightWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
+// GET discover/universal.json
+- (void)_getDiscoverUniversalWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end
