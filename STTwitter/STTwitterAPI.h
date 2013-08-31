@@ -1802,4 +1802,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                   successBlock:(void(^)(NSArray *favoriters, NSArray *repliers, NSArray *retweeters, NSString *favoritersCount, NSString *repliersCount, NSString *retweetersCount))successBlock
                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
+// GET conversation/show.json
+- (void)_getConversationShowForStatusID:(NSString *)statusID
+                                  successBlock:(void(^)(NSArray *statuses))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end

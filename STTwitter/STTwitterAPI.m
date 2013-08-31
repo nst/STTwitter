@@ -3772,6 +3772,22 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// GET conversation/show.json
+- (void)_getConversationShowForStatusID:(NSString *)statusID
+                           successBlock:(void(^)(NSArray *statuses))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(statusID);
+    
+    NSDictionary *d = @{@"id":statusID};
+    
+	[self getAPIResource:@"conversation/show.json" parameters:d successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)
