@@ -592,10 +592,10 @@ static NSDateFormatter *dateFormatter = nil;
                         contributorDetails:nil
                            includeRetweets:nil
                               successBlock:^(NSArray *statuses) {
-        successBlock(statuses);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                                  successBlock(statuses);
+                              } errorBlock:^(NSError *error) {
+                                  errorBlock(error);
+                              }];
 }
 
 - (void)getStatusesRetweetsOfMeWithCount:(NSString *)count
@@ -2628,7 +2628,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(cursor) md[@"cursor"] = cursor;
     if(filterToOwnedLists) md[@"filter_to_owned_lists"] = [filterToOwnedLists boolValue] ? @"1" : @"0";
     
-    [self getAPIResource:@"lists/memberships" parameters:md successBlock:^(id response) {
+    [self getAPIResource:@"lists/memberships.json" parameters:md successBlock:^(id response) {
         NSString *previousCursor = nil;
         NSString *nextCursor = nil;
         NSArray *lists = nil;
@@ -3725,41 +3725,53 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
-/*
- id removeNull(id rootObject) {
- if ([rootObject isKindOfClass:[NSDictionary class]]) {
- NSMutableDictionary *sanitizedDictionary = [NSMutableDictionary dictionaryWithDictionary:rootObject];
- [rootObject enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
- id sanitized = removeNull(obj);
- if (!sanitized) {
- [sanitizedDictionary setObject:@"" forKey:key];
- } else {
- [sanitizedDictionary setObject:sanitized forKey:key];
- }
- }];
- return [NSDictionary dictionaryWithDictionary:sanitizedDictionary];
- }
- 
- if ([rootObject isKindOfClass:[NSArray class]]) {
- NSMutableArray *sanitizedArray = [NSMutableArray arrayWithArray:rootObject];
- [rootObject enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
- id sanitized = removeNull(obj);
- if (!sanitized) {
- [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:@""];
- } else {
- [sanitizedArray replaceObjectAtIndex:[sanitizedArray indexOfObject:obj] withObject:sanitized];
- }
- }];
- return [NSArray arrayWithArray:sanitizedArray];
- }
- 
- if ([rootObject isKindOfClass:[NSNull class]]) {
- return (id)nil;
- } else {
- return rootObject;
- }
- }
- */
+#pragma mark -
+#pragma mark UNDOCUMENTED APIs
+
+// GET activity/about_me.json
+- (void)_getActivityAboutMeWithSuccessBlock:(void(^)(NSArray *activities))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock {
+    
+	[self getAPIResource:@"activity/about_me.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET activity/by_friends.json
+- (void)_getActivityByFriendsWithSuccessBlock:(void(^)(NSArray *activities))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+	[self getAPIResource:@"activity/by_friends.json" parameters:nil successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET statuses/:id/activity/summary.json
+- (void)_getStatusesActivitySummaryForStatusID:(NSString *)statusID
+                                  successBlock:(void(^)(NSArray *favoriters, NSArray *repliers, NSArray *retweeters, NSString *favoritersCount, NSString *repliersCount, NSString *retweetersCount))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSString *resource = [NSString stringWithFormat:@"statuses/%@/activity/summary.json", statusID];
+    
+	[self getAPIResource:resource parameters:nil successBlock:^(id response) {
+        
+        NSArray *favoriters = [response valueForKey:@"favoriters"];
+        NSArray *repliers = [response valueForKey:@"repliers"];
+        NSArray *retweeters = [response valueForKey:@"retweeters"];
+        NSString *favoritersCount = [response valueForKey:@"favoriters_count"];
+        NSString *repliersCount = [response valueForKey:@"repliers_count"];
+        NSString *retweetersCount = [response valueForKey:@"retweeters_count"];
+        
+        successBlock(favoriters, repliers, retweeters, favoritersCount, repliersCount, retweetersCount);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)

@@ -1786,4 +1786,20 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 					 successBlock:(void(^)(NSDictionary *rateLimits))successBlock
 					   errorBlock:(void(^)(NSError *error))errorBlock;
 
+#pragma mark -
+#pragma mark UNDOCUMENTED APIs
+
+// GET activity/about_me.json
+- (void)_getActivityAboutMeWithSuccessBlock:(void(^)(NSArray *activities))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET activity/by_friends.json
+- (void)_getActivityByFriendsWithSuccessBlock:(void(^)(NSArray *activities))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET statuses/:id/activity/summary.json
+- (void)_getStatusesActivitySummaryForStatusID:(NSString *)statusID
+                                  successBlock:(void(^)(NSArray *favoriters, NSArray *repliers, NSArray *retweeters, NSString *favoritersCount, NSString *repliersCount, NSString *retweetersCount))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end
