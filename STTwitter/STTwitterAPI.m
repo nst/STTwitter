@@ -3791,7 +3791,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET discover/highlight.json
 - (void)_getDiscoverHighlightWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
 	[self getAPIResource:@"discover/highlight.json" parameters:nil successBlock:^(id response) {
         
         NSDictionary *metadata = [response valueForKey:@"metadata"];
@@ -3832,7 +3832,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // GET users/recommendations.json
 - (void)_getUsersRecommendationsWithSuccessBlock:(void(^)(NSArray *recommendations))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock {
+                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
 	[self getAPIResource:@"users/recommendations.json" parameters:nil successBlock:^(id response) {
         
@@ -3844,7 +3844,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // GET timeline/home.json
 - (void)_getTimelineHomeWithSuccessBlock:(void(^)(id response))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock {
+                              errorBlock:(void(^)(NSError *error))errorBlock {
     
 	[self getAPIResource:@"timeline/home.json" parameters:nil successBlock:^(id response) {
         
