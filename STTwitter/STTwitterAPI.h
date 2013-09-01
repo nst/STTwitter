@@ -1804,8 +1804,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // GET conversation/show.json
 - (void)_getConversationShowForStatusID:(NSString *)statusID
-                                  successBlock:(void(^)(NSArray *statuses))successBlock
-                                    errorBlock:(void(^)(NSError *error))errorBlock;
+                           successBlock:(void(^)(NSArray *statuses))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET discover/highlight.json
 - (void)_getDiscoverHighlightWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
@@ -1814,5 +1814,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET discover/universal.json
 - (void)_getDiscoverUniversalWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET statuses/media_timeline.json
+- (void)_getMediaTimelineWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET users/recommendations.json
+- (void)_getUsersRecommendationsWithSuccessBlock:(void(^)(NSArray *recommendations))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET timeline/home.json
+- (void)_getTimelineHomeWithSuccessBlock:(void(^)(id response))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end

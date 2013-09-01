@@ -3818,6 +3818,42 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// GET statuses/media_timeline.json
+- (void)_getMediaTimelineWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
+    
+	[self getAPIResource:@"statuses/media_timeline.json" parameters:nil successBlock:^(id response) {
+        
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET users/recommendations.json
+- (void)_getUsersRecommendationsWithSuccessBlock:(void(^)(NSArray *recommendations))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
+    
+	[self getAPIResource:@"users/recommendations.json" parameters:nil successBlock:^(id response) {
+        
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET timeline/home.json
+- (void)_getTimelineHomeWithSuccessBlock:(void(^)(id response))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+	[self getAPIResource:@"timeline/home.json" parameters:nil successBlock:^(id response) {
+        
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)
