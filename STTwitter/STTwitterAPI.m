@@ -1148,12 +1148,12 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 // GET statuses/firehose
-- (void)getStatusesFirehorseWithCount:(NSString *)count
-                            delimited:(NSNumber *)delimited
-                        stallWarnings:(NSNumber *)stallWarnings
-                        progressBlock:(void(^)(id response))progressBlock
-                    stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)getStatusesFirehoseWithCount:(NSString *)count
+                           delimited:(NSNumber *)delimited
+                       stallWarnings:(NSNumber *)stallWarnings
+                       progressBlock:(void(^)(id response))progressBlock
+                   stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(count) md[@"count"] = count;
