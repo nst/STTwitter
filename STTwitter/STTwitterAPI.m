@@ -455,7 +455,7 @@ static NSDateFormatter *dateFormatter = nil;
                                 trimUser:(NSNumber *)trimUser
                           excludeReplies:(NSNumber *)excludeReplies
                       contributorDetails:(NSNumber *)contributorDetails
-                         includeRetweets:(NSNumber *)includeRetweets
+                         includeEntities:(NSNumber *)includeEntities
                             successBlock:(void(^)(NSArray *statuses))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -468,7 +468,7 @@ static NSDateFormatter *dateFormatter = nil;
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(excludeReplies) md[@"exclude_replies"] = [excludeReplies boolValue] ? @"1" : @"0";
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
-    if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"statuses/home_timeline.json" parameters:md successBlock:^(id response) {
         successBlock(response);
@@ -590,7 +590,7 @@ static NSDateFormatter *dateFormatter = nil;
                                   trimUser:nil
                             excludeReplies:nil
                         contributorDetails:nil
-                           includeRetweets:nil
+                           includeEntities:nil
                               successBlock:^(NSArray *statuses) {
                                   successBlock(statuses);
                               } errorBlock:^(NSError *error) {
@@ -3729,10 +3729,20 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark UNDOCUMENTED APIs
 
 // GET activity/about_me.json
-- (void)_getActivityAboutMeWithSuccessBlock:(void(^)(NSArray *activities))successBlock
-                                 errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)_getActivityAboutMeSinceID:(NSString *)sinceID
+                contributorDetails:(NSNumber *)contributorDetails
+                   includeEntities:(NSNumber *)includeEntities
+                  includeMyRetweet:(NSNumber *)includeMyRetweet
+                      successBlock:(void(^)(NSArray *activities))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
     
-	[self getAPIResource:@"activity/about_me.json" parameters:nil successBlock:^(id response) {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"true" : @"false";
+    if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"true" : @"false";
+    
+	[self getAPIResource:@"activity/about_me.json" parameters:md successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3835,7 +3845,6 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
 	[self getAPIResource:@"users/recommendations.json" parameters:nil successBlock:^(id response) {
-        
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3847,7 +3856,38 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
 	[self getAPIResource:@"timeline/home.json" parameters:nil successBlock:^(id response) {
-        
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET statuses/mentions_timeline.json
+- (void)_getStatusesMentionsTimelineWithCount:(NSString *)count
+                          contributorsDetails:(NSNumber *)contributorsDetails
+                              includeEntities:(NSNumber *)includeEntities
+                             includeMyRetweet:(NSNumber *)includeMyRetweet
+                                 successBlock:(void(^)(NSArray *statuses))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(count) md[@"count"] = count;
+    if(contributorsDetails) md[@"contributor_details"] = [contributorsDetails boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"true" : @"false";
+    if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"true" : @"false";
+    
+	[self getAPIResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET trends/available.json
+- (void)_getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *places))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock {
+    
+	[self getAPIResource:@"trends/available.json" parameters:nil successBlock:^(id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

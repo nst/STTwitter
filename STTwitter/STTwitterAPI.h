@@ -189,7 +189,7 @@
                                 trimUser:(NSNumber *)trimUser
                           excludeReplies:(NSNumber *)excludeReplies
                       contributorDetails:(NSNumber *)contributorDetails
-                         includeRetweets:(NSNumber *)includeRetweets
+                         includeEntities:(NSNumber *)includeEntities
                             successBlock:(void(^)(NSArray *statuses))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1790,8 +1790,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark UNDOCUMENTED APIs
 
 // GET activity/about_me.json
-- (void)_getActivityAboutMeWithSuccessBlock:(void(^)(NSArray *activities))successBlock
-                                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)_getActivityAboutMeSinceID:(NSString *)sinceID
+                contributorDetails:(NSNumber *)contributorDetails
+                   includeEntities:(NSNumber *)includeEntities
+                  includeMyRetweet:(NSNumber *)includeMyRetweet
+                      successBlock:(void(^)(NSArray *activities))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET activity/by_friends.json
 - (void)_getActivityByFriendsWithSuccessBlock:(void(^)(NSArray *activities))successBlock
@@ -1826,5 +1830,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET timeline/home.json
 - (void)_getTimelineHomeWithSuccessBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET statuses/mentions_timeline.json
+- (void)_getStatusesMentionsTimelineWithCount:(NSString *)count
+                          contributorsDetails:(NSNumber *)contributorsDetails
+                              includeEntities:(NSNumber *)includeEntities
+                             includeMyRetweet:(NSNumber *)includeMyRetweet
+                                 successBlock:(void(^)(NSArray *statuses))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET trends/available.json
+- (void)_getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *places))successBlock
+                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end
