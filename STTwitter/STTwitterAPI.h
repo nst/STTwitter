@@ -1843,4 +1843,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)_getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *places))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
+// POST users/report_spam
+- (void)_postUsersReportSpamForTweetID:(NSString *)tweetID
+                              reportAs:(NSString *)reportAs // spam, abused, compromised
+                             blockUser:(NSNumber *)blockUser
+                          successBlock:(void(^)(id userProfile))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end

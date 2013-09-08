@@ -3894,6 +3894,27 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// POST users/report_spam
+- (void)_postUsersReportSpamForTweetID:(NSString *)tweetID
+                              reportAs:(NSString *)reportAs // spam, abused, compromised
+                             blockUser:(NSNumber *)blockUser
+                          successBlock:(void(^)(id userProfile))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(tweetID);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"tweet_id"] = tweetID;
+    if(reportAs) md[@"report_as"] = reportAs;
+    if(blockUser) md[@"block_user"] = [blockUser boolValue] ? @"true" : @"false";
+    
+    [self postAPIResource:@"users/report_spam.json" parameters:md successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)
