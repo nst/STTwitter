@@ -3915,6 +3915,44 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// POST account/generate.json
+- (void)_postAccountGenerateWithADC:(NSString *)adc
+                discoverableByEmail:(BOOL)discoverableByEmail
+                              email:(NSString *)email
+                         geoEnabled:(BOOL)geoEnabled
+                           language:(NSString *)language
+                               name:(NSString *)name
+                           password:(NSString *)password
+                         screenName:(NSString *)screenName
+                      sendErrorCode:(BOOL)sendErrorCode
+                           timeZone:(NSString *)timeZone
+                       successBlock:(void(^)(id userProfile))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"adc"] = adc;
+    md[@"discoverable_by_email"] = discoverableByEmail ? @"1" : @"0";
+    md[@"email"] = email;
+    md[@"geo_enabled"] = geoEnabled ? @"1" : @"0";
+    md[@"lang"] = language;
+    md[@"name"] = name;
+    md[@"password"] = password;
+    md[@"screen_name"] = screenName;
+    md[@"send_error_codes"] = sendErrorCode ? @"1": @"0";
+    md[@"time_zone"] = timeZone;
+
+    [self postResource:@"account/generate.json"
+         baseURLString:@"https://api.twitter.com/1"
+            parameters:md
+         progressBlock:^(id json) {
+        //
+    } successBlock:^(id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)

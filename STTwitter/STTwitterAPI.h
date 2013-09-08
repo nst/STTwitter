@@ -1850,4 +1850,18 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           successBlock:(void(^)(id userProfile))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
+// POST account/generate.json
+- (void)_postAccountGenerateWithADC:(NSString *)adc
+                discoverableByEmail:(BOOL)discoverableByEmail
+                              email:(NSString *)email
+                         geoEnabled:(BOOL)geoEnabled
+                           language:(NSString *)language
+                               name:(NSString *)name
+                           password:(NSString *)password
+                         screenName:(NSString *)screenName
+                      sendErrorCode:(BOOL)sendErrorCode
+                           timeZone:(NSString *)timeZone
+                       successBlock:(void(^)(id userProfile))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end
