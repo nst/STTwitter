@@ -8,8 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSUInteger kSTTwitterDefaultShortURLLength;
+extern NSUInteger kSTTwitterDefaultShortURLLengthHTTPS;
+
 @interface NSString (STTwitter)
 
 - (NSString *)firstMatchWithRegex:(NSString *)regex error:(NSError **)e;
+
+// use values from GET help/configuration
+- (NSInteger)charactersInTweetWithShortURLLength:(NSUInteger)shortURLLength
+                             shortURLLengthHTTPS:(NSUInteger)shortURLLengthHTTS;
+
+// use default values for URL shortening
+- (NSInteger)charactersInTweet;
 
 @end

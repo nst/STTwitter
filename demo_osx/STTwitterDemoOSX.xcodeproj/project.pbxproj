@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0315BBC117DF36F900F226E6 /* STMiscTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315BBBF17DF365100F226E6 /* STMiscTests.m */; };
 		03191E5717BF700A0001C06D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191E5617BF700A0001C06D /* Cocoa.framework */; };
 		03191E6117BF700A0001C06D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03191E5F17BF700A0001C06D /* InfoPlist.strings */; };
 		03191E6317BF700A0001C06D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E6217BF700A0001C06D /* main.m */; };
@@ -56,6 +57,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0315BBBE17DF365100F226E6 /* STMiscTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STMiscTests.h; sourceTree = "<group>"; };
+		0315BBBF17DF365100F226E6 /* STMiscTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STMiscTests.m; sourceTree = "<group>"; };
 		03191E5317BF700A0001C06D /* STTwitterDemoOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STTwitterDemoOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03191E5617BF700A0001C06D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		03191E5917BF700A0001C06D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -207,6 +210,8 @@
 				03191EBB17BF72990001C06D /* STHTTPRequestUnitTestAdditions */,
 				03191EB817BF72910001C06D /* STOAuthServiceTests.h */,
 				03191EB917BF72910001C06D /* STOAuthServiceTests.m */,
+				0315BBBE17DF365100F226E6 /* STMiscTests.h */,
+				0315BBBF17DF365100F226E6 /* STMiscTests.m */,
 				03191E7A17BF700B0001C06D /* Supporting Files */,
 			);
 			path = STTwitterDemoOSXTests;
@@ -394,6 +399,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0315BBC117DF36F900F226E6 /* STMiscTests.m in Sources */,
 				03191E9F17BF704C0001C06D /* NSString+STTwitter.m in Sources */,
 				03191EA117BF704C0001C06D /* STHTTPRequest+STTwitter.m in Sources */,
 				03191EA317BF704C0001C06D /* STTwitterAPI.m in Sources */,
