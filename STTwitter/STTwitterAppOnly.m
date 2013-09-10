@@ -60,7 +60,7 @@
             parameters:@{ @"access_token" : _bearerToken }
           useBasicAuth:YES
          progressBlock:nil
-          successBlock:^(NSString *body) {
+          successBlock:^(NSDictionary *rateLimits, NSString *body) {
               
               NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
               
@@ -120,7 +120,7 @@
             parameters:@{ @"grant_type" : @"client_credentials" }
           useBasicAuth:YES
          progressBlock:nil
-          successBlock:^(id json) {
+          successBlock:^(NSDictionary *rateLimits, id json) {
               
               NSString *tokenType = [json valueForKey:@"token_type"];
               if([tokenType isEqualToString:@"bearer"] == NO) {
@@ -142,7 +142,7 @@
       baseURLString:(NSString *)baseURLString // no trailing slash
          parameters:(NSDictionary *)params
       progressBlock:(void(^)(id json))progressBlock
-       successBlock:(void (^)(id))successBlock
+       successBlock:(void (^)(NSDictionary *rateLimits, id json))successBlock
          errorBlock:(void (^)(NSError *))errorBlock {
     
     /*
@@ -186,7 +186,7 @@
         baseURLString:(NSString *)baseURLString
            parameters:(NSDictionary *)params
         progressBlock:(void(^)(id json))progressBlock
-         successBlock:(void(^)(id json))successBlock
+         successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
            errorBlock:(void(^)(NSError *error))errorBlock {
     
     if([HTTPMethod isEqualToString:@"GET"]) {
@@ -217,7 +217,7 @@
           parameters:(NSDictionary *)params
         useBasicAuth:(BOOL)useBasicAuth
        progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(id json))successBlock
+        successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
@@ -251,7 +251,7 @@
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)params
        progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(id json))successBlock
+        successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:resource

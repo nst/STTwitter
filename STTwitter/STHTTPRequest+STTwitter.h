@@ -12,7 +12,7 @@
 
 + (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString
                         stTwitterProgressBlock:(void(^)(id json))progressBlock
-                         stTwitterSuccessBlock:(void(^)(id json))successBlock
+                         stTwitterSuccessBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
                            stTwitterErrorBlock:(void(^)(NSError *error))errorBlock;
 
 @end

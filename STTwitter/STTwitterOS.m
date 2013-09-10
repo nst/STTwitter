@@ -133,7 +133,7 @@ BOOL useTWRequests(void) {
            baseURLString:(NSString *)baseURLString
               httpMethod:(NSInteger)httpMethod
               parameters:(NSDictionary *)params
-         completionBlock:(void (^)(id response))completionBlock
+         completionBlock:(void (^)(NSDictionary *rateLimits, id response))completionBlock
               errorBlock:(void (^)(NSError *error))errorBlock {
     
     NSData *mediaData = [params valueForKey:@"media[]"];
@@ -190,7 +190,7 @@ BOOL useTWRequests(void) {
             }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(s);
+                completionBlock(nil, s);
             }];
             return;
         }
@@ -239,7 +239,7 @@ BOOL useTWRequests(void) {
         if(json) {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock((NSArray *)json);
+                completionBlock(nil, (NSArray *)json);
             }];
             
         } else {
@@ -257,7 +257,7 @@ BOOL useTWRequests(void) {
         baseURLString:(NSString *)baseURLString
            parameters:(NSDictionary *)params
         progressBlock:(void (^)(id))progressBlock // TODO: handle progressBlock?
-         successBlock:(void (^)(id))successBlock
+         successBlock:(void (^)(NSDictionary *rateLimits, id))successBlock
            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSAssert(([ @[@"GET", @"POST"] containsObject:HTTPMethod]), @"unsupported HTTP method");
@@ -350,7 +350,7 @@ BOOL useTWRequests(void) {
           baseURLString:@"https://api.twitter.com"
              parameters:d
           progressBlock:nil
-           successBlock:^(id response) {
+           successBlock:^(NSDictionary *rateLimits, id response) {
                
         NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
                

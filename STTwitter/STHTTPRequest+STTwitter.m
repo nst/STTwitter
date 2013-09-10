@@ -38,7 +38,7 @@
     return nil;
 }
 
-+ (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString stTwitterProgressBlock:(void(^)(id json))progressBlock stTwitterSuccessBlock:(void(^)(id json))successBlock stTwitterErrorBlock:(void(^)(NSError *error))errorBlock {
++ (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString stTwitterProgressBlock:(void(^)(id json))progressBlock stTwitterSuccessBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock stTwitterErrorBlock:(void(^)(NSError *error))errorBlock {
     
     __block STHTTPRequest *r = [self requestWithURLString:urlString];
     __weak STHTTPRequest *wr = r;
@@ -78,15 +78,29 @@
     
     r.completionBlock = ^(NSDictionary *headers, NSString *body) {
         
+        NSMutableDictionary *rateLimits = [NSMutableDictionary dictionary];
+        
+        NSString *limit = [headers valueForKey:@"x-ratelimit-limit"];
+        NSString *remaining = [headers valueForKey:@"x-ratelimit-remaining"];
+        NSString *reset = [headers valueForKey:@"x-ratelimit-reset"];
+
+        if(limit) rateLimits[@"limit"] = limit;
+        if(remaining) rateLimits[@"remaining"] = remaining;
+        if(reset) rateLimits[@"reset"] = reset;
+        
+        NSLog(@"-- rateLimits: %@", rateLimits);
+        
+        /**/
+        
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:wr.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
-            successBlock(body); // response is not necessarily json
+            successBlock(rateLimits, body); // response is not necessarily json
             return;
         }
         
-        successBlock(json);
+        successBlock(rateLimits, json);
     };
     
     r.errorBlock = ^(NSError *error) {

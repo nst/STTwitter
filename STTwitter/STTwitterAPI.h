@@ -91,14 +91,14 @@
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)parameters
       progressBlock:(void(^)(id json))progressBlock
-       successBlock:(void(^)(id json))successBlock
+       successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)parameters
        progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(id response))successBlock
+        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Timelines

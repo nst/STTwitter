@@ -19,7 +19,7 @@
         baseURLString:(NSString *)baseURLString
            parameters:(NSDictionary *)params
         progressBlock:(void(^)(id response))progressBlock
-         successBlock:(void(^)(id response))successBlock
+         successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
            errorBlock:(void(^)(NSError *error))errorBlock;
 
 @optional
