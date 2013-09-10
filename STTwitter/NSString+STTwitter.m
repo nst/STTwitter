@@ -36,13 +36,13 @@ NSUInteger kSTTwitterDefaultShortURLLengthHTTPS = 23;
 }
 
 // use values from GET help/configuration
-- (NSInteger)charactersInTweetWithShortURLLength:(NSUInteger)shortURLLength shortURLLengthHTTPS:(NSUInteger)shortURLLengthHTTPS {
+- (NSInteger)numberOfCharactersInATweetWithShortURLLength:(NSUInteger)shortURLLength shortURLLengthHTTPS:(NSUInteger)shortURLLengthHTTPS {
     
     // NFC normalized string https://dev.twitter.com/docs/counting-characters
     NSString *s = [self precomposedStringWithCanonicalMapping];
     
     NSInteger count = [s length];
-
+    
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(https?://\\S+)"
                                                                            options:0
@@ -64,9 +64,9 @@ NSUInteger kSTTwitterDefaultShortURLLengthHTTPS = 23;
 }
 
 // use default values for URL shortening
-- (NSInteger)charactersInTweet {
-    return [self charactersInTweetWithShortURLLength:kSTTwitterDefaultShortURLLength
-                                 shortURLLengthHTTPS:kSTTwitterDefaultShortURLLengthHTTPS];
+- (NSInteger)numberOfCharactersInATweet {
+    return [self numberOfCharactersInATweetWithShortURLLength:kSTTwitterDefaultShortURLLength
+                                          shortURLLengthHTTPS:kSTTwitterDefaultShortURLLengthHTTPS];
 }
 
 @end

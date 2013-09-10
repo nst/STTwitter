@@ -34,7 +34,7 @@
         [ms appendString:s];
     }
     
-    int c = (int)[ms charactersInTweet];
+    int c = (int)[ms numberOfCharactersInATweet];
     
     STAssertEquals(c, 140, [NSString stringWithFormat:@"c: %d", (int)c]);
 }
@@ -43,7 +43,7 @@
     
     NSString *s = @"\u2070";
     
-    int c = (int)[s charactersInTweet];
+    int c = (int)[s numberOfCharactersInATweet];
     
     STAssertEquals(c, 1, [NSString stringWithFormat:@"c: %d", (int)c]);
 }
@@ -52,7 +52,7 @@
     
     NSString *s = @"caf\x65\xCC\x81";
     
-    int c = (int)[s charactersInTweet];
+    int c = (int)[s numberOfCharactersInATweet];
     
     STAssertEquals(c, 4, [NSString stringWithFormat:@"c: %d", (int)c]);
 }
@@ -61,7 +61,7 @@
     
     NSString *s = @"asd http://www.apple.com http://www.google.com sdf";
         
-    int c = (int)[s charactersInTweet];
+    int c = (int)[s numberOfCharactersInATweet];
     
     int expected = 4 + (int)kSTTwitterDefaultShortURLLength + 1 + (int)kSTTwitterDefaultShortURLLength + 4;
     
@@ -72,7 +72,7 @@
     
     NSString *s = @"https://api.twitter.com/";
     
-    int c = (int)[s charactersInTweet];
+    int c = (int)[s numberOfCharactersInATweet];
     
     STAssertEquals(c, (int)kSTTwitterDefaultShortURLLengthHTTPS, [NSString stringWithFormat:@"c: %d", (int)c]);
 }
