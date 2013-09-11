@@ -36,7 +36,7 @@
     
     int c = (int)[ms numberOfCharactersInATweet];
     
-    STAssertEquals(c, 140, [NSString stringWithFormat:@"c: %d", (int)c]);
+    XCTAssertEqual(c, 140, @"c: %d", (int)c);
 }
 
 - (void)testCharactersCountUnicode {
@@ -45,7 +45,7 @@
     
     int c = (int)[s numberOfCharactersInATweet];
     
-    STAssertEquals(c, 1, [NSString stringWithFormat:@"c: %d", (int)c]);
+    XCTAssertEqual(c, 1, @"c: %d", (int)c);
 }
 
 - (void)testCharactersCountAccentedCharacter {
@@ -54,7 +54,7 @@
     
     int c = (int)[s numberOfCharactersInATweet];
     
-    STAssertEquals(c, 4, [NSString stringWithFormat:@"c: %d", (int)c]);
+    XCTAssertEqual(c, 4, @"c: %d", (int)c);
 }
 
 - (void)testCharactersCountHTTPTwice {
@@ -65,7 +65,7 @@
     
     int expected = 4 + (int)kSTTwitterDefaultShortURLLength + 1 + (int)kSTTwitterDefaultShortURLLength + 4;
     
-    STAssertEquals(c, expected, [NSString stringWithFormat:@"c: %d, expected %d", c, expected]);
+    XCTAssertEqual(c, expected, @"c: %d, expected %d", c, expected);
 }
 
 - (void)testCharactersCountHTTPS {
@@ -74,7 +74,7 @@
     
     int c = (int)[s numberOfCharactersInATweet];
     
-    STAssertEquals(c, (int)kSTTwitterDefaultShortURLLengthHTTPS, [NSString stringWithFormat:@"c: %d", (int)c]);
+    XCTAssertEqual(c, (int)kSTTwitterDefaultShortURLLengthHTTPS, @"c: %d", (int)c);
 }
 
 @end

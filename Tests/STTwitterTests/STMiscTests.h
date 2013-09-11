@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Nicolas Seriot. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface STMiscTests : SenTestCase
+@interface STMiscTests : XCTestCase
 
 @end

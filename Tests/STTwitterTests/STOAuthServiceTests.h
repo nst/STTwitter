@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Nicolas Seriot. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface STOAuthServiceTests : SenTestCase
+@interface STOAuthServiceTests : XCTestCase
 
 @end
