@@ -24,6 +24,8 @@
 		0315BC9017E0944900F226E6 /* STHTTPRequest+UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315BC8B17E0944900F226E6 /* STHTTPRequest+UnitTests.m */; };
 		0315BC9117E0944900F226E6 /* STHTTPRequestTestResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315BC8D17E0944900F226E6 /* STHTTPRequestTestResponse.m */; };
 		0315BC9217E0944900F226E6 /* STHTTPRequestTestResponseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315BC8F17E0944900F226E6 /* STHTTPRequestTestResponseQueue.m */; };
+		03E0C5E717E0E9AB002D5A42 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0315BC8217E093DA00F226E6 /* Social.framework */; };
+		03E0C5E817E0E9B1002D5A42 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0315BC8417E093DF00F226E6 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +74,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03E0C5E817E0E9B1002D5A42 /* Security.framework in Frameworks */,
+				03E0C5E717E0E9AB002D5A42 /* Social.framework in Frameworks */,
 				0315BC7F17E093BE00F226E6 /* Accounts.framework in Frameworks */,
 				0315BC5217E0917E00F226E6 /* XCTest.framework in Frameworks */,
 				0315BC5317E0917E00F226E6 /* Foundation.framework in Frameworks */,
