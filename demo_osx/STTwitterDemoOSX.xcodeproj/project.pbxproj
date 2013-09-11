@@ -7,58 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0315BBC117DF36F900F226E6 /* STMiscTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315BBBF17DF365100F226E6 /* STMiscTests.m */; };
 		03191E5717BF700A0001C06D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191E5617BF700A0001C06D /* Cocoa.framework */; };
 		03191E6117BF700A0001C06D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03191E5F17BF700A0001C06D /* InfoPlist.strings */; };
 		03191E6317BF700A0001C06D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E6217BF700A0001C06D /* main.m */; };
 		03191E6717BF700A0001C06D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 03191E6517BF700A0001C06D /* Credits.rtf */; };
 		03191E6A17BF700A0001C06D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E6917BF700A0001C06D /* AppDelegate.m */; };
 		03191E6D17BF700A0001C06D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03191E6B17BF700A0001C06D /* MainMenu.xib */; };
-		03191E7517BF700B0001C06D /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191E7417BF700B0001C06D /* SenTestingKit.framework */; };
-		03191E7617BF700B0001C06D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191E5617BF700A0001C06D /* Cocoa.framework */; };
-		03191E7E17BF700B0001C06D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03191E7C17BF700B0001C06D /* InfoPlist.strings */; };
 		03191E9E17BF704C0001C06D /* NSString+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E8C17BF704C0001C06D /* NSString+STTwitter.m */; };
-		03191E9F17BF704C0001C06D /* NSString+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E8C17BF704C0001C06D /* NSString+STTwitter.m */; };
 		03191EA017BF704C0001C06D /* STHTTPRequest+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E8E17BF704C0001C06D /* STHTTPRequest+STTwitter.m */; };
-		03191EA117BF704C0001C06D /* STHTTPRequest+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E8E17BF704C0001C06D /* STHTTPRequest+STTwitter.m */; };
 		03191EA217BF704C0001C06D /* STTwitterAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9117BF704C0001C06D /* STTwitterAPI.m */; };
-		03191EA317BF704C0001C06D /* STTwitterAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9117BF704C0001C06D /* STTwitterAPI.m */; };
 		03191EA417BF704C0001C06D /* STTwitterAppOnly.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9317BF704C0001C06D /* STTwitterAppOnly.m */; };
-		03191EA517BF704C0001C06D /* STTwitterAppOnly.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9317BF704C0001C06D /* STTwitterAppOnly.m */; };
 		03191EA617BF704C0001C06D /* STTwitterHTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9517BF704C0001C06D /* STTwitterHTML.m */; };
-		03191EA717BF704C0001C06D /* STTwitterHTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9517BF704C0001C06D /* STTwitterHTML.m */; };
 		03191EA817BF704C0001C06D /* STTwitterOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9717BF704C0001C06D /* STTwitterOAuth.m */; };
-		03191EA917BF704C0001C06D /* STTwitterOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9717BF704C0001C06D /* STTwitterOAuth.m */; };
 		03191EAA17BF704C0001C06D /* STTwitterOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9917BF704C0001C06D /* STTwitterOS.m */; };
-		03191EAB17BF704C0001C06D /* STTwitterOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9917BF704C0001C06D /* STTwitterOS.m */; };
 		03191EAC17BF704C0001C06D /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9D17BF704C0001C06D /* STHTTPRequest.m */; };
-		03191EAD17BF704C0001C06D /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191E9D17BF704C0001C06D /* STHTTPRequest.m */; };
 		03191EB117BF71620001C06D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB017BF71620001C06D /* Accounts.framework */; };
 		03191EB317BF71670001C06D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB217BF71670001C06D /* Social.framework */; };
 		03191EB517BF718A0001C06D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB417BF718A0001C06D /* Security.framework */; };
 		03191EB717BF722D0001C06D /* TwitterClients.plist in Resources */ = {isa = PBXBuildFile; fileRef = 03191EB617BF722D0001C06D /* TwitterClients.plist */; };
-		03191EBA17BF72910001C06D /* STOAuthServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191EB917BF72910001C06D /* STOAuthServiceTests.m */; };
-		03191EC217BF72990001C06D /* STHTTPRequest+UnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191EBD17BF72990001C06D /* STHTTPRequest+UnitTests.m */; };
-		03191EC317BF72990001C06D /* STHTTPRequestTestResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191EBF17BF72990001C06D /* STHTTPRequestTestResponse.m */; };
-		03191EC417BF72990001C06D /* STHTTPRequestTestResponseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 03191EC117BF72990001C06D /* STHTTPRequestTestResponseQueue.m */; };
-		03191EC517BF72BC0001C06D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB017BF71620001C06D /* Accounts.framework */; };
-		03191EC617BF72C30001C06D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB417BF718A0001C06D /* Security.framework */; };
-		03191EC717BF72CA0001C06D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB217BF71670001C06D /* Social.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		03191E7717BF700B0001C06D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 03191E4B17BF700A0001C06D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 03191E5217BF700A0001C06D;
-			remoteInfo = STTwitterDemoOSX;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		0315BBBE17DF365100F226E6 /* STMiscTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STMiscTests.h; sourceTree = "<group>"; };
-		0315BBBF17DF365100F226E6 /* STMiscTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STMiscTests.m; sourceTree = "<group>"; };
+		0315BBE317E08CEC00F226E6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		0315BBEB17E08E8300F226E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03191E5317BF700A0001C06D /* STTwitterDemoOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STTwitterDemoOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03191E5617BF700A0001C06D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		03191E5917BF700A0001C06D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -72,10 +43,7 @@
 		03191E6817BF700A0001C06D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		03191E6917BF700A0001C06D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		03191E6C17BF700A0001C06D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		03191E7317BF700B0001C06D /* STTwitterDemoOSXTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STTwitterDemoOSXTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03191E7417BF700B0001C06D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		03191E7B17BF700B0001C06D /* STTwitterDemoOSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "STTwitterDemoOSXTests-Info.plist"; sourceTree = "<group>"; };
-		03191E7D17BF700B0001C06D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		03191E8B17BF704C0001C06D /* NSString+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+STTwitter.h"; sourceTree = "<group>"; };
 		03191E8C17BF704C0001C06D /* NSString+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+STTwitter.m"; sourceTree = "<group>"; };
 		03191E8D17BF704C0001C06D /* STHTTPRequest+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STHTTPRequest+STTwitter.h"; sourceTree = "<group>"; };
@@ -99,14 +67,6 @@
 		03191EB217BF71670001C06D /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		03191EB417BF718A0001C06D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		03191EB617BF722D0001C06D /* TwitterClients.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TwitterClients.plist; sourceTree = "<group>"; };
-		03191EB817BF72910001C06D /* STOAuthServiceTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STOAuthServiceTests.h; sourceTree = "<group>"; };
-		03191EB917BF72910001C06D /* STOAuthServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STOAuthServiceTests.m; sourceTree = "<group>"; };
-		03191EBC17BF72990001C06D /* STHTTPRequest+UnitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STHTTPRequest+UnitTests.h"; sourceTree = "<group>"; };
-		03191EBD17BF72990001C06D /* STHTTPRequest+UnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STHTTPRequest+UnitTests.m"; sourceTree = "<group>"; };
-		03191EBE17BF72990001C06D /* STHTTPRequestTestResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequestTestResponse.h; sourceTree = "<group>"; };
-		03191EBF17BF72990001C06D /* STHTTPRequestTestResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequestTestResponse.m; sourceTree = "<group>"; };
-		03191EC017BF72990001C06D /* STHTTPRequestTestResponseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequestTestResponseQueue.h; sourceTree = "<group>"; };
-		03191EC117BF72990001C06D /* STHTTPRequestTestResponseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequestTestResponseQueue.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,18 +81,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03191E6F17BF700B0001C06D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				03191E7517BF700B0001C06D /* SenTestingKit.framework in Frameworks */,
-				03191E7617BF700B0001C06D /* Cocoa.framework in Frameworks */,
-				03191EC517BF72BC0001C06D /* Accounts.framework in Frameworks */,
-				03191EC617BF72C30001C06D /* Security.framework in Frameworks */,
-				03191EC717BF72CA0001C06D /* Social.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -142,7 +90,6 @@
 				03191EAE17BF70520001C06D /* README.md */,
 				03191E8A17BF704C0001C06D /* STTwitter */,
 				03191E5C17BF700A0001C06D /* STTwitterDemoOSX */,
-				03191E7917BF700B0001C06D /* STTwitterDemoOSXTests */,
 				03191E5517BF700A0001C06D /* Frameworks */,
 				03191E5417BF700A0001C06D /* Products */,
 			);
@@ -152,7 +99,6 @@
 			isa = PBXGroup;
 			children = (
 				03191E5317BF700A0001C06D /* STTwitterDemoOSX.app */,
-				03191E7317BF700B0001C06D /* STTwitterDemoOSXTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,11 +106,13 @@
 		03191E5517BF700A0001C06D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0315BBE317E08CEC00F226E6 /* XCTest.framework */,
 				03191EB417BF718A0001C06D /* Security.framework */,
 				03191EB217BF71670001C06D /* Social.framework */,
 				03191EB017BF71620001C06D /* Accounts.framework */,
 				03191E5617BF700A0001C06D /* Cocoa.framework */,
 				03191E7417BF700B0001C06D /* SenTestingKit.framework */,
+				0315BBEB17E08E8300F226E6 /* Foundation.framework */,
 				03191E5817BF700A0001C06D /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -204,28 +152,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		03191E7917BF700B0001C06D /* STTwitterDemoOSXTests */ = {
-			isa = PBXGroup;
-			children = (
-				03191EBB17BF72990001C06D /* STHTTPRequestUnitTestAdditions */,
-				03191EB817BF72910001C06D /* STOAuthServiceTests.h */,
-				03191EB917BF72910001C06D /* STOAuthServiceTests.m */,
-				0315BBBE17DF365100F226E6 /* STMiscTests.h */,
-				0315BBBF17DF365100F226E6 /* STMiscTests.m */,
-				03191E7A17BF700B0001C06D /* Supporting Files */,
-			);
-			path = STTwitterDemoOSXTests;
-			sourceTree = "<group>";
-		};
-		03191E7A17BF700B0001C06D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				03191E7B17BF700B0001C06D /* STTwitterDemoOSXTests-Info.plist */,
-				03191E7C17BF700B0001C06D /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		03191E8A17BF704C0001C06D /* STTwitter */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,19 +186,6 @@
 			path = Vendor;
 			sourceTree = "<group>";
 		};
-		03191EBB17BF72990001C06D /* STHTTPRequestUnitTestAdditions */ = {
-			isa = PBXGroup;
-			children = (
-				03191EBC17BF72990001C06D /* STHTTPRequest+UnitTests.h */,
-				03191EBD17BF72990001C06D /* STHTTPRequest+UnitTests.m */,
-				03191EBE17BF72990001C06D /* STHTTPRequestTestResponse.h */,
-				03191EBF17BF72990001C06D /* STHTTPRequestTestResponse.m */,
-				03191EC017BF72990001C06D /* STHTTPRequestTestResponseQueue.h */,
-				03191EC117BF72990001C06D /* STHTTPRequestTestResponseQueue.m */,
-			);
-			path = STHTTPRequestUnitTestAdditions;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -292,25 +205,6 @@
 			productName = STTwitterDemoOSX;
 			productReference = 03191E5317BF700A0001C06D /* STTwitterDemoOSX.app */;
 			productType = "com.apple.product-type.application";
-		};
-		03191E7217BF700B0001C06D /* STTwitterDemoOSXTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 03191E8717BF700B0001C06D /* Build configuration list for PBXNativeTarget "STTwitterDemoOSXTests" */;
-			buildPhases = (
-				03191E6E17BF700B0001C06D /* Sources */,
-				03191E6F17BF700B0001C06D /* Frameworks */,
-				03191E7017BF700B0001C06D /* Resources */,
-				03191E7117BF700B0001C06D /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				03191E7817BF700B0001C06D /* PBXTargetDependency */,
-			);
-			name = STTwitterDemoOSXTests;
-			productName = STTwitterDemoOSXTests;
-			productReference = 03191E7317BF700B0001C06D /* STTwitterDemoOSXTests.octest */;
-			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
@@ -334,7 +228,6 @@
 			projectRoot = "";
 			targets = (
 				03191E5217BF700A0001C06D /* STTwitterDemoOSX */,
-				03191E7217BF700B0001C06D /* STTwitterDemoOSXTests */,
 			);
 		};
 /* End PBXProject section */
@@ -351,31 +244,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03191E7017BF700B0001C06D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				03191E7E17BF700B0001C06D /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		03191E7117BF700B0001C06D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		03191E4F17BF700A0001C06D /* Sources */ = {
@@ -395,35 +264,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03191E6E17BF700B0001C06D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0315BBC117DF36F900F226E6 /* STMiscTests.m in Sources */,
-				03191E9F17BF704C0001C06D /* NSString+STTwitter.m in Sources */,
-				03191EA117BF704C0001C06D /* STHTTPRequest+STTwitter.m in Sources */,
-				03191EA317BF704C0001C06D /* STTwitterAPI.m in Sources */,
-				03191EA517BF704C0001C06D /* STTwitterAppOnly.m in Sources */,
-				03191EA717BF704C0001C06D /* STTwitterHTML.m in Sources */,
-				03191EA917BF704C0001C06D /* STTwitterOAuth.m in Sources */,
-				03191EAB17BF704C0001C06D /* STTwitterOS.m in Sources */,
-				03191EAD17BF704C0001C06D /* STHTTPRequest.m in Sources */,
-				03191EBA17BF72910001C06D /* STOAuthServiceTests.m in Sources */,
-				03191EC217BF72990001C06D /* STHTTPRequest+UnitTests.m in Sources */,
-				03191EC317BF72990001C06D /* STHTTPRequestTestResponse.m in Sources */,
-				03191EC417BF72990001C06D /* STHTTPRequestTestResponseQueue.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		03191E7817BF700B0001C06D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 03191E5217BF700A0001C06D /* STTwitterDemoOSX */;
-			targetProxy = 03191E7717BF700B0001C06D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		03191E5F17BF700A0001C06D /* InfoPlist.strings */ = {
@@ -448,14 +289,6 @@
 				03191E6C17BF700A0001C06D /* en */,
 			);
 			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-		03191E7C17BF700B0001C06D /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				03191E7D17BF700B0001C06D /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -544,36 +377,6 @@
 			};
 			name = Release;
 		};
-		03191E8817BF700B0001C06D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/STTwitterDemoOSX.app/Contents/MacOS/STTwitterDemoOSX";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "STTwitterDemoOSX/STTwitterDemoOSX-Prefix.pch";
-				INFOPLIST_FILE = "STTwitterDemoOSXTests/STTwitterDemoOSXTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Debug;
-		};
-		03191E8917BF700B0001C06D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/STTwitterDemoOSX.app/Contents/MacOS/STTwitterDemoOSX";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "STTwitterDemoOSX/STTwitterDemoOSX-Prefix.pch";
-				INFOPLIST_FILE = "STTwitterDemoOSXTests/STTwitterDemoOSXTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -591,15 +394,6 @@
 			buildConfigurations = (
 				03191E8517BF700B0001C06D /* Debug */,
 				03191E8617BF700B0001C06D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		03191E8717BF700B0001C06D /* Build configuration list for PBXNativeTarget "STTwitterDemoOSXTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				03191E8817BF700B0001C06D /* Debug */,
-				03191E8917BF700B0001C06D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
