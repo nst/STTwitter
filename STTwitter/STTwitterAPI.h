@@ -976,11 +976,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // convenience
 - (void)profileImageFor:(NSString *)screenName
-#if TARGET_OS_IPHONE
-           successBlock:(void(^)(UIImage *image))successBlock
-#else
-           successBlock:(void(^)(NSImage *image))successBlock
-#endif
+           successBlock:(void(^)(id image))successBlock
              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*

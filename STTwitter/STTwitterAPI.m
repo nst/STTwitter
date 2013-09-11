@@ -336,11 +336,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 - (void)profileImageFor:(NSString *)screenName
 
-#if TARGET_OS_IPHONE
-           successBlock:(void(^)(UIImage *image))successBlock
-#else
-           successBlock:(void(^)(NSImage *image))successBlock
-#endif
+           successBlock:(void(^)(id image))successBlock
 
              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -356,10 +352,11 @@ static NSDateFormatter *dateFormatter = nil;
                            NSData *imageData = wr.responseData;
                            
 #if TARGET_OS_IPHONE
-                           successBlock([[UIImage alloc] initWithData:imageData]);
+                           Class STImageClass = NSClassFromString(@"UIImage");
 #else
-                           successBlock([[NSImage alloc] initWithData:imageData]);
+                           Class STImageClass = NSClassFromString(@"NSImage");
 #endif
+                           successBlock([[STImageClass alloc] initWithData:imageData]);
                        };
                        
                        r.errorBlock = ^(NSError *error) {
@@ -1421,37 +1418,6 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
         errorBlock(error);
     }];
 }
-
-//- (void)getUsersAtResource:(NSString *)resource
-//			 forScreenName:(NSString *)screenName
-//			  successBlock:(void(^)(NSArray *friends))successBlock
-//				errorBlock:(void(^)(NSError *error))errorBlock {
-//
-//	NSMutableDictionary *d = [NSMutableDictionary dictionaryWithObject:screenName forKey:@"screen_name"];
-//
-//	__block NSMutableArray *ids = [NSMutableArray new];
-//	__block void (^requestHandler)(id response) = nil;
-//	__block NSString *cursor = @"-1";
-//	requestHandler = [[^(id response) {
-//		if (response) {
-//			[ids addObjectsFromArray:[response objectForKey:@"users"]];
-//			[cursor release]; cursor = [[response objectForKey:@"next_cursor_str"] copy];
-//			d[@"cursor"] = cursor;
-//		}
-//
-//		if ([cursor isEqualToString:@"0"]) {
-//			successBlock(ids);
-//			[ids release]; ids = nil;
-//			[cursor release]; cursor = nil;
-//		} else {
-//			[self getAPIResource:resource parameters:d successBlock:requestHandler
-//					 errorBlock:errorBlock];
-//		}
-//	} copy] autorelease];
-//
-//	//Send the first request
-//	requestHandler(nil);
-//}
 
 - (void)getFriendsIDsForScreenName:(NSString *)screenName
 				      successBlock:(void(^)(NSArray *friends))successBlock
