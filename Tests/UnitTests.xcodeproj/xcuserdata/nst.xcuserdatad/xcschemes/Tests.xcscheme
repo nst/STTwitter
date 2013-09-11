@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0315BC1C17E0902400F226E6"
                BuildableName = "Tests"
-               BlueprintName = "Tests"
-               ReferencedContainer = "container:Tests.xcodeproj">
+               BlueprintName = "UnitTests"
+               ReferencedContainer = "container:UnitTests.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0315BC4F17E0917E00F226E6"
-               BuildableName = "STTwitterTests.xctest"
-               BlueprintName = "STTwitterTests"
-               ReferencedContainer = "container:Tests.xcodeproj">
+               BuildableName = "STTwitterUnitTests.xctest"
+               BlueprintName = "STTwitterUnitTests"
+               ReferencedContainer = "container:UnitTests.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,8 +44,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0315BC1C17E0902400F226E6"
             BuildableName = "Tests"
-            BlueprintName = "Tests"
-            ReferencedContainer = "container:Tests.xcodeproj">
+            BlueprintName = "UnitTests"
+            ReferencedContainer = "container:UnitTests.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0315BC1C17E0902400F226E6"
             BuildableName = "Tests"
-            BlueprintName = "Tests"
-            ReferencedContainer = "container:Tests.xcodeproj">
+            BlueprintName = "UnitTests"
+            ReferencedContainer = "container:UnitTests.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -81,8 +81,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0315BC1C17E0902400F226E6"
             BuildableName = "Tests"
-            BlueprintName = "Tests"
-            ReferencedContainer = "container:Tests.xcodeproj">
+            BlueprintName = "UnitTests"
+            ReferencedContainer = "container:UnitTests.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
