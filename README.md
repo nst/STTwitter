@@ -261,7 +261,7 @@ You can create your own convenience methods with fewer parameters. You can also 
 	        baseURLString:(NSString *)baseURLString
 	           parameters:(NSDictionary *)params
 	        progressBlock:(void(^)(id json))progressBlock
-	         successBlock:(void(^)(id json))successBlock
+	         successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
 	           errorBlock:(void(^)(NSError *error))errorBlock;
            
 ##### Layer Model
