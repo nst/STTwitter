@@ -24,7 +24,9 @@ If you want to use CocoaPods, include the STTwitter pod in your project's podfil
     pod 'STTwitter'
     pod install
 
-Note that STTwitter requires iOS 5+ or OS X 10.7+.
+STTwitter does not depend on AppKit or UIKit and can be used in a command-line Twitter client.
+
+STTwitter requires iOS 5+ or OS X 10.7+.
 
 ### Code Snippets
 
@@ -165,6 +167,8 @@ Here is how to use reverse authentication with STTwitter:
     } errorBlock:^(NSError *error) {
         // ...
     }];
+
+Contrary to what can be read here and there, you can perfectly [access direct messages from iOS Twitter accounts](http://stackoverflow.com/questions/17990484/accessing-twitter-direct-messages-using-slrequest-ios/18760445#18760445).
 
 ### OAuth Consumer Tokens
 
