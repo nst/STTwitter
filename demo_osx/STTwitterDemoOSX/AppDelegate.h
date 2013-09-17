@@ -19,10 +19,10 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) STTwitterAPI *twitter;
 
 @property (nonatomic, retain) NSArray *twitterClients;
-@property (nonatomic, retain) IBOutlet NSArrayController *twitterClientsController;
+@property (nonatomic, assign) IBOutlet NSArrayController *twitterClientsController;
 
-@property (nonatomic, retain) IBOutlet NSTextField *consumerKeyTextField;
-@property (nonatomic, retain) IBOutlet NSTextField *consumerSecretTextField;
+@property (nonatomic, assign) IBOutlet NSTextField *consumerKeyTextField;
+@property (nonatomic, assign) IBOutlet NSTextField *consumerSecretTextField;
 
 @property (nonatomic, retain) NSURL *pinURL;
 
