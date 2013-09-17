@@ -224,10 +224,9 @@ static NSDateFormatter *dateFormatter = nil;
                 progressBlock(response);
             } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
                 successBlock(rateLimits, response);
-            }
-               errorBlock:^(NSString *requestID, NSError *error) {
-                   errorBlock(error);
-               }];
+            } errorBlock:^(NSString *requestID, NSError *error) {
+                errorBlock(error);
+            }];
 }
 
 - (void)postResource:(NSString *)resource
