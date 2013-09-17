@@ -14,13 +14,13 @@
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)fetchResource:(NSString *)resource
-           HTTPMethod:(NSString *)HTTPMethod
-        baseURLString:(NSString *)baseURLString
-           parameters:(NSDictionary *)params
-        progressBlock:(void(^)(id response))progressBlock
-         successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
-           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSString *)fetchResource:(NSString *)resource
+                 HTTPMethod:(NSString *)HTTPMethod
+              baseURLString:(NSString *)baseURLString
+                 parameters:(NSDictionary *)params
+              progressBlock:(void(^)(NSString *requestID, id response))progressBlock
+               successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id response))successBlock
+                 errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock;
 
 @optional
 

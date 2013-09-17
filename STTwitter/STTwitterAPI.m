@@ -200,9 +200,13 @@ static NSDateFormatter *dateFormatter = nil;
                HTTPMethod:@"GET"
             baseURLString:baseURLString
                parameters:parameters
-            progressBlock:progressBlock
-             successBlock:successBlock
-               errorBlock:errorBlock];
+            progressBlock:^(NSString *requestID, id response) {
+                progressBlock(response);
+            } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
+                successBlock(rateLimits, response);
+            } errorBlock:^(NSString *requestID, NSError *error) {
+                errorBlock(error);
+            }];
 }
 
 - (void)postResource:(NSString *)resource
@@ -216,9 +220,14 @@ static NSDateFormatter *dateFormatter = nil;
                HTTPMethod:@"POST"
             baseURLString:baseURLString
                parameters:parameters
-            progressBlock:progressBlock
-             successBlock:successBlock
-               errorBlock:errorBlock];
+            progressBlock:^(NSString *requestID, id response) {
+                progressBlock(response);
+            } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
+                successBlock(rateLimits, response);
+            }
+               errorBlock:^(NSString *requestID, NSError *error) {
+                   errorBlock(error);
+               }];
 }
 
 - (void)postResource:(NSString *)resource
@@ -231,9 +240,12 @@ static NSDateFormatter *dateFormatter = nil;
                HTTPMethod:@"POST"
             baseURLString:baseURLString
                parameters:parameters
-            progressBlock:progressBlock
-             successBlock:nil
-               errorBlock:errorBlock];
+            progressBlock:^(NSString *requestID, id response) {
+                progressBlock(response);
+            } successBlock:nil
+               errorBlock:^(NSString *requestID, NSError *error) {
+                   errorBlock(error);
+               }];
 }
 
 - (void)getResource:(NSString *)resource
@@ -246,9 +258,12 @@ static NSDateFormatter *dateFormatter = nil;
                HTTPMethod:@"GET"
             baseURLString:baseURLString
                parameters:parameters
-            progressBlock:progressBlock
-             successBlock:nil
-               errorBlock:errorBlock];
+            progressBlock:^(NSString *requestID, id response) {
+                progressBlock(response);
+            } successBlock:nil
+               errorBlock:^(NSString *requestID, NSError *error) {
+                   errorBlock(error);
+               }];
 }
 
 - (void)getAPIResource:(NSString *)resource
@@ -3906,17 +3921,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"screen_name"] = screenName;
     md[@"send_error_codes"] = sendErrorCode ? @"1": @"0";
     md[@"time_zone"] = timeZone;
-
+    
     [self postResource:@"account/generate.json"
          baseURLString:@"https://api.twitter.com/1"
             parameters:md
          progressBlock:^(id json) {
-        //
-    } successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+             //
+         } successBlock:^(NSDictionary *rateLimits, id response) {
+             successBlock(response);
+         } errorBlock:^(NSError *error) {
+             errorBlock(error);
+         }];
 }
 
 @end

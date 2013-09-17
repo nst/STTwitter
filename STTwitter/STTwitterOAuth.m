@@ -258,7 +258,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
             parameters:@{}
          oauthCallback:theOAuthCallback
          progressBlock:nil
-          successBlock:^(NSDictionary *rateLimits, id body) {
+          successBlock:^(NSString *requestID, NSDictionary *rateLimits, id body) {
               
               NSDictionary *d = [body parametersDictionary];
               
@@ -271,7 +271,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
               
               successBlock(url, _oauthRequestToken);
               
-          } errorBlock:^(NSError *error) {
+          } errorBlock:^(NSString *requestID, NSError *error) {
               errorBlock(error);
           }];
 }
@@ -283,11 +283,11 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
             parameters:@{@"x_auth_mode" : @"reverse_auth"}
          oauthCallback:nil
          progressBlock:nil
-          successBlock:^(NSDictionary *rateLimits, id body) {
+          successBlock:^(NSString *requestID, NSDictionary *rateLimits, id body) {
               
               successBlock(body);
               
-          } errorBlock:^(NSError *error) {
+          } errorBlock:^(NSString *requestID, NSError *error) {
               errorBlock(error);
           }];
 }
@@ -304,7 +304,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     [self postResource:@"oauth/access_token"
          baseURLString:@"https://api.twitter.com"
             parameters:d
-          successBlock:^(NSDictionary *rateLimits, NSString *body) {
+          successBlock:^(NSString *requestID, NSDictionary *rateLimits, NSString *body) {
               NSDictionary *dict = [body parametersDictionary];
               
               // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
@@ -313,7 +313,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
               self.oauthAccessTokenSecret = dict[@"oauth_token_secret"];
               
               successBlock(_oauthAccessToken, _oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
-          } errorBlock:^(NSError *error) {
+          } errorBlock:^(NSString *requestID, NSError *error) {
               errorBlock(error);
           }];
 }
@@ -334,7 +334,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     [self postResource:@"oauth/access_token"
          baseURLString:@"https://api.twitter.com"
             parameters:d
-          successBlock:^(NSDictionary *rateLimits, NSString *body) {
+          successBlock:^(NSString *requestID, NSDictionary *rateLimits, NSString *body) {
               NSDictionary *dict = [body parametersDictionary];
               
               // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
@@ -344,7 +344,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
               
               successBlock(_oauthAccessToken, _oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
               
-          } errorBlock:^(NSError *error) {
+          } errorBlock:^(NSString *requestID, NSError *error) {
               errorBlock(error);
           }];
 }
@@ -405,12 +405,12 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     [self signRequest:r isMediaUpload:NO];
 }
 
-- (void)getResource:(NSString *)resource
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)params
-      progressBlock:(void (^)(id json))progressBlock
-       successBlock:(void (^)(NSDictionary *rateLimits, id json))successBlock
-         errorBlock:(void (^)(NSError *))errorBlock {
+- (NSString *)getResource:(NSString *)resource
+            baseURLString:(NSString *)baseURLString
+               parameters:(NSDictionary *)params
+            progressBlock:(void (^)(NSString *requestID, id json))progressBlock
+             successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id json))successBlock
+               errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock {
     
     NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, resource];
     
@@ -427,60 +427,75 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         [urlString appendFormat:@"?%@", parameterString];
     }
     
+    NSString *requestID = [NSUUID UUID];
+    
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                                   stTwitterProgressBlock:progressBlock
-                                                    stTwitterSuccessBlock:successBlock
-                                                      stTwitterErrorBlock:errorBlock];
+                                                   stTwitterProgressBlock:^(id json) {
+                                                       progressBlock(requestID, json);
+                                                   } stTwitterSuccessBlock:^(NSDictionary *rateLimits, id json) {
+                                                       successBlock(requestID, rateLimits, json);
+                                                   } stTwitterErrorBlock:^(NSError *error) {
+                                                       errorBlock(requestID, error);
+                                                   }];
     
     [self signRequest:r];
     
     [r startAsynchronous];
+    
+    return requestID;
 }
 
-- (void)fetchResource:(NSString *)resource
-           HTTPMethod:(NSString *)HTTPMethod
-        baseURLString:(NSString *)baseURLString
-           parameters:(NSDictionary *)params
-        progressBlock:(void(^)(id json))progressBlock
-         successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
-           errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSString *)fetchResource:(NSString *)resource
+                 HTTPMethod:(NSString *)HTTPMethod
+              baseURLString:(NSString *)baseURLString
+                 parameters:(NSDictionary *)params
+              progressBlock:(void(^)(NSString *requestID, id json))progressBlock
+               successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id json))successBlock
+                 errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
     
     if([HTTPMethod isEqualToString:@"GET"]) {
         
-        [self getResource:resource baseURLString:baseURLString
-               parameters:params
-            progressBlock:progressBlock
-             successBlock:successBlock
-               errorBlock:errorBlock];
+        return [self getResource:resource baseURLString:baseURLString
+                      parameters:params
+                   progressBlock:progressBlock
+                    successBlock:successBlock
+                      errorBlock:errorBlock];
         
     } else if ([HTTPMethod isEqualToString:@"POST"]) {
         
-        [self postResource:resource
-             baseURLString:baseURLString
-                parameters:params
-             progressBlock:progressBlock
-              successBlock:successBlock
-                errorBlock:errorBlock];
+        return [self postResource:resource
+                    baseURLString:baseURLString
+                       parameters:params
+                    progressBlock:progressBlock
+                     successBlock:successBlock
+                       errorBlock:errorBlock];
         
     } else {
         NSAssert(NO, @"unsupported HTTP method");
+        return nil;
     }
 }
 
-- (void)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString // no trailing slash
-          parameters:(NSDictionary *)params
-       oauthCallback:(NSString *)oauthCallback
-       progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSString *)postResource:(NSString *)resource
+             baseURLString:(NSString *)baseURLString // no trailing slash
+                parameters:(NSDictionary *)params
+             oauthCallback:(NSString *)oauthCallback
+             progressBlock:(void(^)(NSString *requestID, id json))progressBlock
+              successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id response))successBlock
+                errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
+    NSString *requestID = [NSUUID UUID];
+    
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                                   stTwitterProgressBlock:progressBlock
-                                                    stTwitterSuccessBlock:successBlock
-                                                      stTwitterErrorBlock:errorBlock];
+                                                   stTwitterProgressBlock:^(id json) {
+                                                       progressBlock(requestID, json);
+                                                   } stTwitterSuccessBlock:^(NSDictionary *rateLimits, id json) {
+                                                       successBlock(requestID, rateLimits, json);
+                                                   } stTwitterErrorBlock:^(NSError *error) {
+                                                       errorBlock(requestID, error);
+                                                   }];
     
     r.POSTDictionary = params;
     
@@ -504,53 +519,55 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     r.POSTDictionary = mutableParams ? mutableParams : @{};
     
     [r startAsynchronous];
+    
+    return requestID;
 }
 
-- (void)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString // no trailing slash
-          parameters:(NSDictionary *)params
-       progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSString *)postResource:(NSString *)resource
+             baseURLString:(NSString *)baseURLString // no trailing slash
+                parameters:(NSDictionary *)params
+             progressBlock:(void(^)(NSString *requestID, id json))progressBlock
+              successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id response))successBlock
+                errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
     
-    [self postResource:resource
-         baseURLString:baseURLString
-            parameters:params
-         oauthCallback:nil
-         progressBlock:progressBlock
-          successBlock:successBlock
-            errorBlock:errorBlock];
+    return [self postResource:resource
+                baseURLString:baseURLString
+                   parameters:params
+                oauthCallback:nil
+                progressBlock:progressBlock
+                 successBlock:successBlock
+                   errorBlock:errorBlock];
 }
 
-- (void)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString // no trailing slash
-          parameters:(NSDictionary *)params
-       oauthCallback:(NSString *)oauthCallback
-        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSString *)postResource:(NSString *)resource
+             baseURLString:(NSString *)baseURLString // no trailing slash
+                parameters:(NSDictionary *)params
+             oauthCallback:(NSString *)oauthCallback
+              successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id response))successBlock
+                errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
     
-    [self postResource:resource
-         baseURLString:baseURLString
-            parameters:params
-         oauthCallback:oauthCallback
-         progressBlock:nil
-          successBlock:successBlock
-            errorBlock:errorBlock];
+    return [self postResource:resource
+                baseURLString:baseURLString
+                   parameters:params
+                oauthCallback:oauthCallback
+                progressBlock:nil
+                 successBlock:successBlock
+                   errorBlock:errorBlock];
 }
 
-- (void)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString // no trailing slash
-          parameters:(NSDictionary *)params
-        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSString *)postResource:(NSString *)resource
+             baseURLString:(NSString *)baseURLString // no trailing slash
+                parameters:(NSDictionary *)params
+              successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id response))successBlock
+                errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
     
-    [self postResource:resource
-         baseURLString:baseURLString
-            parameters:params
-         oauthCallback:nil
-         progressBlock:nil
-          successBlock:successBlock
-            errorBlock:errorBlock];
+    return [self postResource:resource
+                baseURLString:baseURLString
+                   parameters:params
+                oauthCallback:nil
+                progressBlock:nil
+                 successBlock:successBlock
+                   errorBlock:errorBlock];
 }
 
 @end
