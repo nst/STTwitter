@@ -189,6 +189,23 @@ static NSDateFormatter *dateFormatter = nil;
 
 #pragma mark Generic methods to GET and POST
 
+- (NSString *)fetchResource:(NSString *)resource
+                 HTTPMethod:(NSString *)HTTPMethod
+              baseURLString:(NSString *)baseURLString
+                 parameters:(NSDictionary *)params
+              progressBlock:(void (^)(NSString *requestID, id response))progressBlock // TODO: handle progressBlock?
+               successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
+                 errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock {
+
+    return [_oauth fetchResource:resource
+               HTTPMethod:HTTPMethod
+            baseURLString:baseURLString
+               parameters:params
+            progressBlock:progressBlock
+             successBlock:successBlock
+               errorBlock:errorBlock];
+}
+
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)parameters
@@ -2887,6 +2904,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           skipStatus:(NSNumber *)skipStatus
                         successBlock:(void(^)(NSDictionary *user))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
+    
     NSAssert(listID, @"listID is missing");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -3135,6 +3153,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                     description:(NSString *)description
                    successBlock:(void(^)(NSDictionary *list))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
     NSParameterAssert(name);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];

@@ -87,6 +87,14 @@
 
 #pragma mark Generic methods to GET and POST
 
+- (NSString *)fetchResource:(NSString *)resource
+                 HTTPMethod:(NSString *)HTTPMethod
+              baseURLString:(NSString *)baseURLString
+                 parameters:(NSDictionary *)params
+              progressBlock:(void (^)(NSString *requestID, id response))progressBlock // TODO: handle progressBlock?
+               successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
+                 errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock;
+
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)parameters
