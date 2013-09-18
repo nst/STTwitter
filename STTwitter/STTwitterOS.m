@@ -166,7 +166,7 @@ BOOL useTWRequests(void) {
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
         if(responseData == nil) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, nil);
+                errorBlock(requestID, error);
             }];
             return;
         }
