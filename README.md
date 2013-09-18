@@ -17,7 +17,14 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 
 ### Installation
 
-Drag and drop STTwitter directory into your project and that's it.
+Drag and drop STTwitter directory into your project.
+
+Link your project with the following frameworks:
+
+- Accounts.framework
+- Twitter.framework
+- Security.framework (OS X only)
+- Social.framework (iOS only, weak)
 
 If you want to use CocoaPods, include the STTwitter pod in your project's podfile and install it:
 
