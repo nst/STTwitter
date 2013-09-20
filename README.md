@@ -267,14 +267,14 @@ The application only interacts with `STTwitterAPI`.
 
 You can create your own convenience methods with fewer parameters. You can also use this generic methods directly:
 
-	- (void)fetchResource:(NSString *)resource
-	           HTTPMethod:(NSString *)HTTPMethod
-	        baseURLString:(NSString *)baseURLString
-	           parameters:(NSDictionary *)params
-	        progressBlock:(void(^)(id json))progressBlock
-	         successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
-	           errorBlock:(void(^)(NSError *error))errorBlock;
-           
+    - (NSString *)fetchResource:(NSString *)resource
+                     HTTPMethod:(NSString *)HTTPMethod
+                  baseURLString:(NSString *)baseURLString
+                     parameters:(NSDictionary *)params
+                  progressBlock:(void (^)(NSString *requestID, id response))progressBlock
+                   successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
+                     errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock;
+
 ##### Layer Model
      
      +-------------------------------------------------+
