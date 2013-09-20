@@ -193,7 +193,7 @@ static NSDateFormatter *dateFormatter = nil;
                  HTTPMethod:(NSString *)HTTPMethod
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
-              progressBlock:(void (^)(NSString *requestID, id response))progressBlock // TODO: handle progressBlock?
+              progressBlock:(void (^)(NSString *requestID, id response))progressBlock
                successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
                  errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock {
 
