@@ -384,15 +384,17 @@
     NSAssert(_genericHTTPMethod, @"");
     NSAssert(_genericBaseURLString, @"");
     
+    NSDictionary *attributes = @{ NSFontAttributeName : [NSFont fontWithName:@"Menlo" size:12] };
+    
     [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:nil progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
         NSString *s = [response description];
-        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:nil];;
+        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];;
     } errorBlock:^(NSString *requestID, NSError *error) {
         NSString *s = @"error";
         if(error) {
             s = [error localizedDescription];
         }
-        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:nil];
+        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
     }];
 }
 
