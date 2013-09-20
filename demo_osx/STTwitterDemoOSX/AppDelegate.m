@@ -22,6 +22,11 @@
     
     self.twitterClients = ma;
     
+    self.genericBaseURLString = @"https://api.twitter.com/1.1/";
+    self.genericAPIEndpoint = @"statuses/home_timeline.json";
+    
+    [self changeHTTPMethodAction:self];
+    
     [_twitterClientsController setSelectedObjects:@[customClient]];
 }
 
@@ -364,6 +369,31 @@
                           self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
                       }];
     }
+}
+
+- (IBAction)changeHTTPMethodAction:(id)sender {
+    self.genericHTTPMethod = [_genericHTTPMethodPopUpButton titleOfSelectedItem];
+    NSLog(@"-- %s", __PRETTY_FUNCTION__);
+    NSLog(@"-- %@", _genericHTTPMethod);
+}
+
+- (IBAction)sendRequestAction:(id)sender {
+    NSLog(@"-- %s", __PRETTY_FUNCTION__);
+    
+    NSAssert(_genericAPIEndpoint, @"");
+    NSAssert(_genericHTTPMethod, @"");
+    NSAssert(_genericBaseURLString, @"");
+    
+    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:nil progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
+        NSString *s = [response description];
+        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:nil];;
+    } errorBlock:^(NSString *requestID, NSError *error) {
+        NSString *s = @"error";
+        if(error) {
+            s = [error localizedDescription];
+        }
+        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:nil];
+    }];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {

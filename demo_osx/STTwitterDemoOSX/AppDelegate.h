@@ -24,6 +24,9 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, assign) IBOutlet NSTextField *consumerKeyTextField;
 @property (nonatomic, assign) IBOutlet NSTextField *consumerSecretTextField;
 
+@property (nonatomic, assign) IBOutlet NSPopUpButton *genericHTTPMethodPopUpButton;
+@property (nonatomic, assign) IBOutlet NSTextView *genericTextView;
+
 @property (nonatomic, retain) NSURL *pinURL;
 
 @property (nonatomic, copy) UsernamePasswordBlock_t pinGuessLoginCompletionBlock;
@@ -61,6 +64,12 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 @property (nonatomic, retain) NSArray *timelineStatuses;
 
+@property (nonatomic, strong) NSString *genericHTTPMethod;
+@property (nonatomic, strong) NSString *genericBaseURLString;
+@property (nonatomic, strong) NSString *genericAPIEndpoint;
+@property (nonatomic, strong) NSAttributedString *genericTextViewAttributedString;
+
+
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender;
 
 // OAuth - PIN
@@ -81,6 +90,10 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 // Application Only
 - (IBAction)fetchBearer:(id)sender;
 - (IBAction)invalidateBearer:(id)sender;
+
+// Generic Request
+- (IBAction)changeHTTPMethodAction:(id)sender;
+- (IBAction)sendRequestAction:(id)sender;
 
 // Twitter
 - (IBAction)getTimeline:(id)sender;
