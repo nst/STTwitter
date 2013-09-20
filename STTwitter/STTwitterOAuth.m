@@ -427,11 +427,11 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         [urlString appendFormat:@"?%@", parameterString];
     }
     
-    NSString *requestID = [NSUUID UUID];
+    __block NSString *requestID = [[NSUUID UUID] UUIDString];
     
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                                    stTwitterProgressBlock:^(id json) {
-                                                       progressBlock(requestID, json);
+                                                       if(progressBlock) progressBlock(requestID, json);
                                                    } stTwitterSuccessBlock:^(NSDictionary *rateLimits, id json) {
                                                        successBlock(requestID, rateLimits, json);
                                                    } stTwitterErrorBlock:^(NSError *error) {
@@ -486,11 +486,11 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
-    NSString *requestID = [NSUUID UUID];
+    NSString *requestID = [[NSUUID UUID] UUIDString];
     
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                                    stTwitterProgressBlock:^(id json) {
-                                                       progressBlock(requestID, json);
+                                                       if(progressBlock) progressBlock(requestID, json);
                                                    } stTwitterSuccessBlock:^(NSDictionary *rateLimits, id json) {
                                                        successBlock(requestID, rateLimits, json);
                                                    } stTwitterErrorBlock:^(NSError *error) {

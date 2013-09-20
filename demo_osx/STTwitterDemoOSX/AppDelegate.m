@@ -11,23 +11,53 @@
 
 @implementation AppDelegate
 
++ (NSString *)twitterClientInApplicationSupportPath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+    
+    return [[paths lastObject] stringByAppendingPathComponent:@"STTwitter/TwitterClient.plist"];
+}
+
++ (NSArray *)twitterClientsInApplicationSupport {
+
+    NSString *path = [self twitterClientInApplicationSupportPath];
+    
+    NSArray *a = [NSArray arrayWithContentsOfFile:path];
+    
+    if(a == nil) {
+        NSString *dirPath = [path stringByDeletingLastPathComponent];
+        
+        NSError *error = nil;
+        BOOL dirWasCreated = [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:nil error:&error];
+        if(dirWasCreated == NO) return nil;
+        
+        NSDictionary *d = @{ @"name":@"- Add your tokens in this file -", @"ck":@"1234", @"cs":@"5678" };
+        a = @[d];
+        BOOL fileWasCreated = [a writeToFile:path atomically:YES];
+        if(fileWasCreated == NO) return nil;
+    }
+
+    return a;
+}
+
+- (IBAction)editConsumerTokensAction:(id)sender {
+    NSString *path = [[self class] twitterClientInApplicationSupportPath];
+    
+    [[NSWorkspace sharedWorkspace] openFile:path];
+}
+
 - (void)awakeFromNib {
-    
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"TwitterClients" ofType:@"plist"];
-    NSArray *clientsDictionaries = [NSArray arrayWithContentsOfFile:path];
-    
-    NSDictionary *customClient = @{ @"name":@"Custom...", @"ck":@"", @"cs":@"" };
-    
-    NSArray *ma = [@[customClient] arrayByAddingObjectsFromArray:clientsDictionaries];
-    
-    self.twitterClients = ma;
+
+    self.twitterClients = [[self class] twitterClientsInApplicationSupport];
     
     self.genericBaseURLString = @"https://api.twitter.com/1.1/";
     self.genericAPIEndpoint = @"statuses/home_timeline.json";
     
     [self changeHTTPMethodAction:self];
     
-    [_twitterClientsController setSelectedObjects:@[customClient]];
+    if([_twitterClients count]) {
+        NSDictionary *firstTwitterClient = [_twitterClients objectAtIndex:0];
+        [_twitterClientsController setSelectedObjects:@[firstTwitterClient]];
+    }
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {

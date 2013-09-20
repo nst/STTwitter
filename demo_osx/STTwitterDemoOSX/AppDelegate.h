@@ -71,6 +71,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender;
+- (IBAction)editConsumerTokensAction:(id)sender;
 
 // OAuth - PIN
 - (IBAction)fetchPIN:(id)sender;

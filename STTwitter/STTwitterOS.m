@@ -146,7 +146,7 @@ BOOL useTWRequests(void) {
     
     id request = nil;
     
-    NSString *requestID = [NSUUID UUID];
+    NSString *requestID = [[NSUUID UUID] UUIDString];
     
     if(useTWRequests()) {
 #if TARGET_OS_IPHONE

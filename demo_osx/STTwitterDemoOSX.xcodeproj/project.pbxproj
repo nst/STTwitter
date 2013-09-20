@@ -24,7 +24,6 @@
 		03191EB117BF71620001C06D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB017BF71620001C06D /* Accounts.framework */; };
 		03191EB317BF71670001C06D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB217BF71670001C06D /* Social.framework */; };
 		03191EB517BF718A0001C06D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB417BF718A0001C06D /* Security.framework */; };
-		03191EB717BF722D0001C06D /* TwitterClients.plist in Resources */ = {isa = PBXBuildFile; fileRef = 03191EB617BF722D0001C06D /* TwitterClients.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +65,6 @@
 		03191EB017BF71620001C06D /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		03191EB217BF71670001C06D /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		03191EB417BF718A0001C06D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		03191EB617BF722D0001C06D /* TwitterClients.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TwitterClients.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +132,6 @@
 				03191E6817BF700A0001C06D /* AppDelegate.h */,
 				03191E6917BF700A0001C06D /* AppDelegate.m */,
 				03191E6B17BF700A0001C06D /* MainMenu.xib */,
-				03191EB617BF722D0001C06D /* TwitterClients.plist */,
 				03191E5D17BF700A0001C06D /* Supporting Files */,
 			);
 			path = STTwitterDemoOSX;
@@ -240,7 +237,6 @@
 				03191E6117BF700A0001C06D /* InfoPlist.strings in Resources */,
 				03191E6717BF700A0001C06D /* Credits.rtf in Resources */,
 				03191E6D17BF700A0001C06D /* MainMenu.xib in Resources */,
-				03191EB717BF722D0001C06D /* TwitterClients.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
