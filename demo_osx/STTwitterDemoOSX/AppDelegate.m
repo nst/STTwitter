@@ -52,7 +52,7 @@
     self.genericBaseURLString = @"https://api.twitter.com/1.1/";
     self.genericAPIEndpoint = @"statuses/home_timeline.json";
     
-    NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"asd", @"key", @"sdf", @"value", nil];
+    NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"count", @"key", @"10", @"value", nil];
     
     self.genericRequestParameters = [ @[md] mutableCopy];
     
