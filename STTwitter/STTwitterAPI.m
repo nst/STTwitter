@@ -196,14 +196,14 @@ static NSDateFormatter *dateFormatter = nil;
               progressBlock:(void (^)(NSString *requestID, id response))progressBlock
                successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
                  errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock {
-
+    
     return [_oauth fetchResource:resource
-               HTTPMethod:HTTPMethod
-            baseURLString:baseURLString
-               parameters:params
-            progressBlock:progressBlock
-             successBlock:successBlock
-               errorBlock:errorBlock];
+                      HTTPMethod:HTTPMethod
+                   baseURLString:baseURLString
+                      parameters:params
+                   progressBlock:progressBlock
+                    successBlock:successBlock
+                      errorBlock:errorBlock];
 }
 
 - (void)getResource:(NSString *)resource

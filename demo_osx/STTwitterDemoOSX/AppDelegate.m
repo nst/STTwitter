@@ -52,7 +52,9 @@
     self.genericBaseURLString = @"https://api.twitter.com/1.1/";
     self.genericAPIEndpoint = @"statuses/home_timeline.json";
     
-    self.genericRequestParameters = [ @[ @{@"key":@"asd", @"value":@"sdf"}] mutableCopy];
+    NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"asd", @"key", @"sdf", @"value", nil];
+    
+    self.genericRequestParameters = [ @[md] mutableCopy];
     
     [self changeHTTPMethodAction:self];
     
@@ -418,7 +420,17 @@
     
     NSDictionary *attributes = @{ NSFontAttributeName : [NSFont fontWithName:@"Menlo" size:12] };
     
-    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:nil progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:[_genericRequestParameters count]];
+    
+    for(NSDictionary *d in _genericRequestParameters) {
+        NSString *k = d[@"key"];
+        NSString *v = d[@"value"];
+        [parameters setObject:v forKey:k];
+    }
+    
+    self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    
+    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
         NSString *s = [response description];
         self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];;
     } errorBlock:^(NSString *requestID, NSError *error) {

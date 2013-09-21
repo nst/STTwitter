@@ -20,6 +20,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 @property (nonatomic, retain) NSArray *twitterClients;
 @property (nonatomic, assign) IBOutlet NSArrayController *twitterClientsController;
+@property (nonatomic, assign) IBOutlet NSArrayController *requestParametersController;
 
 @property (nonatomic, assign) IBOutlet NSTextField *consumerKeyTextField;
 @property (nonatomic, assign) IBOutlet NSTextField *consumerSecretTextField;

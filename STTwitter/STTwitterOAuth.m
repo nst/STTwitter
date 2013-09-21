@@ -453,9 +453,14 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id json))successBlock
                  errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
     
+    if([baseURLString hasSuffix:@"/"]) {
+        baseURLString = [baseURLString substringToIndex:[baseURLString length]-1];
+    }
+    
     if([HTTPMethod isEqualToString:@"GET"]) {
         
-        return [self getResource:resource baseURLString:baseURLString
+        return [self getResource:resource
+                   baseURLString:baseURLString
                       parameters:params
                    progressBlock:progressBlock
                     successBlock:successBlock
