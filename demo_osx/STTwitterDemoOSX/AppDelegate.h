@@ -68,7 +68,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, strong) NSString *genericBaseURLString;
 @property (nonatomic, strong) NSString *genericAPIEndpoint;
 @property (nonatomic, strong) NSAttributedString *genericTextViewAttributedString;
-
+@property (nonatomic, strong) NSMutableArray *genericRequestParameters;
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender;
 - (IBAction)editConsumerTokensAction:(id)sender;

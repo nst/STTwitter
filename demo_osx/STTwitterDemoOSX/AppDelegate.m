@@ -52,6 +52,8 @@
     self.genericBaseURLString = @"https://api.twitter.com/1.1/";
     self.genericAPIEndpoint = @"statuses/home_timeline.json";
     
+    self.genericRequestParameters = [ @[ @{@"key":@"asd", @"value":@"sdf"}] mutableCopy];
+    
     [self changeHTTPMethodAction:self];
     
     if([_twitterClients count]) {
