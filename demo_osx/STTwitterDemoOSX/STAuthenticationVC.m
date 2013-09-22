@@ -73,6 +73,10 @@
     [_scrollView setHasHorizontalScroller:NO];
     [_scrollView setDocumentView:_contentView];
     
+    NSPoint topScrollOrigin = NSMakePoint(0.0,NSMaxY([[_scrollView documentView] frame]) - NSHeight([[_scrollView contentView] bounds]));
+    
+    [[_scrollView documentView] scrollPoint:topScrollOrigin];
+    
     [self popupMenuDidSelectTwitterClient:self];
 }
 
