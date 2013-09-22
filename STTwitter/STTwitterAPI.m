@@ -218,7 +218,7 @@ static NSDateFormatter *dateFormatter = nil;
             baseURLString:baseURLString
                parameters:parameters
             progressBlock:^(NSString *requestID, id response) {
-                progressBlock(response);
+                if(progressBlock) progressBlock(response);
             } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
                 successBlock(rateLimits, response);
             } errorBlock:^(NSString *requestID, NSError *error) {
@@ -238,7 +238,7 @@ static NSDateFormatter *dateFormatter = nil;
             baseURLString:baseURLString
                parameters:parameters
             progressBlock:^(NSString *requestID, id response) {
-                progressBlock(response);
+                if(progressBlock) progressBlock(response);
             } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
                 successBlock(rateLimits, response);
             } errorBlock:^(NSString *requestID, NSError *error) {
@@ -257,7 +257,7 @@ static NSDateFormatter *dateFormatter = nil;
             baseURLString:baseURLString
                parameters:parameters
             progressBlock:^(NSString *requestID, id response) {
-                progressBlock(response);
+                if(progressBlock) progressBlock(response);
             } successBlock:nil
                errorBlock:^(NSString *requestID, NSError *error) {
                    errorBlock(error);
@@ -275,7 +275,7 @@ static NSDateFormatter *dateFormatter = nil;
             baseURLString:baseURLString
                parameters:parameters
             progressBlock:^(NSString *requestID, id response) {
-                progressBlock(response);
+                if(progressBlock) progressBlock(response);
             } successBlock:nil
                errorBlock:^(NSString *requestID, NSError *error) {
                    errorBlock(error);
