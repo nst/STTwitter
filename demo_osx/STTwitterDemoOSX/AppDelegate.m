@@ -8,12 +8,12 @@
 
 #import "AppDelegate.h"
 #import "STTwitter.h"
-#import "STRequestsVC.h"
+#import "STConsoleVC.h"
 #import "STClientVC.h"
 
 @interface AppDelegate ()
 @property (nonatomic, strong) STAuthenticationVC *authenticationVC;
-@property (nonatomic, strong) STRequestsVC *requestsVC;
+@property (nonatomic, strong) STConsoleVC *requestsVC;
 @property (nonatomic, strong) STClientVC *clientVC;
 @end
 
@@ -29,15 +29,15 @@
     NSTabViewItem *tvi1 = [_tabView tabViewItemAtIndex:0];
     [tvi1 setView:_authenticationVC.view];
 
-    self.requestsVC = [[STRequestsVC alloc] initWithNibName:@"STRequestsVC" bundle:nil];
-    
-    NSTabViewItem *tvi2 = [_tabView tabViewItemAtIndex:1];
-    [tvi2 setView:_requestsVC.view];
-
     self.clientVC = [[STClientVC alloc] initWithNibName:@"STClientVC" bundle:nil];
     
+    NSTabViewItem *tvi2 = [_tabView tabViewItemAtIndex:1];
+    [tvi2 setView:_clientVC.view];
+    
+    self.requestsVC = [[STConsoleVC alloc] initWithNibName:@"STConsoleVC" bundle:nil];
+    
     NSTabViewItem *tvi3 = [_tabView tabViewItemAtIndex:2];
-    [tvi3 setView:_clientVC.view];
+    [tvi3 setView:_requestsVC.view];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {

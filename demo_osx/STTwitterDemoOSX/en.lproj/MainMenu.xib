@@ -1311,18 +1311,15 @@
 							<string key="NSFrame">{{13, 10}, {661, 574}}</string>
 							<reference key="NSSuperview" ref="337432193"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="588242002"/>
+							<reference key="NSNextKeyView" ref="185157362"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<array class="NSMutableArray" key="NSTabViewItems">
 								<object class="NSTabViewItem" id="757890850">
 									<string key="NSIdentifier">1</string>
 									<object class="NSView" key="NSView" id="588242002">
-										<reference key="NSNextResponder" ref="161048499"/>
+										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">1810</int>
 										<string key="NSFrame">{{10, 33}, {641, 528}}</string>
-										<reference key="NSSuperview" ref="161048499"/>
-										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:11</string>
 									</object>
 									<string key="NSLabel">Authentication</string>
@@ -1343,26 +1340,28 @@
 										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">1810</int>
 										<string key="NSFrame">{{10, 33}, {641, 528}}</string>
-										<reference key="NSNextKeyView"/>
+										<reference key="NSNextKeyView" ref="161048499"/>
 										<string key="NSReuseIdentifierKey">_NS:28</string>
 									</object>
-									<string key="NSLabel">Requests</string>
+									<string key="NSLabel">Tiny Client</string>
 									<reference key="NSColor" ref="170192841"/>
 									<reference key="NSTabView" ref="161048499"/>
 								</object>
 								<object class="NSTabViewItem" id="796259366">
 									<object class="NSView" key="NSView" id="185157362">
-										<nil key="NSNextResponder"/>
+										<reference key="NSNextResponder" ref="161048499"/>
 										<int key="NSvFlags">1810</int>
 										<string key="NSFrame">{{10, 33}, {641, 528}}</string>
-										<reference key="NSNextKeyView"/>
+										<reference key="NSSuperview" ref="161048499"/>
+										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="161048499"/>
 									</object>
-									<string key="NSLabel">Client</string>
+									<string key="NSLabel">Console</string>
 									<reference key="NSColor" ref="170192841"/>
 									<reference key="NSTabView" ref="161048499"/>
 								</object>
 							</array>
-							<reference key="NSSelectedTabViewItem" ref="757890850"/>
+							<reference key="NSSelectedTabViewItem" ref="796259366"/>
 							<object class="NSFont" key="NSFont">
 								<string key="NSName">LucidaGrande</string>
 								<double key="NSSize">13</double>
@@ -1372,7 +1371,7 @@
 							<bool key="NSAllowTruncatedLabels">YES</bool>
 							<bool key="NSDrawsBackground">YES</bool>
 							<array class="NSMutableArray" key="NSSubviews">
-								<reference ref="588242002"/>
+								<reference ref="185157362"/>
 							</array>
 						</object>
 					</array>

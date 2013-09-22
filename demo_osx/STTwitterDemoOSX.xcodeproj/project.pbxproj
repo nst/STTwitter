@@ -26,8 +26,8 @@
 		03191EB517BF718A0001C06D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB417BF718A0001C06D /* Security.framework */; };
 		0334D48117EED32A0070B8B4 /* STAuthenticationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0334D47F17EED32A0070B8B4 /* STAuthenticationVC.m */; };
 		0334D48217EED32A0070B8B4 /* STAuthenticationVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0334D48017EED32A0070B8B4 /* STAuthenticationVC.xib */; };
-		0334D48617EEDBA40070B8B4 /* STRequestsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0334D48417EEDBA40070B8B4 /* STRequestsVC.m */; };
-		0334D48717EEDBA40070B8B4 /* STRequestsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0334D48517EEDBA40070B8B4 /* STRequestsVC.xib */; };
+		0334D48617EEDBA40070B8B4 /* STConsoleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0334D48417EEDBA40070B8B4 /* STConsoleVC.m */; };
+		0334D48717EEDBA40070B8B4 /* STConsoleVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0334D48517EEDBA40070B8B4 /* STConsoleVC.xib */; };
 		0334D48B17EEDBB80070B8B4 /* STClientVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0334D48917EEDBB80070B8B4 /* STClientVC.m */; };
 		0334D48C17EEDBB80070B8B4 /* STClientVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0334D48A17EEDBB80070B8B4 /* STClientVC.xib */; };
 /* End PBXBuildFile section */
@@ -74,9 +74,9 @@
 		0334D47E17EED32A0070B8B4 /* STAuthenticationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAuthenticationVC.h; sourceTree = "<group>"; };
 		0334D47F17EED32A0070B8B4 /* STAuthenticationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAuthenticationVC.m; sourceTree = "<group>"; };
 		0334D48017EED32A0070B8B4 /* STAuthenticationVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STAuthenticationVC.xib; sourceTree = "<group>"; };
-		0334D48317EEDBA40070B8B4 /* STRequestsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STRequestsVC.h; sourceTree = "<group>"; };
-		0334D48417EEDBA40070B8B4 /* STRequestsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STRequestsVC.m; sourceTree = "<group>"; };
-		0334D48517EEDBA40070B8B4 /* STRequestsVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STRequestsVC.xib; sourceTree = "<group>"; };
+		0334D48317EEDBA40070B8B4 /* STConsoleVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STConsoleVC.h; sourceTree = "<group>"; };
+		0334D48417EEDBA40070B8B4 /* STConsoleVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STConsoleVC.m; sourceTree = "<group>"; };
+		0334D48517EEDBA40070B8B4 /* STConsoleVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STConsoleVC.xib; sourceTree = "<group>"; };
 		0334D48817EEDBB80070B8B4 /* STClientVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STClientVC.h; sourceTree = "<group>"; };
 		0334D48917EEDBB80070B8B4 /* STClientVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STClientVC.m; sourceTree = "<group>"; };
 		0334D48A17EEDBB80070B8B4 /* STClientVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STClientVC.xib; sourceTree = "<group>"; };
@@ -150,9 +150,9 @@
 				0334D47E17EED32A0070B8B4 /* STAuthenticationVC.h */,
 				0334D47F17EED32A0070B8B4 /* STAuthenticationVC.m */,
 				0334D48017EED32A0070B8B4 /* STAuthenticationVC.xib */,
-				0334D48317EEDBA40070B8B4 /* STRequestsVC.h */,
-				0334D48417EEDBA40070B8B4 /* STRequestsVC.m */,
-				0334D48517EEDBA40070B8B4 /* STRequestsVC.xib */,
+				0334D48317EEDBA40070B8B4 /* STConsoleVC.h */,
+				0334D48417EEDBA40070B8B4 /* STConsoleVC.m */,
+				0334D48517EEDBA40070B8B4 /* STConsoleVC.xib */,
 				0334D48817EEDBB80070B8B4 /* STClientVC.h */,
 				0334D48917EEDBB80070B8B4 /* STClientVC.m */,
 				0334D48A17EEDBB80070B8B4 /* STClientVC.xib */,
@@ -259,7 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03191E6117BF700A0001C06D /* InfoPlist.strings in Resources */,
-				0334D48717EEDBA40070B8B4 /* STRequestsVC.xib in Resources */,
+				0334D48717EEDBA40070B8B4 /* STConsoleVC.xib in Resources */,
 				03191E6717BF700A0001C06D /* Credits.rtf in Resources */,
 				03191E6D17BF700A0001C06D /* MainMenu.xib in Resources */,
 				0334D48C17EEDBB80070B8B4 /* STClientVC.xib in Resources */,
@@ -280,7 +280,7 @@
 				03191E9E17BF704C0001C06D /* NSString+STTwitter.m in Sources */,
 				03191EA017BF704C0001C06D /* STHTTPRequest+STTwitter.m in Sources */,
 				03191EA217BF704C0001C06D /* STTwitterAPI.m in Sources */,
-				0334D48617EEDBA40070B8B4 /* STRequestsVC.m in Sources */,
+				0334D48617EEDBA40070B8B4 /* STConsoleVC.m in Sources */,
 				03191EA417BF704C0001C06D /* STTwitterAppOnly.m in Sources */,
 				03191EA617BF704C0001C06D /* STTwitterHTML.m in Sources */,
 				03191EA817BF704C0001C06D /* STTwitterOAuth.m in Sources */,
