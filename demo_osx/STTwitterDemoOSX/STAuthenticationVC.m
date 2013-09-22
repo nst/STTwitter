@@ -69,6 +69,10 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
+    [_scrollView setHasVerticalScroller:YES];
+    [_scrollView setHasHorizontalScroller:NO];
+    [_scrollView setDocumentView:_contentView];
+    
     [self popupMenuDidSelectTwitterClient:self];
 }
 

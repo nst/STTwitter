@@ -20,6 +20,9 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
 @interface STAuthenticationVC : NSViewController
 
+@property (nonatomic, assign) IBOutlet NSScrollView *scrollView;
+@property (nonatomic, assign) IBOutlet NSView *contentView;
+
 @property (nonatomic, retain) STTwitterAPI *twitter;
 @property (nonatomic, assign) id <STAuthenticationVCDelegate> delegate;
 
