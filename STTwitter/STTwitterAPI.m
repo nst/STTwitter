@@ -1104,10 +1104,10 @@ static NSDateFormatter *dateFormatter = nil;
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
     if([follow length]) md[@"follow"] = follow;
-    if([keywords length]) md[@"keywords"] = keywords;
+    if([keywords length]) md[@"track"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [self postResource:@"statuses/sample.json"
+    [self postResource:@"statuses/filter.json"
          baseURLString:kBaseURLStringStream
             parameters:md
          progressBlock:^(id json) {
