@@ -1302,24 +1302,27 @@
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMinSize">{687, 974}</string>
 				<object class="NSView" key="NSWindowView" id="337432193">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">1792</int>
 					<array class="NSMutableArray" key="NSSubviews">
-						<object class="NSTabView" id="734121959">
+						<object class="NSTabView" id="398670799">
 							<reference key="NSNextResponder" ref="337432193"/>
-							<int key="NSvFlags">1804</int>
+							<int key="NSvFlags">1810</int>
 							<string key="NSFrame">{{13, 10}, {661, 958}}</string>
 							<reference key="NSSuperview" ref="337432193"/>
-							<reference key="NSNextKeyView" ref="235182246"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="458378000"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<array class="NSMutableArray" key="NSTabViewItems">
-								<object class="NSTabViewItem" id="901148383">
+								<object class="NSTabViewItem" id="32102204">
 									<string key="NSIdentifier">1</string>
-									<object class="NSView" key="NSView" id="235182246">
-										<reference key="NSNextResponder" ref="734121959"/>
+									<object class="NSView" key="NSView" id="458378000">
+										<reference key="NSNextResponder" ref="398670799"/>
 										<int key="NSvFlags">1810</int>
 										<string key="NSFrame">{{10, 33}, {641, 912}}</string>
-										<reference key="NSSuperview" ref="734121959"/>
+										<reference key="NSSuperview" ref="398670799"/>
+										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:11</string>
 									</object>
 									<string key="NSLabel">Authentication</string>
@@ -1332,11 +1335,11 @@
 											<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 										</object>
 									</object>
-									<reference key="NSTabView" ref="734121959"/>
+									<reference key="NSTabView" ref="398670799"/>
 								</object>
-								<object class="NSTabViewItem" id="334692667">
+								<object class="NSTabViewItem" id="846578324">
 									<string key="NSIdentifier">2</string>
-									<object class="NSView" key="NSView" id="236831219">
+									<object class="NSView" key="NSView" id="741700832">
 										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">1810</int>
 										<string key="NSFrame">{{10, 33}, {641, 912}}</string>
@@ -1345,10 +1348,10 @@
 									</object>
 									<string key="NSLabel">Requests</string>
 									<reference key="NSColor" ref="170192841"/>
-									<reference key="NSTabView" ref="734121959"/>
+									<reference key="NSTabView" ref="398670799"/>
 								</object>
-								<object class="NSTabViewItem" id="111724899">
-									<object class="NSView" key="NSView" id="548256809">
+								<object class="NSTabViewItem" id="1030714548">
+									<object class="NSView" key="NSView" id="232645739">
 										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">1810</int>
 										<string key="NSFrame">{{10, 33}, {641, 912}}</string>
@@ -1356,10 +1359,10 @@
 									</object>
 									<string key="NSLabel">Client</string>
 									<reference key="NSColor" ref="170192841"/>
-									<reference key="NSTabView" ref="734121959"/>
+									<reference key="NSTabView" ref="398670799"/>
 								</object>
 							</array>
-							<reference key="NSSelectedTabViewItem" ref="901148383"/>
+							<reference key="NSSelectedTabViewItem" ref="32102204"/>
 							<object class="NSFont" key="NSFont">
 								<string key="NSName">LucidaGrande</string>
 								<double key="NSSize">13</double>
@@ -1369,13 +1372,15 @@
 							<bool key="NSAllowTruncatedLabels">YES</bool>
 							<bool key="NSDrawsBackground">YES</bool>
 							<array class="NSMutableArray" key="NSSubviews">
-								<reference ref="235182246"/>
+								<reference ref="458378000"/>
 							</array>
 						</object>
 					</array>
 					<object class="NSPSMatrix" key="NSFrameMatrix"/>
 					<string key="NSFrameSize">{687, 974}</string>
-					<reference key="NSNextKeyView" ref="734121959"/>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView" ref="398670799"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMinSize">{687, 996}</string>
@@ -2120,14 +2125,14 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">tabView</string>
 						<reference key="source" ref="181915471"/>
-						<reference key="destination" ref="734121959"/>
+						<reference key="destination" ref="398670799"/>
 					</object>
 					<string key="id">iUE-dw-uKL</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
-						<reference key="source" ref="734121959"/>
+						<reference key="source" ref="398670799"/>
 						<reference key="destination" ref="181915471"/>
 					</object>
 					<string key="id">MCr-VK-hCF</string>
@@ -3120,7 +3125,7 @@
 						<string key="id">372</string>
 						<reference key="object" ref="337432193"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="734121959"/>
+							<reference ref="398670799"/>
 						</array>
 						<reference key="parent" ref="805277938"/>
 					</object>
@@ -3141,52 +3146,52 @@
 					</object>
 					<object class="IBObjectRecord">
 						<string key="id">KEj-VM-yjM</string>
-						<reference key="object" ref="734121959"/>
+						<reference key="object" ref="398670799"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="901148383"/>
-							<reference ref="334692667"/>
-							<reference ref="111724899"/>
+							<reference ref="32102204"/>
+							<reference ref="846578324"/>
+							<reference ref="1030714548"/>
 						</array>
 						<reference key="parent" ref="337432193"/>
 					</object>
 					<object class="IBObjectRecord">
 						<string key="id">8Ix-DF-CSw</string>
-						<reference key="object" ref="901148383"/>
+						<reference key="object" ref="32102204"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="235182246"/>
+							<reference ref="458378000"/>
 						</array>
-						<reference key="parent" ref="734121959"/>
+						<reference key="parent" ref="398670799"/>
 					</object>
 					<object class="IBObjectRecord">
 						<string key="id">Tyh-ap-WyK</string>
-						<reference key="object" ref="334692667"/>
+						<reference key="object" ref="846578324"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="236831219"/>
+							<reference ref="741700832"/>
 						</array>
-						<reference key="parent" ref="734121959"/>
+						<reference key="parent" ref="398670799"/>
 					</object>
 					<object class="IBObjectRecord">
 						<string key="id">Jjw-o7-hpF</string>
-						<reference key="object" ref="236831219"/>
-						<reference key="parent" ref="334692667"/>
+						<reference key="object" ref="741700832"/>
+						<reference key="parent" ref="846578324"/>
 					</object>
 					<object class="IBObjectRecord">
 						<string key="id">lyL-K0-Ww7</string>
-						<reference key="object" ref="235182246"/>
-						<reference key="parent" ref="901148383"/>
+						<reference key="object" ref="458378000"/>
+						<reference key="parent" ref="32102204"/>
 					</object>
 					<object class="IBObjectRecord">
 						<string key="id">NF6-oQ-dsN</string>
-						<reference key="object" ref="111724899"/>
+						<reference key="object" ref="1030714548"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="548256809"/>
+							<reference ref="232645739"/>
 						</array>
-						<reference key="parent" ref="734121959"/>
+						<reference key="parent" ref="398670799"/>
 					</object>
 					<object class="IBObjectRecord">
 						<string key="id">1rY-qX-ajR</string>
-						<reference key="object" ref="548256809"/>
-						<reference key="parent" ref="111724899"/>
+						<reference key="object" ref="232645739"/>
+						<reference key="parent" ref="1030714548"/>
 					</object>
 				</array>
 			</object>
@@ -3515,7 +3520,129 @@
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">AppDelegate</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="tabView">NSTabView</string>
+						<string key="window">NSWindow</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="tabView">
+							<string key="name">tabView</string>
+							<string key="candidateClassName">NSTabView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="window">
+							<string key="name">window</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/AppDelegate.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSDocument</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="browseDocumentVersions:">id</string>
+						<string key="duplicateDocument:">id</string>
+						<string key="lockDocument:">id</string>
+						<string key="moveDocument:">id</string>
+						<string key="moveDocumentToUbiquityContainer:">id</string>
+						<string key="printDocument:">id</string>
+						<string key="renameDocument:">id</string>
+						<string key="revertDocumentToSaved:">id</string>
+						<string key="runPageLayout:">id</string>
+						<string key="saveDocument:">id</string>
+						<string key="saveDocumentAs:">id</string>
+						<string key="saveDocumentTo:">id</string>
+						<string key="unlockDocument:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="browseDocumentVersions:">
+							<string key="name">browseDocumentVersions:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="duplicateDocument:">
+							<string key="name">duplicateDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="lockDocument:">
+							<string key="name">lockDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="moveDocument:">
+							<string key="name">moveDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="moveDocumentToUbiquityContainer:">
+							<string key="name">moveDocumentToUbiquityContainer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="printDocument:">
+							<string key="name">printDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="renameDocument:">
+							<string key="name">renameDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="revertDocumentToSaved:">
+							<string key="name">revertDocumentToSaved:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="runPageLayout:">
+							<string key="name">runPageLayout:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocument:">
+							<string key="name">saveDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocumentAs:">
+							<string key="name">saveDocumentAs:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="saveDocumentTo:">
+							<string key="name">saveDocumentTo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="unlockDocument:">
+							<string key="name">unlockDocument:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/NSDocument.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSTextView</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="orderFrontSharingServicePicker:">id</string>
+						<string key="toggleQuickLookPreviewPanel:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="orderFrontSharingServicePicker:">
+							<string key="name">orderFrontSharingServicePicker:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleQuickLookPreviewPanel:">
+							<string key="name">toggleQuickLookPreviewPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/NSTextView.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
