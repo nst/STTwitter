@@ -24,6 +24,12 @@
 		03191EB117BF71620001C06D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB017BF71620001C06D /* Accounts.framework */; };
 		03191EB317BF71670001C06D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB217BF71670001C06D /* Social.framework */; };
 		03191EB517BF718A0001C06D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03191EB417BF718A0001C06D /* Security.framework */; };
+		0334D48117EED32A0070B8B4 /* STAuthenticationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0334D47F17EED32A0070B8B4 /* STAuthenticationVC.m */; };
+		0334D48217EED32A0070B8B4 /* STAuthenticationVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0334D48017EED32A0070B8B4 /* STAuthenticationVC.xib */; };
+		0334D48617EEDBA40070B8B4 /* STRequestsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0334D48417EEDBA40070B8B4 /* STRequestsVC.m */; };
+		0334D48717EEDBA40070B8B4 /* STRequestsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0334D48517EEDBA40070B8B4 /* STRequestsVC.xib */; };
+		0334D48B17EEDBB80070B8B4 /* STClientVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0334D48917EEDBB80070B8B4 /* STClientVC.m */; };
+		0334D48C17EEDBB80070B8B4 /* STClientVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0334D48A17EEDBB80070B8B4 /* STClientVC.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +71,15 @@
 		03191EB017BF71620001C06D /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		03191EB217BF71670001C06D /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		03191EB417BF718A0001C06D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		0334D47E17EED32A0070B8B4 /* STAuthenticationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAuthenticationVC.h; sourceTree = "<group>"; };
+		0334D47F17EED32A0070B8B4 /* STAuthenticationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAuthenticationVC.m; sourceTree = "<group>"; };
+		0334D48017EED32A0070B8B4 /* STAuthenticationVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STAuthenticationVC.xib; sourceTree = "<group>"; };
+		0334D48317EEDBA40070B8B4 /* STRequestsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STRequestsVC.h; sourceTree = "<group>"; };
+		0334D48417EEDBA40070B8B4 /* STRequestsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STRequestsVC.m; sourceTree = "<group>"; };
+		0334D48517EEDBA40070B8B4 /* STRequestsVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STRequestsVC.xib; sourceTree = "<group>"; };
+		0334D48817EEDBB80070B8B4 /* STClientVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STClientVC.h; sourceTree = "<group>"; };
+		0334D48917EEDBB80070B8B4 /* STClientVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STClientVC.m; sourceTree = "<group>"; };
+		0334D48A17EEDBB80070B8B4 /* STClientVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STClientVC.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +147,15 @@
 				03191E6817BF700A0001C06D /* AppDelegate.h */,
 				03191E6917BF700A0001C06D /* AppDelegate.m */,
 				03191E6B17BF700A0001C06D /* MainMenu.xib */,
+				0334D47E17EED32A0070B8B4 /* STAuthenticationVC.h */,
+				0334D47F17EED32A0070B8B4 /* STAuthenticationVC.m */,
+				0334D48017EED32A0070B8B4 /* STAuthenticationVC.xib */,
+				0334D48317EEDBA40070B8B4 /* STRequestsVC.h */,
+				0334D48417EEDBA40070B8B4 /* STRequestsVC.m */,
+				0334D48517EEDBA40070B8B4 /* STRequestsVC.xib */,
+				0334D48817EEDBB80070B8B4 /* STClientVC.h */,
+				0334D48917EEDBB80070B8B4 /* STClientVC.m */,
+				0334D48A17EEDBB80070B8B4 /* STClientVC.xib */,
 				03191E5D17BF700A0001C06D /* Supporting Files */,
 			);
 			path = STTwitterDemoOSX;
@@ -235,8 +259,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				03191E6117BF700A0001C06D /* InfoPlist.strings in Resources */,
+				0334D48717EEDBA40070B8B4 /* STRequestsVC.xib in Resources */,
 				03191E6717BF700A0001C06D /* Credits.rtf in Resources */,
 				03191E6D17BF700A0001C06D /* MainMenu.xib in Resources */,
+				0334D48C17EEDBB80070B8B4 /* STClientVC.xib in Resources */,
+				0334D48217EED32A0070B8B4 /* STAuthenticationVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,15 +274,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0334D48B17EEDBB80070B8B4 /* STClientVC.m in Sources */,
 				03191E6317BF700A0001C06D /* main.m in Sources */,
 				03191E6A17BF700A0001C06D /* AppDelegate.m in Sources */,
 				03191E9E17BF704C0001C06D /* NSString+STTwitter.m in Sources */,
 				03191EA017BF704C0001C06D /* STHTTPRequest+STTwitter.m in Sources */,
 				03191EA217BF704C0001C06D /* STTwitterAPI.m in Sources */,
+				0334D48617EEDBA40070B8B4 /* STRequestsVC.m in Sources */,
 				03191EA417BF704C0001C06D /* STTwitterAppOnly.m in Sources */,
 				03191EA617BF704C0001C06D /* STTwitterHTML.m in Sources */,
 				03191EA817BF704C0001C06D /* STTwitterOAuth.m in Sources */,
 				03191EAA17BF704C0001C06D /* STTwitterOS.m in Sources */,
+				0334D48117EED32A0070B8B4 /* STAuthenticationVC.m in Sources */,
 				03191EAC17BF704C0001C06D /* STHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
