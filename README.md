@@ -112,18 +112,21 @@ So there are five cases altogether, hence these five methods:
 
     + (STTwitterAPI *)twitterAPIOSWithFirstAccount;
 
-    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                      consumerSecret:(NSString *)consumerSecret;
+    + (STTwitterAPI *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
+                                    consumerKey:(NSString *)consumerKey
+                                 consumerSecret:(NSString *)consumerSecret;
 
-    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                      consumerSecret:(NSString *)consumerSecret
-                                            username:(NSString *)username
-                                            password:(NSString *)password;
+    + (STTwitterAPI *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
+                                          consumerKey:(NSString *)consumerKey
+                                       consumerSecret:(NSString *)consumerSecret
+                                             username:(NSString *)username
+                                             password:(NSString *)password;
 
-    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                      consumerSecret:(NSString *)consumerSecret
-                                          oauthToken:(NSString *)oauthToken
-                                    oauthTokenSecret:(NSString *)oauthTokenSecret;
+    + (STTwitterAPI *)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
+                                          consumerKey:(NSString *)consumerKey
+                                       consumerSecret:(NSString *)consumerSecret
+                                           oauthToken:(NSString *)oauthToken
+                                     oauthTokenSecret:(NSString *)oauthTokenSecret;
                    
     + (STTwitterAPI *)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
                                         consumerSecret:(NSString *)consumerSecret;
