@@ -7,9 +7,10 @@
 //
 
 #import "STAuthenticationVC.h"
+#import <Accounts/Accounts.h>
 
 @interface STAuthenticationVC ()
-
+@property (nonatomic, strong) ACAccountStore *accountStore;
 @end
 
 @implementation STAuthenticationVC
@@ -79,6 +80,13 @@
     [[_scrollView documentView] scrollPoint:topScrollOrigin];
     
     [self popupMenuDidSelectTwitterClient:self];
+    
+    /**/
+
+    self.accountStore = [[ACAccountStore alloc] init];
+    ACAccountType *twitterAccountType = [_accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    NSArray *accounts = [_accountStore accountsWithAccountType:twitterAccountType];
+    self.osxAccounts = accounts;
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
@@ -133,7 +141,15 @@
 
 // OS X Twitter account
 - (IBAction)loginOSX:(id)sender {
-    self.twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
+    
+    ACAccount *account = [[_osxAccountsController selectedObjects] lastObject];
+    
+    if(account == nil) {
+        self.osxStatus = @"No account, cannot login.";
+        return;
+    }
+    
+    self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account];
     
     self.osxStatus = @"-";
     
