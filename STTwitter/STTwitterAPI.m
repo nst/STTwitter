@@ -74,6 +74,18 @@ static NSDateFormatter *dateFormatter = nil;
     return twitter;
 }
 
++ (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret
+                                      username:(NSString *)username
+                                      password:(NSString *)password {
+    
+    return [self twitterAPIWithOAuthConsumerName:nil
+                                     consumerKey:consumerKey
+                                  consumerSecret:consumerSecret
+                                        username:username
+                                        password:password];
+}
+
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret
@@ -93,6 +105,18 @@ static NSDateFormatter *dateFormatter = nil;
     return twitter;
 }
 
++ (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret
+                                    oauthToken:(NSString *)oauthToken
+                              oauthTokenSecret:(NSString *)oauthTokenSecret {
+    
+    return [self twitterAPIWithOAuthConsumerName:nil
+                                     consumerKey:consumerKey
+                                  consumerSecret:consumerSecret
+                                      oauthToken:oauthToken
+                                oauthTokenSecret:oauthTokenSecret];
+}
+
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret {
@@ -104,10 +128,15 @@ static NSDateFormatter *dateFormatter = nil;
                                         password:nil];
 }
 
++ (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret {
+    return [self twitterAPIAppOnlyWithConsumerName:nil consumerKey:consumerKey consumerSecret:consumerSecret];
+}
+
 + (instancetype)twitterAPIAppOnlyWithConsumerName:(NSString *)consumerName
                                       consumerKey:(NSString *)consumerKey
                                    consumerSecret:(NSString *)consumerSecret {
-
+    
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     
     STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerKey:consumerKey consumerSecret:consumerSecret];
@@ -121,13 +150,13 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (instancetype)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
-                                   consumerSecret:(NSString *)consumerSecret {
+                                  consumerSecret:(NSString *)consumerSecret {
     return [self twitterAPIAppOnlyWithConsumerName:nil consumerKey:consumerKey consumerSecret:consumerSecret];
 }
 
 - (NSString *)prettyDescription {
     NSMutableString *ms = [_loginTypeDescription mutableCopy];
-
+    
     if(_consumerName) {
         [ms appendFormat:@" (%@)", _consumerName];
     }

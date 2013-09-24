@@ -38,17 +38,33 @@
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret;
 
+// convenience
++ (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret;
+
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret
                                        username:(NSString *)username
                                        password:(NSString *)password;
 
+// convenience
++ (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret
+                                      username:(NSString *)username
+                                      password:(NSString *)password;
+
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret
                                      oauthToken:(NSString *)oauthToken
                                oauthTokenSecret:(NSString *)oauthTokenSecret;
+
+// convenience
++ (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                consumerSecret:(NSString *)consumerSecret
+                                    oauthToken:(NSString *)oauthToken
+                              oauthTokenSecret:(NSString *)oauthTokenSecret;
 
 // https://dev.twitter.com/docs/auth/application-only-auth
 + (instancetype)twitterAPIAppOnlyWithConsumerName:(NSString *)consumerName
