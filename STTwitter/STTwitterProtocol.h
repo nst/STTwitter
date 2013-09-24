@@ -23,6 +23,7 @@
                  errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock;
 
 - (NSString *)consumerName;
+- (NSString *)loginTypeDescription;
 
 @optional
 

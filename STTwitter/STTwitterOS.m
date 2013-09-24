@@ -65,6 +65,10 @@ BOOL useTWRequests(void) {
 #endif
 }
 
+- (NSString *)loginTypeDescription {
+    return @"System";
+}
+
 - (BOOL)canVerifyCredentials {
     return YES;
 }

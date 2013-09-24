@@ -152,6 +152,10 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return _oauthConsumerName;
 }
 
+- (NSString *)loginTypeDescription {
+    return @"OAuth";
+}
+
 - (NSString *)oauthNonce {
     if(_testOauthNonce) return _testOauthNonce;
     

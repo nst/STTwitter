@@ -275,4 +275,8 @@
                    errorBlock:errorBlock];
 }
 
+- (NSString *)loginTypeDescription {
+    return @"App Only";
+}
+
 @end
