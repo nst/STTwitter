@@ -275,7 +275,7 @@
     
     NSAssert(_xAuthUsername, @"");
     NSAssert(_xAuthPassword, @"");
-    
+        
     self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:[self selectedConsumerName]
                                                      consumerKey:_consumerKeyTextField.stringValue
                                                   consumerSecret:_consumerSecretTextField.stringValue

@@ -139,11 +139,10 @@ static NSDateFormatter *dateFormatter = nil;
     
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     
-    STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerKey:consumerKey consumerSecret:consumerSecret];
+    STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     twitter.oauth = appOnly;
     
-    twitter.consumerName = consumerName;
     twitter.loginTypeDescription = @"App Only";
     
     return twitter;
@@ -157,8 +156,8 @@ static NSDateFormatter *dateFormatter = nil;
 - (NSString *)prettyDescription {
     NSMutableString *ms = [_loginTypeDescription mutableCopy];
     
-    if(_consumerName) {
-        [ms appendFormat:@" (%@)", _consumerName];
+    if([_oauth consumerName]) {
+        [ms appendFormat:@" (%@)", [_oauth consumerName]];
     }
     
     if(_userName) {

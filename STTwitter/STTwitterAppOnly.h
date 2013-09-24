@@ -19,11 +19,12 @@
     
 }
 
+@property (nonatomic, retain) NSString *consumerName;
 @property (nonatomic, retain) NSString *consumerKey;
 @property (nonatomic, retain) NSString *consumerSecret;
 @property (nonatomic, retain) NSString *bearerToken;
 
-+ (instancetype)twitterAppOnlyWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
++ (instancetype)twitterAppOnlyWithConsumerName:(NSString *)conumerName consumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 
 + (NSString *)base64EncodedBearerTokenCredentialsWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 

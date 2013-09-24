@@ -101,7 +101,6 @@
 
 - (NSString *)prettyDescription;
 
-@property (nonatomic, retain) NSString *consumerName;
 @property (nonatomic, retain) NSString *userName; // available for osx, set after successful connection for STTwitterOAuth
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;

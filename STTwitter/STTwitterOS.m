@@ -57,6 +57,14 @@ BOOL useTWRequests(void) {
     return self.account.username;
 }
 
+- (NSString *)consumerName {
+#if TARGET_OS_IPHONE
+    return @"iOS";
+#else
+    return @"OS X";
+#endif
+}
+
 - (BOOL)canVerifyCredentials {
     return YES;
 }

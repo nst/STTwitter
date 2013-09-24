@@ -148,6 +148,10 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
 }
 
+- (NSString *)consumerName {
+    return _oauthConsumerName;
+}
+
 - (NSString *)oauthNonce {
     if(_testOauthNonce) return _testOauthNonce;
     

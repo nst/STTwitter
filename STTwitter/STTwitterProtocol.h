@@ -22,6 +22,8 @@
                successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id response))successBlock
                  errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock;
 
+- (NSString *)consumerName;
+
 @optional
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock

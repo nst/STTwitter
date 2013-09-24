@@ -25,8 +25,9 @@
     return self;
 }
 
-+ (instancetype)twitterAppOnlyWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
++ (instancetype)twitterAppOnlyWithConsumerName:(NSString *)consumerName consumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret {
     STTwitterAppOnly *twitterAppOnly = [[[self class] alloc] init];
+    twitterAppOnly.consumerName = consumerName;
     twitterAppOnly.consumerKey = consumerKey;
     twitterAppOnly.consumerSecret = consumerSecret;
     return twitterAppOnly;
