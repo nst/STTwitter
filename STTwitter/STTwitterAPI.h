@@ -51,6 +51,11 @@
                                oauthTokenSecret:(NSString *)oauthTokenSecret;
 
 // https://dev.twitter.com/docs/auth/application-only-auth
++ (instancetype)twitterAPIAppOnlyWithConsumerName:(NSString *)consumerName
+                                      consumerKey:(NSString *)consumerKey
+                                   consumerSecret:(NSString *)consumerSecret;
+
+// convenience
 + (instancetype)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
                                   consumerSecret:(NSString *)consumerSecret;
 
@@ -77,6 +82,8 @@
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (NSString *)prettyDescription;
 
 @property (nonatomic, retain) NSString *consumerName;
 @property (nonatomic, retain) NSString *userName; // available for osx, set after successful connection for STTwitterOAuth

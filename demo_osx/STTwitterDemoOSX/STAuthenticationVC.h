@@ -13,7 +13,7 @@
 @class STAuthenticationVC;
 
 @protocol STAuthenticationVCDelegate
-- (void)authenticationVC:(STAuthenticationVC *)sender didChangetwitterObject:(STTwitterAPI *)twitter;
+- (void)authenticationVC:(STAuthenticationVC *)sender didChangeTwitterObject:(STTwitterAPI *)twitter;
 @end
 
 typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
@@ -62,7 +62,7 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) NSString *oauthTokensStatus;
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender;
-- (IBAction)editConsumerTokensAction:(id)sender;
+- (IBAction)revealConsumerTokensFileAction:(id)sender;
 
 // OAuth - PIN
 - (IBAction)fetchPIN:(id)sender;

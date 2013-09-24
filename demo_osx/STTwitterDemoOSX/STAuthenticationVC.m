@@ -18,7 +18,7 @@
 - (void)setTwitter:(STTwitterAPI *)twitter {
     _twitter = twitter;
     
-    [_delegate authenticationVC:self didChangetwitterObject:twitter];
+    [_delegate authenticationVC:self didChangeTwitterObject:twitter];
 }
 
 + (NSString *)twitterClientInApplicationSupportPath {
@@ -49,10 +49,10 @@
     return a;
 }
 
-- (IBAction)editConsumerTokensAction:(id)sender {
+- (IBAction)revealConsumerTokensFileAction:(id)sender {
     NSString *path = [[self class] twitterClientInApplicationSupportPath];
     
-    [[NSWorkspace sharedWorkspace] openFile:path];
+    [[NSWorkspace sharedWorkspace] openFile:[path stringByDeletingLastPathComponent]];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -139,6 +139,10 @@
     _pinGuessLoginCompletionBlock(username, password);
 }
 
+- (NSString *)selectedConsumerName {
+    return [[[_twitterClientsController selectedObjects] lastObject] valueForKey:@"name"];
+}
+
 // OS X Twitter account
 - (IBAction)loginOSX:(id)sender {
     
@@ -155,6 +159,7 @@
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         self.osxStatus = [NSString stringWithFormat:@"Access granted for %@", username];
+        [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
     } errorBlock:^(NSError *error) {
         self.osxStatus = [error localizedDescription];
     }];
@@ -249,6 +254,8 @@
                                    self.pinOAuthToken = oauthToken;
                                    self.pinOAuthTokenSecret = oauthTokenSecret;
                                    
+                                   [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
+
                                } errorBlock:^(NSError *error) {
                                    self.pinStatus2 = [error localizedDescription];
                                }];
@@ -268,7 +275,7 @@
     NSAssert(_xAuthUsername, @"");
     NSAssert(_xAuthPassword, @"");
     
-    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:[self selectedConsumerName]
                                                      consumerKey:_consumerKeyTextField.stringValue
                                                   consumerSecret:_consumerSecretTextField.stringValue
                                                         username:_xAuthUsername
@@ -281,6 +288,8 @@
         self.xAuthOAuthToken = _twitter.oauthAccessToken;
         self.xAuthOAuthTokenSecret = _twitter.oauthAccessTokenSecret;
         
+        [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
+        
     } errorBlock:^(NSError *error) {
         
         self.xAuthStatus = [error localizedDescription];
@@ -292,10 +301,11 @@
     
     self.bearerStatus = @"-";
     
-    self.twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
+    self.twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerName:[self selectedConsumerName] consumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
         self.bearerToken = [_twitter bearerToken];
+        [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
     } errorBlock:^(NSError *error) {
         self.bearerToken = [_twitter bearerToken];
         self.bearerStatus = [error localizedDescription];
@@ -332,6 +342,8 @@
         
         self.oauthToken = _twitter.oauthAccessToken;
         self.oauthTokenSecret = _twitter.oauthAccessTokenSecret;
+        
+        [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
         
     } errorBlock:^(NSError *error) {
         

@@ -23,6 +23,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 @interface STTwitterAPI ()
 @property (nonatomic, retain) NSObject <STTwitterProtocol> *oauth;
+@property (nonatomic, retain) NSString *loginTypeDescription;
 @end
 
 @implementation STTwitterAPI
@@ -44,6 +45,7 @@ static NSDateFormatter *dateFormatter = nil;
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:account];
+    twitter.loginTypeDescription = @"OSX/iOS";
     return twitter;
 }
 
@@ -66,6 +68,9 @@ static NSDateFormatter *dateFormatter = nil;
                                                   consumerSecret:consumerSecret
                                                         username:username
                                                         password:password];
+    
+    twitter.loginTypeDescription = @"OAuth";
+    
     return twitter;
 }
 
@@ -82,6 +87,9 @@ static NSDateFormatter *dateFormatter = nil;
                                                   consumerSecret:consumerSecret
                                                       oauthToken:oauthToken
                                                 oauthTokenSecret:oauthTokenSecret];
+    
+    twitter.loginTypeDescription = @"OAuth";
+    
     return twitter;
 }
 
@@ -96,16 +104,39 @@ static NSDateFormatter *dateFormatter = nil;
                                         password:nil];
 }
 
-+ (instancetype)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
-                                  consumerSecret:(NSString *)consumerSecret {
-    
++ (instancetype)twitterAPIAppOnlyWithConsumerName:(NSString *)consumerName
+                                      consumerKey:(NSString *)consumerKey
+                                   consumerSecret:(NSString *)consumerSecret {
+
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     
     STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerKey:consumerKey consumerSecret:consumerSecret];
     
     twitter.oauth = appOnly;
     
+    twitter.consumerName = consumerName;
+    twitter.loginTypeDescription = @"App Only";
+    
     return twitter;
+}
+
++ (instancetype)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
+                                   consumerSecret:(NSString *)consumerSecret {
+    return [self twitterAPIAppOnlyWithConsumerName:nil consumerKey:consumerKey consumerSecret:consumerSecret];
+}
+
+- (NSString *)prettyDescription {
+    NSMutableString *ms = [_loginTypeDescription mutableCopy];
+
+    if(_consumerName) {
+        [ms appendFormat:@" (%@)", _consumerName];
+    }
+    
+    if(_userName) {
+        [ms appendFormat:@" - %@", _userName];
+    }
+    
+    return ms;
 }
 
 - (NSDateFormatter *)dateFormatter {

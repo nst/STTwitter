@@ -21,6 +21,11 @@
 
 - (void)awakeFromNib {
     
+//    [self.window setContentBorderThickness:24.0 forEdge:NSMinYEdge];
+//    [self.window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+    
+    /**/
+    
     [_tabView selectFirstTabViewItem:nil];
     
     self.authenticationVC = [[STAuthenticationVC alloc] initWithNibName:@"STAuthenticationVC" bundle:nil];
@@ -64,9 +69,11 @@
 
 #pragma mark STAuthenticationVCDelegate
 
-- (void)authenticationVC:(STAuthenticationVC *)sender didChangetwitterObject:(STTwitterAPI *)twitter {
+- (void)authenticationVC:(STAuthenticationVC *)sender didChangeTwitterObject:(STTwitterAPI *)twitter {
     _requestsVC.twitter = twitter;
     _clientVC.twitter = twitter;
+    
+    [self.window setTitle:[twitter prettyDescription]];
 }
 
 @end

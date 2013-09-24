@@ -1308,7 +1308,7 @@
 						<object class="NSTabView" id="161048499">
 							<reference key="NSNextResponder" ref="337432193"/>
 							<int key="NSvFlags">1810</int>
-							<string key="NSFrame">{{13, 10}, {661, 574}}</string>
+							<string key="NSFrame">{{13, 34}, {661, 550}}</string>
 							<reference key="NSSuperview" ref="337432193"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="185157362"/>
@@ -1319,7 +1319,7 @@
 									<object class="NSView" key="NSView" id="588242002">
 										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">1810</int>
-										<string key="NSFrame">{{10, 33}, {641, 528}}</string>
+										<string key="NSFrame">{{10, 33}, {641, 504}}</string>
 										<string key="NSReuseIdentifierKey">_NS:11</string>
 									</object>
 									<string key="NSLabel">Authentication</string>
@@ -1339,7 +1339,7 @@
 									<object class="NSView" key="NSView" id="236825260">
 										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">1810</int>
-										<string key="NSFrame">{{10, 33}, {641, 528}}</string>
+										<string key="NSFrame">{{10, 33}, {641, 504}}</string>
 										<reference key="NSNextKeyView" ref="161048499"/>
 										<string key="NSReuseIdentifierKey">_NS:28</string>
 									</object>
@@ -1351,10 +1351,9 @@
 									<object class="NSView" key="NSView" id="185157362">
 										<reference key="NSNextResponder" ref="161048499"/>
 										<int key="NSvFlags">1810</int>
-										<string key="NSFrame">{{10, 33}, {641, 528}}</string>
+										<string key="NSFrame">{{10, 33}, {641, 504}}</string>
 										<reference key="NSSuperview" ref="161048499"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="161048499"/>
 									</object>
 									<string key="NSLabel">Console</string>
 									<reference key="NSColor" ref="170192841"/>
