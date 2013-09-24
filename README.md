@@ -191,9 +191,9 @@ Once you got the OAuth tokens, you can get your timeline and post a new status.
 
 There is also a simple iOS demo project in `demo_ios`.
 
-![STTwitter](Art/STTwitter.png "STTwitter Demo OS X") 
+![STTwitter](Art/osx.png "STTwitter Demo OS X")
 <img border="1" src="Art/ios.png" alt="STTwitter Demo iOS"></img> 
-<img border="1" src="Art/STTweet.png" alt="STTwitter Demo Tweet"></img> 
+<img border="1" src="Art/tweet.png" alt="sample tweet"></img>
 
 ### Integration Tips
 
