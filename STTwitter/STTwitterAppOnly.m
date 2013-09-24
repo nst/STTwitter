@@ -60,15 +60,10 @@
             parameters:@{ @"access_token" : _bearerToken }
           useBasicAuth:YES
          progressBlock:nil
-          successBlock:^(NSString *requestID, NSDictionary *rateLimits, NSString *body) {
-              
-              NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
-              
-              NSError *error = nil;
-              id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
+          successBlock:^(NSString *requestID, NSDictionary *rateLimits, id json) {
               
               if([json isKindOfClass:[NSDictionary class]] == NO) {
-                  errorBlock(error);
+                  successBlock(json);
                   return;
               }
               
