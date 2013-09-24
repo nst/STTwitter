@@ -220,9 +220,9 @@ static NSDateFormatter *dateFormatter = nil;
             progressBlock:^(NSString *requestID, id response) {
                 if(progressBlock) progressBlock(response);
             } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
-                successBlock(rateLimits, response);
+                if(successBlock) successBlock(rateLimits, response);
             } errorBlock:^(NSString *requestID, NSError *error) {
-                errorBlock(error);
+                if(errorBlock) errorBlock(error);
             }];
 }
 
@@ -240,9 +240,9 @@ static NSDateFormatter *dateFormatter = nil;
             progressBlock:^(NSString *requestID, id response) {
                 if(progressBlock) progressBlock(response);
             } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
-                successBlock(rateLimits, response);
+                if(successBlock) successBlock(rateLimits, response);
             } errorBlock:^(NSString *requestID, NSError *error) {
-                errorBlock(error);
+                if(errorBlock) errorBlock(error);
             }];
 }
 
@@ -1121,10 +1121,12 @@ static NSDateFormatter *dateFormatter = nil;
                  progressBlock(json);
              }
              
-         } successBlock:nil
-            errorBlock:^(NSError *error) {
-                errorBlock(error);
-            }];
+         } successBlock:^(NSDictionary *rateLimits, id response) {
+             // reaching successBlock for a stream request is an error
+             errorBlock(response);
+         } errorBlock:^(NSError *error) {
+             errorBlock(error);
+         }];
 }
 
 // convenience
@@ -1169,10 +1171,12 @@ static NSDateFormatter *dateFormatter = nil;
                 progressBlock(json);
             }
             
-        } successBlock:nil
-           errorBlock:^(NSError *error) {
-               errorBlock(error);
-           }];
+        } successBlock:^(NSDictionary *rateLimits, id json) {
+            // reaching successBlock for a stream request is an error
+            errorBlock(json);
+        } errorBlock:^(NSError *error) {
+            errorBlock(error);
+        }];
 }
 
 // GET statuses/firehose
@@ -1202,7 +1206,10 @@ static NSDateFormatter *dateFormatter = nil;
                 progressBlock(json);
             }
             
-        } successBlock:nil errorBlock:^(NSError *error) {
+        } successBlock:^(NSDictionary *rateLimits, id json) {
+            // reaching successBlock for a stream request is an error
+            errorBlock(json);
+        } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
 }
@@ -1245,10 +1252,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                 progressBlock(json);
             }
             
-        } successBlock:nil
-           errorBlock:^(NSError *error) {
-               errorBlock(error);
-           }];
+        } successBlock:^(NSDictionary *rateLimits, id json) {
+            // reaching successBlock for a stream request is an error
+            errorBlock(json);
+        } errorBlock:^(NSError *error) {
+            errorBlock(error);
+        }];
 }
 
 // GET site
@@ -1285,10 +1294,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                 progressBlock(json);
             }
             
-        } successBlock:nil
-           errorBlock:^(NSError *error) {
-               errorBlock(error);
-           }];
+        } successBlock:^(NSDictionary *rateLimits, id json) {
+            // reaching successBlock for a stream request is an error
+            errorBlock(json);
+        } errorBlock:^(NSError *error) {
+            errorBlock(error);
+        }];
 }
 
 #pragma mark Direct Messages
