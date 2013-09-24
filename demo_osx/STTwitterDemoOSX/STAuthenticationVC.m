@@ -175,7 +175,7 @@
     self.pinStatus1 = @"-";
     self.pinStatus2 = @"-";
     
-    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:[self selectedConsumerName]
                                                      consumerKey:_consumerKeyTextField.stringValue
                                                   consumerSecret:_consumerSecretTextField.stringValue];
     
@@ -302,7 +302,9 @@
     
     self.bearerStatus = @"-";
     
-    self.twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerName:[self selectedConsumerName] consumerKey:_consumerKeyTextField.stringValue consumerSecret:_consumerSecretTextField.stringValue];
+    self.twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerName:[self selectedConsumerName]
+                                                       consumerKey:_consumerKeyTextField.stringValue
+                                                    consumerSecret:_consumerSecretTextField.stringValue];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
         self.bearerToken = [_twitter bearerToken];
@@ -331,7 +333,7 @@
     
     self.oauthTokensStatus = @"-";
     
-    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:[self selectedConsumerName]
                                                      consumerKey:_consumerKeyTextField.stringValue
                                                   consumerSecret:_consumerSecretTextField.stringValue
                                                       oauthToken:_oauthToken
