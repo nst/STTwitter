@@ -50,9 +50,10 @@
 }
 
 - (IBAction)revealConsumerTokensFileAction:(id)sender {
-    NSString *path = [[self class] twitterClientInApplicationSupportPath];
     
-    [[NSWorkspace sharedWorkspace] openFile:[path stringByDeletingLastPathComponent]];
+    NSString *path = [[self class] twitterClientInApplicationSupportPath];
+
+    [[NSWorkspace sharedWorkspace] selectFile:path inFileViewerRootedAtPath:path];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
