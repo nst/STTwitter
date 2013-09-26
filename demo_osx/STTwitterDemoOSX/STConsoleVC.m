@@ -60,20 +60,35 @@
         [parameters setObject:v forKey:k];
     }
     
-    self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     
     [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
+
+        self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[headers description] attributes:attributes];
         
-        // create the JSONSyntaxHighilight Object
         JSONSyntaxHighlight *jsh = [[JSONSyntaxHighlight alloc] initWithJSON:response];
         
-        self.genericTextViewAttributedString = [jsh highlightJSONWithPrettyPrint:YES];
+        NSMutableDictionary *keyAttributes = [jsh.keyAttributes mutableCopy];
+        [keyAttributes addEntriesFromDictionary:attributes];
+
+        NSMutableDictionary *stringAttributes = [jsh.stringAttributes mutableCopy];
+        [stringAttributes addEntriesFromDictionary:attributes];
+
+        NSMutableDictionary *nonStringAttributes = [jsh.nonStringAttributes mutableCopy];
+        [nonStringAttributes addEntriesFromDictionary:attributes];
+
+        jsh.keyAttributes = keyAttributes;
+        jsh.stringAttributes = stringAttributes;
+        jsh.nonStringAttributes = nonStringAttributes;
+        
+        self.bodyTextViewAttributedString = [jsh highlightJSONWithPrettyPrint:YES];
     } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
         NSString *s = @"error";
         if(error) {
             s = [error localizedDescription];
         }
-        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
+        self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
     }];
 }
 

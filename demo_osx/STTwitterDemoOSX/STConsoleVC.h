@@ -16,12 +16,14 @@
 @property (nonatomic, assign) IBOutlet NSArrayController *requestParametersController;
 
 @property (nonatomic, assign) IBOutlet NSPopUpButton *genericHTTPMethodPopUpButton;
-@property (nonatomic, assign) IBOutlet NSTextView *genericTextView;
+@property (nonatomic, assign) IBOutlet NSTextView *headersTextView;
+@property (nonatomic, assign) IBOutlet NSTextView *bodyTextView;
 
 @property (nonatomic, strong) NSString *genericHTTPMethod;
 @property (nonatomic, strong) NSString *genericBaseURLString;
 @property (nonatomic, strong) NSString *genericAPIEndpoint;
-@property (nonatomic, strong) NSAttributedString *genericTextViewAttributedString;
+@property (nonatomic, strong) NSAttributedString *headersTextViewAttributedString;
+@property (nonatomic, strong) NSAttributedString *bodyTextViewAttributedString;
 @property (nonatomic, strong) NSMutableArray *genericRequestParameters;
 
 - (IBAction)changeHTTPMethodAction:(id)sender;
