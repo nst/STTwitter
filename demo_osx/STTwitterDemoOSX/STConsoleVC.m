@@ -88,6 +88,9 @@
         if(error) {
             s = [error localizedDescription];
         }
+        
+        self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[headers description] attributes:attributes];
+        
         self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
     }];
 }
