@@ -39,13 +39,9 @@
 
 - (IBAction)changeHTTPMethodAction:(id)sender {
     self.genericHTTPMethod = [_genericHTTPMethodPopUpButton titleOfSelectedItem];
-    NSLog(@"-- %s", __PRETTY_FUNCTION__);
-    NSLog(@"-- %@", _genericHTTPMethod);
 }
 
 - (IBAction)sendRequestAction:(id)sender {
-    NSLog(@"-- %s", __PRETTY_FUNCTION__);
-    
     NSAssert(_genericAPIEndpoint, @"");
     NSAssert(_genericHTTPMethod, @"");
     NSAssert(_genericBaseURLString, @"");
