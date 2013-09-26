@@ -187,7 +187,7 @@ STTwitter demo project comes with `TwitterClients.plist` where you can enter you
 
 There is a demo project for OS X in `demo_osx`, which lets you choose how to get the OAuth tokens (see below).
 
-An archive generated on 2013-09-24 12:49 is available at [http://seriot.ch/temp/STTwitterDemoOSX.app.zip](http://seriot.ch/temp/STTwitterDemoOSX.app.zip).
+An archive generated on 2013-09-26 10:17 is available at [http://seriot.ch/temp/STTwitterDemoOSX.app.zip](http://seriot.ch/temp/STTwitterDemoOSX.app.zip).
 
 Once you got the OAuth tokens, you can get your timeline and post a new status.
 
@@ -272,10 +272,10 @@ You can create your own convenience methods with fewer parameters. You can also 
     - (NSString *)fetchResource:(NSString *)resource
                      HTTPMethod:(NSString *)HTTPMethod
                   baseURLString:(NSString *)baseURLString
-                     parameters:(NSDictionary *)params
+                     parameters:(NSDictionary *)parameters
                   progressBlock:(void (^)(NSString *requestID, id response))progressBlock
-                   successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
-                     errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock;
+                   successBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))successBlock
+                     errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock;
 
 ##### Layer Model
      
