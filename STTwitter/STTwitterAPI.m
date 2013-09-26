@@ -245,8 +245,8 @@ static NSDateFormatter *dateFormatter = nil;
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
               progressBlock:(void (^)(NSString *requestID, id response))progressBlock
-               successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
-                 errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock {
+               successBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))successBlock
+                 errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
     
     return [_oauth fetchResource:resource
                       HTTPMethod:HTTPMethod
@@ -270,9 +270,9 @@ static NSDateFormatter *dateFormatter = nil;
                parameters:parameters
             progressBlock:^(NSString *requestID, id response) {
                 if(progressBlock) progressBlock(response);
-            } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
-                if(successBlock) successBlock(rateLimits, response);
-            } errorBlock:^(NSString *requestID, NSError *error) {
+            } successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
+                if(successBlock) successBlock(headers, response);
+            } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
                 if(errorBlock) errorBlock(error);
             }];
 }
@@ -290,9 +290,9 @@ static NSDateFormatter *dateFormatter = nil;
                parameters:parameters
             progressBlock:^(NSString *requestID, id response) {
                 if(progressBlock) progressBlock(response);
-            } successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
-                if(successBlock) successBlock(rateLimits, response);
-            } errorBlock:^(NSString *requestID, NSError *error) {
+            } successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
+                if(successBlock) successBlock(headers, response);
+            } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
                 if(errorBlock) errorBlock(error);
             }];
 }
@@ -310,7 +310,7 @@ static NSDateFormatter *dateFormatter = nil;
             progressBlock:^(NSString *requestID, id response) {
                 if(progressBlock) progressBlock(response);
             } successBlock:nil
-               errorBlock:^(NSString *requestID, NSError *error) {
+               errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
                    errorBlock(error);
                }];
 }
@@ -328,7 +328,7 @@ static NSDateFormatter *dateFormatter = nil;
             progressBlock:^(NSString *requestID, id response) {
                 if(progressBlock) progressBlock(response);
             } successBlock:nil
-               errorBlock:^(NSString *requestID, NSError *error) {
+               errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
                    errorBlock(error);
                }];
 }

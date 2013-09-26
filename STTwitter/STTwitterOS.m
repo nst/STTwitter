@@ -145,8 +145,8 @@ BOOL useTWRequests(void) {
                  baseURLString:(NSString *)baseURLString
                     httpMethod:(NSInteger)httpMethod
                     parameters:(NSDictionary *)params
-               completionBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id response))completionBlock
-                    errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock {
+               completionBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))completionBlock
+                    errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
     
     NSData *mediaData = [params valueForKey:@"media[]"];
     
@@ -176,9 +176,12 @@ BOOL useTWRequests(void) {
     }
     
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+
+        NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+
         if(responseData == nil) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, error);
+                errorBlock(requestID, [urlResponse allHeaderFields], error);
             }];
             return;
         }
@@ -188,23 +191,21 @@ BOOL useTWRequests(void) {
         
         if(json == nil) {
             
-            NSString *s = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-            
             // do our best to extract Twitter error message from responseString
             
             NSError *regexError = nil;
-            NSString *errorString = [s firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
+            NSString *errorString = [rawResponse firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
             
             if(errorString) {
                 error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(requestID, error);
+                    errorBlock(requestID, [urlResponse allHeaderFields], error);
                 }];
                 return;
             }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(requestID, nil, s);
+                completionBlock(requestID, [urlResponse allHeaderFields], rawResponse);
             }];
             return;
         }
@@ -218,7 +219,7 @@ BOOL useTWRequests(void) {
             NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:userInfo];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, jsonErrorFromResponse);
+                errorBlock(requestID, [urlResponse allHeaderFields], jsonErrorFromResponse);
             }];
             
             return;
@@ -242,7 +243,7 @@ BOOL useTWRequests(void) {
             NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:userInfo];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, jsonErrorFromResponse);
+                errorBlock(requestID, [urlResponse allHeaderFields], jsonErrorFromResponse);
             }];
             
             return;
@@ -253,13 +254,13 @@ BOOL useTWRequests(void) {
         if(json) {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(requestID, nil, (NSArray *)json);
+                completionBlock(requestID, [urlResponse allHeaderFields], (NSArray *)json);
             }];
             
         } else {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, jsonError);
+                errorBlock(requestID, [urlResponse allHeaderFields], jsonError);
             }];
         }
     }];
@@ -272,8 +273,8 @@ BOOL useTWRequests(void) {
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
               progressBlock:(void (^)(NSString *requestID, id response))progressBlock // TODO: handle progressBlock?
-               successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id))successBlock
-                 errorBlock:(void (^)(NSString *requestID, NSError *error))errorBlock {
+               successBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))successBlock
+                 errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
     
     NSAssert(([ @[@"GET", @"POST"] containsObject:HTTPMethod]), @"unsupported HTTP method");
     
@@ -365,7 +366,7 @@ BOOL useTWRequests(void) {
           baseURLString:@"https://api.twitter.com"
              parameters:d
           progressBlock:nil
-           successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
+           successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
                
                NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
                
@@ -375,7 +376,7 @@ BOOL useTWRequests(void) {
                NSString *screenName = [d valueForKey:@"screen_name"];
                
                successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
-           } errorBlock:^(NSString *requestID, NSError *error) {
+           } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
                errorBlock(error);
            }];
 }

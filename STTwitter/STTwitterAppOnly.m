@@ -61,7 +61,7 @@
             parameters:@{ @"access_token" : _bearerToken }
           useBasicAuth:YES
          progressBlock:nil
-          successBlock:^(NSString *requestID, NSDictionary *rateLimits, id json) {
+          successBlock:^(NSString *requestID, NSDictionary *headers, id json) {
               
               if([json isKindOfClass:[NSDictionary class]] == NO) {
                   successBlock(json);
@@ -76,7 +76,7 @@
               
               successBlock(oldToken);
               
-          } errorBlock:^(NSString *requestID, NSError *error) {
+          } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
               errorBlock(error);
           }];
     
@@ -116,7 +116,7 @@
             parameters:@{ @"grant_type" : @"client_credentials" }
           useBasicAuth:YES
          progressBlock:nil
-          successBlock:^(NSString *requestID, NSDictionary *rateLimits, id json) {
+          successBlock:^(NSString *requestID, NSDictionary *headers, id json) {
               
               NSString *tokenType = [json valueForKey:@"token_type"];
               if([tokenType isEqualToString:@"bearer"] == NO) {
@@ -129,7 +129,7 @@
               
               successBlock(_bearerToken);
               
-          } errorBlock:^(NSString *requestID, NSError *error) {
+          } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
               errorBlock(error);
           }];
 }
@@ -138,8 +138,8 @@
             baseURLString:(NSString *)baseURLString // no trailing slash
                parameters:(NSDictionary *)params
             progressBlock:(void(^)(NSString *requestID, id json))progressBlock
-             successBlock:(void (^)(NSString *requestID, NSDictionary *rateLimits, id json))successBlock
-               errorBlock:(void (^)(NSString *requestID, NSError *))errorBlock {
+             successBlock:(void (^)(NSString *requestID, NSDictionary *headers, id json))successBlock
+               errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
     
     /*
      GET /1.1/statuses/user_timeline.json?count=100&screen_name=twitterapi HTTP/1.1
@@ -170,10 +170,10 @@
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                                    stTwitterProgressBlock:^(id json) {
                                                        if(progressBlock) progressBlock(requestID, json);
-                                                   } stTwitterSuccessBlock:^(NSDictionary *rateLimits, id json) {
-                                                       successBlock(requestID, rateLimits, json);
-                                                   } stTwitterErrorBlock:^(NSError *error) {
-                                                       errorBlock(requestID, error);
+                                                   } stTwitterSuccessBlock:^(NSDictionary *headers, id json) {
+                                                       successBlock(requestID, headers, json);
+                                                   } stTwitterErrorBlock:^(NSDictionary *headers, NSError *error) {
+                                                       errorBlock(requestID, headers, error);
                                                    }];
     if(_bearerToken) {
         [r setHeaderWithName:@"Authorization" value:[NSString stringWithFormat:@"Bearer %@", _bearerToken]];
@@ -189,8 +189,8 @@
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
               progressBlock:(void(^)(NSString *requestID, id json))progressBlock
-               successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id json))successBlock
-                 errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
+               successBlock:(void(^)(NSString *requestID, NSDictionary *headers, id json))successBlock
+                 errorBlock:(void(^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
     
     if([baseURLString hasSuffix:@"/"]) {
         baseURLString = [baseURLString substringToIndex:[baseURLString length]-1];
@@ -225,8 +225,8 @@
                 parameters:(NSDictionary *)params
               useBasicAuth:(BOOL)useBasicAuth
              progressBlock:(void(^)(NSString *requestID, id json))progressBlock
-              successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id json))successBlock
-                errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
+              successBlock:(void(^)(NSString *requestID, NSDictionary *headers, id json))successBlock
+                errorBlock:(void(^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
@@ -235,10 +235,10 @@
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                                    stTwitterProgressBlock:^(id json) {
                                                        if(progressBlock) progressBlock(requestID, json);
-                                                   } stTwitterSuccessBlock:^(NSDictionary *rateLimits, id json) {
-                                                       successBlock(requestID, rateLimits, json);
-                                                   } stTwitterErrorBlock:^(NSError *error) {
-                                                       errorBlock(requestID, error);
+                                                   } stTwitterSuccessBlock:^(NSDictionary *headers, id json) {
+                                                       successBlock(requestID, headers, json);
+                                                   } stTwitterErrorBlock:^(NSDictionary *headers, NSError *error) {
+                                                       errorBlock(requestID, headers, error);
                                                    }];
     
     r.POSTDictionary = params;
@@ -267,8 +267,8 @@
              baseURLString:(NSString *)baseURLString
                 parameters:(NSDictionary *)params
              progressBlock:(void(^)(NSString *requestID, id json))progressBlock
-              successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id json))successBlock
-                errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock {
+              successBlock:(void(^)(NSString *requestID, NSDictionary *headers, id json))successBlock
+                errorBlock:(void(^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
     
     return [self postResource:resource
                 baseURLString:baseURLString

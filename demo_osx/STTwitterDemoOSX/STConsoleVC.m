@@ -7,6 +7,7 @@
 //
 
 #import "STConsoleVC.h"
+#import "JSONSyntaxHighlight.h"
 
 @interface STConsoleVC ()
 
@@ -61,10 +62,13 @@
     
     self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     
-    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *rateLimits, id response) {
-        NSString *s = [response description];
-        self.genericTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];;
-    } errorBlock:^(NSString *requestID, NSError *error) {
+    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
+        
+        // create the JSONSyntaxHighilight Object
+        JSONSyntaxHighlight *jsh = [[JSONSyntaxHighlight alloc] initWithJSON:response];
+        
+        self.genericTextViewAttributedString = [jsh highlightJSONWithPrettyPrint:YES];
+    } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
         NSString *s = @"error";
         if(error) {
             s = [error localizedDescription];

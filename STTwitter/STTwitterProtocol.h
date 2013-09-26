@@ -19,8 +19,8 @@
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
               progressBlock:(void(^)(NSString *requestID, id response))progressBlock
-               successBlock:(void(^)(NSString *requestID, NSDictionary *rateLimits, id response))successBlock
-                 errorBlock:(void(^)(NSString *requestID, NSError *error))errorBlock;
+               successBlock:(void(^)(NSString *requestID, NSDictionary *headers, id response))successBlock
+                 errorBlock:(void(^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock;
 
 - (NSString *)consumerName;
 - (NSString *)loginTypeDescription;
