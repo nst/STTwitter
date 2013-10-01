@@ -43,6 +43,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
 @property (nonatomic, assign) NSUInteger timeoutSeconds;
 @property (nonatomic) BOOL addCredentialsToURL; // default NO
+@property (nonatomic) NSString *HTTPMethod; // default: GET, or POST if POSTDictionary or files to upload
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString;
