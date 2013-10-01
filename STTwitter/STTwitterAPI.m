@@ -124,7 +124,10 @@ static NSDateFormatter *dateFormatter = nil;
 
 + (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
                                 consumerSecret:(NSString *)consumerSecret {
-    return [self twitterAPIAppOnlyWithConsumerName:nil consumerKey:consumerKey consumerSecret:consumerSecret];
+    
+    return [self twitterAPIWithOAuthConsumerName:nil
+                                     consumerKey:consumerKey
+                                  consumerSecret:consumerSecret];
 }
 
 + (instancetype)twitterAPIAppOnlyWithConsumerName:(NSString *)consumerName
