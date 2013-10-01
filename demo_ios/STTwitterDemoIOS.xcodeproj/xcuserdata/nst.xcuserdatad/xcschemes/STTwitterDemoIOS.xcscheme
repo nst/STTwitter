@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "03191DD817BF6A160001C06D"
-               BuildableName = "STTwitterDemoIOS.app"
-               BlueprintName = "STTwitterDemoIOS"
-               ReferencedContainer = "container:STTwitterDemoIOS.xcodeproj">
+               BlueprintIdentifier = "03144B3E17FB608C007812DC"
+               BuildableName = "STTwitterDemoiOS.app"
+               BlueprintName = "STTwitterDemoiOS"
+               ReferencedContainer = "container:STTwitterDemoiOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,14 +28,24 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "03144B5F17FB608C007812DC"
+               BuildableName = "STTwitterDemoiOSTests.xctest"
+               BlueprintName = "STTwitterDemoiOSTests"
+               ReferencedContainer = "container:STTwitterDemoiOS.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "03191DD817BF6A160001C06D"
-            BuildableName = "STTwitterDemoIOS.app"
-            BlueprintName = "STTwitterDemoIOS"
-            ReferencedContainer = "container:STTwitterDemoIOS.xcodeproj">
+            BlueprintIdentifier = "03144B3E17FB608C007812DC"
+            BuildableName = "STTwitterDemoiOS.app"
+            BlueprintName = "STTwitterDemoiOS"
+            ReferencedContainer = "container:STTwitterDemoiOS.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,10 +61,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "03191DD817BF6A160001C06D"
-            BuildableName = "STTwitterDemoIOS.app"
-            BlueprintName = "STTwitterDemoIOS"
-            ReferencedContainer = "container:STTwitterDemoIOS.xcodeproj">
+            BlueprintIdentifier = "03144B3E17FB608C007812DC"
+            BuildableName = "STTwitterDemoiOS.app"
+            BlueprintName = "STTwitterDemoiOS"
+            ReferencedContainer = "container:STTwitterDemoiOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,10 +79,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "03191DD817BF6A160001C06D"
-            BuildableName = "STTwitterDemoIOS.app"
-            BlueprintName = "STTwitterDemoIOS"
-            ReferencedContainer = "container:STTwitterDemoIOS.xcodeproj">
+            BlueprintIdentifier = "03144B3E17FB608C007812DC"
+            BuildableName = "STTwitterDemoiOS.app"
+            BlueprintName = "STTwitterDemoiOS"
+            ReferencedContainer = "container:STTwitterDemoiOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

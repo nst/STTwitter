@@ -1,8 +1,8 @@
 //
 //  ViewController.m
-//  STTwitterDemoIOS
+//  STTwitterDemoiOSSafari
 //
-//  Created by Nicolas Seriot on 8/17/13.
+//  Created by Nicolas Seriot on 10/1/13.
 //  Copyright (c) 2013 Nicolas Seriot. All rights reserved.
 //
 
@@ -10,57 +10,96 @@
 #import "STTwitter.h"
 
 @interface ViewController ()
-@property (nonatomic, retain) NSArray *statuses;
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
-@property (nonatomic, retain) IBOutlet UILabel *statusLabel;
+@property (nonatomic, strong) STTwitterAPI *twitter;
 @end
 
-@implementation ViewController
+// https://dev.twitter.com/docs/auth/implementing-sign-twitter
 
-- (IBAction)getTimelineAction:(id)sender {
-    
-    self.statuses = @[];
-    self.statusLabel.text = @"";
-    [self.tableView reloadData];
-    
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
-    
-    [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
-        
-        self.statusLabel.text = [NSString stringWithFormat:@"Fetching timeline for @%@...", username];
-        
-        [twitter getHomeTimelineSinceID:nil
-                                  count:20
-                           successBlock:^(NSArray *statuses) {
-                               
-                               NSLog(@"-- statuses: %@", statuses);
-                               
-                               self.statusLabel.text = [NSString stringWithFormat:@"@%@", username];
-                               
-                               self.statuses = statuses;
-                               
-                               [self.tableView reloadData];
-                               
-                           } errorBlock:^(NSError *error) {
-                               self.statusLabel.text = [error localizedDescription];
-                           }];
-        
-    } errorBlock:^(NSError *error) {
-        self.statusLabel.text = [error localizedDescription];
-    }];
-}
+@implementation ViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.statusLabel.text = @"";
+    
+#warning Replace these demo tokens with yours https://dev.twitter.com/apps
+    _consumerKeyTextField.text = @"PdLBPYUXlhQpt4AguShUIw";
+    _consumerSecretTextField.text = @"drdhGuKSingTbsDLtYpob4m5b5dn1abf9XXYyZKQzk";
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)loginWithiOSAction:(id)sender {
+    
+    self.twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
+
+    _loginStatusLabel.text = @"Trying to login with iOS...";
+    _loginStatusLabel.text = @"";
+    
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+        
+        _loginStatusLabel.text = username;
+        
+    } errorBlock:^(NSError *error) {
+        _loginStatusLabel.text = [error localizedDescription];
+    }];
+
+}
+
+- (IBAction)loginInSafariAction:(id)sender {
+    
+    self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:_consumerKeyTextField.text
+                                                 consumerSecret:_consumerSecretTextField.text];
+    
+    _loginStatusLabel.text = @"Trying to login with Safari...";
+    _loginStatusLabel.text = @"";
+    
+    [_twitter postTokenRequest:^(NSURL *url, NSString *oauthToken) {
+        NSLog(@"-- url: %@", url);
+        NSLog(@"-- oauthToken: %@", oauthToken);
+        
+        [[UIApplication sharedApplication] openURL:url];
+        
+    } oauthCallback:@"myapp://twitter_access_tokens/"
+                    errorBlock:^(NSError *error) {
+                        NSLog(@"-- error: %@", error);
+                    }];
+}
+
+- (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verfier {
+    [_twitter postAccessTokenRequestWithPIN:verfier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
+        NSLog(@"-- screenName: %@", screenName);
+        
+        _loginStatusLabel.text = screenName;
+        
+    } errorBlock:^(NSError *error) {
+        NSLog(@"-- %@", error);
+    }];
+}
+
+- (IBAction)getTimelineAction:(id)sender {
+    
+    self.getTimelineStatusLabel.text = @"";
+    
+    [_twitter getHomeTimelineSinceID:nil
+                              count:20
+                       successBlock:^(NSArray *statuses) {
+                           
+                           NSLog(@"-- statuses: %@", statuses);
+                           
+                           self.getTimelineStatusLabel.text = [NSString stringWithFormat:@"%d statuses", [statuses count]];
+                           
+                           self.statuses = statuses;
+                           
+                           [self.tableView reloadData];
+                           
+                       } errorBlock:^(NSError *error) {
+                           self.getTimelineStatusLabel.text = [error localizedDescription];
+                       }];
 }
 
 #pragma mark UITableViewDataSource

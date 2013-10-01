@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>STTwitterDemoIOS.xcscheme</key>
+		<key>STTwitterDemoiOS.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>03191DD817BF6A160001C06D</key>
+		<key>03144B3E17FB608C007812DC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>03144B5F17FB608C007812DC</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -1,8 +1,8 @@
 //
 //  main.m
-//  STTwitterDemoIOS
+//  STTwitterDemoiOS
 //
-//  Created by Nicolas Seriot on 8/17/13.
+//  Created by Nicolas Seriot on 10/1/13.
 //  Copyright (c) 2013 Nicolas Seriot. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 #import "AppDelegate.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
