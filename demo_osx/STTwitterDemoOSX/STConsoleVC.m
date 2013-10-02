@@ -8,9 +8,10 @@
 
 #import "STConsoleVC.h"
 #import "JSONSyntaxHighlight.h"
+#import "BAVPlistNode.h"
 
 @interface STConsoleVC ()
-
+@property (nonatomic, strong) BAVPlistNode *rootNode;
 @end
 
 @implementation STConsoleVC
@@ -58,7 +59,9 @@
     
     self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
-    
+    self.rootNode = nil;
+    [_outlineView reloadData];
+
     [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
 
         self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[headers description] attributes:attributes];
@@ -79,16 +82,62 @@
         jsh.nonStringAttributes = nonStringAttributes;
         
         self.bodyTextViewAttributedString = [jsh highlightJSONWithPrettyPrint:YES];
+        
+        self.rootNode = [BAVPlistNode plistNodeFromObject:response key:@"Root"];
+        
+        [_outlineView reloadData];
+        
     } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
         NSString *s = @"error";
         if(error) {
             s = [error localizedDescription];
         }
         
-        self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[headers description] attributes:attributes];
+        NSString *headersDescription = headers ? [headers description] : @"";
+        self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:headersDescription attributes:attributes];
         
         self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
+        
+        self.rootNode = nil;
+        [_outlineView reloadData];
     }];
+}
+
+#pragma mark - NSOutlineViewDataSource
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(BAVPlistNode *)item
+{
+    if (item == nil)
+        return self.rootNode;
+    
+    return item.children[index];
+}
+
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(BAVPlistNode *)item
+{
+    if (item == nil)
+        return 1;
+    
+    return item.children.count;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(BAVPlistNode *)item
+{
+    return item.collection;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(BAVPlistNode *)item
+{
+    NSString *columnId = tableColumn.identifier;
+    
+    if ([columnId isEqualToString:@"key"])
+        return item.key;
+    else if ([columnId isEqualToString:@"type"])
+        return item.type;
+    else if ([columnId isEqualToString:@"value"])
+        return item.value;
+    
+    return nil;
 }
 
 @end
