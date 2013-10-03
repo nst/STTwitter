@@ -26,10 +26,12 @@ Link your project with the following frameworks:
 - Security.framework (OS X only)
 - Social.framework (iOS only, weak)
 
-If you want to use CocoaPods, include the STTwitter pod in your project's podfile and install it:
+If you want to use CocoaPods, add the two following lines to your Podfile:
 
-    echo "pod 'STTwitter'" >> Podfile
-    echo "platform :ios, '5.0'" >> Podfile
+    pod 'STTwitter'
+    platform :ios, '5.0'
+
+Then, run the followinf command to install the STTwitter pod:
 
     pod install
 
