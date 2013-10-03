@@ -28,7 +28,9 @@ Link your project with the following frameworks:
 
 If you want to use CocoaPods, include the STTwitter pod in your project's podfile and install it:
 
-    pod 'STTwitter'
+    echo "pod 'STTwitter'" >> Podfile
+    echo "platform :ios, '5.0'" >> Podfile
+
     pod install
 
 STTwitter does not depend on AppKit or UIKit and can be used in a command-line Twitter client.
