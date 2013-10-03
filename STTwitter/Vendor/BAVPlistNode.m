@@ -10,22 +10,15 @@
 
 
 static NSString *typeForObject(id object) {
-    if ([object isKindOfClass:[NSArray class]])
-        return @"Array";
-    else if ([object isKindOfClass:[NSDictionary class]])
-        return @"Dictionary";
-    else if ([object isKindOfClass:[NSString class]])
-        return @"String";
-    else if ([object isKindOfClass:[NSData class]])
-        return @"Data";
-    else if ([object isKindOfClass:[NSDate class]])
-        return @"Date";
-    else if (object == (id)kCFBooleanTrue || object == (id)kCFBooleanFalse)
-        return @"Boolean";
-    else if ([object isKindOfClass:[NSNumber class]])
-        return @"Number";
-
-    return @"Unknown";
+    return ([object isKindOfClass:[NSArray class]] ? @"Array" :
+            [object isKindOfClass:[NSDictionary class]] ? @"Dictionary" :
+            [object isKindOfClass:[NSString class]] ? @"String" :
+            [object isKindOfClass:[NSData class]] ? @"Data" :
+            [object isKindOfClass:[NSDate class]] ? @"Date" :
+            object == (id)kCFBooleanTrue || object == (id)kCFBooleanFalse ? @"Boolean" :
+            [object isKindOfClass:[NSNumber class]] ? @"Number" :
+            [object isKindOfClass:[NSNull class]] ? @"Null" :
+            @"Unknown");
 }
 
 static NSString *formatItemCount(NSUInteger count) {
@@ -65,6 +58,15 @@ static NSString *formatItemCount(NSUInteger count) {
 
         newNode.value = formatItemCount(keys.count);
         newNode.children = children;
+    }
+    else if ([object isKindOfClass:[NSNull class]]) {
+        newNode.value = @"null";
+    }
+    else if (object == (id)kCFBooleanTrue) {
+        newNode.value = @"true";
+    }
+    else if (object == (id)kCFBooleanFalse) {
+        newNode.value = @"false";
     }
     else {
         newNode.value = [NSString stringWithFormat:@"%@", object];
