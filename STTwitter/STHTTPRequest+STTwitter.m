@@ -18,21 +18,32 @@
 @implementation STHTTPRequest (STTwitter)
 
 + (NSError *)errorFromResponseData:(NSData *)responseData {
-    // assume error message such as: {"errors":[{"message":"Bad Authentication data","code":215}]}
     
     NSError *jsonError = nil;
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+
+    NSString *message = nil;
+    NSInteger code = 0;
+    
     if([json isKindOfClass:[NSDictionary class]]) {
-        NSArray *errors = [json valueForKey:@"errors"];
-        if([errors isKindOfClass:[NSArray class]] && [errors count] > 0) {
+        // assume {"errors":[{"message":"Bad Authentication data","code":215}]}
+
+        id errors = [json valueForKey:@"errors"];
+        if([errors isKindOfClass:[NSArray class]] && [(NSArray *)errors count] > 0) {
             NSDictionary *errorDictionary = [errors lastObject];
             if([errorDictionary isKindOfClass:[NSDictionary class]]) {
-                NSString *message = errorDictionary[@"message"];
-                NSInteger code = [errorDictionary[@"code"] integerValue];
-                NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:@{NSLocalizedDescriptionKey : message}];
-                return error;
+                message = errorDictionary[@"message"];
+                code = [[errorDictionary valueForKey:@"code"] integerValue];
             }
+        } else if([errors isKindOfClass:[NSString class]]) {
+            // assume {errors = "Screen name can't be blank";}
+            message = errors;
         }
+    }
+
+    if(message) {
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:@{NSLocalizedDescriptionKey : message}];
+        return error;
     }
     
     return nil;
