@@ -19,15 +19,6 @@
 @property (nonatomic, retain) ACAccount *account; // if nil, will be set to first account available
 @end
 
-// for iOS 5 support
-BOOL useTWRequests(void) {
-#if TARGET_OS_IPHONE
-    return NSClassFromString(@"SLRequest") == nil;
-#else
-    return NO;
-#endif
-}
-
 @implementation STTwitterOS
 
 - (id)init {
@@ -74,15 +65,17 @@ BOOL useTWRequests(void) {
 }
 
 - (BOOL)hasAccessToTwitter {
-    
-#if TARGET_OS_IPHONE
-    if(NSClassFromString(@"SLComposeViewController")) { // since iOS 6
-        return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
-    } else {
-        return [TWTweetComposeViewController canSendTweet]; // iOS 5
-    }
+
+#if TARGET_API_MAC_OSX
+    return YES;
 #else
-    return YES; // error will be detected later
+    
+#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    return [TWTweetComposeViewController canSendTweet]; // iOS 5
+#else
+    return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
+#endif
+    
 #endif
 }
 
@@ -128,17 +121,15 @@ BOOL useTWRequests(void) {
         }];
     };
     
-    if(useTWRequests()) {
-#if TARGET_OS_IPHONE
-        [self.accountStore requestAccessToAccountsWithType:accountType
-                                     withCompletionHandler:accountStoreRequestCompletionHandler];
-#endif
-    } else {
-        [self.accountStore requestAccessToAccountsWithType:accountType
-                                                   options:NULL
-                                                completion:accountStoreRequestCompletionHandler];
-    }
+#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    [self.accountStore requestAccessToAccountsWithType:accountType
+                                 withCompletionHandler:accountStoreRequestCompletionHandler];
     
+#else
+    [self.accountStore requestAccessToAccountsWithType:accountType
+                                               options:NULL
+                                            completion:accountStoreRequestCompletionHandler];
+#endif
 }
 
 - (NSString *)fetchAPIResource:(NSString *)resource
@@ -156,18 +147,16 @@ BOOL useTWRequests(void) {
     NSString *urlString = [baseURLString stringByAppendingString:resource];
     NSURL *url = [NSURL URLWithString:urlString];
     
+    NSString *requestID = [[NSUUID UUID] UUIDString];
+
     id request = nil;
     
-    NSString *requestID = [[NSUUID UUID] UUIDString];
-    
-    if(useTWRequests()) {
-#if TARGET_OS_IPHONE
-        TWRequestMethod method = (httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
-        request = [[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method];
+#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    TWRequestMethod method = (httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
+    request = [[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method];
+#else
+    request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
 #endif
-    } else {
-        request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
-    }
     
     [request setAccount:self.account];
     
@@ -176,9 +165,9 @@ BOOL useTWRequests(void) {
     }
     
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-
+        
         NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-
+        
         if(responseData == nil) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 errorBlock(requestID, [urlResponse allHeaderFields], error);
