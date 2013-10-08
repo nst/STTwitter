@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1070</int>
-		<string key="IBDocument.SystemVersion">12F37</string>
+		<string key="IBDocument.SystemVersion">12E55</string>
 		<string key="IBDocument.InterfaceBuilderVersion">4510</string>
 		<string key="IBDocument.AppKitVersion">1187.39</string>
 		<string key="IBDocument.HIToolboxVersion">626.00</string>
@@ -53,7 +53,7 @@
 					<object class="NSButton" id="925953182">
 						<reference key="NSNextResponder" ref="1005"/>
 						<int key="NSvFlags">265</int>
-						<string key="NSFrame">{{486, 767}, {107, 32}}</string>
+						<string key="NSFrame">{{477, 767}, {116, 32}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="98558014"/>
@@ -91,7 +91,7 @@
 										<reference key="NSNextResponder" ref="657067475"/>
 										<int key="NSvFlags">1290</int>
 										<object class="NSPSMatrix" key="NSFrameMatrix"/>
-										<string key="NSFrame">{{160, 68}, {409, 22}}</string>
+										<string key="NSFrame">{{160, 68}, {411, 22}}</string>
 										<reference key="NSSuperview" ref="657067475"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="713375416"/>
@@ -161,7 +161,7 @@
 										<reference key="NSNextResponder" ref="657067475"/>
 										<int key="NSvFlags">1289</int>
 										<object class="NSPSMatrix" key="NSFrameMatrix"/>
-										<string key="NSFrame">{{474, 32}, {101, 32}}</string>
+										<string key="NSFrame">{{461, 32}, {116, 32}}</string>
 										<reference key="NSSuperview" ref="657067475"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="852769005"/>
@@ -191,7 +191,7 @@
 										<reference key="NSNextResponder" ref="657067475"/>
 										<int key="NSvFlags">1289</int>
 										<object class="NSPSMatrix" key="NSFrameMatrix"/>
-										<string key="NSFrame">{{412, 32}, {62, 32}}</string>
+										<string key="NSFrame">{{399, 32}, {62, 32}}</string>
 										<reference key="NSSuperview" ref="657067475"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="121173823"/>
@@ -308,7 +308,7 @@
 						<reference key="NSNextResponder" ref="1005"/>
 						<int key="NSvFlags">1290</int>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{176, 771}, {311, 26}}</string>
+						<string key="NSFrame">{{176, 771}, {302, 26}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="925953182"/>
@@ -398,6 +398,7 @@
 										<string key="NSFrame">{{502, 30}, {75, 32}}</string>
 										<reference key="NSSuperview" ref="451806586"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSHuggingPriority">{250, 750}</string>
 										<bool key="NSEnabled">YES</bool>
 										<object class="NSButtonCell" key="NSCell" id="593983220">
@@ -1239,7 +1240,7 @@
 										<reference key="NSNextResponder" ref="983061120"/>
 										<int key="NSvFlags">1292</int>
 										<object class="NSPSMatrix" key="NSFrameMatrix"/>
-										<string key="NSFrame">{{468, 25}, {109, 32}}</string>
+										<string key="NSFrame">{{461, 25}, {116, 32}}</string>
 										<reference key="NSSuperview" ref="983061120"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="716641560"/>
@@ -1304,7 +1305,7 @@
 									<object class="NSPopUpButton" id="212325686">
 										<reference key="NSNextResponder" ref="983061120"/>
 										<int key="NSvFlags">1292</int>
-										<string key="NSFrame">{{159, 29}, {310, 26}}</string>
+										<string key="NSFrame">{{159, 29}, {303, 26}}</string>
 										<reference key="NSSuperview" ref="983061120"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="571166750"/>
@@ -3535,7 +3536,7 @@
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<real value="1080" key="NS.object.0"/>
+			<real value="1070" key="NS.object.0"/>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
