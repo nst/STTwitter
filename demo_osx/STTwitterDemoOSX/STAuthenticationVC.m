@@ -9,6 +9,8 @@
 #import "STAuthenticationVC.h"
 #import <Accounts/Accounts.h>
 
+static NSString *kCustomString = @"Custom...";
+
 @interface STAuthenticationVC ()
 @property (nonatomic, strong) ACAccountStore *accountStore;
 @end
@@ -19,6 +21,10 @@
     _twitter = twitter;
     
     [_delegate authenticationVC:self didChangeTwitterObject:twitter];
+}
+
+- (void)reloadTokenFile {
+    self.twitterClients = [[self class] twitterClientsInApplicationSupport];
 }
 
 + (NSString *)twitterClientInApplicationSupportPath {
@@ -40,8 +46,9 @@
         BOOL dirWasCreated = [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:nil error:&error];
         if(dirWasCreated == NO) return nil;
         
-        NSDictionary *d = @{ @"name":@"- Add your tokens in this file -", @"ck":@"1234", @"cs":@"5678" };
-        a = @[d];
+        NSDictionary *d1 = @{ @"name":kCustomString, @"ck":@"", @"cs":@"" };
+        NSDictionary *d2 = @{ @"name":@"- Add your tokens in this file -", @"ck":@"1234", @"cs":@"5678" };
+        a = @[d1, d2];
         BOOL fileWasCreated = [a writeToFile:path atomically:YES];
         if(fileWasCreated == NO) return nil;
     }
@@ -63,7 +70,6 @@
         // Initialization code here.
         
         self.twitterClients = [[self class] twitterClientsInApplicationSupport];
-        
     }
     return self;
 }
@@ -93,7 +99,7 @@
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
     NSDictionary *selectedClient = [[_twitterClientsController selectedObjects] lastObject];
     
-    BOOL isCustomClient = [[selectedClient valueForKey:@"name"] isEqualToString:@"Custom..."];
+    BOOL isCustomClient = [[selectedClient valueForKey:@"name"] isEqualToString:kCustomString];
     
     _consumerKeyTextField.editable = isCustomClient;
     _consumerSecretTextField.editable = isCustomClient;

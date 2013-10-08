@@ -61,6 +61,8 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) NSString *oauthTokenSecret;
 @property (nonatomic, retain) NSString *oauthTokensStatus;
 
+- (void)reloadTokenFile;
+
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender;
 - (IBAction)revealConsumerTokensFileAction:(id)sender;
 

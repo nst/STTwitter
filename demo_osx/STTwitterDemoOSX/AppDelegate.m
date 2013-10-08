@@ -49,6 +49,10 @@
     // ...
 }
 
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+    [_authenticationVC reloadTokenFile];
+}
+
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
     return YES;
 }
