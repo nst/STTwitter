@@ -25,6 +25,7 @@
 		03144B9317FB6109007812DC /* STTwitterOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 03144B8617FB6109007812DC /* STTwitterOS.m */; };
 		03144B9417FB6109007812DC /* JSONSyntaxHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 03144B8A17FB6109007812DC /* JSONSyntaxHighlight.m */; };
 		03144B9517FB6109007812DC /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03144B8C17FB6109007812DC /* STHTTPRequest.m */; };
+		032DFF2A1804175B008BD769 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 032DFF291804175B008BD769 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		03144B8A17FB6109007812DC /* JSONSyntaxHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONSyntaxHighlight.m; sourceTree = "<group>"; };
 		03144B8B17FB6109007812DC /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		03144B8C17FB6109007812DC /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
+		032DFF291804175B008BD769 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 		03144B3617FB608C007812DC = {
 			isa = PBXGroup;
 			children = (
+				032DFF291804175B008BD769 /* README.md */,
 				03144B7717FB6109007812DC /* STTwitter */,
 				03144B4817FB608C007812DC /* STTwitterDemoiOS */,
 				03144B4117FB608C007812DC /* Frameworks */,
@@ -198,7 +201,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Nicolas Seriot";
 			};
-			buildConfigurationList = 03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoiOS" */;
+			buildConfigurationList = 03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoIOS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -223,6 +226,7 @@
 			files = (
 				03144B5B17FB608C007812DC /* Images.xcassets in Resources */,
 				03144B4D17FB608C007812DC /* InfoPlist.strings in Resources */,
+				032DFF2A1804175B008BD769 /* README.md in Resources */,
 				03144B5617FB608C007812DC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,7 +376,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoiOS" */ = {
+		03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoIOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03144B6F17FB608C007812DC /* Debug */,
