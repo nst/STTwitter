@@ -100,7 +100,15 @@
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
             if(granted == NO) {
-                errorBlock(error);
+                
+                if(error) {
+                    errorBlock(error);
+                    return;
+                }
+                
+                NSString *message = @"User denied access to their account(s).";
+                NSError *grantError = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+                errorBlock(grantError);
                 return;
             }
             

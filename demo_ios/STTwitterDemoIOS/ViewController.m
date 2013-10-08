@@ -91,7 +91,7 @@
                            
                            NSLog(@"-- statuses: %@", statuses);
                            
-                           self.getTimelineStatusLabel.text = [NSString stringWithFormat:@"%d statuses", [statuses count]];
+                           self.getTimelineStatusLabel.text = [NSString stringWithFormat:@"%lu statuses", (unsigned long)[statuses count]];
                            
                            self.statuses = statuses;
                            
