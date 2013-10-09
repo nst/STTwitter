@@ -31,7 +31,7 @@ If you want to use CocoaPods, add the two following lines to your Podfile:
     pod 'STTwitter'
     platform :ios, '5.0'
 
-Then, run the followinf command to install the STTwitter pod:
+Then, run the following command to install the STTwitter pod:
 
     pod install
 
@@ -48,11 +48,10 @@ Notes:
 
 ##### Instantiate STTwitterAPI
 
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:@""
-                                                              consumerKey:@""
-                                                           consumerSecret:@""
-                                                                 username:@""
-                                                                 password:@""];
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:@""
+                                                          consumerSecret:@""
+                                                                username:@""
+                                                                password:@""];
 
 ##### Verify the credentials
 
