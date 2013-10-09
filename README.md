@@ -282,23 +282,19 @@ You can create your own convenience methods with fewer parameters. You can also 
 
 ##### Layer Model
      
-     +-------------------------------------------------+
-     |                Your Application                 |
-     +-------------------------------------------------+
-                             v
-     +-------------------------------------------------+
-     |                  STTwitterAPI                   |
-     +-------------------------------------------------+
-            v              v                 v
+     +-----------------------------------------------------------------+
+     |                         Your Application                        |
+     +-------------------------------------------------+---------------+
+     |                  STTwitterAPI                   | STTwitterHTML |
+     +-------------------------------------------------+---------------+
      + - - - - - - - - - - - - - - - - - - - - - - - - +
      |              STTwitterOAuthProtocol             |
      + - - - - - - - - - - - - - - - - - - - - - - - - +
-            v              v                 v
      +-------------+----------------+------------------+
      | STTwitterOS | STTwitterOAuth | STTwitterAppOnly |
-     |             +----------------+------------------+
-     |             |          STHTTPRequest            |
-     +-------------+-----------------------------------+
+     |             +----------------+------------------+---------------+
+     |             |                   STHTTPRequest                   |
+     +-------------+---------------------------------------------------+
       |
       + Accounts.framework
       + Social.framework
@@ -308,6 +304,10 @@ You can create your own convenience methods with fewer parameters. You can also 
      * STTwitterAPI
         - can be instantiated with the authentication mode you want
         - provides methods to interact with each Twitter API endpoint
+
+     * STTwitterHTML
+        - a hackish class to login on Twitter by parsing the HTML code and get a PIN
+        - it can break at anytime, your app should not rely on it in production
 
      * STTwitterOAuthProtocol
         - provides generic methods to POST and GET resources on Twitter hosts
