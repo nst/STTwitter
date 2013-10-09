@@ -67,17 +67,21 @@
     } oauthCallback:@"myapp://twitter_access_tokens/"
                     errorBlock:^(NSError *error) {
                         NSLog(@"-- error: %@", error);
+                        _loginStatusLabel.text = [error localizedDescription];
                     }];
 }
 
 - (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verfier {
+    
     [_twitter postAccessTokenRequestWithPIN:verfier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
         NSLog(@"-- screenName: %@", screenName);
         
         _loginStatusLabel.text = screenName;
         
     } errorBlock:^(NSError *error) {
-        NSLog(@"-- %@", error);
+        
+        _loginStatusLabel.text = [error localizedDescription];
+        NSLog(@"-- %@", [error localizedDescription]);
     }];
 }
 
