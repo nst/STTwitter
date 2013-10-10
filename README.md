@@ -202,6 +202,14 @@ There is also a simple iOS demo project in `demo_ios`.
 
 ### Integration Tips
 
+##### Remove Asserts in Release Mode
+
+There are several asserts in the code. They are very useful in debug mode but you should not include them in release.
+
+New projects created with XCode 5 already remove NSAssert logic by default in release.
+
+In older projects, you can set the compilation flag `-DNS_BLOCK_ASSERTIONS=1`.
+
 ##### Number of Characters in a Tweet
 
 Use the method `-[NSString numberOfCharactersInATweet]` to let the user know how many characters she can enter before the end of the Tweet. The method may also return a negative value if the string exceeds a tweet's maximum length. The method considers the shortened URL lengths.
