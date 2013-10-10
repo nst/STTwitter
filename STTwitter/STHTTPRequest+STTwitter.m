@@ -80,8 +80,8 @@
             NSError *jsonError = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
             if(json == nil) {
-                errorBlock(wr.responseHeaders, jsonError);
-                return;
+//                errorBlock(wr.responseHeaders, jsonError);
+                return; // not enough information to say it's an error
             }
             progressBlock(json);
         }
