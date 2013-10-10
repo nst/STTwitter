@@ -3339,7 +3339,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)getSavedSearchesListWithSuccessBlock:(void(^)(NSArray *savedSearches))successBlock
                                   errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self postAPIResource:@"saved_searches/list.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
+    [self getAPIResource:@"saved_searches/list.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3355,7 +3355,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSString *resource = [NSString stringWithFormat:@"saved_searches/show/%@.json", savedSearchID];
     
-    [self postAPIResource:resource parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
+    [self getAPIResource:resource parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
