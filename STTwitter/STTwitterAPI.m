@@ -139,7 +139,7 @@ static NSDateFormatter *dateFormatter = nil;
     STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     twitter.oauth = appOnly;
-        
+    
     return twitter;
 }
 
@@ -158,7 +158,7 @@ static NSDateFormatter *dateFormatter = nil;
     if([self userName]) {
         [ms appendFormat:@" - %@", [self userName]];
     }
-
+    
     return ms;
 }
 
@@ -3794,6 +3794,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // GET activity/about_me.json
 - (void)_getActivityAboutMeSinceID:(NSString *)sinceID
+                             count:(NSString *)count //
+                      includeCards:(NSNumber *)includeCards
+                      modelVersion:(NSNumber *)modelVersion
+                    sendErrorCodes:(NSNumber *)sendErrorCodes
                 contributorDetails:(NSNumber *)contributorDetails
                    includeEntities:(NSNumber *)includeEntities
                   includeMyRetweet:(NSNumber *)includeMyRetweet
@@ -3802,9 +3806,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(sinceID) md[@"since_id"] = sinceID;
+    if(count) md[@"count"] = count;
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"true" : @"false";
-    if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"true" : @"false";
+    if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"1" : @"0";
+    if(includeCards) md[@"include_cards"] = [includeCards boolValue] ? @"1" : @"0";
+    if(modelVersion) md[@"model_version"] = [modelVersion boolValue] ? @"true" : @"false";
+    if(sendErrorCodes) md[@"send_error_codes"] = [sendErrorCodes boolValue] ? @"1" : @"0";
     
 	[self getAPIResource:@"activity/about_me.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -3814,10 +3822,29 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 }
 
 // GET activity/by_friends.json
-- (void)_getActivityByFriendsWithSuccessBlock:(void(^)(NSArray *activities))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)_getActivityByFriendsSinceID:(NSString *)sinceID
+                               count:(NSString *)count
+                  contributorDetails:(NSNumber *)contributorDetails
+                        includeCards:(NSNumber *)includeCards
+                     includeEntities:(NSNumber *)includeEntities
+                   includeMyRetweets:(NSNumber *)includeMyRetweets
+                  includeUserEntites:(NSNumber *)includeUserEntites
+                       latestResults:(NSNumber *)latestResults
+                      sendErrorCodes:(NSNumber *)sendErrorCodes
+                        successBlock:(void(^)(NSArray *activities))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock {
     
-	[self getAPIResource:@"activity/by_friends.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(sinceID) md[@"since_id"] = sinceID;
+    if(count) md[@"count"] = count;
+    if(includeCards) md[@"include_cards"] = [includeCards boolValue] ? @"1" : @"0";
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"true" : @"false";
+    if(includeMyRetweets) md[@"include_my_retweet"] = [includeMyRetweets boolValue] ? @"true" : @"false";
+    if(includeUserEntites) md[@"include_user_entities"] = [includeUserEntites boolValue] ? @"1" : @"0";
+    if(latestResults) md[@"latest_results"] = [latestResults boolValue] ? @"true" : @"false";
+    if(sendErrorCodes) md[@"send_error_codes"] = [sendErrorCodes boolValue] ? @"1" : @"0";
+    
+	[self getAPIResource:@"activity/by_friends.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
