@@ -57,6 +57,8 @@
     __block STHTTPRequest *r = [self requestWithURLString:urlString];
     __weak STHTTPRequest *wr = r;
     
+    r.ignoreCookieStorage = YES;
+    
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
         if(progressBlock == nil) return;
