@@ -157,7 +157,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 }
 
 - (NSString *)oauthNonce {
-    return @"0";
     if(_testOauthNonce) return _testOauthNonce;
     
     return [NSString random32Characters];
@@ -243,7 +242,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 }
 
 - (NSString *)oauthTimestamp {
-//    return @"1381873654";
     /*
      The oauth_timestamp parameter indicates when the request was created. This value should be the number of seconds since the Unix epoch at the point the request is generated, and should be easily generated in most programming languages. Twitter will reject requests which were created too far in the past, so it is important to keep the clock of the computer generating requests in sync with NTP.
      */
