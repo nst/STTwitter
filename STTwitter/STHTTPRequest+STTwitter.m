@@ -49,8 +49,11 @@
     return nil;
 }
 
-+ (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString stTwitterProgressBlock:(void(^)(id json))progressBlock stTwitterSuccessBlock:(void(^)(NSDictionary *headers, id json))successBlock stTwitterErrorBlock:(void(^)(NSDictionary *headers, NSError *error))errorBlock {
-    
++ (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString
+                        stTwitterProgressBlock:(void(^)(id json))progressBlock
+                         stTwitterSuccessBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
+                           stTwitterErrorBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+
     __block STHTTPRequest *r = [self requestWithURLString:urlString];
     __weak STHTTPRequest *wr = r;
     
@@ -87,17 +90,17 @@
         }
     };
     
-    r.completionBlock = ^(NSDictionary *headers, NSString *body) {
+    r.completionBlock = ^(NSDictionary *responseHeaders, NSString *body) {
         
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:wr.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
-            successBlock(headers, body); // response is not necessarily json
+            successBlock(wr.requestHeaders, wr.responseHeaders, body); // response is not necessarily json
             return;
         }
         
-        successBlock(headers, json);
+        successBlock(wr.requestHeaders, wr.responseHeaders, json);
     };
     
     r.errorBlock = ^(NSError *error) {
@@ -105,7 +108,7 @@
         NSError *e = [self errorFromResponseData:wr.responseData];
         
         if(e) {
-            errorBlock(wr.responseHeaders, e);
+            errorBlock(wr.requestHeaders, wr.responseHeaders, e);
             return;
         }
         
@@ -124,7 +127,7 @@
         }
         
         STLog(@"-- body: %@", wr.responseString);
-        errorBlock(wr.responseHeaders, error);
+        errorBlock(wr.requestHeaders, wr.responseHeaders, error);
     };
     
     return r;

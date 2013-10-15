@@ -57,14 +57,16 @@
         [parameters setObject:v forKey:k];
     }
     
-    self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    self.requestHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.rootNode = nil;
     [_outlineView reloadData];
 
-    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
+    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
 
-        self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[headers description] attributes:attributes];
+        self.requestHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[requestHeaders description] attributes:attributes];
+        self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[responseHeaders description] attributes:attributes];
         
         JSONSyntaxHighlight *jsh = [[JSONSyntaxHighlight alloc] initWithJSON:response];
         
@@ -87,14 +89,16 @@
         
         [_outlineView reloadData];
         
-    } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
+    } errorBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
         NSString *s = @"error";
         if(error) {
             s = [error localizedDescription];
         }
         
-        NSString *headersDescription = headers ? [headers description] : @"";
-        self.headersTextViewAttributedString = [[NSAttributedString alloc] initWithString:headersDescription attributes:attributes];
+        NSString *requestHeadersDescription = requestHeaders ? [requestHeaders description] : @"";
+        NSString *responseHeadersDescription = responseHeaders ? [responseHeaders description] : @"";
+        self.requestHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:requestHeadersDescription attributes:attributes];
+        self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:responseHeadersDescription attributes:attributes];
         
         self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
         

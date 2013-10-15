@@ -85,7 +85,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         self.timeoutSeconds = kSTHTTPRequestDefaultTimeout;
         self.filesToUpload = [NSMutableArray array];
         self.dataToUpload = [NSMutableArray array];
-//        self.HTTPMethod = @"GET"; // default
+        //        self.HTTPMethod = @"GET"; // default
     }
     
     return self;
@@ -274,7 +274,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     return data;
 }
 
-- (NSURLRequest *)requestByAddingCredentialsToURL:(BOOL)useCredentialsInURL {
+- (NSMutableURLRequest *)requestByAddingCredentialsToURL:(BOOL)useCredentialsInURL {
     
     NSURL *theURL = nil;
     
@@ -392,11 +392,11 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         NSData *data = [s dataUsingEncoding:_postDataEncoding allowLossyConversion:YES];
         
         if([request HTTPMethod] == nil) [request setHTTPMethod:@"POST"];
-            
+        
         [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[data length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:data];
     } else {
-        if([request HTTPMethod] == nil) [request setHTTPMethod:@"GET"];        
+        if([request HTTPMethod] == nil) [request setHTTPMethod:@"GET"];
     }
     
     [_requestHeaders enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -554,12 +554,15 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         NSLog(@"\t %@ = %@", key, obj);
     }];
     
-    NSArray *cookies = [self requestCookies];
-    
-    if([cookies count]) NSLog(@"COOKIES");
-    
-    for(NSHTTPCookie *cookie in cookies) {
-        NSLog(@"\t %@ = %@", [cookie name], [cookie value]);
+    if([request HTTPShouldHandleCookies]) {
+        
+        NSArray *cookies = [self requestCookies];
+        
+        if([cookies count]) NSLog(@"COOKIES");
+        
+        for(NSHTTPCookie *cookie in cookies) {
+            NSLog(@"\t %@ = %@", [cookie name], [cookie value]);
+        }
     }
     
     NSArray *kvDictionaries = [[self class] dictionariesSortedByKey:_POSTDictionary];
@@ -592,7 +595,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 
 - (void)startAsynchronous {
     
-    NSURLRequest *request = [self requestByAddingCredentialsToURL:_addCredentialsToURL];
+    NSMutableURLRequest *request = [self requestByAddingCredentialsToURL:_addCredentialsToURL];
     
     self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];

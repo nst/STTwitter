@@ -140,12 +140,20 @@
 #endif
 }
 
+- (NSDictionary *)requestHeadersForRequest:(id)request {
+#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    return [[request signedURLRequest] allHTTPHeaderFields];
+#else
+    return [[request preparedURLRequest] allHTTPHeaderFields];
+#endif
+}
+
 - (NSString *)fetchAPIResource:(NSString *)resource
                  baseURLString:(NSString *)baseURLString
                     httpMethod:(NSInteger)httpMethod
                     parameters:(NSDictionary *)params
-               completionBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))completionBlock
-                    errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
+               completionBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
+                    errorBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     NSData *mediaData = [params valueForKey:@"media[]"];
     
@@ -173,12 +181,12 @@
     }
     
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-        
+
         NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
         if(responseData == nil) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, [urlResponse allHeaderFields], error);
+                errorBlock(requestID, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
             }];
             return;
         }
@@ -196,13 +204,13 @@
             if(errorString) {
                 error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(requestID, [urlResponse allHeaderFields], error);
+                    errorBlock(requestID, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
                 }];
                 return;
             }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(requestID, [urlResponse allHeaderFields], rawResponse);
+                completionBlock(requestID, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], rawResponse);
             }];
             return;
         }
@@ -216,7 +224,7 @@
             NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:userInfo];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, [urlResponse allHeaderFields], jsonErrorFromResponse);
+                    errorBlock(requestID, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonErrorFromResponse);
             }];
             
             return;
@@ -240,7 +248,7 @@
             NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:userInfo];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, [urlResponse allHeaderFields], jsonErrorFromResponse);
+                errorBlock(requestID, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonErrorFromResponse);
             }];
             
             return;
@@ -251,13 +259,13 @@
         if(json) {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(requestID, [urlResponse allHeaderFields], (NSArray *)json);
+                completionBlock(requestID, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], (NSArray *)json);
             }];
             
         } else {
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(requestID, [urlResponse allHeaderFields], jsonError);
+                errorBlock(requestID, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonError);
             }];
         }
     }];
@@ -270,8 +278,8 @@
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
               progressBlock:(void (^)(NSString *requestID, id response))progressBlock // TODO: handle progressBlock?
-               successBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))successBlock
-                 errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock {
+               successBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+                 errorBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     NSAssert(([ @[@"GET", @"POST"] containsObject:HTTPMethod]), @"unsupported HTTP method");
     
@@ -363,7 +371,7 @@
           baseURLString:@"https://api.twitter.com"
              parameters:d
           progressBlock:nil
-           successBlock:^(NSString *requestID, NSDictionary *headers, id response) {
+           successBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                
                NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
                
@@ -373,7 +381,7 @@
                NSString *screenName = [d valueForKey:@"screen_name"];
                
                successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
-           } errorBlock:^(NSString *requestID, NSDictionary *headers, NSError *error) {
+           } errorBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                errorBlock(error);
            }];
 }

@@ -114,8 +114,8 @@
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
               progressBlock:(void (^)(NSString *requestID, id response))progressBlock // TODO: handle progressBlock?
-               successBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))successBlock
-                 errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock;
+               successBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+                 errorBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
 - (void)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString

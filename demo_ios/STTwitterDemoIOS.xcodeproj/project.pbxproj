@@ -201,7 +201,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Nicolas Seriot";
 			};
-			buildConfigurationList = 03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoIOS" */;
+			buildConfigurationList = 03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoiOS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -308,7 +308,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -341,7 +341,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -376,7 +376,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoIOS" */ = {
+		03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoiOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03144B6F17FB608C007812DC /* Debug */,
