@@ -1817,6 +1817,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // GET activity/about_me.json
 - (void)_getActivityAboutMeSinceID:(NSString *)sinceID
+                             count:(NSString *)count
+                      includeCards:(NSNumber *)includeCards
+                      modelVersion:(NSNumber *)modelVersion
+                    sendErrorCodes:(NSNumber *)sendErrorCodes
                 contributorDetails:(NSNumber *)contributorDetails
                    includeEntities:(NSNumber *)includeEntities
                   includeMyRetweet:(NSNumber *)includeMyRetweet
@@ -1824,8 +1828,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET activity/by_friends.json
-- (void)_getActivityByFriendsWithSuccessBlock:(void(^)(NSArray *activities))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)_getActivityByFriendsSinceID:(NSString *)sinceID
+                               count:(NSString *)count
+                  contributorDetails:(NSNumber *)contributorDetails
+                        includeCards:(NSNumber *)includeCards
+                     includeEntities:(NSNumber *)includeEntities
+                   includeMyRetweets:(NSNumber *)includeMyRetweets
+                  includeUserEntites:(NSNumber *)includeUserEntites
+                       latestResults:(NSNumber *)latestResults
+                      sendErrorCodes:(NSNumber *)sendErrorCodes
+                        successBlock:(void(^)(NSArray *activities))successBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET statuses/:id/activity/summary.json
 - (void)_getStatusesActivitySummaryForStatusID:(NSString *)statusID
