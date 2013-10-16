@@ -42,6 +42,38 @@
     self.genericHTTPMethod = [_genericHTTPMethodPopUpButton titleOfSelectedItem];
 }
 
+- (NSString *)curlDescriptionWithEndpoint:(NSString *)endPoint baseURLString:(NSString *)baseURLString parameters:(NSDictionary *)parameters requestHeaders:(NSDictionary *)requestHeaders {
+/*
+ $ curl -i -H "Authorization: OAuth oauth_consumer_key="7YBPrscvh0RIThrWYVeGg", \
+                                    oauth_nonce="DA5E6B1E-E98D-4AFB-9AAB-18A463F2", \
+                                    oauth_signature_method="HMAC-SHA1", \
+                                    oauth_timestamp="1381908706", \
+                                    oauth_version="1.0", \
+                                    oauth_token="1294332967-UsaIUBcsC4JcHv9tIYxk5EktsVisAtCLNVGKghP", \
+                                    oauth_signature="gnmc02ohamTvTmkTppz%2FbH8OjAs%3D"" \
+        "https://api.twitter.com/1.1/statuses/home_timeline.json?count=10"
+ */
+
+    if([baseURLString hasSuffix:@"/"]) baseURLString = [baseURLString substringToIndex:[baseURLString length]-1];
+    
+    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, endPoint];
+    
+    NSMutableArray *parametersArray = [NSMutableArray array];
+    
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
+        [parametersArray addObject:s];
+    }];
+    
+    if([parameters count]) {
+        NSString *parameterString = [parametersArray componentsJoinedByString:@"&"];
+        
+        [urlString appendFormat:@"?%@", parameterString];
+    }
+
+    return [NSString stringWithFormat:@"curl -i -H \"Authorization: %@\" \"%@\"", [requestHeaders valueForKey:@"Authorization"], urlString];
+}
+
 - (IBAction)sendRequestAction:(id)sender {
     NSAssert(_genericAPIEndpoint, @"");
     NSAssert(_genericHTTPMethod, @"");
@@ -57,15 +89,17 @@
         [parameters setObject:v forKey:k];
     }
     
-    self.requestHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
+    self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:@"" attributes:attributes];
     self.rootNode = nil;
     [_outlineView reloadData];
-
+    
     [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-
-        self.requestHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[requestHeaders description] attributes:attributes];
+        
+        NSString *curlDescription = [self curlDescriptionWithEndpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
+        
+        self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:curlDescription attributes:attributes];
         self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[responseHeaders description] attributes:attributes];
         
         JSONSyntaxHighlight *jsh = [[JSONSyntaxHighlight alloc] initWithJSON:response];
@@ -97,7 +131,7 @@
         
         NSString *requestHeadersDescription = requestHeaders ? [requestHeaders description] : @"";
         NSString *responseHeadersDescription = responseHeaders ? [responseHeaders description] : @"";
-        self.requestHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:requestHeadersDescription attributes:attributes];
+        self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:requestHeadersDescription attributes:attributes];
         self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:responseHeadersDescription attributes:attributes];
         
         self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];

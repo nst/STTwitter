@@ -25,7 +25,7 @@
 @property (nonatomic, strong) NSString *genericHTTPMethod;
 @property (nonatomic, strong) NSString *genericBaseURLString;
 @property (nonatomic, strong) NSString *genericAPIEndpoint;
-@property (nonatomic, strong) NSAttributedString *requestHeadersTextViewAttributedString;
+@property (nonatomic, strong) NSAttributedString *curlTextViewAttributedString;
 @property (nonatomic, strong) NSAttributedString *responseHeadersTextViewAttributedString;
 @property (nonatomic, strong) NSAttributedString *bodyTextViewAttributedString;
 @property (nonatomic, strong) NSMutableArray *genericRequestParameters;
