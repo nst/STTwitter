@@ -29,22 +29,27 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (copy) downloadProgressBlock_t downloadProgressBlock;
 @property (copy) completionBlock_t completionBlock;
 @property (copy) errorBlock_t errorBlock;
-@property (nonatomic) NSStringEncoding postDataEncoding;
-@property (nonatomic, retain) NSDictionary *POSTDictionary; // keys and values are NSString objects
+
+// request
+@property (nonatomic, retain) NSString *HTTPMethod; // default: GET, or POST if POSTDictionary or files to upload
 @property (nonatomic, retain) NSMutableDictionary *requestHeaders;
+@property (nonatomic, retain) NSDictionary *POSTDictionary; // keys and values are NSString instances
+@property (nonatomic, retain) NSData *rawPOSTData; // eg. to post JSON contents
+@property (nonatomic) NSStringEncoding POSTDataEncoding;
+@property (nonatomic, assign) NSUInteger timeoutSeconds;
+@property (nonatomic) BOOL addCredentialsToURL; // default NO
+@property (nonatomic) BOOL encodePOSTDictionary; // default YES
+@property (nonatomic, retain, readonly) NSURL *url;
+@property (nonatomic) BOOL ignoreCookieStorage;
+
+// response
+@property (nonatomic) NSStringEncoding forcedResponseEncoding;
 @property (nonatomic, readonly) NSInteger responseStatus;
 @property (nonatomic, retain, readonly) NSString *responseStringEncodingName;
 @property (nonatomic, retain, readonly) NSDictionary *responseHeaders;
-@property (nonatomic, retain, readonly) NSURL *url;
+@property (nonatomic, retain, readonly) NSString *responseString;
 @property (nonatomic, retain, readonly) NSMutableData *responseData;
 @property (nonatomic, retain, readonly) NSError *error;
-@property (nonatomic, retain) NSString *responseString;
-@property (nonatomic) NSStringEncoding forcedResponseEncoding;
-@property (nonatomic) BOOL encodePOSTDictionary; // default YES
-@property (nonatomic, assign) NSUInteger timeoutSeconds;
-@property (nonatomic) BOOL addCredentialsToURL; // default NO
-@property (nonatomic) NSString *HTTPMethod; // default: GET, or POST if POSTDictionary or files to upload
-@property (nonatomic) BOOL ignoreCookieStorage;
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString;
