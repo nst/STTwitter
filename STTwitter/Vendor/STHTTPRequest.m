@@ -19,7 +19,8 @@
 NSUInteger const kSTHTTPRequestCancellationError = 1;
 NSUInteger const kSTHTTPRequestDefaultTimeout = 30;
 
-static NSMutableDictionary *sharedCredentialsStorage = nil;
+static NSMutableDictionary *localCredentialsStorage = nil;
+static NSMutableArray *localCookiesStorage = nil;
 
 /**/
 
@@ -54,6 +55,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 @property (nonatomic, retain) NSMutableArray *filesToUpload; // STHTTPRequestFileUpload instances
 @property (nonatomic, retain) NSMutableArray *dataToUpload; // STHTTPRequestDataUpload instances
 @property (nonatomic, retain) NSURLRequest *request;
+@property (nonatomic, retain) NSString *responseString;
 @end
 
 @interface NSData (Base64)
@@ -80,30 +82,30 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         self.url = theURL;
         self.responseData = [[NSMutableData alloc] init];
         self.requestHeaders = [NSMutableDictionary dictionary];
-        self.postDataEncoding = NSUTF8StringEncoding;
+        self.POSTDataEncoding = NSUTF8StringEncoding;
         self.encodePOSTDictionary = YES;
         self.addCredentialsToURL = NO;
         self.timeoutSeconds = kSTHTTPRequestDefaultTimeout;
         self.filesToUpload = [NSMutableArray array];
         self.dataToUpload = [NSMutableArray array];
-        //        self.HTTPMethod = @"GET"; // default
+        // self.HTTPMethod = @"GET"; // default
     }
     
     return self;
 }
 
-+ (void)clearSession {
+- (void)clearSession {
     [self deleteAllCookies];
-    [self deleteAllCredentials];
+    [[self class] deleteAllCredentials];
 }
 
 #pragma mark Credentials
 
 + (NSMutableDictionary *)sharedCredentialsStorage {
-    if(sharedCredentialsStorage == nil) {
-        sharedCredentialsStorage = [NSMutableDictionary dictionary];
+    if(localCredentialsStorage == nil) {
+        localCredentialsStorage = [NSMutableDictionary dictionary];
     }
-    return sharedCredentialsStorage;
+    return localCredentialsStorage;
 }
 
 + (NSURLCredential *)sessionAuthenticationCredentialsForURL:(NSURL *)requestURL {
@@ -111,7 +113,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 }
 
 + (void)deleteAllCredentials {
-    sharedCredentialsStorage = [NSMutableDictionary dictionary];
+    localCredentialsStorage = [NSMutableDictionary dictionary];
 }
 
 - (void)setCredentialForCurrentHost:(NSURLCredential *)c {
@@ -143,9 +145,22 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
 
 #pragma mark Cookies
 
-+ (NSArray *)sessionCookies {
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray *allCookies = [cookieStorage cookies];
++ (NSMutableArray *)localCookiesStorage {
+    if(localCookiesStorage == nil) {
+        localCookiesStorage = [NSMutableArray array];
+    }
+    return localCookiesStorage;
+}
+
+- (NSArray *)sessionCookies {
+    
+    NSArray *allCookies = nil;
+    
+    if(_ignoreSharedCookiesStorage) {
+        allCookies = [[self class] localCookiesStorage];
+    } else {
+        allCookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+    }
     
     NSArray *sessionCookies = [allCookies filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         NSHTTPCookie *cookie = (NSHTTPCookie *)evaluatedObject;
@@ -155,36 +170,55 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     return sessionCookies;
 }
 
-+ (void)deleteSessionCookies {
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+- (void)deleteSessionCookies {
     
     for(NSHTTPCookie *cookie in [self sessionCookies]) {
-        [cookieStorage deleteCookie:cookie];
+        if(_ignoreSharedCookiesStorage) {
+            [[[self class] localCookiesStorage] removeObject:cookie];
+        } else {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+        }
     }
 }
 
-+ (void)deleteAllCookies {
-    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+- (void)deleteAllCookies {
+    if(_ignoreSharedCookiesStorage) {
+        [[[self class] localCookiesStorage] removeAllObjects];
+    } else {
+        NSHTTPCookieStorage *sharedCookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+        NSArray *cookies = [sharedCookieStorage cookies];
+        for (NSHTTPCookie *cookie in cookies) {
+            [sharedCookieStorage deleteCookie:cookie];
+        }
+    }
+}
+
+- (void)addCookie:(NSHTTPCookie *)cookie {
     
-    NSArray *cookies = [cookieStorage cookies];
-    for (NSHTTPCookie *cookie in cookies) {
-        [cookieStorage deleteCookie:cookie];
+    NSParameterAssert(cookie);
+    if(cookie == nil) return;
+
+    if(_ignoreSharedCookiesStorage) {
+        [[[self class] localCookiesStorage] addObject:cookie];
+    } else {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+
+#if DEBUG
+        NSHTTPCookie *readCookie = [[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies] lastObject];
+        NSAssert(readCookie, @"cannot read any cookie after adding one");
+#endif
     }
 }
 
-+ (void)addCookie:(NSHTTPCookie *)cookie forURL:(NSURL *)url {
-    NSArray *cookies = [NSArray arrayWithObject:cookie];
-	
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookies:cookies forURL:url mainDocumentURL:nil];
-}
-
-+ (void)addCookieWithName:(NSString *)name value:(NSString *)value url:(NSURL *)url {
+- (void)addCookieWithName:(NSString *)name value:(NSString *)value url:(NSURL *)url {
+    
+    NSParameterAssert(url);
+    if(url == nil) return;
     
     NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                              name, NSHTTPCookieName,
                                              value, NSHTTPCookieValue,
-                                             [url host], NSHTTPCookieDomain,
-                                             [url host], NSHTTPCookieOriginURL,
+                                             url, NSHTTPCookieOriginURL,
                                              @"FALSE", NSHTTPCookieDiscard,
                                              @"/", NSHTTPCookiePath,
                                              @"0", NSHTTPCookieVersion,
@@ -193,20 +227,24 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
     
-    [[self class] addCookie:cookie forURL:url];
+    [self addCookie:cookie];
 }
 
 - (NSArray *)requestCookies {
-    if(_ignoreCookieStorage) return nil;
-    return [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[_url absoluteURL]];
-}
-
-- (void)addCookie:(NSHTTPCookie *)cookie {
-    [[self class] addCookie:cookie forURL:_url];
+    
+    if(_ignoreSharedCookiesStorage) {
+        NSArray *filteredCookies = [[[self class] localCookiesStorage] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            NSHTTPCookie *cookie = (NSHTTPCookie *)evaluatedObject;
+            return [[cookie domain] isEqualToString:[_url host]];
+        }]];
+                                           return filteredCookies;
+    } else {
+        return [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[_url absoluteURL]];
+    }
 }
 
 - (void)addCookieWithName:(NSString *)name value:(NSString *)value {
-    [[self class] addCookieWithName:name value:value url:_url];
+    [self addCookieWithName:name value:value url:_url];
 }
 
 #pragma mark Headers
@@ -294,12 +332,18 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
     
     request.timeoutInterval = self.timeoutSeconds;
     
+    if(_ignoreSharedCookiesStorage) {
+        NSArray *cookies = [[self class] localCookiesStorage];
+        NSDictionary *d = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+        [request setAllHTTPHeaderFields:d];
+    }
+    
     // escape POST dictionary keys and values if needed
     if(_encodePOSTDictionary) {
         NSMutableDictionary *escapedPOSTDictionary = _POSTDictionary ? [NSMutableDictionary dictionary] : nil;
         [_POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            NSString *k = [key st_stringByAddingRFC3986PercentEscapesUsingEncoding:_postDataEncoding];
-            NSString *v = [[obj description] st_stringByAddingRFC3986PercentEscapesUsingEncoding:_postDataEncoding];
+            NSString *k = [key st_stringByAddingRFC3986PercentEscapesUsingEncoding:_POSTDataEncoding];
+            NSString *v = [[obj description] st_stringByAddingRFC3986PercentEscapesUsingEncoding:_POSTDataEncoding];
             [escapedPOSTDictionary setValue:v forKey:k];
         }];
         self.POSTDictionary = escapedPOSTDictionary;
@@ -365,11 +409,18 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[body length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:body];
         
-    } else if(_POSTDictionary != nil) { // may be empty (POST request without body)
+    } else if (_rawPOSTData) {
+        
+        if([request HTTPMethod] == nil) [request setHTTPMethod:@"POST"];
+        
+        [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[_rawPOSTData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPBody:_rawPOSTData];
+        
+    } else if (_POSTDictionary != nil) { // may be empty (POST request without body)
         
         if(_encodePOSTDictionary) {
             
-            CFStringEncoding cfStringEncoding = CFStringConvertNSStringEncodingToEncoding(_postDataEncoding);
+            CFStringEncoding cfStringEncoding = CFStringConvertNSStringEncodingToEncoding(_POSTDataEncoding);
             NSString *encodingName = (NSString *)CFStringConvertEncodingToIANACharSetName(cfStringEncoding);
             
             if(encodingName) {
@@ -391,7 +442,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         
         NSString *s = [ma componentsJoinedByString:@"&"];
         
-        NSData *data = [s dataUsingEncoding:_postDataEncoding allowLossyConversion:YES];
+        NSData *data = [s dataUsingEncoding:_POSTDataEncoding allowLossyConversion:YES];
         
         if([request HTTPMethod] == nil) [request setHTTPMethod:@"POST"];
         
@@ -558,7 +609,7 @@ static NSMutableDictionary *sharedCredentialsStorage = nil;
         [ms appendFormat:@"\t %@ = %@\n", key, obj];
     }];
     
-    if(_ignoreCookieStorage == NO && [_request HTTPShouldHandleCookies]) {
+    if([_request HTTPShouldHandleCookies]) {
         
         NSArray *cookies = [self requestCookies];
         
