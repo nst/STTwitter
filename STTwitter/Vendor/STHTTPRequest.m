@@ -14,8 +14,6 @@
 
 #import "STHTTPRequest.h"
 
-//#define DEBUG 1
-
 NSUInteger const kSTHTTPRequestCancellationError = 1;
 NSUInteger const kSTHTTPRequestDefaultTimeout = 30;
 
@@ -519,7 +517,6 @@ static NSMutableArray *localCookiesStorage = nil;
     return [[NSString alloc] initWithData:data encoding:encoding];
 }
 
-#if DEBUG
 - (NSString *)curlDescription {
     
     NSMutableArray *ma = [NSMutableArray array];
@@ -593,8 +590,6 @@ static NSMutableArray *localCookiesStorage = nil;
     
     NSMutableString *ms = [NSMutableString string];
     
-    [ms appendString:(@"--------------------------------------\n")];
-    
     NSString *method = (self.POSTDictionary || [self.filesToUpload count] || [self.dataToUpload count]) ? @"POST" : @"GET";
     
     [ms appendFormat:@"%@ %@\n", method, [_request URL]];
@@ -640,12 +635,8 @@ static NSMutableArray *localCookiesStorage = nil;
         [ms appendFormat:@"\t %@ = [%u bytes]\n", d.parameterName, (unsigned int)[d.data length]];
     }
     
-    [ms appendString:@"--\n"];
-    [ms appendFormat:@"%@\n", [self curlDescription]];
-    [ms appendString:@"--------------------------------------\n"];
     return ms;
 }
-#endif
 
 #pragma mark Start Request
 
@@ -661,10 +652,37 @@ static NSMutableArray *localCookiesStorage = nil;
     
     self.requestHeaders = [[_request allHTTPHeaderFields] mutableCopy];
     
-#if DEBUG
-    NSLog(@"%@", [self debugDescription]);
-#endif
+    /**/
     
+    BOOL showDebugDescription = [[NSUserDefaults standardUserDefaults] boolForKey:@"STHTTPRequestShowDebugDescription"];
+    BOOL showCurlDescription = [[NSUserDefaults standardUserDefaults] boolForKey:@"STHTTPRequestShowCurlDescription"];
+    
+    NSMutableString *logString = nil;
+    
+    if(showDebugDescription || showCurlDescription) {
+        logString = [NSMutableString stringWithString:@"\n----------\n"];
+    }
+    
+    if(showDebugDescription) {
+        [logString appendString:[self debugDescription]];
+    }
+
+    if(showDebugDescription && showCurlDescription) {
+        [logString appendString:@"\n"];
+    }
+
+    if(showCurlDescription) {
+        [logString appendString:[self curlDescription]];
+    }
+
+    if(showDebugDescription || showCurlDescription) {
+        [logString appendString:@"\n----------\n"];
+    }
+         
+    if(logString) NSLog(@"%@", logString);
+    
+    /**/
+
     if(_connection == nil) {
         NSString *s = @"can't create connection";
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey];
