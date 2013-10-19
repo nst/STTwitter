@@ -40,7 +40,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic) BOOL addCredentialsToURL; // default NO
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
 @property (nonatomic, retain, readonly) NSURL *url;
-@property (nonatomic) BOOL ignoreSharedCookiesStorage; // TODO: support still to be tested
+@property (nonatomic) BOOL ignoreSharedCookiesStorage;
 
 // response
 @property (nonatomic) NSStringEncoding forcedResponseEncoding;
