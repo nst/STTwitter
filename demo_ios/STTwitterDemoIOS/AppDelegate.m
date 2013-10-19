@@ -76,7 +76,7 @@
     ViewController *vc = (ViewController *)[[self window] rootViewController];
     [vc setOAuthToken:token oauthVerifier:verifier];
     
-    return NO;
+    return YES;
 }
 
 @end
