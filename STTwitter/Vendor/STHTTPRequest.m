@@ -195,12 +195,12 @@ static NSMutableArray *localCookiesStorage = nil;
     
     NSParameterAssert(cookie);
     if(cookie == nil) return;
-
+    
     if(_ignoreSharedCookiesStorage) {
         [[[self class] localCookiesStorage] addObject:cookie];
     } else {
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-
+        
 #if DEBUG
         NSHTTPCookie *readCookie = [[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies] lastObject];
         NSAssert(readCookie, @"cannot read any cookie after adding one");
@@ -235,7 +235,7 @@ static NSMutableArray *localCookiesStorage = nil;
             NSHTTPCookie *cookie = (NSHTTPCookie *)evaluatedObject;
             return [[cookie domain] isEqualToString:[_url host]];
         }]];
-                                           return filteredCookies;
+        return filteredCookies;
     } else {
         return [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[_url absoluteURL]];
     }
@@ -331,7 +331,7 @@ static NSMutableArray *localCookiesStorage = nil;
     request.timeoutInterval = self.timeoutSeconds;
     
     if(_ignoreSharedCookiesStorage) {
-        NSArray *cookies = [[self class] localCookiesStorage];
+        NSArray *cookies = [self sessionCookies];
         NSDictionary *d = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
         [request setAllHTTPHeaderFields:d];
     }
@@ -466,10 +466,6 @@ static NSMutableArray *localCookiesStorage = nil;
     return request;
 }
 
-- (NSURLRequest *)request {
-    return [self requestByAddingCredentialsToURL:NO];
-}
-
 - (NSURLRequest *)requestByAddingCredentialsToURL {
     return [self requestByAddingCredentialsToURL:YES];
 }
@@ -565,10 +561,9 @@ static NSMutableArray *localCookiesStorage = nil;
     
     // -H "X-you-and-me: yes"                                       // extra headers
     
-    NSMutableDictionary *headers = [[self requestHeaders] mutableCopy];
-    
-    [headers addEntriesFromDictionary:[self.request allHTTPHeaderFields]];
-    
+    NSMutableDictionary *headers = [[_request allHTTPHeaderFields] mutableCopy];
+    [headers removeObjectForKey:@"Cookie"];
+
     NSMutableArray *headersStrings = [NSMutableArray array];
     [headers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         NSString *s = [NSString stringWithFormat:@"-H \"%@: %@\"", key, obj];
@@ -594,9 +589,8 @@ static NSMutableArray *localCookiesStorage = nil;
     
     [ms appendFormat:@"%@ %@\n", method, [_request URL]];
     
-    NSMutableDictionary *headers = [[self requestHeaders] mutableCopy];
-    
-    [headers addEntriesFromDictionary:[_request allHTTPHeaderFields]];
+    NSMutableDictionary *headers = [[_request allHTTPHeaderFields] mutableCopy];
+    [headers removeObjectForKey:@"Cookie"];
     
     if([headers count]) [ms appendString:@"HEADERS\n"];
     
@@ -604,15 +598,12 @@ static NSMutableArray *localCookiesStorage = nil;
         [ms appendFormat:@"\t %@ = %@\n", key, obj];
     }];
     
-    if([_request HTTPShouldHandleCookies]) {
-        
-        NSArray *cookies = [self requestCookies];
-        
-        if([cookies count]) [ms appendString:@"COOKIES\n"];
-        
-        for(NSHTTPCookie *cookie in cookies) {
-            [ms appendFormat:@"\t %@ = %@\n", [cookie name], [cookie value]];
-        }
+    NSArray *cookies = [self requestCookies];
+    
+    if([cookies count]) [ms appendString:@"COOKIES\n"];
+    
+    for(NSHTTPCookie *cookie in cookies) {
+        [ms appendFormat:@"\t %@ = %@\n", [cookie name], [cookie value]];
     }
     
     NSArray *kvDictionaries = [[self class] dictionariesSortedByKey:_POSTDictionary];
@@ -644,6 +635,8 @@ static NSMutableArray *localCookiesStorage = nil;
     
     NSMutableURLRequest *request = [self requestByAddingCredentialsToURL:_addCredentialsToURL];
     
+    [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
+    
     self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     [_connection start];
@@ -651,7 +644,7 @@ static NSMutableArray *localCookiesStorage = nil;
     self.request = [_connection currentRequest];
     
     self.requestHeaders = [[_request allHTTPHeaderFields] mutableCopy];
-    
+        
     /**/
     
     BOOL showDebugDescription = [[NSUserDefaults standardUserDefaults] boolForKey:@"STHTTPRequestShowDebugDescription"];
@@ -666,23 +659,23 @@ static NSMutableArray *localCookiesStorage = nil;
     if(showDebugDescription) {
         [logString appendString:[self debugDescription]];
     }
-
+    
     if(showDebugDescription && showCurlDescription) {
         [logString appendString:@"\n"];
     }
-
+    
     if(showCurlDescription) {
         [logString appendString:[self curlDescription]];
     }
-
+    
     if(showDebugDescription || showCurlDescription) {
         [logString appendString:@"\n----------\n"];
     }
-         
+    
     if(logString) NSLog(@"%@", logString);
     
     /**/
-
+    
     if(_connection == nil) {
         NSString *s = @"can't create connection";
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey];
