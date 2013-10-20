@@ -53,7 +53,6 @@ static NSMutableArray *localCookiesStorage = nil;
 @property (nonatomic, retain) NSMutableArray *filesToUpload; // STHTTPRequestFileUpload instances
 @property (nonatomic, retain) NSMutableArray *dataToUpload; // STHTTPRequestDataUpload instances
 @property (nonatomic, retain) NSURLRequest *request;
-@property (nonatomic, retain) NSString *responseString;
 @end
 
 @interface NSData (Base64)

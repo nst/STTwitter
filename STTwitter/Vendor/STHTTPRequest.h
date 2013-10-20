@@ -47,7 +47,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic, readonly) NSInteger responseStatus;
 @property (nonatomic, retain, readonly) NSString *responseStringEncodingName;
 @property (nonatomic, retain, readonly) NSDictionary *responseHeaders;
-@property (nonatomic, retain, readonly) NSString *responseString;
+@property (nonatomic, retain) NSString *responseString;
 @property (nonatomic, retain, readonly) NSMutableData *responseData;
 @property (nonatomic, retain, readonly) NSError *error;
 
