@@ -190,7 +190,7 @@ STTwitter demo project comes with `TwitterClients.plist` where you can enter you
 
 There is a demo project for OS X in `demo_osx`, which lets you choose how to get the OAuth tokens (see below).
 
-An archive generated on 2013-09-26 10:17 is available at [http://seriot.ch/temp/STTwitterDemoOSX.app.zip](http://seriot.ch/temp/STTwitterDemoOSX.app.zip).
+An archive generated on 2013-10-20 10:35 is available at [http://seriot.ch/temp/STTwitterDemoOSX.app.zip](http://seriot.ch/temp/STTwitterDemoOSX.app.zip).
 
 Once you got the OAuth tokens, you can get your timeline and post a new status.
 
