@@ -36,7 +36,7 @@
 - (IBAction)loginWithiOSAction:(id)sender {
     
     self.twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
-
+    
     _loginStatusLabel.text = @"Trying to login with iOS...";
     _loginStatusLabel.text = @"";
     
@@ -47,7 +47,7 @@
     } errorBlock:^(NSError *error) {
         _loginStatusLabel.text = [error localizedDescription];
     }];
-
+    
 }
 
 - (IBAction)loginInSafariAction:(id)sender {
@@ -71,9 +71,9 @@
                     }];
 }
 
-- (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verfier {
+- (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verifier {
     
-    [_twitter postAccessTokenRequestWithPIN:verfier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
+    [_twitter postAccessTokenRequestWithPIN:verifier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
         NSLog(@"-- screenName: %@", screenName);
         
         _loginStatusLabel.text = screenName;
@@ -90,20 +90,20 @@
     self.getTimelineStatusLabel.text = @"";
     
     [_twitter getHomeTimelineSinceID:nil
-                              count:20
-                       successBlock:^(NSArray *statuses) {
-                           
-                           NSLog(@"-- statuses: %@", statuses);
-                           
-                           self.getTimelineStatusLabel.text = [NSString stringWithFormat:@"%lu statuses", (unsigned long)[statuses count]];
-                           
-                           self.statuses = statuses;
-                           
-                           [self.tableView reloadData];
-                           
-                       } errorBlock:^(NSError *error) {
-                           self.getTimelineStatusLabel.text = [error localizedDescription];
-                       }];
+                               count:20
+                        successBlock:^(NSArray *statuses) {
+                            
+                            NSLog(@"-- statuses: %@", statuses);
+                            
+                            self.getTimelineStatusLabel.text = [NSString stringWithFormat:@"%lu statuses", (unsigned long)[statuses count]];
+                            
+                            self.statuses = statuses;
+                            
+                            [self.tableView reloadData];
+                            
+                        } errorBlock:^(NSError *error) {
+                            self.getTimelineStatusLabel.text = [error localizedDescription];
+                        }];
 }
 
 #pragma mark UITableViewDataSource
