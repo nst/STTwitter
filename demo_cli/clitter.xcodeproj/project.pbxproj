@@ -63,6 +63,7 @@
 		03954DCD181558C500B15ECE /* STTwitterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterProtocol.h; sourceTree = "<group>"; };
 		03954DD3181558C500B15ECE /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		03954DD4181558C500B15ECE /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
+		03EB47F9181A41B500FE9DFE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +113,7 @@
 		0308C37C180733CF00C5D104 /* clitter */ = {
 			isa = PBXGroup;
 			children = (
+				03EB47F9181A41B500FE9DFE /* Info.plist */,
 				0308C37D180733CF00C5D104 /* main.m */,
 				0308C381180733CF00C5D104 /* clitter.1 */,
 				0308C37F180733CF00C5D104 /* Supporting Files */,
@@ -301,6 +303,12 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "clitter/clitter-Prefix.pch";
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"\"$SRCROOT\"/clitter/Info.plist",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -310,6 +318,12 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "clitter/clitter-Prefix.pch";
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"\"$SRCROOT\"/clitter/Info.plist",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
