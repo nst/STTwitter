@@ -2,7 +2,7 @@
 
 _A comprehensive Objective-C library for Twitter REST API 1.1_
 
-> STTwitter will be presented at [SoftShake](http://soft-shake.ch) 2013, Geneva, on October 24th.
+> [2013-10-24] STTwitter was presented at [SoftShake](http://soft-shake.ch) ([slides](http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf)).
 
 1. [Installation](#installation)
 2. [Code Snippets](#code-snippets)
