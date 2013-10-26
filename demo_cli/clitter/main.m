@@ -9,20 +9,73 @@
 #import <Foundation/Foundation.h>
 #import "STTwitter.h"
 
+NSString *descriptionForTarget(NSDictionary *target) {
+    //NSString *timestamp = [target valueForKey:@"created_at"];
+    NSString *targetName = [target valueForKeyPath:@"user.screen_name"];
+    NSString *text = [target valueForKey:@"text"];
+    text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@"\n                                    "];
+    NSString *favouritesCount = [target valueForKey:@"favorite_count"];
+    NSString *retweetsCount = [target valueForKey:@"retweet_count"];
+    NSString *idString = [target valueForKey:@"id_str"];
+    
+    return [NSString stringWithFormat:@"%@\t[F %@] [R %@]\t@%@\t%@", idString, favouritesCount, retweetsCount, targetName, text];
+}
+
+NSString *descriptionForFavorites(NSArray *favorites) {
+    
+    NSMutableString *ms = [NSMutableString string];
+    
+    NSUInteger numberOfFavorites = 0;
+    
+    for(NSDictionary *d in favorites) {
+        [ms appendString:@"----------\n"];
+        
+        NSString *timestamp = [d valueForKey:@"created_at"];
+        
+        for(NSDictionary *source in [d valueForKey:@"sources"]) {
+            NSString *sourceName = [source valueForKey:@"screen_name"];
+            
+            [ms appendFormat:@"%@ @%@ favorited:\n", timestamp, sourceName];
+        }
+        
+        NSArray *targets = [d valueForKey:@"targets"];
+        
+        numberOfFavorites += [targets count];
+        
+        for(NSDictionary *target in targets) {
+            
+            NSString *targetDescription = descriptionForTarget(target);
+
+            [ms appendFormat:@"%@\n", targetDescription];
+        }
+    }
+    
+    return ms;
+}
+
 int main(int argc, const char * argv[])
 {
     
     @autoreleasepool {
+
+        printf("Clitter displays the latest favorites by your friends, using OS X settings.\n");
+        printf("By default, it remembers the latest position and will fetch only new one.\n");
+        printf("USAGE: ./clitter ([-pos POSITION] | [-all YES])\n\n");
         
-        NSString *h = [[NSUserDefaults standardUserDefaults] valueForKey:@"h"];
-        NSString *help = [[NSUserDefaults standardUserDefaults] valueForKey:@"help"];
-        NSString *sinceID = [[NSUserDefaults standardUserDefaults] valueForKey:@"pos"];
+        // 1382776597941
         
-        if(h || help) {
-            printf("Display latest favorites by friends using OS X settings.\n");
-            printf("USAGE:\n");
-            printf("./clitter ([-h][-help] | [-pos POSITION])\n");
-            exit(1);
+        BOOL fetchAll = [[NSUserDefaults standardUserDefaults] boolForKey:@"all"];
+        NSString *sinceIDFromArgument = [[NSUserDefaults standardUserDefaults] valueForKey:@"pos"];
+        NSString *sinceIDFromUserDefaults = [[NSUserDefaults standardUserDefaults] valueForKey:@"CurrentPosition"];
+
+        NSString *sinceID = nil;
+
+        if(fetchAll) {
+            sinceID = nil;
+        } else if(sinceIDFromArgument) {
+            sinceID = sinceIDFromArgument;
+        } else if (sinceIDFromUserDefaults) {
+            sinceID = sinceIDFromUserDefaults;
         }
         
         __block STTwitterAPI *twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
@@ -48,55 +101,24 @@ int main(int argc, const char * argv[])
                                            NSDictionary *d = (NSDictionary *)evaluatedObject;
                                            return [[d valueForKey:@"action"] isEqualToString:@"favorite"];
                                        }]];
-                                       
-                                       NSMutableString *ms = [NSMutableString string];
-                                       
-                                       NSString *globalMaxPosition = nil;
-                                       
-                                       NSUInteger numberOfFavorites = 0;
-                                       
-                                       for(NSDictionary *d in favorites) {
-                                           [ms appendString:@"----------\n"];
-                                           
-                                           NSString *maxPosition = [d valueForKey:@"max_position"];
-                                           
-                                           NSString *timestamp = [d valueForKey:@"created_at"];
-                                           
-                                           [ms appendFormat:@"max_position: %@\n", maxPosition];
-                                           
-                                           for(NSDictionary *source in [d valueForKey:@"sources"]) {
-                                               NSString *sourceName = [source valueForKey:@"screen_name"];
-                                               
-                                               [ms appendFormat:@"%@ @%@ favorited:\n", timestamp, sourceName];
-                                           }
-                                           
-                                           for(NSDictionary *target in [d valueForKey:@"targets"]) {
-                                               numberOfFavorites += 1;
-                                               
-                                               //NSString *timestamp = [target valueForKey:@"created_at"];
-                                               NSString *targetName = [target valueForKeyPath:@"user.screen_name"];
-                                               NSString *text = [target valueForKey:@"text"];
-                                               text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@"\n                                    "];
-                                               NSString *favouritesCount = [target valueForKey:@"favorite_count"];
-                                               NSString *retweetsCount = [target valueForKey:@"retweet_count"];
-                                               NSString *idString = [target valueForKey:@"id_str"];
-                                               
-                                               if(globalMaxPosition == nil) {
-                                                   globalMaxPosition = maxPosition;
-                                               } else {
-                                                   NSArray *sorted = [@[globalMaxPosition, maxPosition] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                                                       return [obj1 compare:obj2 options:NSNumericSearch];
-                                                   }];
-                                                   globalMaxPosition = [sorted lastObject];
-                                               }
-                                               
-                                               [ms appendFormat:@"%@\t[F %@] [R %@]\t@%@\t%@\n", idString, favouritesCount, retweetsCount, targetName, text];
-                                           }
+
+                                       if([favorites count] == 0) {
+                                           printf("No favorites found.\n");
+                                           exit(0);
                                        }
                                        
-                                       printf("Max Position: %s\n", [globalMaxPosition cStringUsingEncoding:NSUTF8StringEncoding]);
+                                       NSArray *maxPositions = [favorites valueForKeyPath:@"max_position"];
+                                       NSString *maxPosition = [maxPositions count] ? [maxPositions objectAtIndex:0] : nil;
                                        
-                                       printf("%s", [ms cStringUsingEncoding:NSUTF8StringEncoding]);
+                                       if(maxPosition) {
+                                           [[NSUserDefaults standardUserDefaults] setValue:maxPosition forKey:@"CurrentPosition"];
+                                           [[NSUserDefaults standardUserDefaults] synchronize];
+                                       }
+                                       
+                                       printf("Current position: %s\n", [maxPosition cStringUsingEncoding:NSUTF8StringEncoding]);
+
+                                       NSString *favoritesDescription = descriptionForFavorites(favorites);
+                                       printf("%s", [favoritesDescription cStringUsingEncoding:NSUTF8StringEncoding]);
                                        
                                        exit(0);
                                        
