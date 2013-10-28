@@ -3607,6 +3607,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // POST get/place
 
+// WARNING: deprecated since December 2nd, 2013 https://dev.twitter.com/discussions/22452
+
 - (void)postGeoPlaceWithName:(NSString *)name // eg. "Twitter HQ"
      placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
            similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"

@@ -1680,6 +1680,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Before creating a place you need to query GET geo/similar_places with the latitude, longitude and name of the place you wish to create. The query will return an array of places which are similar to the one you wish to create, and a token. If the place you wish to create isn't in the returned array you can use the token with this method to create a new one.
  
  Learn more about Finding Tweets about Places.
+ 
+ WARNING: deprecated since December 2nd, 2013 https://dev.twitter.com/discussions/22452
  */
 
 - (void)postGeoPlaceWithName:(NSString *)name // eg. "Twitter HQ"
