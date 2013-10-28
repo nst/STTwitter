@@ -45,6 +45,7 @@
 		0308C3AA1807340F00C5D104 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		0308C3AC1807341600C5D104 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0308C3AE1807342B00C5D104 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		035BBA94181EDF37009A059A /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		03954DBE181558C500B15ECE /* NSString+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+STTwitter.h"; sourceTree = "<group>"; };
 		03954DBF181558C500B15ECE /* NSString+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+STTwitter.m"; sourceTree = "<group>"; };
 		03954DC0181558C500B15ECE /* STHTTPRequest+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STHTTPRequest+STTwitter.h"; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 		0308C36E180733CF00C5D104 = {
 			isa = PBXGroup;
 			children = (
+				035BBA94181EDF37009A059A /* README.txt */,
 				03954DBD181558C500B15ECE /* STTwitter */,
 				0308C37C180733CF00C5D104 /* clitter */,
 				0308C379180733CF00C5D104 /* Frameworks */,
