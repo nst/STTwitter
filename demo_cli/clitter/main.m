@@ -45,7 +45,7 @@ NSString *descriptionForFavorites(NSArray *favorites) {
         for(NSDictionary *target in targets) {
             
             NSString *targetDescription = descriptionForTarget(target);
-
+            
             [ms appendFormat:@"%@\n", targetDescription];
         }
     }
@@ -57,7 +57,7 @@ int main(int argc, const char * argv[])
 {
     
     @autoreleasepool {
-
+        
         printf("Clitter displays the latest favorites by your friends, using OS X settings.\n");
         printf("By default, it remembers the latest position and will fetch only new one.\n");
         printf("USAGE: ./clitter ([-pos POSITION] | [-all YES])\n\n");
@@ -67,9 +67,9 @@ int main(int argc, const char * argv[])
         BOOL fetchAll = [[NSUserDefaults standardUserDefaults] boolForKey:@"all"];
         NSString *sinceIDFromArgument = [[NSUserDefaults standardUserDefaults] valueForKey:@"pos"];
         NSString *sinceIDFromUserDefaults = [[NSUserDefaults standardUserDefaults] valueForKey:@"CurrentPosition"];
-
+        
         NSString *sinceID = nil;
-
+        
         if(fetchAll) {
             sinceID = nil;
         } else if(sinceIDFromArgument) {
@@ -101,7 +101,7 @@ int main(int argc, const char * argv[])
                                            NSDictionary *d = (NSDictionary *)evaluatedObject;
                                            return [[d valueForKey:@"action"] isEqualToString:@"favorite"];
                                        }]];
-
+                                       
                                        if([favorites count] == 0) {
                                            printf("No favorites found.\n");
                                            exit(0);
@@ -116,7 +116,7 @@ int main(int argc, const char * argv[])
                                        }
                                        
                                        printf("Current position: %s\n", [maxPosition cStringUsingEncoding:NSUTF8StringEncoding]);
-
+                                       
                                        NSString *favoritesDescription = descriptionForFavorites(favorites);
                                        printf("%s", [favoritesDescription cStringUsingEncoding:NSUTF8StringEncoding]);
                                        
@@ -130,6 +130,7 @@ int main(int argc, const char * argv[])
             
         } errorBlock:^(NSError *error) {
             printf("%s\n", [[error localizedDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
+            exit(0);
         }];
         
         [[NSRunLoop currentRunLoop] run];
