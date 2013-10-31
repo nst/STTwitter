@@ -53,6 +53,64 @@ NSString *descriptionForFavorites(NSArray *favorites) {
     return ms;
 }
 
+void setFavoriteStatus(STTwitterAPI *twitter, BOOL isFavorite, NSString *statusID) {
+    [twitter postFavoriteState:isFavorite forStatusID:statusID successBlock:^(NSDictionary *status) {
+        NSLog(@"%@", status);
+        exit(0);
+    } errorBlock:^(NSError *error) {
+        printf("%s\n", [[error localizedDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
+        exit(1);
+    }];
+}
+
+void fetchFavorites(STTwitterAPI *twitter, NSString *sinceID) {
+    if(sinceID) {
+        printf("Fetching favorites starting at position: %s\n", [sinceID cStringUsingEncoding:NSUTF8StringEncoding]);
+    }
+    
+    [twitter _getActivityByFriendsSinceID:sinceID
+                                    count:@"100"
+                       contributorDetails:@(NO)
+                             includeCards:@(NO)
+                          includeEntities:@(NO)
+                        includeMyRetweets:nil
+                       includeUserEntites:@(NO)
+                            latestResults:@(YES)
+                           sendErrorCodes:nil successBlock:^(NSArray *activities) {
+                               
+                               NSArray *favorites = [activities filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                                   NSDictionary *d = (NSDictionary *)evaluatedObject;
+                                   return [[d valueForKey:@"action"] isEqualToString:@"favorite"];
+                               }]];
+                               
+                               if([favorites count] == 0) {
+                                   printf("No favorites found.\n");
+                                   exit(0);
+                               }
+                               
+                               NSArray *maxPositions = [favorites valueForKeyPath:@"max_position"];
+                               NSString *maxPosition = [maxPositions count] ? [maxPositions objectAtIndex:0] : nil;
+                               
+                               if(maxPosition) {
+                                   [[NSUserDefaults standardUserDefaults] setValue:maxPosition forKey:@"CurrentPosition"];
+                                   [[NSUserDefaults standardUserDefaults] synchronize];
+                               }
+                               
+                               printf("Current position: %s\n", [maxPosition cStringUsingEncoding:NSUTF8StringEncoding]);
+                               
+                               NSString *favoritesDescription = descriptionForFavorites(favorites);
+                               printf("%s", [favoritesDescription cStringUsingEncoding:NSUTF8StringEncoding]);
+                               
+                               exit(0);
+                               
+                           } errorBlock:^(NSError *error) {
+                               printf("%s\n", [[error localizedDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
+                               
+                               exit(1);
+                           }];
+}
+
+
 int main(int argc, const char * argv[])
 {
     
@@ -60,11 +118,13 @@ int main(int argc, const char * argv[])
         
         printf("Clitter displays the latest favorites by your friends, using OS X settings.\n");
         printf("By default, it remembers the latest position and will fetch only new one.\n");
-        printf("USAGE: ./clitter ([-pos POSITION] | [-all YES])\n\n");
+        printf("USAGE: ./clitter [-fav (1|0) -status STATUS_ID] | [-pos POSITION] | [-all YES]\n\n");
         
         // 1382776597941
         
         BOOL fetchAll = [[NSUserDefaults standardUserDefaults] boolForKey:@"all"];
+        NSString *setToFavoriteString = [[NSUserDefaults standardUserDefaults] valueForKey:@"fav"]; // 1 or 0
+        NSString *statusID = [[NSUserDefaults standardUserDefaults] valueForKey:@"status"];
         NSString *sinceIDFromArgument = [[NSUserDefaults standardUserDefaults] valueForKey:@"pos"];
         NSString *sinceIDFromUserDefaults = [[NSUserDefaults standardUserDefaults] valueForKey:@"CurrentPosition"];
         
@@ -83,54 +143,17 @@ int main(int argc, const char * argv[])
         [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
             printf("Account: %s\n", [username cStringUsingEncoding:NSUTF8StringEncoding]);
             
-            if(sinceID) {
-                printf("Fetching favorites starting at position: %s\n", [sinceID cStringUsingEncoding:NSUTF8StringEncoding]);
+            if(setToFavoriteString && statusID) {
+                BOOL setToFavorite = [@([setToFavoriteString integerValue]) boolValue];
+                
+                setFavoriteStatus(twitter, setToFavorite, statusID);
+            } else {
+                fetchFavorites(twitter, sinceID);
             }
-            
-            [twitter _getActivityByFriendsSinceID:sinceID
-                                            count:@"100"
-                               contributorDetails:@(NO)
-                                     includeCards:@(NO)
-                                  includeEntities:@(NO)
-                                includeMyRetweets:nil
-                               includeUserEntites:@(NO)
-                                    latestResults:@(YES)
-                                   sendErrorCodes:nil successBlock:^(NSArray *activities) {
-                                       
-                                       NSArray *favorites = [activities filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-                                           NSDictionary *d = (NSDictionary *)evaluatedObject;
-                                           return [[d valueForKey:@"action"] isEqualToString:@"favorite"];
-                                       }]];
-                                       
-                                       if([favorites count] == 0) {
-                                           printf("No favorites found.\n");
-                                           exit(0);
-                                       }
-                                       
-                                       NSArray *maxPositions = [favorites valueForKeyPath:@"max_position"];
-                                       NSString *maxPosition = [maxPositions count] ? [maxPositions objectAtIndex:0] : nil;
-                                       
-                                       if(maxPosition) {
-                                           [[NSUserDefaults standardUserDefaults] setValue:maxPosition forKey:@"CurrentPosition"];
-                                           [[NSUserDefaults standardUserDefaults] synchronize];
-                                       }
-                                       
-                                       printf("Current position: %s\n", [maxPosition cStringUsingEncoding:NSUTF8StringEncoding]);
-                                       
-                                       NSString *favoritesDescription = descriptionForFavorites(favorites);
-                                       printf("%s", [favoritesDescription cStringUsingEncoding:NSUTF8StringEncoding]);
-                                       
-                                       exit(0);
-                                       
-                                   } errorBlock:^(NSError *error) {
-                                       printf("%s\n", [[error localizedDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
-                                       
-                                       exit(0);
-                                   }];
             
         } errorBlock:^(NSError *error) {
             printf("%s\n", [[error localizedDescription] cStringUsingEncoding:NSUTF8StringEncoding]);
-            exit(0);
+            exit(1);
         }];
         
         [[NSRunLoop currentRunLoop] run];
