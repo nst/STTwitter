@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "STTwitter"
-  s.version      = "0.0.5"
+  s.version      = "0.0.6"
   s.summary      = "A comprehensive Objective-C library for Twitter's REST API 1.1."
   s.homepage     = "https://github.com/nst/STTwitter"
 
@@ -10,8 +10,8 @@ Pod::Spec.new do |s|
   }
 
   s.homepage     = "https://github.com/nst/STTwitter/"
-  s.authors      = 'Nicolas Seriot', 'Frank Dowsett', 'xnyhps', 'pawelniewie', 'Bavarious'
-  s.source       = { :git => "https://github.com/nst/STTwitter.git", :tag => '0.0.5' }
+  s.authors      = 'Nicolas Seriot', 'Frank Dowsett', 'Victor Ng', 'Thijs Alkemade', 'Pawel Niewiadomski', 'Matthew Tomlinson', 'Chris Ricca', 'Evan Roth', 'Bavarious'
+  s.source       = { :git => "https://github.com/nst/STTwitter.git", :tag => '0.0.6' }
 
   s.ios.deployment_target = '5.0'
   s.osx.deployment_target = '10.7'
