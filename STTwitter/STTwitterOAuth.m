@@ -331,7 +331,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     if([pin length] == 0) {
-        errorBlock([NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"PIN needed"}]);
+        errorBlock([NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOAuthCannotPostAccessTokenRequestWithoutPIN userInfo:@{NSLocalizedDescriptionKey : @"PIN needed"}]);
         return;
     }
     

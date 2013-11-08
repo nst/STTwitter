@@ -15,6 +15,11 @@
 #   define STLog(...)
 #endif
 
+NS_ENUM(NSUInteger, STTwitterAppOnlyErrorCode) {
+    STTwitterAppOnlyCannotFindBearerTokenToBeInvalidated,
+    STTwitterAppOnlyCannotFindBearerTokenInResponse
+};
+
 @interface STTwitterAppOnly : NSObject <STTwitterProtocol> {
     
 }

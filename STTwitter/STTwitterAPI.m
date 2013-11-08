@@ -800,7 +800,7 @@ static NSDateFormatter *dateFormatter = nil;
               errorBlock:(void(^)(NSError *error))errorBlock {
     
     if(status == nil) {
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"cannot post empty status"}];
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPICannotPostEmptyStatus userInfo:@{NSLocalizedDescriptionKey : @"cannot post empty status"}];
         errorBlock(error);
         return;
     }
@@ -871,7 +871,7 @@ static NSDateFormatter *dateFormatter = nil;
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
     
     if(data == nil) {
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"data is nil"}];
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPIMediaDataIsEmpty userInfo:@{NSLocalizedDescriptionKey : @"data is nil"}];
         errorBlock(error);
         return;
     }

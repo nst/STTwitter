@@ -21,6 +21,11 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
+    STTwitterAPICannotPostEmptyStatus,
+    STTwitterAPIMediaDataIsEmpty
+};
+
 /*
  Tweet fields contents
  https://dev.twitter.com/docs/platform-objects/tweets

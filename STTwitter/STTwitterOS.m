@@ -82,7 +82,7 @@
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     if([self hasAccessToTwitter] == NO) {
         NSString *message = @"This system cannot access Twitter.";
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSSystemCannotAccessTwitter userInfo:@{NSLocalizedDescriptionKey : message}];
         errorBlock(error);
         return;
     }
@@ -91,7 +91,7 @@
     
     if(accountType == nil) {
         NSString *message = @"Cannot find Twitter account.";
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSCannotFindTwitterAccount userInfo:@{NSLocalizedDescriptionKey : message}];
         errorBlock(error);
         return;
     }
@@ -107,7 +107,7 @@
                 }
                 
                 NSString *message = @"User denied access to their account(s).";
-                NSError *grantError = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+                NSError *grantError = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSUserDeniedAccessToTheirAccounts userInfo:@{NSLocalizedDescriptionKey : message}];
                 errorBlock(grantError);
                 return;
             }
@@ -117,7 +117,7 @@
                 
                 if([accounts count] == 0) {
                     NSString *message = @"No Twitter account available.";
-                    NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : message}];
+                    NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
                     errorBlock(error);
                     return;
                 }

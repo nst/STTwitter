@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ENUM(NSUInteger, STTwitterHTMLErrorCode) {
+    STTwitterHTMLCannotPostWithoutCredentials
+};
+
 @interface STTwitterHTML : NSObject
 
 - (void)getLoginForm:(void(^)(NSString *authenticityToken))successBlock

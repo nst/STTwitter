@@ -45,7 +45,7 @@
     
     if([username length] == 0 || [password length] == 0) {
         NSString *errorDescription = [NSString stringWithFormat:@"Missing credentials"];
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterHTMLCannotPostWithoutCredentials userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
         errorBlock(error);
         return;
     }

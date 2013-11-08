@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterProtocol.h"
 
+NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
+    STTwitterOSSystemCannotAccessTwitter,
+    STTwitterOSCannotFindTwitterAccount,
+    STTwitterOSUserDeniedAccessToTheirAccounts,
+    STTwitterOSNoTwitterAccountIsAvailable
+};
+
 @class ACAccount;
 
 @interface STTwitterOS : NSObject <STTwitterProtocol> {

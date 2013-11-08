@@ -51,7 +51,7 @@
                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     if(_bearerToken == nil) {
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"Cannot invalidate missing bearer token"}];
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAppOnlyCannotFindBearerTokenToBeInvalidated userInfo:@{NSLocalizedDescriptionKey : @"Cannot invalidate missing bearer token"}];
         errorBlock(error);
         return;
     }
@@ -120,7 +120,7 @@
               
               NSString *tokenType = [json valueForKey:@"token_type"];
               if([tokenType isEqualToString:@"bearer"] == NO) {
-                  NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : @"Cannot find bearer token in server response"}];
+                  NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAppOnlyCannotFindBearerTokenInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find bearer token in server response"}];
                   errorBlock(error);
                   return;
               }
