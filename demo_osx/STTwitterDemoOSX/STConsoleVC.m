@@ -95,7 +95,7 @@
     self.rootNode = nil;
     [_outlineView reloadData];
     
-    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
         
         NSString *curlDescription = [self curlDescriptionWithEndpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
         
@@ -123,7 +123,7 @@
         
         [_outlineView reloadData];
         
-    } errorBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+    } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
         NSString *s = @"error";
         if(error) {
             s = [error localizedDescription];

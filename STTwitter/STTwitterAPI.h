@@ -114,22 +114,22 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
 
 #pragma mark Generic methods to GET and POST
 
-- (NSString *)fetchResource:(NSString *)resource
+- (id)fetchResource:(NSString *)resource
                  HTTPMethod:(NSString *)HTTPMethod
               baseURLString:(NSString *)baseURLString
                  parameters:(NSDictionary *)params
-              progressBlock:(void (^)(NSString *requestID, id response))progressBlock // TODO: handle progressBlock?
-               successBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
-                 errorBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
+              progressBlock:(void (^)(id request, id response))progressBlock // TODO: handle progressBlock?
+               successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+                 errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
-- (void)getResource:(NSString *)resource
+- (id)getResource:(NSString *)resource
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)parameters
       progressBlock:(void(^)(id json))progressBlock
        successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
          errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postResource:(NSString *)resource
+- (id)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)parameters
        progressBlock:(void(^)(id json))progressBlock
@@ -454,7 +454,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  At least one predicate parameter (follow, locations, or track) must be specified.
  */
 
-- (void)postStatusesFilterUserIDs:(NSArray *)userIDs
+- (id)postStatusesFilterUserIDs:(NSArray *)userIDs
                   keywordsToTrack:(NSArray *)keywordsToTrack
             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                         delimited:(NSNumber *)delimited
@@ -464,7 +464,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postStatusesFilterKeyword:(NSString *)keyword
+- (id)postStatusesFilterKeyword:(NSString *)keyword
                     progressBlock:(void(^)(id response))progressBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -474,7 +474,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  Returns a small random sample of all public statuses. The Tweets returned by the default access level are the same, so if two different clients connect to this endpoint, they will see the same Tweets.
  */
 
-- (void)getStatusesSampleDelimited:(NSNumber *)delimited
+- (id)getStatusesSampleDelimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
                      progressBlock:(void(^)(id response))progressBlock
                  stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
@@ -488,7 +488,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  Returns all public statuses. Few applications require this level of access. Creative use of a combination of other resources and various access levels can satisfy nearly every application use case.
  */
 
-- (void)getStatusesFirehoseWithCount:(NSString *)count
+- (id)getStatusesFirehoseWithCount:(NSString *)count
                            delimited:(NSNumber *)delimited
                        stallWarnings:(NSNumber *)stallWarnings
                        progressBlock:(void(^)(id response))progressBlock
@@ -501,7 +501,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  Streams messages for a single user, as described in User streams https://dev.twitter.com/docs/streaming-apis/streams/user
  */
 
-- (void)getUserStreamDelimited:(NSNumber *)delimited
+- (id)getUserStreamDelimited:(NSNumber *)delimited
                  stallWarnings:(NSNumber *)stallWarnings
 includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
                 includeReplies:(NSNumber *)includeReplies
@@ -517,7 +517,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Streams messages for a set of users, as described in Site streams https://dev.twitter.com/docs/streaming-apis/streams/site
  */
 
-- (void)getSiteStreamForUserIDs:(NSArray *)userIDs
+- (id)getSiteStreamForUserIDs:(NSArray *)userIDs
                       delimited:(NSNumber *)delimited
                   stallWarnings:(NSNumber *)stallWarnings
          restrictToUserMessages:(NSNumber *)restrictToUserMessages

@@ -243,13 +243,13 @@ static NSDateFormatter *dateFormatter = nil;
 
 #pragma mark Generic methods to GET and POST
 
-- (NSString *)fetchResource:(NSString *)resource
-                 HTTPMethod:(NSString *)HTTPMethod
-              baseURLString:(NSString *)baseURLString
-                 parameters:(NSDictionary *)params
-              progressBlock:(void (^)(NSString *requestID, id response))progressBlock
-               successBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
-                 errorBlock:(void (^)(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+- (id)fetchResource:(NSString *)resource
+         HTTPMethod:(NSString *)HTTPMethod
+      baseURLString:(NSString *)baseURLString
+         parameters:(NSDictionary *)params
+      progressBlock:(void (^)(id request, id response))progressBlock
+       successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+         errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     return [_oauth fetchResource:resource
                       HTTPMethod:HTTPMethod
@@ -260,60 +260,60 @@ static NSDateFormatter *dateFormatter = nil;
                       errorBlock:errorBlock];
 }
 
-- (void)getResource:(NSString *)resource
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)parameters
-      progressBlock:(void(^)(id json))progressBlock
-       successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock {
+- (id)getResource:(NSString *)resource
+    baseURLString:(NSString *)baseURLString
+       parameters:(NSDictionary *)parameters
+    progressBlock:(void(^)(id json))progressBlock
+     successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
+       errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [_oauth fetchResource:resource
-               HTTPMethod:@"GET"
-            baseURLString:baseURLString
-               parameters:parameters
-            progressBlock:^(NSString *requestID, id response) {
-                if(progressBlock) progressBlock(response);
-            } successBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-                if(successBlock) successBlock(responseHeaders, response);
-            } errorBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                if(errorBlock) errorBlock(error);
-            }];
+    return [_oauth fetchResource:resource
+                      HTTPMethod:@"GET"
+                   baseURLString:baseURLString
+                      parameters:parameters
+                   progressBlock:^(id request, id response) {
+                       if(progressBlock) progressBlock(response);
+                   } successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+                       if(successBlock) successBlock(responseHeaders, response);
+                   } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                       if(errorBlock) errorBlock(error);
+                   }];
+}
+
+- (id)postResource:(NSString *)resource
+     baseURLString:(NSString *)baseURLString
+        parameters:(NSDictionary *)parameters
+     progressBlock:(void(^)(id json))progressBlock
+      successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
+        errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    return [_oauth fetchResource:resource
+                      HTTPMethod:@"POST"
+                   baseURLString:baseURLString
+                      parameters:parameters
+                   progressBlock:^(id request, id response) {
+                       if(progressBlock) progressBlock(response);
+                   } successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+                       if(successBlock) successBlock(responseHeaders, response);
+                   } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                       if(errorBlock) errorBlock(error);
+                   }];
 }
 
 - (void)postResource:(NSString *)resource
        baseURLString:(NSString *)baseURLString
           parameters:(NSDictionary *)parameters
        progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
           errorBlock:(void(^)(NSError *error))errorBlock {
     
     [_oauth fetchResource:resource
                HTTPMethod:@"POST"
             baseURLString:baseURLString
                parameters:parameters
-            progressBlock:^(NSString *requestID, id response) {
-                if(progressBlock) progressBlock(response);
-            } successBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-                if(successBlock) successBlock(responseHeaders, response);
-            } errorBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                if(errorBlock) errorBlock(error);
-            }];
-}
-
-- (void)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString
-          parameters:(NSDictionary *)parameters
-       progressBlock:(void(^)(id json))progressBlock
-          errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    [_oauth fetchResource:resource
-               HTTPMethod:@"POST"
-            baseURLString:baseURLString
-               parameters:parameters
-            progressBlock:^(NSString *requestID, id response) {
+            progressBlock:^(id request, id response) {
                 if(progressBlock) progressBlock(response);
             } successBlock:nil
-               errorBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                    errorBlock(error);
                }];
 }
@@ -328,10 +328,10 @@ static NSDateFormatter *dateFormatter = nil;
                HTTPMethod:@"GET"
             baseURLString:baseURLString
                parameters:parameters
-            progressBlock:^(NSString *requestID, id response) {
+            progressBlock:^(id request, id response) {
                 if(progressBlock) progressBlock(response);
             } successBlock:nil
-               errorBlock:^(NSString *requestID, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                    errorBlock(error);
                }];
 }
@@ -542,7 +542,7 @@ static NSDateFormatter *dateFormatter = nil;
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-        
+    
     if(count) md[@"count"] = count;
     if(sinceID) md[@"since_id"] = sinceID;
     if(maxID) md[@"max_id"] = maxID;
@@ -1138,14 +1138,14 @@ static NSDateFormatter *dateFormatter = nil;
 
 // POST statuses/filter
 
-- (void)postStatusesFilterUserIDs:(NSArray *)userIDs
-                  keywordsToTrack:(NSArray *)keywordsToTrack
-            locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                        delimited:(NSNumber *)delimited
-                    stallWarnings:(NSNumber *)stallWarnings
-                    progressBlock:(void(^)(id response))progressBlock
-                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock {
+- (id)postStatusesFilterUserIDs:(NSArray *)userIDs
+                keywordsToTrack:(NSArray *)keywordsToTrack
+          locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                      delimited:(NSNumber *)delimited
+                  stallWarnings:(NSNumber *)stallWarnings
+                  progressBlock:(void(^)(id response))progressBlock
+              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *follow = [userIDs componentsJoinedByString:@","];
     NSString *keywords = [keywordsToTrack componentsJoinedByString:@","];
@@ -1161,123 +1161,123 @@ static NSDateFormatter *dateFormatter = nil;
     if([keywords length]) md[@"track"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [self postResource:@"statuses/filter.json"
-         baseURLString:kBaseURLStringStream
-            parameters:md
-         progressBlock:^(id json) {
-             
-             NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-             if(stallWarning && stallWarningBlock) {
-                 stallWarningBlock([stallWarning valueForKey:@"code"],
-                                   [stallWarning valueForKey:@"message"],
-                                   [[stallWarning valueForKey:@"percent_full"] integerValue]);
-             } else {
-                 progressBlock(json);
-             }
-             
-         } successBlock:^(NSDictionary *rateLimits, id response) {
-             // reaching successBlock for a stream request is an error
-             errorBlock(response);
-         } errorBlock:^(NSError *error) {
-             errorBlock(error);
-         }];
+    return [self postResource:@"statuses/filter.json"
+                baseURLString:kBaseURLStringStream
+                   parameters:md
+                progressBlock:^(id json) {
+                    
+                    NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+                    if(stallWarning && stallWarningBlock) {
+                        stallWarningBlock([stallWarning valueForKey:@"code"],
+                                          [stallWarning valueForKey:@"message"],
+                                          [[stallWarning valueForKey:@"percent_full"] integerValue]);
+                    } else {
+                        progressBlock(json);
+                    }
+                    
+                } successBlock:^(NSDictionary *rateLimits, id response) {
+                    // reaching successBlock for a stream request is an error
+                    errorBlock(response);
+                } errorBlock:^(NSError *error) {
+                    errorBlock(error);
+                }];
 }
 
 // convenience
-- (void)postStatusesFilterKeyword:(NSString *)keyword
-                    progressBlock:(void(^)(id response))progressBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock {
+- (id)postStatusesFilterKeyword:(NSString *)keyword
+                  progressBlock:(void(^)(id response))progressBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(keyword);
     
-    [self postStatusesFilterUserIDs:nil
-                    keywordsToTrack:@[keyword]
-              locationBoundingBoxes:nil
-                          delimited:nil
-                      stallWarnings:nil
-                      progressBlock:progressBlock
-                  stallWarningBlock:nil
-                         errorBlock:errorBlock];
+    return [self postStatusesFilterUserIDs:nil
+                           keywordsToTrack:@[keyword]
+                     locationBoundingBoxes:nil
+                                 delimited:nil
+                             stallWarnings:nil
+                             progressBlock:progressBlock
+                         stallWarningBlock:nil
+                                errorBlock:errorBlock];
 }
 
 // GET statuses/sample
-- (void)getStatusesSampleDelimited:(NSNumber *)delimited
+- (id)getStatusesSampleDelimited:(NSNumber *)delimited
+                   stallWarnings:(NSNumber *)stallWarnings
+                   progressBlock:(void(^)(id response))progressBlock
+               stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    
+    return [self getResource:@"statuses/sample.json"
+               baseURLString:kBaseURLStringStream
+                  parameters:md
+               progressBlock:^(id json) {
+                   
+                   NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+                   if(stallWarning && stallWarningBlock) {
+                       stallWarningBlock([stallWarning valueForKey:@"code"],
+                                         [stallWarning valueForKey:@"message"],
+                                         [[stallWarning valueForKey:@"percent_full"] integerValue]);
+                   } else {
+                       progressBlock(json);
+                   }
+                   
+               } successBlock:^(NSDictionary *rateLimits, id json) {
+                   // reaching successBlock for a stream request is an error
+                   errorBlock(json);
+               } errorBlock:^(NSError *error) {
+                   errorBlock(error);
+               }];
+}
+
+// GET statuses/firehose
+- (id)getStatusesFirehoseWithCount:(NSString *)count
+                         delimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
                      progressBlock:(void(^)(id response))progressBlock
                  stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
-    if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
-    
-    [self getResource:@"statuses/sample.json"
-        baseURLString:kBaseURLStringStream
-           parameters:md
-        progressBlock:^(id json) {
-            
-            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-            if(stallWarning && stallWarningBlock) {
-                stallWarningBlock([stallWarning valueForKey:@"code"],
-                                  [stallWarning valueForKey:@"message"],
-                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
-            } else {
-                progressBlock(json);
-            }
-            
-        } successBlock:^(NSDictionary *rateLimits, id json) {
-            // reaching successBlock for a stream request is an error
-            errorBlock(json);
-        } errorBlock:^(NSError *error) {
-            errorBlock(error);
-        }];
-}
-
-// GET statuses/firehose
-- (void)getStatusesFirehoseWithCount:(NSString *)count
-                           delimited:(NSNumber *)delimited
-                       stallWarnings:(NSNumber *)stallWarnings
-                       progressBlock:(void(^)(id response))progressBlock
-                   stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(count) md[@"count"] = count;
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    [self getResource:@"statuses/firehose.json"
-        baseURLString:kBaseURLStringStream
-           parameters:md
-        progressBlock:^(id json) {
-            
-            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-            if(stallWarning && stallWarningBlock) {
-                stallWarningBlock([stallWarning valueForKey:@"code"],
-                                  [stallWarning valueForKey:@"message"],
-                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
-            } else {
-                progressBlock(json);
-            }
-            
-        } successBlock:^(NSDictionary *rateLimits, id json) {
-            // reaching successBlock for a stream request is an error
-            errorBlock(json);
-        } errorBlock:^(NSError *error) {
-            errorBlock(error);
-        }];
+    return [self getResource:@"statuses/firehose.json"
+               baseURLString:kBaseURLStringStream
+                  parameters:md
+               progressBlock:^(id json) {
+                   
+                   NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+                   if(stallWarning && stallWarningBlock) {
+                       stallWarningBlock([stallWarning valueForKey:@"code"],
+                                         [stallWarning valueForKey:@"message"],
+                                         [[stallWarning valueForKey:@"percent_full"] integerValue]);
+                   } else {
+                       progressBlock(json);
+                   }
+                   
+               } successBlock:^(NSDictionary *rateLimits, id json) {
+                   // reaching successBlock for a stream request is an error
+                   errorBlock(json);
+               } errorBlock:^(NSError *error) {
+                   errorBlock(error);
+               }];
 }
 
 // GET user
-- (void)getUserStreamDelimited:(NSNumber *)delimited
-                 stallWarnings:(NSNumber *)stallWarnings
+- (id)getUserStreamDelimited:(NSNumber *)delimited
+               stallWarnings:(NSNumber *)stallWarnings
 includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                includeReplies:(NSNumber *)includeReplies
-               keywordsToTrack:(NSArray *)keywordsToTrack
-         locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                 progressBlock:(void(^)(id response))progressBlock
-             stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock {
+              includeReplies:(NSNumber *)includeReplies
+             keywordsToTrack:(NSArray *)keywordsToTrack
+       locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+               progressBlock:(void(^)(id response))progressBlock
+           stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"stringify_friend_ids"] = @"1";
@@ -1292,37 +1292,37 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if([keywords length]) md[@"keywords"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    [self getResource:@"user.json"
-        baseURLString:kBaseURLStringUserStream
-           parameters:md
-        progressBlock:^(id json) {
-            
-            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-            if(stallWarning && stallWarningBlock) {
-                stallWarningBlock([stallWarning valueForKey:@"code"],
-                                  [stallWarning valueForKey:@"message"],
-                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
-            } else {
-                progressBlock(json);
-            }
-            
-        } successBlock:^(NSDictionary *rateLimits, id json) {
-            // reaching successBlock for a stream request is an error
-            errorBlock(json);
-        } errorBlock:^(NSError *error) {
-            errorBlock(error);
-        }];
+    return [self getResource:@"user.json"
+               baseURLString:kBaseURLStringUserStream
+                  parameters:md
+               progressBlock:^(id json) {
+                   
+                   NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+                   if(stallWarning && stallWarningBlock) {
+                       stallWarningBlock([stallWarning valueForKey:@"code"],
+                                         [stallWarning valueForKey:@"message"],
+                                         [[stallWarning valueForKey:@"percent_full"] integerValue]);
+                   } else {
+                       progressBlock(json);
+                   }
+                   
+               } successBlock:^(NSDictionary *rateLimits, id json) {
+                   // reaching successBlock for a stream request is an error
+                   errorBlock(json);
+               } errorBlock:^(NSError *error) {
+                   errorBlock(error);
+               }];
 }
 
 // GET site
-- (void)getSiteStreamForUserIDs:(NSArray *)userIDs
-                      delimited:(NSNumber *)delimited
-                  stallWarnings:(NSNumber *)stallWarnings
-         restrictToUserMessages:(NSNumber *)restrictToUserMessages
-                 includeReplies:(NSNumber *)includeReplies
-                  progressBlock:(void(^)(id response))progressBlock
-              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock {
+- (id)getSiteStreamForUserIDs:(NSArray *)userIDs
+                    delimited:(NSNumber *)delimited
+                stallWarnings:(NSNumber *)stallWarnings
+       restrictToUserMessages:(NSNumber *)restrictToUserMessages
+               includeReplies:(NSNumber *)includeReplies
+                progressBlock:(void(^)(id response))progressBlock
+            stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"stringify_friend_ids"] = @"1";
@@ -1334,26 +1334,26 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSString *follow = [userIDs componentsJoinedByString:@","];
     if([follow length]) md[@"follow"] = follow;
     
-    [self getResource:@"site.json"
-        baseURLString:kBaseURLStringSiteStream
-           parameters:md
-        progressBlock:^(id json) {
-            
-            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-            if(stallWarning && stallWarningBlock) {
-                stallWarningBlock([stallWarning valueForKey:@"code"],
-                                  [stallWarning valueForKey:@"message"],
-                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
-            } else {
-                progressBlock(json);
-            }
-            
-        } successBlock:^(NSDictionary *rateLimits, id json) {
-            // reaching successBlock for a stream request is an error
-            errorBlock(json);
-        } errorBlock:^(NSError *error) {
-            errorBlock(error);
-        }];
+    return [self getResource:@"site.json"
+               baseURLString:kBaseURLStringSiteStream
+                  parameters:md
+               progressBlock:^(id json) {
+                   
+                   NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
+                   if(stallWarning && stallWarningBlock) {
+                       stallWarningBlock([stallWarning valueForKey:@"code"],
+                                         [stallWarning valueForKey:@"message"],
+                                         [[stallWarning valueForKey:@"percent_full"] integerValue]);
+                   } else {
+                       progressBlock(json);
+                   }
+                   
+               } successBlock:^(NSDictionary *rateLimits, id json) {
+                   // reaching successBlock for a stream request is an error
+                   errorBlock(json);
+               } errorBlock:^(NSError *error) {
+                   errorBlock(error);
+               }];
 }
 
 #pragma mark Direct Messages

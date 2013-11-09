@@ -73,14 +73,18 @@ Notes:
 
 ##### Streaming API
 
-    [twitter getStatusesSampleDelimited:nil
-                          stallWarnings:nil
-                          progressBlock:^(id response) {
+    id request = [twitter getStatusesSampleDelimited:nil
+                                       stallWarnings:nil
+                                       progressBlock:^(id response) {
         // ...
     } stallWarningBlock:nil
              errorBlock:^(NSError *error) {
         // ...
     }];
+    
+    // ...
+    
+    [request cancel]; // when you're done with it
 
 ##### App Only Authentication
 
@@ -284,13 +288,13 @@ The application only interacts with `STTwitterAPI`.
 
 You can create your own convenience methods with fewer parameters. You can also use this generic methods directly:
 
-    - (NSString *)fetchResource:(NSString *)resource
-                     HTTPMethod:(NSString *)HTTPMethod
-                  baseURLString:(NSString *)baseURLString
-                     parameters:(NSDictionary *)parameters
-                  progressBlock:(void (^)(NSString *requestID, id response))progressBlock
-                   successBlock:(void (^)(NSString *requestID, NSDictionary *headers, id response))successBlock
-                     errorBlock:(void (^)(NSString *requestID, NSDictionary *headers, NSError *error))errorBlock;
+    - (id)fetchResource:(NSString *)resource
+             HTTPMethod:(NSString *)HTTPMethod
+          baseURLString:(NSString *)baseURLString
+             parameters:(NSDictionary *)parameters
+          progressBlock:(void (^)(id request, id response))progressBlock
+           successBlock:(void (^)(id request, NSDictionary *headers, id response))successBlock
+             errorBlock:(void (^)(id request, NSDictionary *headers, NSError *error))errorBlock;
 
 ##### Layer Model
      

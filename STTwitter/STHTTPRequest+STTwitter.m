@@ -129,6 +129,10 @@
         }
         
         STLog(@"-- body: %@", wr.responseString);
+        
+//        BOOL isCancellationError = [[error domain] isEqualToString:@"STHTTPRequest"] && ([error code] == kSTHTTPRequestCancellationError);
+//        if(isCancellationError) return;
+        
         errorBlock(wr.requestHeaders, wr.responseHeaders, error);
     };
     
