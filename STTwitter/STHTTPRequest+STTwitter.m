@@ -59,6 +59,8 @@
     
     r.ignoreSharedCookiesStorage = YES;
     
+    r.timeoutSeconds = 0;
+    
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
         if(progressBlock == nil) return;
