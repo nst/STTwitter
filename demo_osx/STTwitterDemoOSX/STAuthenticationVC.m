@@ -69,6 +69,7 @@ static NSString *kCustomString = @"Custom...";
     if (self) {
         // Initialization code here.
         
+        self.accountStore = [[ACAccountStore alloc] init];
         self.twitterClients = [[self class] twitterClientsInApplicationSupport];
     }
     return self;
@@ -90,10 +91,14 @@ static NSString *kCustomString = @"Custom...";
     
     /**/
 
-    self.accountStore = [[ACAccountStore alloc] init];
     ACAccountType *twitterAccountType = [_accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    NSArray *accounts = [_accountStore accountsWithAccountType:twitterAccountType];
-    self.osxAccounts = accounts;
+    
+    [_accountStore requestAccessToAccountsWithType:twitterAccountType options:nil completion:^(BOOL granted, NSError *error) {
+        
+        if(granted == NO) return;
+        
+        self.osxAccounts = [_accountStore accountsWithAccountType:twitterAccountType];
+    }];
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
