@@ -349,4 +349,4 @@ You can create your own convenience methods with fewer parameters. You can also 
 
 ### BSD 3-Clause License
 
-See [LICENSE.txt](LICENSE.txt).
+See [LICENCE.txt](LICENCE.txt).
