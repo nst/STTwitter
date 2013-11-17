@@ -218,6 +218,14 @@ In older projects, you can set the compilation flag `-DNS_BLOCK_ASSERTIONS=1`.
 
 Use the method `-[NSString numberOfCharactersInATweet]` to let the user know how many characters she can enter before the end of the Tweet. The method may also return a negative value if the string exceeds a tweet's maximum length. The method considers the shortened URL lengths.
 
+##### Date Formatter
+
+In order to convert the string in the `created_at` field from Twitter's JSON into an NSDate instance, you can use the `+[NSDateFormatter stTwitterDateFormatter]`.
+
+    NSDateFormatter *df = [NSDateFormatter stTwitterDateFormatter];
+    NSString *dateString = [d valueForKey:@"created_at"]; // "Sun Jun 28 20:33:01 +0000 2009"
+    NSDate *date = [df dateFromString:dateString];
+
 ##### Boolean Parameters
 
 There are a lot of optional parameters In Twitter API. In STTwitter, you can ignore such parameters by passing `nil`. Regarding boolean parameters, STTwitter can't just use Objective-C `YES` and `NO` because `NO` has the same value as `nil` (zero). So boolean parameters are wrapped into `NSNumber` objects, which are pretty easy to use with boolean values thanks to Objective-C literals. So, with STTwitter, you will give an optional parameter of Twitter API either `@(YES)`, `@(NO)` or `nil`.
