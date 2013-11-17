@@ -2636,13 +2636,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST lists/members/destroy
 
 - (void)postListsMembersDestroyForListID:(NSString *)listID
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSDictionary *d = @{ @"list_id" : listID };
     
     [self postAPIResource:@"lists/members/destroy" parameters:d successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2715,7 +2715,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             cursor:(NSString *)cursor
                    includeEntities:(NSNumber *)includeEntities
                         skipStatus:(NSNumber *)skipStatus
-                      successBlock:(void(^)())successBlock
+                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
@@ -2747,7 +2747,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                               cursor:(NSString *)cursor
                      includeEntities:(NSNumber *)includeEntities
                           skipStatus:(NSNumber *)skipStatus
-                        successBlock:(void(^)())successBlock
+                        successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -2771,7 +2771,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST	lists/subscribers/create
 
 - (void)postListSubscribersCreateForListID:(NSString *)listID
-                              successBlock:(void(^)())successBlock
+                              successBlock:(void(^)(id response))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -2780,7 +2780,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"list_id"] = listID;
     
     [self postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2789,7 +2789,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListSubscribersCreateForSlug:(NSString *)slug
                          ownerScreenName:(NSString *)ownerScreenName
                                orOwnerID:(NSString *)ownerID
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
@@ -2801,7 +2801,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerID) md[@"owner_id"] = ownerID;
     
     [self postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2814,7 +2814,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             orScreenName:(NSString *)screenName
                          includeEntities:(NSNumber *)includeEntities
                               skipStatus:(NSNumber *)skipStatus
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(listID);
     NSAssert((userID || screenName), @"missing userID or screenName");
@@ -2827,7 +2827,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2840,7 +2840,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           orScreenName:(NSString *)screenName
                        includeEntities:(NSNumber *)includeEntities
                             skipStatus:(NSNumber *)skipStatus
-                          successBlock:(void(^)())successBlock
+                          successBlock:(void(^)(id response))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(slug);
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
@@ -2856,7 +2856,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2865,7 +2865,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST	lists/subscribers/destroy
 
 - (void)postListSubscribersDestroyForListID:(NSString *)listID
-                               successBlock:(void(^)())successBlock
+                               successBlock:(void(^)(id response))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -2874,7 +2874,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"list_id"] = listID;
     
     [self postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2883,7 +2883,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListSubscribersDestroyForSlug:(NSString *)slug
                           ownerScreenName:(NSString *)ownerScreenName
                                 orOwnerID:(NSString *)ownerID
-                             successBlock:(void(^)())successBlock
+                             successBlock:(void(^)(id response))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
@@ -2895,7 +2895,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerID) md[@"owner_id"] = ownerID;
     
     [self postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2906,7 +2906,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListsMembersCreateAllForListID:(NSString *)listID
                                    userIDs:(NSArray *)userIDs // array of strings
                              orScreenNames:(NSArray *)screenNames // array of strings
-                              successBlock:(void(^)())successBlock
+                              successBlock:(void(^)(id response))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(listID);
     NSAssert((userIDs || screenNames), @"missing usersIDs or screenNames");
@@ -2921,7 +2921,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }
     
     [self postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -2932,7 +2932,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                orOwnerID:(NSString *)ownerID
                                  userIDs:(NSArray *)userIDs // array of strings
                            orScreenNames:(NSArray *)screenNames // array of strings
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock {
     NSParameterAssert(slug);
     NSAssert((ownerScreenName || ownerID), @"missing ownerScreenName or ownerID");
@@ -2954,7 +2954,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }
     
     [self postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -3077,7 +3077,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListMemberCreateForListID:(NSString *)listID
                                userID:(NSString *)userID
                            screenName:(NSString *)screenName
-                         successBlock:(void(^)())successBlock
+                         successBlock:(void(^)(id response))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -3090,7 +3090,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"screen_name"] = screenName;
     
     [self postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -3101,7 +3101,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           orOwnerID:(NSString *)ownerID
                              userID:(NSString *)userID
                          screenName:(NSString *)screenName
-                       successBlock:(void(^)())successBlock
+                       successBlock:(void(^)(id response))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
@@ -3115,7 +3115,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"screen_name"] = screenName;
     
     [self postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -3124,7 +3124,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST	lists/destroy
 
 - (void)postListsDestroyForListID:(NSString *)listID
-                     successBlock:(void(^)())successBlock
+                     successBlock:(void(^)(id response))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -3133,7 +3133,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[@"list_id"] = listID;
     
     [self postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -3142,7 +3142,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListsDestroyForSlug:(NSString *)slug
                 ownerScreenName:(NSString *)ownerScreenName
                       orOwnerID:(NSString *)ownerID
-                   successBlock:(void(^)())successBlock
+                   successBlock:(void(^)(id response))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
@@ -3154,7 +3154,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerID) md[@"owner_id"] = ownerID;
     
     [self postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -3166,7 +3166,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             name:(NSString *)name
                        isPrivate:(BOOL)isPrivate
                      description:(NSString *)description
-                    successBlock:(void(^)())successBlock
+                    successBlock:(void(^)(id response))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -3190,7 +3190,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           name:(NSString *)name
                      isPrivate:(BOOL)isPrivate
                    description:(NSString *)description
-                  successBlock:(void(^)())successBlock
+                  successBlock:(void(^)(id response))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
@@ -3277,7 +3277,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListsMembersDestroyAllForListID:(NSString *)listID
                                     userIDs:(NSArray *)userIDs // array of strings
                               orScreenNames:(NSArray *)screenNames // array of strings
-                               successBlock:(void(^)())successBlock
+                               successBlock:(void(^)(id response))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
@@ -3293,7 +3293,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }
     
     [self postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
@@ -3304,7 +3304,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                 orOwnerID:(NSString *)ownerID
                                   userIDs:(NSArray *)userIDs // array of strings
                             orScreenNames:(NSArray *)screenNames // array of strings
-                             successBlock:(void(^)())successBlock
+                             successBlock:(void(^)(id response))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(slug);
@@ -3327,7 +3327,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }
     
     [self postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock();
+        successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];

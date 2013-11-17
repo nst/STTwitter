@@ -37,7 +37,7 @@
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)(id response))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 // access tokens are available only with plain OAuth authentication

@@ -1239,7 +1239,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 
 - (void)postListsMembersDestroyForListID:(NSString *)listID
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListsMembersDestroyForSlug:(NSString *)slug
@@ -1275,14 +1275,14 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             cursor:(NSString *)cursor
                    includeEntities:(NSNumber *)includeEntities
                         skipStatus:(NSNumber *)skipStatus
-                      successBlock:(void(^)())successBlock
+                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getListsSubscribersForListID:(NSString *)listID
                               cursor:(NSString *)cursor
                      includeEntities:(NSNumber *)includeEntities
                           skipStatus:(NSNumber *)skipStatus
-                        successBlock:(void(^)())successBlock
+                        successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1292,13 +1292,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 
 - (void)postListSubscribersCreateForListID:(NSString *)listID
-                              successBlock:(void(^)())successBlock
+                              successBlock:(void(^)(id response))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListSubscribersCreateForSlug:(NSString *)slug
                          ownerScreenName:(NSString *)ownerScreenName
                                orOwnerID:(NSString *)ownerID
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1312,7 +1312,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             orScreenName:(NSString *)screenName
                          includeEntities:(NSNumber *)includeEntities
                               skipStatus:(NSNumber *)skipStatus
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)getListsSubscribersShowForSlug:(NSString *)slug
@@ -1322,7 +1322,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           orScreenName:(NSString *)screenName
                        includeEntities:(NSNumber *)includeEntities
                             skipStatus:(NSNumber *)skipStatus
-                          successBlock:(void(^)())successBlock
+                          successBlock:(void(^)(id response))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1332,13 +1332,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 
 - (void)postListSubscribersDestroyForListID:(NSString *)listID
-                               successBlock:(void(^)())successBlock
+                               successBlock:(void(^)(id response))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListSubscribersDestroyForSlug:(NSString *)slug
                           ownerScreenName:(NSString *)ownerScreenName
                                 orOwnerID:(NSString *)ownerID
-                             successBlock:(void(^)())successBlock
+                             successBlock:(void(^)(id response))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1352,7 +1352,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListsMembersCreateAllForListID:(NSString *)listID
                                    userIDs:(NSArray *)userIDs // array of strings
                              orScreenNames:(NSArray *)screenNames // array of strings
-                              successBlock:(void(^)())successBlock
+                              successBlock:(void(^)(id response))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListsMembersCreateAllForSlug:(NSString *)slug
@@ -1360,7 +1360,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                orOwnerID:(NSString *)ownerID
                                  userIDs:(NSArray *)userIDs // array of strings
                            orScreenNames:(NSArray *)screenNames // array of strings
-                            successBlock:(void(^)())successBlock
+                            successBlock:(void(^)(id response))successBlock
                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1418,7 +1418,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListMemberCreateForListID:(NSString *)listID
                                userID:(NSString *)userID
                            screenName:(NSString *)screenName
-                         successBlock:(void(^)())successBlock
+                         successBlock:(void(^)(id response))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListMemberCreateForSlug:(NSString *)slug
@@ -1426,7 +1426,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           orOwnerID:(NSString *)ownerID
                              userID:(NSString *)userID
                          screenName:(NSString *)screenName
-                       successBlock:(void(^)())successBlock
+                       successBlock:(void(^)(id response))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1436,13 +1436,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 
 - (void)postListsDestroyForListID:(NSString *)listID
-                     successBlock:(void(^)())successBlock
+                     successBlock:(void(^)(id response))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListsDestroyForSlug:(NSString *)slug
                 ownerScreenName:(NSString *)ownerScreenName
                       orOwnerID:(NSString *)ownerID
-                   successBlock:(void(^)())successBlock
+                   successBlock:(void(^)(id response))successBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1455,7 +1455,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                             name:(NSString *)name
                        isPrivate:(BOOL)isPrivate
                      description:(NSString *)description
-                    successBlock:(void(^)())successBlock
+                    successBlock:(void(^)(id response))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListsUpdateForSlug:(NSString *)slug
@@ -1464,7 +1464,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           name:(NSString *)name
                      isPrivate:(BOOL)isPrivate
                    description:(NSString *)description
-                  successBlock:(void(^)())successBlock
+                  successBlock:(void(^)(id response))successBlock
                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -1519,7 +1519,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)postListsMembersDestroyAllForListID:(NSString *)listID
                                     userIDs:(NSArray *)userIDs // array of strings
                               orScreenNames:(NSArray *)screenNames // array of strings
-                               successBlock:(void(^)())successBlock
+                               successBlock:(void(^)(id response))successBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)postListsMembersDestroyAllForSlug:(NSString *)slug
@@ -1527,7 +1527,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                                 orOwnerID:(NSString *)ownerID
                                   userIDs:(NSArray *)userIDs // array of strings
                             orScreenNames:(NSArray *)screenNames // array of strings
-                             successBlock:(void(^)())successBlock
+                             successBlock:(void(^)(id response))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*

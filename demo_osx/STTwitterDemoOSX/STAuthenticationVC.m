@@ -214,7 +214,7 @@ static NSString *kCustomString = @"Custom...";
             
             [self askForUsernameAndPasswordWithCompletionBlock:^(NSString *username, NSString *password) {
                 
-                [twitterHTML postLoginFormWithUsername:username password:password authenticityToken:authenticityToken successBlock:^{
+                [twitterHTML postLoginFormWithUsername:username password:password authenticityToken:authenticityToken successBlock:^(NSString *body) {
                     
                     [twitterHTML getAuthorizeFormAtURL:pinURL successBlock:^(NSString *newAuthenticityToken, NSString *newOauthToken) {
                         

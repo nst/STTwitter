@@ -20,7 +20,7 @@ NS_ENUM(NSUInteger, STTwitterHTMLErrorCode) {
 - (void)postLoginFormWithUsername:(NSString *)username
                          password:(NSString *)password
                 authenticityToken:(NSString *)authenticityToken
-                     successBlock:(void(^)())successBlock
+                     successBlock:(void(^)(NSString *body))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 
