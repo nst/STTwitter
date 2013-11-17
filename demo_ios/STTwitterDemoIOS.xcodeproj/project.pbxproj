@@ -26,6 +26,7 @@
 		03144B9417FB6109007812DC /* JSONSyntaxHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 03144B8A17FB6109007812DC /* JSONSyntaxHighlight.m */; };
 		03144B9517FB6109007812DC /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03144B8C17FB6109007812DC /* STHTTPRequest.m */; };
 		032DFF2A1804175B008BD769 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 032DFF291804175B008BD769 /* README.md */; };
+		03ACFD3C18390F7B005CEE2A /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,8 @@
 		03144B8B17FB6109007812DC /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		03144B8C17FB6109007812DC /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
 		032DFF291804175B008BD769 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		03ACFD3A18390F7B005CEE2A /* NSDateFormatter+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+STTwitter.h"; sourceTree = "<group>"; };
+		03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,8 @@
 			children = (
 				03144B7817FB6109007812DC /* NSString+STTwitter.h */,
 				03144B7917FB6109007812DC /* NSString+STTwitter.m */,
+				03ACFD3A18390F7B005CEE2A /* NSDateFormatter+STTwitter.h */,
+				03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */,
 				03144B7A17FB6109007812DC /* STHTTPRequest+STTwitter.h */,
 				03144B7B17FB6109007812DC /* STHTTPRequest+STTwitter.m */,
 				03144B7C17FB6109007812DC /* STTwitter.h */,
@@ -201,7 +206,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Nicolas Seriot";
 			};
-			buildConfigurationList = 03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoiOS" */;
+			buildConfigurationList = 03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoIOS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -239,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03144B8D17FB6109007812DC /* NSString+STTwitter.m in Sources */,
+				03ACFD3C18390F7B005CEE2A /* NSDateFormatter+STTwitter.m in Sources */,
 				03144B9117FB6109007812DC /* STTwitterHTML.m in Sources */,
 				03144B8F17FB6109007812DC /* STTwitterAPI.m in Sources */,
 				03144B9417FB6109007812DC /* JSONSyntaxHighlight.m in Sources */,
@@ -376,7 +382,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoiOS" */ = {
+		03144B3A17FB608C007812DC /* Build configuration list for PBXProject "STTwitterDemoIOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				03144B6F17FB608C007812DC /* Debug */,
