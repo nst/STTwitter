@@ -69,4 +69,70 @@ NSUInteger kSTTwitterDefaultShortURLLengthHTTPS = 23;
                                           shortURLLengthHTTPS:kSTTwitterDefaultShortURLLengthHTTPS];
 }
 
+
+- (NSString *)stringByConvertingHTMLToPlainText {
+    return [[[self stringByReplacingOccurrencesOfString: @"&amp;" withString: @"&"]
+      stringByReplacingOccurrencesOfString: @"&gt;" withString: @">"]
+     stringByReplacingOccurrencesOfString: @"&lt;" withString: @"<"];
+    
+}
+
+-(NSString *)stringByRemovingURLs{
+    NSString *s = [self precomposedStringWithCanonicalMapping];
+    
+    
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(https?://\\S+)"
+                                                                           options:0
+                                                                             error:&error];
+    
+    NSArray *matches = [regex matchesInString:s
+                                      options:0
+                                        range:NSMakeRange(0, [s length])];
+    
+    NSMutableArray* arr=[[NSMutableArray alloc] init];
+    
+    for (NSTextCheckingResult *match in matches) {
+
+        NSString* matchStr=[s substringWithRange:match.range];
+        [arr addObject:matchStr];
+    }
+    
+    for (NSString * match in arr) {
+        s=[s stringByReplacingOccurrencesOfString:match withString:@""];
+    }
+    
+    return s;
+}
+
+
+-(NSString *)stringByRemovingMentions{
+    NSString *s = [self precomposedStringWithCanonicalMapping];
+    
+    
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\b[@\\w]+\\b"
+                                                                           options:0
+                                                                             error:&error];
+    
+    NSArray *matches = [regex matchesInString:s
+                                      options:0
+                                        range:NSMakeRange(0, [s length])];
+    
+    NSMutableArray* arr=[[NSMutableArray alloc] init];
+    
+    for (NSTextCheckingResult *match in matches) {
+        
+        NSString* matchStr=[s substringWithRange:match.range];
+        [arr addObject:matchStr];
+    }
+    
+    for (NSString * match in arr) {
+        s=[s stringByReplacingOccurrencesOfString:match withString:@""];
+    }
+    
+    return s;
+}
+
+
 @end

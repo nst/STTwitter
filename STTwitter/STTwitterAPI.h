@@ -364,7 +364,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  The Tweet text will be rewritten to include the media URL(s), which will reduce the number of characters allowed in the Tweet text. If the URL(s) cannot be appended without text truncation, the tweet will be rejected and this method will return an HTTP 403 error.
  */
 
-- (void)postStatusUpdate:(NSString *)status
+- (id)postStatusUpdate:(NSString *)status
           mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
        possiblySensitive:(NSNumber *)possiblySensitive
        inReplyToStatusID:(NSString *)inReplyToStatusID

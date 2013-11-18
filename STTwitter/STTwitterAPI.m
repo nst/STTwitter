@@ -377,12 +377,12 @@ static NSDateFormatter *dateFormatter = nil;
             errorBlock:errorBlock];
 }
 
-- (void)postAPIResource:(NSString *)resource
+- (id)postAPIResource:(NSString *)resource
              parameters:(NSDictionary *)parameters
            successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
              errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self postResource:resource
+   return  [self postResource:resource
          baseURLString:kBaseURLStringAPI
             parameters:parameters
          progressBlock:nil
@@ -827,7 +827,7 @@ static NSDateFormatter *dateFormatter = nil;
     }];
 }
 
-- (void)postStatusUpdate:(NSString *)status
+- (id)postStatusUpdate:(NSString *)status
           mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
        possiblySensitive:(NSNumber *)possiblySensitive
        inReplyToStatusID:(NSString *)inReplyToStatusID
@@ -852,7 +852,7 @@ static NSDateFormatter *dateFormatter = nil;
     md[@"media[]"] = [mediaDataArray objectAtIndex:0];
     md[kSTPOSTDataKey] = @"media[]";
     
-    [self postAPIResource:@"statuses/update_with_media.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+    return [self postAPIResource:@"statuses/update_with_media.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
