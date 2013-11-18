@@ -68,13 +68,13 @@ NS_ENUM(NSUInteger, STTwitterOAuthErrorCode) {
 @end
 
 @interface NSString (STTwitterOAuth)
-+ (NSString *)random32Characters;
-- (NSString *)signHmacSHA1WithKey:(NSString *)key;
-- (NSDictionary *)parametersDictionary;
-- (NSString *)urlEncodedString;
++ (NSString *)st_random32Characters;
+- (NSString *)st_signHmacSHA1WithKey:(NSString *)key;
+- (NSDictionary *)st_parametersDictionary;
+- (NSString *)st_urlEncodedString;
 @end
 
 @interface NSURL (STTwitterOAuth)
-- (NSString *)normalizedForOauthSignatureString;
-- (NSArray *)rawGetParametersDictionaries;
+- (NSString *)st_normalizedForOauthSignatureString;
+- (NSArray *)st_rawGetParametersDictionaries;
 @end

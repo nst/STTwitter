@@ -25,30 +25,33 @@
 
 
 - (IBAction)postTweet:(id)sender {
-
+    
     self.twitterPostTweetStatus = @"-";
-
+    
     if(_twitterPostMediaURL) {
-
+        
         [_twitter postStatusUpdate:_twitterPostTweetText
                  inReplyToStatusID:nil
                           mediaURL:_twitterPostMediaURL
                            placeID:nil
                           latitude:_twitterPostLatitude
                          longitude:_twitterPostLongitude
-                      successBlock:^(NSDictionary *status) {
-
-                          self.twitterPostTweetText = @"";
-                          self.twitterPostTweetStatus = @"OK";
-                          self.twitterPostLatitude = nil;
-                          self.twitterPostLongitude = nil;
-                          self.twitterPostMediaURL = nil;
-                      } errorBlock:^(NSError *error) {
-                          self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
-                      }];
-
+         
+               uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
+                   NSLog(@"%lu %lu %lu", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+               } successBlock:^(NSDictionary *status) {
+                   
+                   self.twitterPostTweetText = @"";
+                   self.twitterPostTweetStatus = @"OK";
+                   self.twitterPostLatitude = nil;
+                   self.twitterPostLongitude = nil;
+                   self.twitterPostMediaURL = nil;
+               } errorBlock:^(NSError *error) {
+                   self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
+               }];
+        
     } else {
-
+        
         [_twitter postStatusUpdate:_twitterPostTweetText
                  inReplyToStatusID:nil
                           latitude:_twitterPostLatitude
@@ -57,7 +60,7 @@
                 displayCoordinates:@(YES)
                           trimUser:nil
                       successBlock:^(NSDictionary *status) {
-
+                          
                           self.twitterPostTweetText = @"";
                           self.twitterPostTweetStatus = @"OK";
                           self.twitterPostLatitude = nil;
@@ -101,7 +104,7 @@
     [panel setAllowedFileTypes:@[ @"png", @"PNG", @"jpg", @"JPG", @"jpeg", @"JPEG", @"gif", @"GIF"] ];
     
     NSWindow *mainWindow = [[NSApplication sharedApplication] mainWindow];
-
+    
     [panel beginSheetModalForWindow:mainWindow completionHandler:^(NSInteger result) {
         
         if (result != NSFileHandlingPanelOKButton) return;

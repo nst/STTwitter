@@ -152,6 +152,7 @@
          baseURLString:(NSString *)baseURLString
             httpMethod:(NSInteger)httpMethod
             parameters:(NSDictionary *)params
+   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock // ignored
        completionBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
             errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -275,7 +276,8 @@
          HTTPMethod:(NSString *)HTTPMethod
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-      progressBlock:(void (^)(id request, id response))progressBlock // TODO: handle progressBlock?
+uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock // ignored
+downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME: how to handle progressBlock?
        successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
          errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -299,6 +301,7 @@
                     baseURLString:baseURLStringWithTrailingSlash
                        httpMethod:slRequestMethod
                        parameters:d
+              uploadProgressBlock:uploadProgressBlock
                   completionBlock:successBlock
                        errorBlock:errorBlock];
 }
@@ -368,7 +371,8 @@
              HTTPMethod:@"POST"
           baseURLString:@"https://api.twitter.com"
              parameters:d
-          progressBlock:nil
+    uploadProgressBlock:nil
+  downloadProgressBlock:nil
            successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                
                NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];

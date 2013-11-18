@@ -97,8 +97,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         NSString *key = [[d allKeys] lastObject];
         NSString *value = [[d allValues] lastObject];
         
-        NSString *encodedKey = [key urlEncodedString];
-        NSString *encodedValue = [value urlEncodedString];
+        NSString *encodedKey = [key st_urlEncodedString];
+        NSString *encodedValue = [value st_urlEncodedString];
         
         [encodedParameters addObject:@{encodedKey : encodedValue}];
     }
@@ -159,7 +159,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 - (NSString *)oauthNonce {
     if(_testOauthNonce) return _testOauthNonce;
     
-    return [NSString random32Characters];
+    return [NSString st_random32Characters];
 }
 
 + (NSString *)signatureBaseStringWithHTTPMethod:(NSString *)httpMethod url:(NSURL *)url allParametersUnsorted:(NSArray *)parameters {
@@ -186,8 +186,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     
     NSString *signatureBaseString = [NSString stringWithFormat:@"%@&%@&%@",
                                      [httpMethod uppercaseString],
-                                     [[url normalizedForOauthSignatureString] urlEncodedString],
-                                     [encodedParametersString urlEncodedString]];
+                                     [[url st_normalizedForOauthSignatureString] st_urlEncodedString],
+                                     [encodedParametersString st_urlEncodedString]];
     
     return signatureBaseString;
 }
@@ -204,8 +204,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
      Note that there are some flows, such as when obtaining a request token, where the token secret is not yet known. In this case, the signing key should consist of the percent encoded consumer secret followed by an ampersand character '&'.
      */
     
-    NSString *encodedConsumerSecret = [consumerSecret urlEncodedString];
-    NSString *encodedTokenSecret = [tokenSecret urlEncodedString];
+    NSString *encodedConsumerSecret = [consumerSecret st_urlEncodedString];
+    NSString *encodedTokenSecret = [tokenSecret st_urlEncodedString];
     
     NSString *signingKey = [NSString stringWithFormat:@"%@&", encodedConsumerSecret];
     
@@ -213,7 +213,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         signingKey = [signingKey stringByAppendingString:encodedTokenSecret];
     }
     
-    NSString *oauthSignature = [signatureBaseString signHmacSHA1WithKey:signingKey];
+    NSString *oauthSignature = [signatureBaseString st_signHmacSHA1WithKey:signingKey];
     
     return oauthSignature;
 }
@@ -261,10 +261,11 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
          baseURLString:@"https://api.twitter.com"
             parameters:@{}
          oauthCallback:theOAuthCallback
-         progressBlock:nil
+   uploadProgressBlock:nil
+ downloadProgressBlock:nil
           successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id body) {
               
-              NSDictionary *d = [body parametersDictionary];
+              NSDictionary *d = [body st_parametersDictionary];
               
               NSString *s = [NSString stringWithFormat:@"https://api.twitter.com/oauth/authorize?%@", body];
               
@@ -286,7 +287,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
          baseURLString:@"https://api.twitter.com"
             parameters:@{@"x_auth_mode" : @"reverse_auth"}
          oauthCallback:nil
-         progressBlock:nil
+   uploadProgressBlock:nil
+ downloadProgressBlock:nil
           successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id body) {
               
               successBlock(body);
@@ -309,7 +311,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
          baseURLString:@"https://api.twitter.com"
             parameters:d
           successBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSString *body) {
-              NSDictionary *dict = [body parametersDictionary];
+              NSDictionary *dict = [body st_parametersDictionary];
               
               // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
               
@@ -339,7 +341,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
          baseURLString:@"https://api.twitter.com"
             parameters:d
           successBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSString *body) {
-              NSDictionary *dict = [body parametersDictionary];
+              NSDictionary *dict = [body st_parametersDictionary];
               
               // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
               
@@ -385,7 +387,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     // "In the HTTP request the parameters are URL encoded, but you should collect the raw values."
     // https://dev.twitter.com/docs/auth/creating-signature
     
-    NSMutableArray *oauthAndPOSTandGETParameters = [[r.url rawGetParametersDictionaries] mutableCopy];
+    NSMutableArray *oauthAndPOSTandGETParameters = [[r.url st_rawGetParametersDictionaries] mutableCopy];
     [oauthAndPOSTandGETParameters addObjectsFromArray:oauthAndPOSTParameters];
     
     NSString *signature = [[self class] oauthSignatureWithHTTPMethod:httpMethod
@@ -412,7 +414,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 - (STHTTPRequest *)getResource:(NSString *)resource
                  baseURLString:(NSString *)baseURLString
                     parameters:(NSDictionary *)params
-                 progressBlock:(void (^)(STHTTPRequest *r, id json))progressBlock
+         downloadProgressBlock:(void (^)(STHTTPRequest *r, id json))downloadProgressBlock
                   successBlock:(void (^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
                     errorBlock:(void (^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -434,13 +436,14 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     //    __block NSString *requestID = [[NSUUID UUID] UUIDString];
     
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                                   stTwitterProgressBlock:^(id json) {
-                                                       if(progressBlock) progressBlock(r, json);
-                                                   } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
-                                                       successBlock(r, requestHeaders, responseHeaders, json);
-                                                   } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                                                       errorBlock(r, requestHeaders, responseHeaders, error);
-                                                   }];
+                                             stTwitterUploadProgressBlock:nil
+                                           stTwitterDownloadProgressBlock:^(id json) {
+                                               if(downloadProgressBlock) downloadProgressBlock(r, json);
+                                           } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
+                                               successBlock(r, requestHeaders, responseHeaders, json);
+                                           } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                                               errorBlock(r, requestHeaders, responseHeaders, error);
+                                           }];
     
     [self signRequest:r];
     
@@ -453,7 +456,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
          HTTPMethod:(NSString *)HTTPMethod
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-      progressBlock:(void(^)(id r, id json))progressBlock
+uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+downloadProgressBlock:(void(^)(id r, id json))downloadProgressBlock
        successBlock:(void(^)(id r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
          errorBlock:(void(^)(id r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -466,7 +470,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         return [self getResource:resource
                    baseURLString:baseURLString
                       parameters:params
-                   progressBlock:progressBlock
+           downloadProgressBlock:downloadProgressBlock
                     successBlock:successBlock
                       errorBlock:errorBlock];
         
@@ -475,7 +479,9 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         return [self postResource:resource
                     baseURLString:baseURLString
                        parameters:params
-                    progressBlock:progressBlock
+                    oauthCallback:nil
+              uploadProgressBlock:uploadProgressBlock
+            downloadProgressBlock:downloadProgressBlock
                      successBlock:successBlock
                        errorBlock:errorBlock];
         
@@ -489,20 +495,22 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                   baseURLString:(NSString *)baseURLString // no trailing slash
                      parameters:(NSDictionary *)params
                   oauthCallback:(NSString *)oauthCallback
-                  progressBlock:(void(^)(STHTTPRequest *r, id json))progressBlock
+            uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+          downloadProgressBlock:(void(^)(STHTTPRequest *r, id json))downloadProgressBlock
                    successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                      errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                                   stTwitterProgressBlock:^(id json) {
-                                                       if(progressBlock) progressBlock(r, json);
-                                                   } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
-                                                       successBlock(r, requestHeaders, responseHeaders, json);
-                                                   } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                                                       errorBlock(r, requestHeaders, responseHeaders, error);
-                                                   }];
+                                             stTwitterUploadProgressBlock:uploadProgressBlock
+                                           stTwitterDownloadProgressBlock:^(id json) {
+                                               if(downloadProgressBlock) downloadProgressBlock(r, json);
+                                           } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
+                                               successBlock(r, requestHeaders, responseHeaders, json);
+                                           } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                                               errorBlock(r, requestHeaders, responseHeaders, error);
+                                           }];
     
     r.POSTDictionary = params;
     
@@ -530,6 +538,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return r;
 }
 
+// convenience
 - (STHTTPRequest *)postResource:(NSString *)resource
                   baseURLString:(NSString *)baseURLString // no trailing slash
                      parameters:(NSDictionary *)params
@@ -541,11 +550,13 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                 baseURLString:baseURLString
                    parameters:params
                 oauthCallback:nil
-                progressBlock:progressBlock
+          uploadProgressBlock:nil
+        downloadProgressBlock:progressBlock
                  successBlock:successBlock
                    errorBlock:errorBlock];
 }
 
+// convenience
 - (STHTTPRequest *)postResource:(NSString *)resource
                   baseURLString:(NSString *)baseURLString // no trailing slash
                      parameters:(NSDictionary *)params
@@ -557,11 +568,13 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                 baseURLString:baseURLString
                    parameters:params
                 oauthCallback:oauthCallback
-                progressBlock:nil
+          uploadProgressBlock:nil
+        downloadProgressBlock:nil
                  successBlock:successBlock
                    errorBlock:errorBlock];
 }
 
+// convenience
 - (STHTTPRequest *)postResource:(NSString *)resource
                   baseURLString:(NSString *)baseURLString // no trailing slash
                      parameters:(NSDictionary *)params
@@ -572,7 +585,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
                 baseURLString:baseURLString
                    parameters:params
                 oauthCallback:nil
-                progressBlock:nil
+          uploadProgressBlock:nil
+        downloadProgressBlock:nil
                  successBlock:successBlock
                    errorBlock:errorBlock];
 }
@@ -581,7 +595,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 
 @implementation NSURL (STTwitterOAuth)
 
-- (NSArray *)rawGetParametersDictionaries {
+- (NSArray *)st_rawGetParametersDictionaries {
     
     NSString *q = [self query];
     
@@ -600,7 +614,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return ma;
 }
 
-- (NSString *)normalizedForOauthSignatureString {
+- (NSString *)st_normalizedForOauthSignatureString {
     return [NSString stringWithFormat:@"%@://%@%@", [self scheme], [self host], [self path]];
 }
 
@@ -608,22 +622,22 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
 
 @implementation NSString (STTwitterOAuth)
 
-+ (NSString *)randomString {
++ (NSString *)st_randomString {
     CFUUIDRef cfuuid = CFUUIDCreate (kCFAllocatorDefault);
     NSString *uuid = (__bridge_transfer NSString *)(CFUUIDCreateString (kCFAllocatorDefault, cfuuid));
     CFRelease (cfuuid);
     return uuid;
 }
 
-+ (NSString *)random32Characters {
-    NSString *randomString = [self randomString];
++ (NSString *)st_random32Characters {
+    NSString *randomString = [self st_randomString];
     
     NSAssert([randomString length] >= 32, @"");
     
     return [randomString substringToIndex:32];
 }
 
-- (NSString *)signHmacSHA1WithKey:(NSString *)key {
+- (NSString *)st_signHmacSHA1WithKey:(NSString *)key {
     
     unsigned char buf[CC_SHA1_DIGEST_LENGTH];
     CCHmac(kCCHmacAlgSHA1, [key UTF8String], [key length], [self UTF8String], [self length], buf);
@@ -631,7 +645,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return [data base64Encoding];
 }
 
-- (NSDictionary *)parametersDictionary {
+- (NSDictionary *)st_parametersDictionary {
     
     NSArray *parameters = [self componentsSeparatedByString:@"&"];
     
@@ -649,7 +663,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return md;
 }
 
-- (NSString *)urlEncodedString {
+- (NSString *)st_urlEncodedString {
     // https://dev.twitter.com/docs/auth/percent-encoding-parameters
     // http://tools.ietf.org/html/rfc3986#section-2.1
     

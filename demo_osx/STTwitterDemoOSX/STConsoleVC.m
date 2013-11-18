@@ -43,16 +43,16 @@
 }
 
 - (NSString *)curlDescriptionWithEndpoint:(NSString *)endPoint baseURLString:(NSString *)baseURLString parameters:(NSDictionary *)parameters requestHeaders:(NSDictionary *)requestHeaders {
-/*
- $ curl -i -H "Authorization: OAuth oauth_consumer_key="7YBPrscvh0RIThrWYVeGg", \
-                                    oauth_nonce="DA5E6B1E-E98D-4AFB-9AAB-18A463F2", \
-                                    oauth_signature_method="HMAC-SHA1", \
-                                    oauth_timestamp="1381908706", \
-                                    oauth_version="1.0", \
-                                    oauth_token="1294332967-UsaIUBcsC4JcHv9tIYxk5EktsVisAtCLNVGKghP", \
-                                    oauth_signature="gnmc02ohamTvTmkTppz%2FbH8OjAs%3D"" \
-        "https://api.twitter.com/1.1/statuses/home_timeline.json?count=10"
- */
+    /*
+     $ curl -i -H "Authorization: OAuth oauth_consumer_key="7YBPrscvh0RIThrWYVeGg", \
+                                        oauth_nonce="DA5E6B1E-E98D-4AFB-9AAB-18A463F2", \
+                                        oauth_signature_method="HMAC-SHA1", \
+                                        oauth_timestamp="1381908706", \
+                                        oauth_version="1.0", \
+                                        oauth_token="1294332967-UsaIUBcsC4JcHv9tIYxk5EktsVisAtCLNVGKghP", \
+                                        oauth_signature="gnmc02ohamTvTmkTppz%2FbH8OjAs%3D"" \
+                                        "https://api.twitter.com/1.1/statuses/home_timeline.json?count=10"
+     */
 
     if([baseURLString hasSuffix:@"/"]) baseURLString = [baseURLString substringToIndex:[baseURLString length]-1];
     
@@ -70,7 +70,7 @@
         
         [urlString appendFormat:@"?%@", parameterString];
     }
-
+    
     return [NSString stringWithFormat:@"curl -i -H \"Authorization: %@\" \"%@\"", [requestHeaders valueForKey:@"Authorization"], urlString];
 }
 
@@ -95,50 +95,56 @@
     self.rootNode = nil;
     [_outlineView reloadData];
     
-    [_twitter fetchResource:_genericAPIEndpoint HTTPMethod:_genericHTTPMethod baseURLString:_genericBaseURLString parameters:parameters progressBlock:nil successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-        
-        NSString *curlDescription = [self curlDescriptionWithEndpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
-        
-        self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:curlDescription attributes:attributes];
-        self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[responseHeaders description] attributes:attributes];
-        
-        JSONSyntaxHighlight *jsh = [[JSONSyntaxHighlight alloc] initWithJSON:response];
-        
-        NSMutableDictionary *keyAttributes = [jsh.keyAttributes mutableCopy];
-        [keyAttributes addEntriesFromDictionary:attributes];
-
-        NSMutableDictionary *stringAttributes = [jsh.stringAttributes mutableCopy];
-        [stringAttributes addEntriesFromDictionary:attributes];
-
-        NSMutableDictionary *nonStringAttributes = [jsh.nonStringAttributes mutableCopy];
-        [nonStringAttributes addEntriesFromDictionary:attributes];
-
-        jsh.keyAttributes = keyAttributes;
-        jsh.stringAttributes = stringAttributes;
-        jsh.nonStringAttributes = nonStringAttributes;
-        
-        self.bodyTextViewAttributedString = [jsh highlightJSONWithPrettyPrint:YES];
-        
-        self.rootNode = [BAVPlistNode plistNodeFromObject:response key:@"Root"];
-        
-        [_outlineView reloadData];
-        
-    } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-        NSString *s = @"error";
-        if(error) {
-            s = [error localizedDescription];
-        }
-        
-        NSString *requestHeadersDescription = requestHeaders ? [requestHeaders description] : @"";
-        NSString *responseHeadersDescription = responseHeaders ? [responseHeaders description] : @"";
-        self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:requestHeadersDescription attributes:attributes];
-        self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:responseHeadersDescription attributes:attributes];
-        
-        self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
-        
-        self.rootNode = nil;
-        [_outlineView reloadData];
-    }];
+    [_twitter fetchResource:_genericAPIEndpoint
+                 HTTPMethod:_genericHTTPMethod
+              baseURLString:_genericBaseURLString
+                 parameters:parameters
+        uploadProgressBlock:nil
+      downloadProgressBlock:nil
+               successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+                   
+                   NSString *curlDescription = [self curlDescriptionWithEndpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
+                   
+                   self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:curlDescription attributes:attributes];
+                   self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[responseHeaders description] attributes:attributes];
+                   
+                   JSONSyntaxHighlight *jsh = [[JSONSyntaxHighlight alloc] initWithJSON:response];
+                   
+                   NSMutableDictionary *keyAttributes = [jsh.keyAttributes mutableCopy];
+                   [keyAttributes addEntriesFromDictionary:attributes];
+                   
+                   NSMutableDictionary *stringAttributes = [jsh.stringAttributes mutableCopy];
+                   [stringAttributes addEntriesFromDictionary:attributes];
+                   
+                   NSMutableDictionary *nonStringAttributes = [jsh.nonStringAttributes mutableCopy];
+                   [nonStringAttributes addEntriesFromDictionary:attributes];
+                   
+                   jsh.keyAttributes = keyAttributes;
+                   jsh.stringAttributes = stringAttributes;
+                   jsh.nonStringAttributes = nonStringAttributes;
+                   
+                   self.bodyTextViewAttributedString = [jsh highlightJSONWithPrettyPrint:YES];
+                   
+                   self.rootNode = [BAVPlistNode plistNodeFromObject:response key:@"Root"];
+                   
+                   [_outlineView reloadData];
+                   
+               } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                   NSString *s = @"error";
+                   if(error) {
+                       s = [error localizedDescription];
+                   }
+                   
+                   NSString *requestHeadersDescription = requestHeaders ? [requestHeaders description] : @"";
+                   NSString *responseHeadersDescription = responseHeaders ? [responseHeaders description] : @"";
+                   self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:requestHeadersDescription attributes:attributes];
+                   self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:responseHeadersDescription attributes:attributes];
+                   
+                   self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
+                   
+                   self.rootNode = nil;
+                   [_outlineView reloadData];
+               }];
 }
 
 #pragma mark - NSOutlineViewDataSource

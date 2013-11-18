@@ -20,7 +20,8 @@
          HTTPMethod:(NSString *)HTTPMethod
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-      progressBlock:(void(^)(id request, id response))progressBlock
+uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+downloadProgressBlock:(void(^)(id request, id response))progressBlock
        successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
          errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 

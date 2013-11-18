@@ -21,13 +21,13 @@
     
     NSError *jsonError = nil;
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-
+    
     NSString *message = nil;
     NSInteger code = 0;
     
     if([json isKindOfClass:[NSDictionary class]]) {
         // assume {"errors":[{"message":"Bad Authentication data","code":215}]}
-
+        
         id errors = [json valueForKey:@"errors"];
         if([errors isKindOfClass:[NSArray class]] && [(NSArray *)errors count] > 0) {
             NSDictionary *errorDictionary = [errors lastObject];
@@ -40,7 +40,7 @@
             message = errors;
         }
     }
-
+    
     if(message) {
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:@{NSLocalizedDescriptionKey : message}];
         return error;
@@ -50,10 +50,11 @@
 }
 
 + (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString
-                        stTwitterProgressBlock:(void(^)(id json))progressBlock
+                  stTwitterUploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                stTwitterDownloadProgressBlock:(void(^)(id json))downloadProgressBlock
                          stTwitterSuccessBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
                            stTwitterErrorBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
-
+    
     __block STHTTPRequest *r = [self requestWithURLString:urlString];
     __weak STHTTPRequest *wr = r;
     
@@ -61,15 +62,17 @@
     
     r.timeoutSeconds = 0;
     
+    r.uploadProgressBlock = uploadProgressBlock;
+    
     r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
         
-        if(progressBlock == nil) return;
+        if(downloadProgressBlock == nil) return;
         
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
         
         if(json) {
-            progressBlock(json);
+            downloadProgressBlock(json);
             return;
         }
         
@@ -87,10 +90,10 @@
             NSError *jsonError = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
             if(json == nil) {
-//                errorBlock(wr.responseHeaders, jsonError);
+                //                errorBlock(wr.responseHeaders, jsonError);
                 return; // not enough information to say it's an error
             }
-            progressBlock(json);
+            downloadProgressBlock(json);
         }
     };
     
@@ -132,8 +135,8 @@
         
         STLog(@"-- body: %@", wr.responseString);
         
-//        BOOL isCancellationError = [[error domain] isEqualToString:@"STHTTPRequest"] && ([error code] == kSTHTTPRequestCancellationError);
-//        if(isCancellationError) return;
+        //        BOOL isCancellationError = [[error domain] isEqualToString:@"STHTTPRequest"] && ([error code] == kSTHTTPRequestCancellationError);
+        //        if(isCancellationError) return;
         
         errorBlock(wr.requestHeaders, wr.responseHeaders, error);
     };

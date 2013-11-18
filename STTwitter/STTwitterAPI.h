@@ -115,26 +115,28 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
 #pragma mark Generic methods to GET and POST
 
 - (id)fetchResource:(NSString *)resource
-                 HTTPMethod:(NSString *)HTTPMethod
-              baseURLString:(NSString *)baseURLString
-                 parameters:(NSDictionary *)params
-              progressBlock:(void (^)(id request, id response))progressBlock // TODO: handle progressBlock?
-               successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
-                 errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
+         HTTPMethod:(NSString *)HTTPMethod
+      baseURLString:(NSString *)baseURLString
+         parameters:(NSDictionary *)params
+uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
+       successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+         errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
 - (id)getResource:(NSString *)resource
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)parameters
-      progressBlock:(void(^)(id json))progressBlock
-       successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
-         errorBlock:(void(^)(NSError *error))errorBlock;
+    baseURLString:(NSString *)baseURLString
+       parameters:(NSDictionary *)parameters
+downloadProgressBlock:(void(^)(id json))progredownloadProgressBlockssBlock
+     successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
+       errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (id)postResource:(NSString *)resource
-       baseURLString:(NSString *)baseURLString
-          parameters:(NSDictionary *)parameters
-       progressBlock:(void(^)(id json))progressBlock
-        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock;
+     baseURLString:(NSString *)baseURLString
+        parameters:(NSDictionary *)parameters
+uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+downloadProgressBlock:(void(^)(id json))downloadProgressBlock
+      successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
+        errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Timelines
 
@@ -372,6 +374,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
                longitude:(NSString *)longitude
                  placeID:(NSString *)placeID
       displayCoordinates:(NSNumber *)displayCoordinates
+     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -382,6 +385,7 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
                  placeID:(NSString *)placeID
                 latitude:(NSString *)latitude
                longitude:(NSString *)longitude
+     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -455,18 +459,18 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  */
 
 - (id)postStatusesFilterUserIDs:(NSArray *)userIDs
-                  keywordsToTrack:(NSArray *)keywordsToTrack
-            locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                        delimited:(NSNumber *)delimited
-                    stallWarnings:(NSNumber *)stallWarnings
-                    progressBlock:(void(^)(id response))progressBlock
-                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+                keywordsToTrack:(NSArray *)keywordsToTrack
+          locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                      delimited:(NSNumber *)delimited
+                  stallWarnings:(NSNumber *)stallWarnings
+                  progressBlock:(void(^)(id response))progressBlock
+              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (id)postStatusesFilterKeyword:(NSString *)keyword
-                    progressBlock:(void(^)(id response))progressBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+                  progressBlock:(void(^)(id response))progressBlock
+                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/sample
@@ -475,10 +479,10 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  */
 
 - (id)getStatusesSampleDelimited:(NSNumber *)delimited
-                     stallWarnings:(NSNumber *)stallWarnings
-                     progressBlock:(void(^)(id response))progressBlock
-                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+                   stallWarnings:(NSNumber *)stallWarnings
+                   progressBlock:(void(^)(id response))progressBlock
+               stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/firehose
@@ -489,11 +493,11 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  */
 
 - (id)getStatusesFirehoseWithCount:(NSString *)count
-                           delimited:(NSNumber *)delimited
-                       stallWarnings:(NSNumber *)stallWarnings
-                       progressBlock:(void(^)(id response))progressBlock
-                   stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+                         delimited:(NSNumber *)delimited
+                     stallWarnings:(NSNumber *)stallWarnings
+                     progressBlock:(void(^)(id response))progressBlock
+                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    user
@@ -502,14 +506,14 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
  */
 
 - (id)getUserStreamDelimited:(NSNumber *)delimited
-                 stallWarnings:(NSNumber *)stallWarnings
+               stallWarnings:(NSNumber *)stallWarnings
 includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                includeReplies:(NSNumber *)includeReplies
-               keywordsToTrack:(NSArray *)keywordsToTrack
-         locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                 progressBlock:(void(^)(id response))progressBlock
-             stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock;
+              includeReplies:(NSNumber *)includeReplies
+             keywordsToTrack:(NSArray *)keywordsToTrack
+       locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+               progressBlock:(void(^)(id response))progressBlock
+           stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    site
@@ -518,13 +522,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 
 - (id)getSiteStreamForUserIDs:(NSArray *)userIDs
-                      delimited:(NSNumber *)delimited
-                  stallWarnings:(NSNumber *)stallWarnings
-         restrictToUserMessages:(NSNumber *)restrictToUserMessages
-                 includeReplies:(NSNumber *)includeReplies
-                  progressBlock:(void(^)(id response))progressBlock
-              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+                    delimited:(NSNumber *)delimited
+                stallWarnings:(NSNumber *)stallWarnings
+       restrictToUserMessages:(NSNumber *)restrictToUserMessages
+               includeReplies:(NSNumber *)includeReplies
+                progressBlock:(void(^)(id response))progressBlock
+            stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Direct Messages
 
