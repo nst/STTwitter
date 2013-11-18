@@ -21,5 +21,8 @@ extern NSUInteger kSTTwitterDefaultShortURLLengthHTTPS;
 
 // use default values for URL shortening
 - (NSInteger)numberOfCharactersInATweet;
+- (NSString *)stringByConvertingHTMLToPlainText;
+-(NSString *)stringByRemovingURLs;
+-(NSString *)stringByRemovingMentions;
 
 @end
