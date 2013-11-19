@@ -2,18 +2,29 @@
 
 _A comprehensive Objective-C library for Twitter REST API 1.1_
 
-> [2013-10-24] STTwitter was presented at [SoftShake](http://soft-shake.ch) ([slides](http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf)).
+**[2013-10-24]** STTwitter was presented at [SoftShake 2013](http://soft-shake.ch) ([slides](http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf)).
 
-1. [Installation](#installation)
-2. [Code Snippets](#code-snippets)
-3. [Various Kinds of OAuth Connections](#various-kinds-of-oauth-connections)
-4. [OAuth Consumer Tokens](#oauth-consumer-tokens)
-5. [Demo / Test Project](#demo--test-project)
-6. [Integration Tips](#integration-tips)
-7. [Troubleshooting](#troubleshooting)
-8. [Developers](#developers)
-9. [Applications Using STTwitter](#applications-using-sttwitter)
-10. [BSD 3-Clause License](#bsd-3-clause-license)
+1. [Testimonials](#testimonials)
+2. [Installation](#installation)
+3. [Code Snippets](#code-snippets)
+4. [Various Kinds of OAuth Connections](#various-kinds-of-oauth-connections)
+5. [OAuth Consumer Tokens](#oauth-consumer-tokens)
+6. [Demo / Test Project](#demo--test-project)
+7. [Integration Tips](#integration-tips)
+8. [Troubleshooting](#troubleshooting)
+9. [Developers](#developers)
+10. [BSD 3-Clause License](#bsd-3-clause-license)  
+
+### Testimonials
+
+> "We are now using STTwitter"
+[Adium developers](https://adium.im/blog/2013/07/adium-1-5-7-released/)
+
+> "An awesome Objective-C wrapper for Twitter’s HTTP API? Yes please!"
+[@nilsou](https://twitter.com/nilsou/status/392364862472736768)
+
+> "Your Library is really great, I stopped the development of my client because I was hating twitter APIs for some reasons, this Library make me want to continue, seriously thank you!"
+[MP0w](https://github.com/nst/STTwitter/pull/49#issuecomment-28746249)
 
 ### Installation
 
@@ -351,10 +362,6 @@ You can create your own convenience methods with fewer parameters. You can also 
      * STHTTPRequest
         - block-based wrapper around NSURLConnection
         - https://github.com/nst/STHTTPRequest
-
-### Applications Using STTwitter
-
-* [Adium](http://adium.im/) developers have [chosen](http://permalink.gmane.org/gmane.network.instant-messaging.adium.devel/2332) to use STTwitter to handle Twitter connectivity in Adium, starting from version 1.5.7.
 
 ### BSD 3-Clause License
 
