@@ -21,6 +21,7 @@ extern NSUInteger const kSTHTTPRequestDefaultTimeout;
 typedef void (^uploadProgressBlock_t)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite);
 typedef void (^downloadProgressBlock_t)(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive);
 typedef void (^completionBlock_t)(NSDictionary *headers, NSString *body);
+typedef void (^completionDataBlock_t)(NSDictionary *headers, NSData *body);
 typedef void (^errorBlock_t)(NSError *error);
 
 @interface STHTTPRequest : NSObject <NSURLConnectionDelegate>
@@ -29,6 +30,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (copy) downloadProgressBlock_t downloadProgressBlock;
 @property (copy) completionBlock_t completionBlock;
 @property (copy) errorBlock_t errorBlock;
+@property (copy) completionDataBlock_t completionDataBlock;
 
 // request
 @property (nonatomic, retain) NSString *HTTPMethod; // default: GET, or POST if POSTDictionary or files to upload
@@ -41,6 +43,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
 @property (nonatomic, retain, readonly) NSURL *url;
 @property (nonatomic) BOOL ignoreSharedCookiesStorage;
+@property (nonatomic) BOOL preventRedirections;
 
 // response
 @property (nonatomic) NSStringEncoding forcedResponseEncoding;
@@ -62,10 +65,14 @@ typedef void (^errorBlock_t)(NSError *error);
 - (void)cancel;
 
 // Cookies
++ (void)addCookieToSharedCookiesStorage:(NSHTTPCookie *)cookie;
++ (void)addCookieToSharedCookiesStorageWithName:(NSString *)name value:(NSString *)value url:(NSURL *)url;
 - (void)addCookieWithName:(NSString *)name value:(NSString *)value url:(NSURL *)url;
 - (void)addCookieWithName:(NSString *)name value:(NSString *)value;
 - (NSArray *)requestCookies;
 - (NSArray *)sessionCookies;
++ (NSArray *)sessionCookiesInSharedCookiesStorage;
++ (void)deleteAllCookiesFromSharedCookieStorage;
 - (void)deleteSessionCookies;
 
 // Credentials
@@ -86,7 +93,7 @@ typedef void (^errorBlock_t)(NSError *error);
 - (void)addDataToUpload:(NSData *)data parameterName:(NSString *)param mimeType:(NSString *)mimeType fileName:(NSString *)fileName;
 
 // Session
-- (void)clearSession; // delete all credentials and cookies
++ (void)clearSession; // delete all credentials and cookies
 
 @end
 
