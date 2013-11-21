@@ -237,6 +237,16 @@ In order to convert the string in the `created_at` field from Twitter's JSON int
     NSString *dateString = [d valueForKey:@"created_at"]; // "Sun Jun 28 20:33:01 +0000 2009"
     NSDate *date = [df dateFromString:dateString];
 
+##### URLs Shorteners
+
+In order to expand shortened URLs such as Twitter's `t.co` service, use:
+
+    [STHTTPRequest expandedURLStringForShortenedURLString:@"http://t.co/tmoxbSfDWc" successBlock:^(NSString *expandedURLString) {
+        //
+    } errorBlock:^(NSError *error) {
+        //
+    }];
+
 ##### Boolean Parameters
 
 There are a lot of optional parameters In Twitter API. In STTwitter, you can ignore such parameters by passing `nil`. Regarding boolean parameters, STTwitter can't just use Objective-C `YES` and `NO` because `NO` has the same value as `nil` (zero). So boolean parameters are wrapped into `NSNumber` objects, which are pretty easy to use with boolean values thanks to Objective-C literals. So, with STTwitter, you will give an optional parameter of Twitter API either `@(YES)`, `@(NO)` or `nil`.
