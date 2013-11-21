@@ -144,4 +144,28 @@
     return r;
 }
 
++ (void)expandedURLStringForShortenedURLString:(NSString *)urlString
+                                  successBlock:(void(^)(NSString *expandedURLString))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
+    
+    r.ignoreSharedCookiesStorage = YES;
+    r.preventRedirections = YES;
+    
+    r.completionBlock = ^(NSDictionary *responseHeaders, NSString *body) {
+        
+        NSString *location = [responseHeaders valueForKey:@"location"];
+        if(location == nil) [responseHeaders valueForKey:@"Location"];
+        
+        successBlock(location);
+    };
+    
+    r.errorBlock = ^(NSError *error) {
+        errorBlock(error);
+    };
+    
+    [r startAsynchronous];
+}
+
 @end

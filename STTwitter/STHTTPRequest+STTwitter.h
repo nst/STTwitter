@@ -16,4 +16,8 @@
                          stTwitterSuccessBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
                            stTwitterErrorBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
++ (void)expandedURLStringForShortenedURLString:(NSString *)urlString
+                                  successBlock:(void(^)(NSString *expandedURLString))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end
