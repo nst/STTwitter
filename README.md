@@ -294,6 +294,18 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
     
     @end
 
+##### Stream Request and Connection Losses
+
+Streaming requests may be lost when your iOS application comes back to foreground after a while in background. To handle this case properly you can detect the connection loss in the error block and restart the stream request from there.
+
+    // ...
+    } errorBlock:^(NSError *error) {
+
+        if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorNetworkConnectionLost) {
+            [self startStreamRequest];
+        }
+
+    }];
 
 ### Troubleshooting
 
