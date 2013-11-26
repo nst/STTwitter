@@ -26,7 +26,7 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 > "Your Library is really great, I stopped the development of my client because I was hating twitter APIs for some reasons, this Library make me want to continue, seriously thank you!"
 [MP0w](https://github.com/nst/STTwitter/pull/49#issuecomment-28746249)
 
-> "Powered by his own backend wrapper for HTTP calls, STTwitter writes most of the code for you for oAuth based authentication and API resource access like statuses, mentions, users, searches, friends & followers, favorites, lists, places, trends. The documentation is also excellent.
+> "Powered by his own backend wrapper for HTTP calls, STTwitter writes most of the code for you for oAuth based authentication and API resource access like statuses, mentions, users, searches, friends & followers, favorites, lists, places, trends. The documentation is also excellent."
 [STTwitter - Delightful Twitter Library for iOS / buddingdevelopers.com](http://buddingdevelopers.com/sttwitter-delightful-twitter-library-for-ios/)
 
 ### Installation
