@@ -60,7 +60,7 @@
     
     r.ignoreSharedCookiesStorage = YES;
     
-    r.timeoutSeconds = 0;
+    r.timeoutSeconds = DBL_MAX;
     
     r.uploadProgressBlock = uploadProgressBlock;
     
