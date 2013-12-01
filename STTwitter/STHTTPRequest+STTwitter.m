@@ -97,13 +97,13 @@
         }
     };
     
-    r.completionBlock = ^(NSDictionary *responseHeaders, NSString *body) {
+    r.completionDataBlock = ^(NSDictionary *responseHeaders, NSData *responseData) {
         
         NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:wr.responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+        id json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
-            successBlock(wr.requestHeaders, wr.responseHeaders, body); // response is not necessarily json
+            successBlock(wr.requestHeaders, wr.responseHeaders, wr.responseString); // response is not necessarily json
             return;
         }
         
@@ -124,7 +124,7 @@
         NSError *regexError = nil;
         NSString *errorString = [wr.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
         if(errorString == nil) {
-            STLog(@"-- regexError: %@", [regexError localizedDescription]);
+            if(regexError) STLog(@"-- regexError: %@", [regexError localizedDescription]);
         }
         
         if(errorString) {
@@ -133,7 +133,7 @@
             error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
         }
         
-        STLog(@"-- body: %@", wr.responseString);
+        if (wr.responseString) STLog(@"-- body: %@", wr.responseString);
         
         //        BOOL isCancellationError = [[error domain] isEqualToString:@"STHTTPRequest"] && ([error code] == kSTHTTPRequestCancellationError);
         //        if(isCancellationError) return;
