@@ -320,6 +320,15 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
               
               successBlock(_oauthAccessToken, _oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
           } errorBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+              
+              if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorUserCancelledAuthentication) {
+                  NSError *xAuthNotEnabledError = [NSError errorWithDomain:NSStringFromClass([self class])
+                                                                      code:STTwitterOAuthConsumerTokensAreProbablyNotXAuthEnabled
+                                                                  userInfo:@{NSLocalizedDescriptionKey : @"The consumer tokens are probably not xAuth enabled."}];
+                  errorBlock(xAuthNotEnabledError);
+                  return;
+              }
+              
               errorBlock(error);
           }];
 }
