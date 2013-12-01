@@ -314,7 +314,7 @@ Streaming requests may be lost when your iOS application comes back to foregroun
 
 ##### xAuth
 
-Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So if you get an error like `The consumer tokens are probably not xAuth enabled.` while accessing `https://api.twitter.com/oauth/access_token` then your consumer tokens are probably not xAuth-enabled. You can read more on this on Twitter website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
+Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So if you get an error like `The consumer tokens are probably not xAuth enabled.` while accessing `https://api.twitter.com/oauth/access_token` see Twitter website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
 
 ##### Concurrency
 
