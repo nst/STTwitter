@@ -2265,7 +2265,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
-    md[@"query"] = [query st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    md[@"q"] = [query st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     if(page) md[@"page"] = page;
     if(count) md[@"count"] = count;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
