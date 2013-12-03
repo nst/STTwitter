@@ -71,13 +71,13 @@
 
 - (void)testURLEncodedString {
     NSString *s1 = @"\"<>\%{}[]|\\^`hello #";
-    XCTAssertEqualObjects([s1 urlEncodedString], @"\%22\%3C\%3E\%25\%7B\%7D\%5B\%5D\%7C\%5C\%5E\%60hello\%20\%23", @"s1 was not encoded properly.");
+    XCTAssertEqualObjects([s1 st_urlEncodedString], @"\%22\%3C\%3E\%25\%7B\%7D\%5B\%5D\%7C\%5C\%5E\%60hello\%20\%23", @"s1 was not encoded properly.");
     
     NSString *s2 = @"☃";
-    XCTAssertEqualObjects([s2 urlEncodedString], @"%E2%98%83", @"s2 was not encoded properly.");
+    XCTAssertEqualObjects([s2 st_urlEncodedString], @"%E2%98%83", @"s2 was not encoded properly.");
     
     NSString *s3 = @"!*'();:@&=+$,/?%#[];/?:@&=$+{}<>,";
-    XCTAssertEqualObjects([s3 urlEncodedString], @"%21%2A%27%28%29%3B%3A%40%26%3D%2B%24%2C%2F%3F%25%23%5B%5D%3B%2F%3F%3A%40%26%3D%24%2B%7B%7D%3C%3E%2C", @"s3 was not encoded properly.");
+    XCTAssertEqualObjects([s3 st_urlEncodedString], @"%21%2A%27%28%29%3B%3A%40%26%3D%2B%24%2C%2F%3F%25%23%5B%5D%3B%2F%3F%3A%40%26%3D%24%2B%7B%7D%3C%3E%2C", @"s3 was not encoded properly.");
 }
 
 - (void)testAuthorizationHeader {
@@ -128,7 +128,7 @@
     
     NSString *baseString = @"GET&http%3A%2F%2Fphotos.example.net%2Fphotos&file%3Dvacation.jpg%26oauth_consumer_key%3Ddpf43f3p2l4k3l03%26oauth_nonce%3Dkllo9940pd9333jh%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1191242096%26oauth_token%3Dnnch734d00sl2jdk%26oauth_version%3D1.0%26size%3Doriginal";
     
-    NSString *signature = [baseString signHmacSHA1WithKey:@"kd94hf93k423kf44&pfkkdhi9sl3r4s00"];
+    NSString *signature = [baseString st_signHmacSHA1WithKey:@"kd94hf93k423kf44&pfkkdhi9sl3r4s00"];
     
     XCTAssertEqualObjects(@"tR3+Ty81lMeYAr/Fid0kMTYa/WM=", signature, @"bad signature");
 }
@@ -157,7 +157,7 @@
     
     NSString *baseString = @"GET&https%3A%2F%2Fapi.twitter.com%2F1.1%2Fgeo%2Fsearch.json&oauth_consumer_key%3D30d7ECqcJDGx8pBEMqxCxg%26oauth_nonce%3Dea95faa8097f4aeca24f77be0b6923a1%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1351964056%26oauth_token%3D15111995-XFRb1CWIy4YLtr82nxPULkEKxKn5Cvh88Qkrtxni8%26oauth_version%3D1.0%26query%3DToronto";
     
-    NSString *signature = [baseString signHmacSHA1WithKey:@"N5YupBKlcE75i7HbeqkocCKiNk418bjQTIHCRKaX4&iwKhgvXo3AJ6O61OqvEwgZJzw8jte0kwl09Twe3ik8"];
+    NSString *signature = [baseString st_signHmacSHA1WithKey:@"N5YupBKlcE75i7HbeqkocCKiNk418bjQTIHCRKaX4&iwKhgvXo3AJ6O61OqvEwgZJzw8jte0kwl09Twe3ik8"];
     
     XCTAssertEqualObjects(@"eMPFYN/QqvrbQISuKOiq2I9vQpk=", signature, @"bad signature");
 }
