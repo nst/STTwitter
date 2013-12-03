@@ -36,7 +36,6 @@ void Swizzle(Class c, SEL orig, SEL new) {
 
 - (void)unitTests_startAsynchronous {
     
-    NSAssert(self.completionBlock != nil, @"completionBlock needed");
     NSAssert(self.errorBlock != nil, @"errorBlock needed");
     
     STHTTPRequestTestResponse *tr = [[STHTTPRequestTestResponseQueue sharedInstance] dequeue];
@@ -44,11 +43,15 @@ void Swizzle(Class c, SEL orig, SEL new) {
     NSAssert(tr.block != nil, @"block needed");
     
     tr.block(self); // simulate network response
-        
+    
     BOOL success = self.responseStatus < 400;
     
     if(success) {
-        self.completionBlock(self.responseHeaders, self.responseString);
+        if(self.completionBlock) {
+            self.completionBlock(self.responseHeaders, self.responseString);
+        } else if(self.completionDataBlock) {
+            self.completionDataBlock(self.responseHeaders, self.responseData);
+        }
     } else {
         self.errorBlock(self.error);
     }

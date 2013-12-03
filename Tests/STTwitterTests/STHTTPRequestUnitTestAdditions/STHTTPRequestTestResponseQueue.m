@@ -28,7 +28,7 @@ static STHTTPRequestTestResponseQueue *sharedInstance = nil;
 
 - (STHTTPRequestTestResponse *)dequeue {
     
-    NSAssert([_responses count] > 0, @"can't dequeue because queue is empty, count is %ld", [_responses count]);
+    NSAssert([_responses count] > 0, @"can't dequeue because queue is empty, count is %lu", [_responses count]);
 
     if([_responses count] == 0) {
         return nil;
