@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'STTwitter/*.{h,m}', 'STTwitter/Vendor/*.{h,m}'
 
-  s.ios.frameworks  = 'CoreGraphics', 'Foundation', 'QuartzCore', 'UIKit', 'Accounts', 'Social', 'Twitter'
+  s.ios.frameworks  = 'CoreGraphics', 'Foundation', 'QuartzCore', 'UIKit', 'Accounts', 'Twitter'
+  s.ios.weak_frameworks = 'Social'
   s.requires_arc = true
 end
