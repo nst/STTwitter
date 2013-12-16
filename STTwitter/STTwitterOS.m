@@ -181,37 +181,48 @@
     
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
         
-        NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        
         if(responseData == nil) {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
             }];
             return;
         }
-        
+
         NSError *jsonError = nil;
         NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
-            
-            // do our best to extract Twitter error message from responseString
-            
-            NSError *regexError = nil;
-            NSString *errorString = [rawResponse firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
-            
-            if(errorString) {
-                error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
+
+            NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+             // stream API can send several {} not in a [] which is invalid JSON, so we try reformatting the result
+            NSArray *lines = [rawResponse componentsSeparatedByString:@"\n"];
+            NSString *s = [lines componentsJoinedByString:@", "];
+            NSData *data = [[NSString stringWithFormat:@"[%@]", s] dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *jsonError = nil;
+            json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&jsonError];
+
+            if(json == nil) {
+                // do our best to extract Twitter error message from responseString
+                
+                NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+                
+                NSError *regexError = nil;
+                NSString *errorString = [rawResponse firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
+                
+                if(errorString) {
+                    error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
+                    }];
+                    return;
+                }
+                
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
+                    completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], rawResponse);
                 }];
                 return;
             }
             
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], rawResponse);
-            }];
-            return;
         }
         
         /**/
