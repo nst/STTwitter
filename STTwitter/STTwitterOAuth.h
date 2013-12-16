@@ -24,7 +24,7 @@ extern NSString * const kSTPOSTDataKey;
 
 NS_ENUM(NSUInteger, STTwitterOAuthErrorCode) {
     STTwitterOAuthCannotPostAccessTokenRequestWithoutPIN,
-    STTwitterOAuthConsumerTokensAreProbablyNotXAuthEnabled
+    STTwitterOAuthBadCredentialsOrConsumerTokensNotXAuthEnabled
 };
 
 @interface STTwitterOAuth : NSObject <STTwitterProtocol>

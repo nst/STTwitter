@@ -323,8 +323,8 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
               
               if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorUserCancelledAuthentication) {
                   NSError *xAuthNotEnabledError = [NSError errorWithDomain:NSStringFromClass([self class])
-                                                                      code:STTwitterOAuthConsumerTokensAreProbablyNotXAuthEnabled
-                                                                  userInfo:@{NSLocalizedDescriptionKey : @"The consumer tokens are probably not xAuth enabled."}];
+                                                                      code:STTwitterOAuthBadCredentialsOrConsumerTokensNotXAuthEnabled
+                                                                  userInfo:@{NSLocalizedDescriptionKey : @"Bad credentials, or tokens not xAuth enabled."}];
                   errorBlock(xAuthNotEnabledError);
                   return;
               }
