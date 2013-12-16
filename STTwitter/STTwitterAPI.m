@@ -1197,8 +1197,7 @@ downloadProgressBlock:nil
             }
             
         } successBlock:^(NSDictionary *rateLimits, id response) {
-            // reaching successBlock for a stream request is an error
-            errorBlock(response);
+            progressBlock(response);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
@@ -1282,8 +1281,7 @@ downloadProgressBlock:nil
            }
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
-           // reaching successBlock for a stream request is an error
-           errorBlock(json);
+           progressBlock(json);
        } errorBlock:^(NSError *error) {
            errorBlock(error);
        }];
@@ -1328,8 +1326,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            }
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
-           // reaching successBlock for a stream request is an error
-           errorBlock(json);
+           progressBlock(json);
        } errorBlock:^(NSError *error) {
            errorBlock(error);
        }];
@@ -1370,8 +1367,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            }
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
-           // reaching successBlock for a stream request is an error
-           errorBlock(json);
+           progressBlock(json);
        } errorBlock:^(NSError *error) {
            errorBlock(error);
        }];
