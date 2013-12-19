@@ -14,9 +14,16 @@
 #import <Twitter/Twitter.h> // iOS 5
 #endif
 
+typedef void (^completionBlock_t)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response);
+typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error);
+
 @interface STTwitterOS ()
 @property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
 @property (nonatomic, retain) ACAccount *account; // if nil, will be set to first account available
+
+@property (copy) completionBlock_t completionBlock; // only used with streaming API
+@property (copy) errorBlock_t errorBlock; // only used with streaming API
+@property (nonatomic, retain) NSHTTPURLResponse *httpURLResponse; // only used with streaming API
 @end
 
 @implementation STTwitterOS
@@ -141,6 +148,11 @@
 }
 
 - (NSDictionary *)requestHeadersForRequest:(id)request {
+    
+    if([request isKindOfClass:[NSURLRequest class]]) {
+        return [request allHTTPHeaderFields];
+    }
+    
 #if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
     return [[request signedURLRequest] allHTTPHeaderFields];
 #else
@@ -178,109 +190,89 @@
     if(mediaData) {
         [request addMultipartData:mediaData withName:@"media[]" type:@"application/octet-stream" filename:@"media.jpg"];
     }
+
+    self.completionBlock = completionBlock;
+    self.errorBlock = errorBlock;
     
-    [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-        
-        if(responseData == nil) {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
-            }];
-            return;
-        }
+    // we use NSURLConnection because SLRequest doesn't play well with the streaming API
+    NSURLConnection *connection = [NSURLConnection connectionWithRequest:[request preparedURLRequest] delegate:self];
+    [connection start];
+    return connection;
+}
 
-        NSError *jsonError = nil;
-        NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-        
-        if(json == nil) {
-
-            NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-             // stream API can send several {} not in a [] which is invalid JSON, so we try reformatting the result
-            NSArray *lines = [rawResponse componentsSeparatedByString:@"\n"];
-            NSString *s = [lines componentsJoinedByString:@", "];
-            NSData *data = [[NSString stringWithFormat:@"[%@]", s] dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *jsonError = nil;
-            json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&jsonError];
-
-            if(json == nil) {
-                // do our best to extract Twitter error message from responseString
-                
-                NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-                
-                NSError *regexError = nil;
-                NSString *errorString = [rawResponse firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
-                
-                if(errorString) {
-                    error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
-                    }];
-                    return;
-                }
-                
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], rawResponse);
-                }];
-                return;
-            }
-            
-        }
-        
-        /**/
-        
-        if([json isKindOfClass:[NSArray class]] == NO && [json valueForKey:@"error"]) {
-            
-            NSString *message = [json valueForKey:@"error"];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
-            NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:userInfo];
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonErrorFromResponse);
-            }];
-            
-            return;
-        }
-        
-        /**/
-        
-        id jsonErrors = [json valueForKey:@"errors"];
-        
-        if(jsonErrors != nil && [jsonErrors isKindOfClass:[NSArray class]] == NO) {
-            if(jsonErrors == nil) jsonErrors = @"";
-            jsonErrors = [NSArray arrayWithObject:@{@"message":jsonErrors, @"code" : @(0)}];
-        }
-        
-        if([jsonErrors count] > 0 && [jsonErrors lastObject] != [NSNull null]) {
-            
-            NSDictionary *jsonErrorDictionary = [jsonErrors lastObject];
-            NSString *message = jsonErrorDictionary[@"message"];
-            NSInteger code = [jsonErrorDictionary[@"code"] intValue];
-            NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
-            NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:userInfo];
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonErrorFromResponse);
-            }];
-            
-            return;
-        }
-        
-        /**/
-        
-        if(json) {
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], (NSArray *)json);
-            }];
-            
-        } else {
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonError);
-            }];
-        }
-    }];
+- (void)handleResponse:(NSHTTPURLResponse *)urlResponse request:(id)request data:(NSData *)responseData {
     
-    return request;
+    if(responseData == nil) {
+        self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], nil);
+        return;
+    }
+    
+    NSError *jsonError = nil;
+    NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+    
+    if(json == nil) {
+        // do our best to extract Twitter error message from responseString
+        
+        NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        
+        NSError *regexError = nil;
+        NSString *errorString = [rawResponse firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
+        
+        if(errorString) {
+            NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
+            self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
+            return;
+        }
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], rawResponse);
+        }];
+        return;
+    }
+    
+    /**/
+    
+    if([json isKindOfClass:[NSArray class]] == NO && [json valueForKey:@"error"]) {
+        
+        NSString *message = [json valueForKey:@"error"];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
+        NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:userInfo];
+        
+        self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonErrorFromResponse);
+        
+        return;
+    }
+    
+    /**/
+    
+    id jsonErrors = [json valueForKey:@"errors"];
+    
+    if(jsonErrors != nil && [jsonErrors isKindOfClass:[NSArray class]] == NO) {
+        if(jsonErrors == nil) jsonErrors = @"";
+        jsonErrors = [NSArray arrayWithObject:@{@"message":jsonErrors, @"code" : @(0)}];
+    }
+    
+    if([jsonErrors count] > 0 && [jsonErrors lastObject] != [NSNull null]) {
+        
+        NSDictionary *jsonErrorDictionary = [jsonErrors lastObject];
+        NSString *message = jsonErrorDictionary[@"message"];
+        NSInteger code = [jsonErrorDictionary[@"code"] intValue];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
+        NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:userInfo];
+        
+        self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonErrorFromResponse);
+        
+        return;
+    }
+    
+    /**/
+    
+    if(json) {
+        self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], (NSArray *)json);
+    } else {
+        self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonError);
+    }
+
 }
 
 - (id)fetchResource:(NSString *)resource
@@ -397,6 +389,28 @@ downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME:
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                errorBlock(error);
            }];
+}
+
+#pragma mark NSURLConnectionDelegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    if([response isKindOfClass:[NSHTTPURLResponse class]] == NO) return;
+    
+    self.httpURLResponse = (NSHTTPURLResponse *)response;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [self handleResponse:_httpURLResponse request:[connection currentRequest] data:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
+    NSURLRequest *request = [connection currentRequest];
+    NSDictionary *requestHeaders = [request allHTTPHeaderFields];
+    NSDictionary *responseHeaders = [_httpURLResponse allHeaderFields];
+    
+    self.errorBlock(request, requestHeaders, responseHeaders, error);
 }
 
 @end
