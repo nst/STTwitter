@@ -73,9 +73,9 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
 
 - (BOOL)hasAccessToTwitter {
     
-//#if TARGET_API_MAC_OSX
-//    return YES;
-//#else
+#if TARGET_API_MAC_OSX
+    return YES;
+#else
     
 #if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
     return [TWTweetComposeViewController canSendTweet]; // iOS 5
@@ -83,7 +83,7 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
     return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
 #endif
     
-//#endif
+#endif
 }
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
