@@ -928,10 +928,12 @@ downloadProgressBlock:nil
     NSParameterAssert(statusID);
     NSParameterAssert(urlString);
     
+#if DEBUG
     if(align) {
         NSArray *validValues = @[@"left", @"right", @"center", @"none"];
         NSAssert([validValues containsObject: align], @"");
     }
+#endif
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"id"] = statusID;
