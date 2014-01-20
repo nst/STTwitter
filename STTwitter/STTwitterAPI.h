@@ -1914,4 +1914,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                        successBlock:(void(^)(id userProfile))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock;
 
+// GET search/typeahead.json
+- (void)_getSearchTypeaheadQuery:(NSString *)query
+                      resultType:(NSString *)resultType // "all"
+                  sendErrorCodes:(NSNumber *)sendErrorCodes
+                    successBlock:(void(^)(id results))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
+
 @end

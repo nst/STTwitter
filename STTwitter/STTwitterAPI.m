@@ -4066,6 +4066,25 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  }];
 }
 
+// GET search/typeahead.json
+- (void)_getSearchTypeaheadQuery:(NSString *)query
+                      resultType:(NSString *)resultType // "all"
+                  sendErrorCodes:(NSNumber *)sendErrorCodes
+                    successBlock:(void(^)(id results))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"q"] = query;
+    if(resultType) md[@"result_type"] = resultType;
+    if(sendErrorCodes) md[@"send_error_codes"] = @([sendErrorCodes boolValue]);
+    
+    [self getAPIResource:@"search/typeahead.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)
