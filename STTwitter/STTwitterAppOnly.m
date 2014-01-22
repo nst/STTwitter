@@ -120,6 +120,12 @@
  downloadProgressBlock:nil
           successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
               
+              if([json isKindOfClass:[NSDictionary class]] == NO) {
+                  NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAppOnlyCannotFindJSONInResponse userInfo:nil];
+                  errorBlock(error);
+                  return;
+              }
+              
               NSString *tokenType = [json valueForKey:@"token_type"];
               if([tokenType isEqualToString:@"bearer"] == NO) {
                   NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAppOnlyCannotFindBearerTokenInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find bearer token in server response"}];

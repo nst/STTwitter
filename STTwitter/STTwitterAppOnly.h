@@ -17,6 +17,7 @@
 
 NS_ENUM(NSUInteger, STTwitterAppOnlyErrorCode) {
     STTwitterAppOnlyCannotFindBearerTokenToBeInvalidated,
+    STTwitterAppOnlyCannotFindJSONInResponse,
     STTwitterAppOnlyCannotFindBearerTokenInResponse
 };
 
