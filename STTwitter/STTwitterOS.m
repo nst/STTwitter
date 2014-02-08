@@ -1,6 +1,6 @@
 //
-//  MGTwitterEngine+TH.m
-//  TwitHunter
+//  STTwitterOS.m
+//  STTwitter
 //
 //  Created by Nicolas Seriot on 5/1/10.
 //  Copyright 2010 seriot.ch. All rights reserved.
@@ -73,12 +73,16 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
 
 - (BOOL)hasAccessToTwitter {
     
-#if TARGET_API_MAC_OSX
+#if !TARGET_OS_IPHONE
     return YES;
 #else
     
-#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    return [TWTweetComposeViewController canSendTweet]; // iOS 5
+#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
+        return [TWTweetComposeViewController canSendTweet]; // iOS 5
+    } else {
+        return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
+    }
 #else
     return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
 #endif
@@ -137,9 +141,14 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
     };
     
 #if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    [self.accountStore requestAccessToAccountsWithType:accountType
-                                 withCompletionHandler:accountStoreRequestCompletionHandler];
-    
+    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                     withCompletionHandler:accountStoreRequestCompletionHandler];
+    } else {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                                   options:NULL
+                                                completion:accountStoreRequestCompletionHandler];
+    }
 #else
     [self.accountStore requestAccessToAccountsWithType:accountType
                                                options:NULL
@@ -154,7 +163,11 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
     }
     
 #if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    return [[request signedURLRequest] allHTTPHeaderFields];
+    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
+        return [[request signedURLRequest] allHTTPHeaderFields];
+    } else {
+        return [[request preparedURLRequest] allHTTPHeaderFields];
+    }
 #else
     return [[request preparedURLRequest] allHTTPHeaderFields];
 #endif
@@ -178,9 +191,15 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
     
     id request = nil;
     
-#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    TWRequestMethod method = (httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
-    request = [[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method];
+#if TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    
+    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
+        TWRequestMethod method = (httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
+        request = [[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method];
+    } else {
+        request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
+    }
+    
 #else
     request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
 #endif
@@ -190,15 +209,19 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
     if(mediaData) {
         [request addMultipartData:mediaData withName:@"media[]" type:@"application/octet-stream" filename:@"media.jpg"];
     }
-
+    
     self.completionBlock = completionBlock;
     self.errorBlock = errorBlock;
     
     // we use NSURLConnection because SLRequest doesn't play well with the streaming API
     
     NSURLRequest *preparedURLRequest = nil;
-#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    preparedURLRequest = [request signedURLRequest];
+#if TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
+        preparedURLRequest = [request signedURLRequest];
+    } else {
+        preparedURLRequest = [request preparedURLRequest];
+    }
 #else
     preparedURLRequest = [request preparedURLRequest];
 #endif
@@ -280,7 +303,7 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
     } else {
         self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonError);
     }
-
+    
 }
 
 - (id)fetchResource:(NSString *)resource
