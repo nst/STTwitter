@@ -81,6 +81,13 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
                                   consumerSecret:(NSString *)consumerSecret;
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+              forceLogin:(NSNumber *)forceLogin
+              screenName:(NSString *)screenName
+           oauthCallback:(NSString *)oauthCallback
+              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
            oauthCallback:(NSString *)oauthCallback
               errorBlock:(void(^)(NSError *error))errorBlock;
 

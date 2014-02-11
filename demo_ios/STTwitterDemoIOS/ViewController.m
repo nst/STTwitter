@@ -63,8 +63,9 @@
         NSLog(@"-- oauthToken: %@", oauthToken);
         
         [[UIApplication sharedApplication] openURL:url];
-        
-    } oauthCallback:@"myapp://twitter_access_tokens/"
+    } forceLogin:@(YES)
+                    screenName:nil
+                 oauthCallback:@"myapp://twitter_access_tokens/"
                     errorBlock:^(NSError *error) {
                         NSLog(@"-- error: %@", error);
                         _loginStatusLabel.text = [error localizedDescription];
@@ -75,15 +76,15 @@
     
     [_twitter postAccessTokenRequestWithPIN:verifier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
         NSLog(@"-- screenName: %@", screenName);
-
+        
         _loginStatusLabel.text = screenName;
         
         /*
          At this point, the user can use the API and you can read his access tokens with:
-        
+         
          _twitter.oauthAccessToken;
          _twitter.oauthAccessTokenSecret;
-        
+         
          You can store these tokens (in user default, or in keychain) so that the user doesn't need to authenticate again on next launches.
          
          Next time, just instanciate STTwitter with the class method:

@@ -46,8 +46,16 @@ NS_ENUM(NSUInteger, STTwitterOAuthErrorCode) {
                                     password:(NSString *)password;
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+              forceLogin:(NSNumber *)forceLogin // optional, default @(NO)
+              screenName:(NSString *)screenName // optional, default nil
            oauthCallback:(NSString *)oauthCallback
               errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+           oauthCallback:(NSString *)oauthCallback
+              errorBlock:(void(^)(NSError *error))errorBlock;
+
 
 - (void)postAccessTokenRequestWithPIN:(NSString *)pin
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock

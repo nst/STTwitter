@@ -170,8 +170,12 @@ static NSDateFormatter *dateFormatter = nil;
     return dateFormatter;
 }
 
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock forceLogin:(NSNumber *)forceLogin screenName:(NSString *)screenName oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
+    [_oauth postTokenRequest:successBlock forceLogin:forceLogin screenName:screenName oauthCallback:oauthCallback errorBlock:errorBlock];
+}
+
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
-    [_oauth postTokenRequest:successBlock oauthCallback:oauthCallback errorBlock:errorBlock];
+    [_oauth postTokenRequest:successBlock forceLogin:nil screenName:nil oauthCallback:oauthCallback errorBlock:errorBlock];
 }
 
 - (void)postAccessTokenRequestWithPIN:(NSString *)pin

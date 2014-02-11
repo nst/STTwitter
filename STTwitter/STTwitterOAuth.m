@@ -253,7 +253,7 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
     return @"1.0";
 }
 
-- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock forceLogin:(NSNumber *)forceLogin screenName:(NSString *)screenName oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *theOAuthCallback = [oauthCallback length] ? oauthCallback : @"oob"; // out of band, ie PIN instead of redirect
     
@@ -265,20 +265,40 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
  downloadProgressBlock:nil
           successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id body) {
               
-              NSDictionary *d = [body st_parametersDictionary];
+              NSMutableDictionary *md = [[body st_parametersDictionary] mutableCopy];
               
-              NSString *s = [NSString stringWithFormat:@"https://api.twitter.com/oauth/authorize?%@", body];
+              if([forceLogin boolValue]) md[@"force_login"] = @"1";
+              if(screenName) md[@"screen_name"] = screenName;
               
-              NSURL *url = [NSURL URLWithString:s];
+              //
               
-              self.oauthRequestToken = d[@"oauth_token"];
-              self.oauthRequestTokenSecret = d[@"oauth_token_secret"]; // unused
+              NSMutableArray *parameters = [NSMutableArray array];
+              
+              [md enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                  NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
+                  [parameters addObject:s];
+              }];
+              
+              NSString *parameterString = [parameters componentsJoinedByString:@"&"];
+
+              NSString *urlString = [NSString stringWithFormat:@"https://api.twitter.com/oauth/authorize?%@", parameterString];
+              
+              //
+              
+              NSURL *url = [NSURL URLWithString:urlString];
+              
+              self.oauthRequestToken = md[@"oauth_token"];
+              self.oauthRequestTokenSecret = md[@"oauth_token_secret"]; // unused
               
               successBlock(url, _oauthRequestToken);
               
           } errorBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
               errorBlock(error);
           }];
+}
+
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
+    [self postTokenRequest:successBlock forceLogin:nil screenName:nil oauthCallback:oauthCallback errorBlock:errorBlock];
 }
 
 - (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
