@@ -22,7 +22,7 @@ static NSString *typeForObject(id object) {
 }
 
 static NSString *formatItemCount(NSUInteger count) {
-    return (count == 1 ? @"1 item" : [NSString stringWithFormat:@"%lu items", count]);
+    return (count == 1 ? @"1 item" : [NSString stringWithFormat:@"%lu items", (unsigned long)count]);
 }
 
 
@@ -40,7 +40,7 @@ static NSString *formatItemCount(NSUInteger count) {
         NSMutableArray *children = [NSMutableArray new];
         NSUInteger elementIndex = 0;
         for (id element in array) {
-            NSString *elementKey = [NSString stringWithFormat:@"Item %lu", elementIndex];
+            NSString *elementKey = [NSString stringWithFormat:@"Item %lu", (unsigned long)elementIndex];
             [children addObject:[self plistNodeFromObject:element key:elementKey]];
             elementIndex++;
         }
