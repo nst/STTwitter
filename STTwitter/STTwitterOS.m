@@ -24,6 +24,7 @@ typedef void (^errorBlock_t)(id request, NSDictionary *requestHeaders, NSDiction
 @property (copy) completionBlock_t completionBlock; // only used with streaming API
 @property (copy) errorBlock_t errorBlock; // only used with streaming API
 @property (nonatomic, retain) NSHTTPURLResponse *httpURLResponse; // only used with streaming API
+@property (nonatomic, retain) NSMutableData *data; // only used with non-streaming API
 @end
 
 @implementation STTwitterOS
@@ -422,17 +423,26 @@ downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME:
            }];
 }
 
-#pragma mark NSURLConnectionDelegate
+#pragma mark NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     
     if([response isKindOfClass:[NSHTTPURLResponse class]] == NO) return;
     
     self.httpURLResponse = (NSHTTPURLResponse *)response;
+    
+    self.data = [NSMutableData data];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [self handleResponse:_httpURLResponse request:[connection currentRequest] data:data];
+
+    BOOL isStreaming = [[[[connection originalRequest] URL] host] rangeOfString:@"stream"].location != NSNotFound;
+    
+    if(isStreaming) {
+        [self handleResponse:_httpURLResponse request:[connection currentRequest] data:data];
+    } else {
+        [self.data appendData:data];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -443,5 +453,10 @@ downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME:
     
     self.errorBlock(request, requestHeaders, responseHeaders, error);
 }
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [self handleResponse:_httpURLResponse request:[connection currentRequest] data:_data];
+}
+
 
 @end
