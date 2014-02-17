@@ -42,7 +42,7 @@
     self.genericHTTPMethod = [_genericHTTPMethodPopUpButton titleOfSelectedItem];
 }
 
-- (NSString *)curlDescriptionWithEndpoint:(NSString *)endPoint baseURLString:(NSString *)baseURLString parameters:(NSDictionary *)parameters requestHeaders:(NSDictionary *)requestHeaders {
+- (NSString *)curlDescriptionWithMethod:(NSString *)method endpoint:(NSString *)endPoint baseURLString:(NSString *)baseURLString parameters:(NSDictionary *)parameters requestHeaders:(NSDictionary *)requestHeaders {
     /*
      $ curl -i -H "Authorization: OAuth oauth_consumer_key="7YBPrscvh0RIThrWYVeGg", \
                                         oauth_nonce="DA5E6B1E-E98D-4AFB-9AAB-18A463F2", \
@@ -55,6 +55,7 @@
      */
 
     if([baseURLString hasSuffix:@"/"]) baseURLString = [baseURLString substringToIndex:[baseURLString length]-1];
+    if([endPoint hasPrefix:@"/"]) endPoint = [endPoint substringFromIndex:1];
     
     NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, endPoint];
     
@@ -65,13 +66,21 @@
         [parametersArray addObject:s];
     }];
     
+    NSString *POSTParameters = @"";
+
+    NSMutableArray *ma = [NSMutableArray array];
+    NSString *parameterString = [parametersArray componentsJoinedByString:@"&"];
+
     if([parameters count]) {
-        NSString *parameterString = [parametersArray componentsJoinedByString:@"&"];
-        
-        [urlString appendFormat:@"?%@", parameterString];
+        if([method isEqualToString:@"POST"]) {
+            [ma addObject:[NSString stringWithFormat:@"-d \"%@\"", parameterString]];
+            POSTParameters = [ma componentsJoinedByString:@" "];
+        } else {
+            [urlString appendFormat:@"?%@", parameterString];
+        }
     }
     
-    return [NSString stringWithFormat:@"curl -i -H \"Authorization: %@\" \"%@\"", [requestHeaders valueForKey:@"Authorization"], urlString];
+    return [NSString stringWithFormat:@"curl -i -H \"Authorization: %@\" \"%@\" %@", [requestHeaders valueForKey:@"Authorization"], urlString, POSTParameters];
 }
 
 - (IBAction)sendRequestAction:(id)sender {
@@ -103,7 +112,7 @@
       downloadProgressBlock:nil
                successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                    
-                   NSString *curlDescription = [self curlDescriptionWithEndpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
+                   NSString *curlDescription = [self curlDescriptionWithMethod:_genericHTTPMethod endpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
                    
                    self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:curlDescription attributes:attributes];
                    self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:[responseHeaders description] attributes:attributes];
