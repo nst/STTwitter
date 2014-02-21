@@ -18,9 +18,7 @@ NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
 
 @class ACAccount;
 
-@interface STTwitterOS : NSObject <STTwitterProtocol, NSURLConnectionDelegate> {
-    
-}
+@interface STTwitterOS : NSObject <STTwitterProtocol>
 
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account;
 + (instancetype)twitterAPIOSWithFirstAccount;
