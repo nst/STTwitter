@@ -16,10 +16,12 @@
 
 typedef void (^completion_block_t)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response);
 typedef void (^error_block_t)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error);
+typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite);
 
 @interface STTwitterOSRequest ()
 @property (nonatomic, copy) completion_block_t completionBlock;
 @property (nonatomic, copy) error_block_t errorBlock;
+@property (nonatomic, copy) upload_progress_block_t uploadProgressBlock;
 @property (nonatomic, retain) NSHTTPURLResponse *httpURLResponse; // only used with streaming API
 @property (nonatomic, retain) NSMutableData *data; // only used with non-streaming API
 @property (nonatomic, retain) ACAccount *account;
@@ -33,13 +35,16 @@ typedef void (^error_block_t)(id request, NSDictionary *requestHeaders, NSDictio
 @implementation STTwitterOSRequest
 
 - (id)initWithAPIResource:(NSString *)resource
-                    baseURLString:(NSString *)baseURLString
-                       httpMethod:(NSInteger)httpMethod
-                       parameters:(NSDictionary *)params
-                          account:(ACAccount *)account
-              uploadProgressBlock:(id)uploadProgressBlock
-                  completionBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
-                       errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+            baseURLString:(NSString *)baseURLString
+               httpMethod:(NSInteger)httpMethod
+               parameters:(NSDictionary *)params
+                  account:(ACAccount *)account
+      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+          completionBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
+               errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+    
+    NSAssert(completionBlock, @"completionBlock is missing");
+    NSAssert(errorBlock, @"errorBlock is missing");
     
     self = [super init];
     
@@ -50,6 +55,7 @@ typedef void (^error_block_t)(id request, NSDictionary *requestHeaders, NSDictio
     self.account = account;
     self.completionBlock = completionBlock;
     self.errorBlock = errorBlock;
+    self.uploadProgressBlock = uploadProgressBlock;
     
     return self;
 }
@@ -63,7 +69,7 @@ typedef void (^error_block_t)(id request, NSDictionary *requestHeaders, NSDictio
     
     NSString *urlString = [_baseURLString stringByAppendingString:_resource];
     NSURL *url = [NSURL URLWithString:urlString];
-
+    
     id request = nil;
     
 #if TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
@@ -138,13 +144,14 @@ typedef void (^error_block_t)(id request, NSDictionary *requestHeaders, NSDictio
         NSError *regexError = nil;
         NSString *errorString = [rawResponse firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
         
-        if(errorString) {
-            NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-            self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
-            return;
-        }
-        
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+
+            if(errorString) {
+                NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
+                self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
+                return;
+            }
+            
             self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], rawResponse);
         }];
         return;
@@ -228,6 +235,14 @@ typedef void (^error_block_t)(id request, NSDictionary *requestHeaders, NSDictio
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [self handleResponse:_httpURLResponse request:[connection currentRequest] data:_data];
+}
+
+- (void)connection:(NSURLConnection *)connection
+   didSendBodyData:(NSInteger)bytesWritten
+ totalBytesWritten:(NSInteger)totalBytesWritten
+totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    if(self.uploadProgressBlock == nil) return;
+    self.uploadProgressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
 }
 
 @end

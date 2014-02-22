@@ -17,7 +17,7 @@
                httpMethod:(NSInteger)httpMethod
                parameters:(NSDictionary *)params
                   account:(ACAccount *)account
-      uploadProgressBlock:(id)uploadProgressBlock
+      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
           completionBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
                errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
