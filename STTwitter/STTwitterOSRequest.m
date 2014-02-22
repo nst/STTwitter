@@ -195,7 +195,7 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     /**/
     
     if(json) {
-        self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], (NSArray *)json);
+        self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], json);
     } else {
         self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonError);
     }
