@@ -26,6 +26,7 @@
 		03144B9417FB6109007812DC /* JSONSyntaxHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 03144B8A17FB6109007812DC /* JSONSyntaxHighlight.m */; };
 		03144B9517FB6109007812DC /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03144B8C17FB6109007812DC /* STHTTPRequest.m */; };
 		032DFF2A1804175B008BD769 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 032DFF291804175B008BD769 /* README.md */; };
+		03426AF518B947FB00CA9ABF /* STTwitterOSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03426AF418B947FB00CA9ABF /* STTwitterOSRequest.m */; };
 		03ACFD3C18390F7B005CEE2A /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,8 @@
 		03144B8B17FB6109007812DC /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		03144B8C17FB6109007812DC /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
 		032DFF291804175B008BD769 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		03426AF318B947FB00CA9ABF /* STTwitterOSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterOSRequest.h; sourceTree = "<group>"; };
+		03426AF418B947FB00CA9ABF /* STTwitterOSRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterOSRequest.m; sourceTree = "<group>"; };
 		03ACFD3A18390F7B005CEE2A /* NSDateFormatter+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+STTwitter.h"; sourceTree = "<group>"; };
 		03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,6 +162,8 @@
 				03144B8417FB6109007812DC /* STTwitterOAuth.m */,
 				03144B8517FB6109007812DC /* STTwitterOS.h */,
 				03144B8617FB6109007812DC /* STTwitterOS.m */,
+				03426AF318B947FB00CA9ABF /* STTwitterOSRequest.h */,
+				03426AF418B947FB00CA9ABF /* STTwitterOSRequest.m */,
 				03144B8717FB6109007812DC /* STTwitterProtocol.h */,
 				03144B8817FB6109007812DC /* Vendor */,
 			);
@@ -249,6 +254,7 @@
 				03144B8F17FB6109007812DC /* STTwitterAPI.m in Sources */,
 				03144B9417FB6109007812DC /* JSONSyntaxHighlight.m in Sources */,
 				03144B9217FB6109007812DC /* STTwitterOAuth.m in Sources */,
+				03426AF518B947FB00CA9ABF /* STTwitterOSRequest.m in Sources */,
 				03144B5917FB608C007812DC /* ViewController.m in Sources */,
 				03144B9517FB6109007812DC /* STHTTPRequest.m in Sources */,
 				03144B5317FB608C007812DC /* AppDelegate.m in Sources */,
