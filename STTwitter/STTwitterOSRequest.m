@@ -75,10 +75,10 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
 #if TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
     
     if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
-        TWRequestMethod method = (httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
+        TWRequestMethod method = (_httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
         request = [[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method];
     } else {
-        request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:httpMethod URL:url parameters:paramsWithoutMedia];
+        request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:_httpMethod URL:url parameters:paramsWithoutMedia];
     }
     
 #else
