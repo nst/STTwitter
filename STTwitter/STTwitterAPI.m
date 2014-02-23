@@ -1169,7 +1169,7 @@ downloadProgressBlock:nil
           locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                       delimited:(NSNumber *)delimited
                   stallWarnings:(NSNumber *)stallWarnings
-                  progressBlock:(void(^)(id response))progressBlock
+                  progressBlock:(void(^)(NSDictionary *tweet))progressBlock
               stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1211,7 +1211,7 @@ downloadProgressBlock:nil
 
 // convenience
 - (id)postStatusesFilterKeyword:(NSString *)keyword
-                  progressBlock:(void(^)(id response))progressBlock
+                  progressBlock:(void(^)(NSDictionary *tweet))progressBlock
                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(keyword);
