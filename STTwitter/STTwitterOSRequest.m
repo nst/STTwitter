@@ -134,32 +134,9 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     }
     
     NSError *jsonError = nil;
-    NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
+    NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
     
-    if(json == nil) {
-        // do our best to extract Twitter error message from responseString
-        
-        NSString *rawResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        
-        NSError *regexError = nil;
-        NSString *errorString = [rawResponse firstMatchWithRegex:@"<error.*?>(.*)</error>" error:&regexError];
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-
-            if(errorString) {
-                NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-                self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], error);
-                return;
-            }
-            
-            self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], rawResponse);
-        }];
-        return;
-    }
-    
-    /**/
-    
-    if([json isKindOfClass:[NSArray class]] == NO && [json valueForKey:@"error"]) {
+    if([json valueForKey:@"error"]) {
         
         NSString *message = [json valueForKey:@"error"];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
@@ -170,36 +147,24 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
         return;
     }
     
-    /**/
+    // we can receive several dictionaries in the same data chunk
+    // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
+    // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
     
-    id jsonErrors = [json valueForKey:@"errors"];
+    NSString *jsonString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     
-    if(jsonErrors != nil && [jsonErrors isKindOfClass:[NSArray class]] == NO) {
-        if(jsonErrors == nil) jsonErrors = @"";
-        jsonErrors = [NSArray arrayWithObject:@{@"message":jsonErrors, @"code" : @(0)}];
+    NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
+    
+    for(NSString *jsonChunk in jsonChunks) {
+        if([jsonChunk length] == 0) continue;
+        NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *jsonError = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+        if(json) {
+            self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], json);
+        }
     }
-    
-    if([jsonErrors count] > 0 && [jsonErrors lastObject] != [NSNull null]) {
-        
-        NSDictionary *jsonErrorDictionary = [jsonErrors lastObject];
-        NSString *message = jsonErrorDictionary[@"message"];
-        NSInteger code = [jsonErrorDictionary[@"code"] intValue];
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:message forKey:NSLocalizedDescriptionKey];
-        NSError *jsonErrorFromResponse = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:userInfo];
-        
-        self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonErrorFromResponse);
-        
-        return;
-    }
-    
-    /**/
-    
-    if(json) {
-        self.completionBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], json);
-    } else {
-        self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], jsonError);
-    }
-    
+
 }
 
 #pragma mark NSURLConnectionDataDelegate
