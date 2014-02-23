@@ -126,7 +126,7 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
 #endif
 }
 
-- (void)handleResponse:(NSHTTPURLResponse *)urlResponse request:(id)request data:(NSData *)responseData {
+- (void)handleStreamingResponse:(NSHTTPURLResponse *)urlResponse request:(id)request data:(NSData *)responseData {
     
     if(responseData == nil) {
         self.errorBlock(request, [self requestHeadersForRequest:request], [urlResponse allHeaderFields], nil);
@@ -183,7 +183,7 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     BOOL isStreaming = [[[[connection originalRequest] URL] host] rangeOfString:@"stream"].location != NSNotFound;
     
     if(isStreaming) {
-        [self handleResponse:_httpURLResponse request:[connection currentRequest] data:data];
+        [self handleStreamingResponse:_httpURLResponse request:[connection currentRequest] data:data];
     } else {
         [self.data appendData:data];
     }
@@ -199,7 +199,23 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [self handleResponse:_httpURLResponse request:[connection currentRequest] data:_data];
+    
+    NSURLRequest *request = [connection currentRequest];
+    
+    if(_data == nil) {
+        self.errorBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], nil);
+        return;
+    }
+    
+    NSError *jsonError = nil;
+    NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
+
+    if(json) {
+        self.completionBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], json);
+    } else {
+        self.errorBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], jsonError);
+    }
+    
 }
 
 - (void)connection:(NSURLConnection *)connection
