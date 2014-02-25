@@ -13,7 +13,6 @@
 #endif
 
 #import "STHTTPRequest.h"
-#import <Security/Security.h>
 
 NSUInteger const kSTHTTPRequestCancellationError = 1;
 NSUInteger const kSTHTTPRequestDefaultTimeout = 30;
@@ -781,80 +780,29 @@ static NSMutableArray *localCookiesStorage = nil;
     return request;
 }
 
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
-    
-    NSString *method = [protectionSpace authenticationMethod];
-    return (method == NSURLAuthenticationMethodServerTrust ||
-            method == NSURLAuthenticationMethodHTTPBasic ||
-            method == NSURLAuthenticationMethodHTTPDigest);
-}
-
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     
     NSURLProtectionSpace *protectionSpace = [challenge protectionSpace];
     NSString *authenticationMethod = [protectionSpace authenticationMethod];
     
-    // Server Trust authentication
-    // https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/NetworkingTopics/Articles/OverridingSSLChainValidationCorrectly.html
-    if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        SecTrustRef trust = [protectionSpace serverTrust];
-        
-        /* Re-evaluate the trust policy. */
-        SecTrustResultType secresult = kSecTrustResultInvalid;
-        if (SecTrustEvaluate(trust, &secresult) != errSecSuccess) {
-            /* Trust evaluation failed. */
-            
-            [connection cancel];
-            [[challenge sender] cancelAuthenticationChallenge:challenge];
-            
-            // Perform other cleanup here, as needed.
-            return;
-        }
-        
-        switch (secresult) {
-            case kSecTrustResultUnspecified: // The OS trusts this certificate implicitly.
-            case kSecTrustResultProceed: // The user explicitly told the OS to trust it.
-            {
-                NSURLCredential *credential =
-                [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-                [challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
-                return;
-            }
-            default:
-                /* It's somebody else's key. Fall through. */
-                NSLog(@"-- bad key, secresult %d", secresult);
-        }
-        /* The server sent a key other than the trusted key. */
-        [connection cancel];
-        [[challenge sender] cancelAuthenticationChallenge:challenge];
-    }
-    
-    // Digest and Basic authentication
-    else if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPDigest] ||
-             [authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPBasic]) {
+    if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPDigest] ||
+        [authenticationMethod isEqualToString:NSURLAuthenticationMethodHTTPBasic]) {
         
         if([challenge previousFailureCount] == 0) {
             NSURLCredential *credential = [self credentialForCurrentHost];
             [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
         } else {
             [[[self class] sharedCredentialsStorage] removeObjectForKey:[_url host]];
-            [connection cancel];
-            [[challenge sender] cancelAuthenticationChallenge:challenge];
+            [[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
         }
-    }
-    
-    // Unhandled
-    else
-    {
+    } else if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        [[challenge sender] performDefaultHandlingForAuthenticationChallenge:challenge];
+    } else {
         NSLog(@"Unhandled authentication challenge type - %@", authenticationMethod);
         [connection cancel];
         [[challenge sender] cancelAuthenticationChallenge:challenge];
     }
     
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
 }
 
 - (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
