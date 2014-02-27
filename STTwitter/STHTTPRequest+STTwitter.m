@@ -111,27 +111,19 @@
     };
     
     r.errorBlock = ^(NSError *error) {
+
+        if(error) {
+            errorBlock(wr.requestHeaders, wr.responseHeaders, error);
+            return;
+        }
         
         NSError *e = [self errorFromResponseData:wr.responseData];
-        
         if(e) {
             errorBlock(wr.requestHeaders, wr.responseHeaders, e);
             return;
         }
-        
-        // do our best to extract Twitter error message from responseString
-        
-        NSError *regexError = nil;
-        NSString *errorString = [wr.responseString firstMatchWithRegex:@"<error>(.*)</error>" error:&regexError];
-        if(errorString == nil) {
-            if(regexError) STLog(@"-- regexError: %@", [regexError localizedDescription]);
-        }
-        
-        if(errorString) {
-            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorString}];
-        } else if ([wr.responseString length] > 0 && [wr.responseString length] < 64) {
-            error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
-        }
+
+        e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
         
         if (wr.responseString) STLog(@"-- body: %@", wr.responseString);
         
