@@ -795,14 +795,9 @@ static NSMutableArray *localCookiesStorage = nil;
             [[[self class] sharedCredentialsStorage] removeObjectForKey:[_url host]];
             [[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
         }
-    } else if ([authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        [[challenge sender] performDefaultHandlingForAuthenticationChallenge:challenge];
     } else {
-        NSLog(@"Unhandled authentication challenge type - %@", authenticationMethod);
-        [connection cancel];
-        [[challenge sender] cancelAuthenticationChallenge:challenge];
+        [[challenge sender] performDefaultHandlingForAuthenticationChallenge:challenge];
     }
-    
 }
 
 - (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
