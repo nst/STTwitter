@@ -208,10 +208,16 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     }
     
     NSError *jsonError = nil;
-    NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
-
-    if(json) {
-        self.completionBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], json);
+    id response = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
+    
+    if(response == nil) {
+        // eg. reverse auth response
+        // oauth_token=xxx&oauth_token_secret=xxx&user_id=xxx&screen_name=xxx
+        response = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+    }
+    
+    if(response) {
+        self.completionBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], response);
     } else {
         self.errorBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], jsonError);
     }
