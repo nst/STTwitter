@@ -154,7 +154,7 @@
          baseURLString:(NSString *)baseURLString
             httpMethod:(NSInteger)httpMethod
             parameters:(NSDictionary *)params
-   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock // ignored
+   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
        completionBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
             errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -163,7 +163,7 @@
                                                             httpMethod:httpMethod
                                                             parameters:params
                                                                account:self.account
-                                                   uploadProgressBlock:nil
+                                                   uploadProgressBlock:uploadProgressBlock
                                                        completionBlock:completionBlock
                                                             errorBlock:errorBlock];
     
@@ -176,7 +176,7 @@
          HTTPMethod:(NSString *)HTTPMethod
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
-uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock // ignored
+uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
 downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME: how to handle progressBlock?
        successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
          errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
