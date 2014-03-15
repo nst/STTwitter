@@ -3049,7 +3049,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSAssert(listID, @"listID is missing");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"listID"] = listID;
+    md[@"list_id"] = listID;
     if(cursor) md[@"cursor"] = cursor;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
