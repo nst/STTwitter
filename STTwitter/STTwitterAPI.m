@@ -3104,13 +3104,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(listID);
-    NSParameterAssert(userID);
-    NSParameterAssert(screenName);
-    
+    NSAssert((userID || screenName), @"missing userID or screenName");
+
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
-    md[@"user_id"] = userID;
-    md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
     
     [self postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
