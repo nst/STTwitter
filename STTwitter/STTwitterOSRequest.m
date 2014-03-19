@@ -13,6 +13,7 @@
 #import <Twitter/Twitter.h> // iOS 5
 #endif
 #import "NSString+STTwitter.h"
+#import "NSError+STTwitter.h"
 
 typedef void (^completion_block_t)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response);
 typedef void (^error_block_t)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error);
@@ -207,33 +208,15 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
         return;
     }
     
-    NSError *jsonError = nil;
-    id response = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
+    NSError *error = [NSError st_twitterErrorFromResponseData:_data responseHeaders:[_httpURLResponse allHeaderFields] underlyingError:nil];
     
-    NSString *message = nil;
-    NSInteger code = 0;
-
-    if([response isKindOfClass:[NSDictionary class]]) {
-        // assume {"errors":[{"message":"Bad Authentication data","code":215}]}
-        
-        id errors = [response valueForKey:@"errors"];
-        if([errors isKindOfClass:[NSArray class]] && [(NSArray *)errors count] > 0) {
-            NSDictionary *errorDictionary = [errors lastObject];
-            if([errorDictionary isKindOfClass:[NSDictionary class]]) {
-                message = errorDictionary[@"message"];
-                code = [[errorDictionary valueForKey:@"code"] integerValue];
-            }
-        } else if([errors isKindOfClass:[NSString class]]) {
-            // assume {errors = "Screen name can't be blank";}
-            message = errors;
-        }
-    }
-    
-    if(message) {
-        NSError *error = [NSError errorWithDomain:@"STTwitterTwitterErrorDomain" code:code userInfo:@{NSLocalizedDescriptionKey : message}];
+    if(error) {
         self.errorBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], error);
         return;
     }
+    
+    NSError *jsonError = nil;
+    id response = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
     
     if(response == nil) {
         // eg. reverse auth response

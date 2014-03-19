@@ -50,7 +50,7 @@
         
         NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:md];
         
-        return [NSError errorWithDomain:@"STTwitterTwitterErrorDomain" code:code userInfo:userInfo];
+        return [NSError errorWithDomain:kSTTwitterTwitterErrorDomain code:code userInfo:userInfo];
     }
     
     return nil;

@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString *kSTTwitterRateLimitLimit = @"kSTTwitterRateLimitLimit";
-static NSString *kSTTwitterRateLimitRemaining = @"kSTTwitterRateLimitRemaining";
-static NSString *kSTTwitterRateLimitResetDate = @"kSTTwitterRateLimitResetDate";
+static NSString *kSTTwitterTwitterErrorDomain = @"STTwitterTwitterErrorDomain";
+static NSString *kSTTwitterRateLimitLimit = @"STTwitterRateLimitLimit";
+static NSString *kSTTwitterRateLimitRemaining = @"STTwitterRateLimitRemaining";
+static NSString *kSTTwitterRateLimitResetDate = @"STTwitterRateLimitResetDate";
 
 @interface NSError (STTwitter)
 

@@ -25,6 +25,7 @@
 		0315BC9117E0944900F226E6 /* STHTTPRequestTestResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315BC8D17E0944900F226E6 /* STHTTPRequestTestResponse.m */; };
 		0315BC9217E0944900F226E6 /* STHTTPRequestTestResponseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315BC8F17E0944900F226E6 /* STHTTPRequestTestResponseQueue.m */; };
 		03426AF218B947E000CA9ABF /* STTwitterOSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03426AF118B947E000CA9ABF /* STTwitterOSRequest.m */; };
+		0344DB1B18D9CB28004AC0BB /* NSError+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0344DB1A18D9CB28004AC0BB /* NSError+STTwitter.m */; };
 		03E0C5E717E0E9AB002D5A42 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0315BC8217E093DA00F226E6 /* Social.framework */; };
 		03E0C5E817E0E9B1002D5A42 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0315BC8417E093DF00F226E6 /* Security.framework */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,8 @@
 		0315BC8F17E0944900F226E6 /* STHTTPRequestTestResponseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequestTestResponseQueue.m; sourceTree = "<group>"; };
 		03426AF018B947E000CA9ABF /* STTwitterOSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterOSRequest.h; sourceTree = "<group>"; };
 		03426AF118B947E000CA9ABF /* STTwitterOSRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterOSRequest.m; sourceTree = "<group>"; };
+		0344DB1918D9CB28004AC0BB /* NSError+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+STTwitter.h"; sourceTree = "<group>"; };
+		0344DB1A18D9CB28004AC0BB /* NSError+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+STTwitter.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +142,8 @@
 				0315BC3D17E0904000F226E6 /* STTwitterOS.m */,
 				03426AF018B947E000CA9ABF /* STTwitterOSRequest.h */,
 				03426AF118B947E000CA9ABF /* STTwitterOSRequest.m */,
+				0344DB1918D9CB28004AC0BB /* NSError+STTwitter.h */,
+				0344DB1A18D9CB28004AC0BB /* NSError+STTwitter.m */,
 				0315BC3E17E0904000F226E6 /* STTwitterProtocol.h */,
 				0315BC3F17E0904000F226E6 /* Vendor */,
 			);
@@ -258,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0344DB1B18D9CB28004AC0BB /* NSError+STTwitter.m in Sources */,
 				0315BC6A17E092D800F226E6 /* NSString+STTwitter.m in Sources */,
 				0315BC6C17E092D800F226E6 /* STHTTPRequest+STTwitter.m in Sources */,
 				0315BC9017E0944900F226E6 /* STHTTPRequest+UnitTests.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import "STHTTPRequest+STTwitter.h"
 #import "NSString+STTwitter.h"
+#import "NSError+STTwitter.h"
 
 #if DEBUG
 #   define STLog(...) NSLog(__VA_ARGS__)
@@ -16,38 +17,6 @@
 #endif
 
 @implementation STHTTPRequest (STTwitter)
-
-+ (NSError *)errorFromResponseData:(NSData *)responseData {
-    
-    NSError *jsonError = nil;
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
-    
-    NSString *message = nil;
-    NSInteger code = 0;
-    
-    if([json isKindOfClass:[NSDictionary class]]) {
-        // assume {"errors":[{"message":"Bad Authentication data","code":215}]}
-        
-        id errors = [json valueForKey:@"errors"];
-        if([errors isKindOfClass:[NSArray class]] && [(NSArray *)errors count] > 0) {
-            NSDictionary *errorDictionary = [errors lastObject];
-            if([errorDictionary isKindOfClass:[NSDictionary class]]) {
-                message = errorDictionary[@"message"];
-                code = [[errorDictionary valueForKey:@"code"] integerValue];
-            }
-        } else if([errors isKindOfClass:[NSString class]]) {
-            // assume {errors = "Screen name can't be blank";}
-            message = errors;
-        }
-    }
-    
-    if(message) {
-        NSError *error = [NSError errorWithDomain:@"STTwitterTwitterErrorDomain" code:code userInfo:@{NSLocalizedDescriptionKey : message}];
-        return error;
-    }
-    
-    return nil;
-}
 
 + (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString
                   stTwitterUploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
@@ -111,18 +80,18 @@
     };
     
     r.errorBlock = ^(NSError *error) {
+        
+        NSError *e = [NSError st_twitterErrorFromResponseData:wr.responseData responseHeaders:wr.responseHeaders underlyingError:error];
+        if(e) {
+            errorBlock(wr.requestHeaders, wr.responseHeaders, e);
+            return;
+        }
 
         if(error) {
             errorBlock(wr.requestHeaders, wr.responseHeaders, error);
             return;
         }
         
-        NSError *e = [self errorFromResponseData:wr.responseData];
-        if(e) {
-            errorBlock(wr.requestHeaders, wr.responseHeaders, e);
-            return;
-        }
-
         e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
         
         if (wr.responseString) STLog(@"-- body: %@", wr.responseString);
