@@ -312,6 +312,20 @@ Streaming requests may be lost when your iOS application comes back to foregroun
 
     }];
 
+##### API Responses Text Processing
+
+You may want to use Twitter's own Objective-C library for text processing: [https://github.com/twitter/twitter-text-objc/](https://github.com/twitter/twitter-text-objc/).
+
+`twitter-text-objc` provides you with methods such as:
+
+	+ (NSArray*)entitiesInText:(NSString*)text;
+	+ (NSArray*)URLsInText:(NSString*)text;
+	+ (NSArray*)hashtagsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
+	+ (NSArray*)symbolsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
+	+ (NSArray*)mentionedScreenNamesInText:(NSString*)text;
+	+ (NSArray*)mentionsOrListsInText:(NSString*)text;
+	+ (TwitterTextEntity*)repliedScreenNameInText:(NSString*)text;
+
 ### Troubleshooting
 
 ##### xAuth
