@@ -167,9 +167,7 @@
                                                        completionBlock:completionBlock
                                                             errorBlock:errorBlock];
     
-    [r startRequest];
-    
-    return r;
+    return [r startRequest]; // NSURLConnection
 }
 
 - (id)fetchResource:(NSString *)resource
