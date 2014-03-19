@@ -210,6 +210,31 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     NSError *jsonError = nil;
     id response = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
     
+    NSString *message = nil;
+    NSInteger code = 0;
+
+    if([response isKindOfClass:[NSDictionary class]]) {
+        // assume {"errors":[{"message":"Bad Authentication data","code":215}]}
+        
+        id errors = [response valueForKey:@"errors"];
+        if([errors isKindOfClass:[NSArray class]] && [(NSArray *)errors count] > 0) {
+            NSDictionary *errorDictionary = [errors lastObject];
+            if([errorDictionary isKindOfClass:[NSDictionary class]]) {
+                message = errorDictionary[@"message"];
+                code = [[errorDictionary valueForKey:@"code"] integerValue];
+            }
+        } else if([errors isKindOfClass:[NSString class]]) {
+            // assume {errors = "Screen name can't be blank";}
+            message = errors;
+        }
+    }
+    
+    if(message) {
+        NSError *error = [NSError errorWithDomain:@"STTwitterTwitterErrorDomain" code:code userInfo:@{NSLocalizedDescriptionKey : message}];
+        self.errorBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], error);
+        return;
+    }
+    
     if(response == nil) {
         // eg. reverse auth response
         // oauth_token=xxx&oauth_token_secret=xxx&user_id=xxx&screen_name=xxx

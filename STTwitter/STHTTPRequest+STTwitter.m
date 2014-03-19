@@ -42,7 +42,7 @@
     }
     
     if(message) {
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:code userInfo:@{NSLocalizedDescriptionKey : message}];
+        NSError *error = [NSError errorWithDomain:@"STTwitterTwitterErrorDomain" code:code userInfo:@{NSLocalizedDescriptionKey : message}];
         return error;
     }
     
