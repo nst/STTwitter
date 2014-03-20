@@ -40,7 +40,7 @@ Link your project with the following frameworks:
 - Security.framework (OS X only)
 - Social.framework (iOS only, weak)
 
-If you want to use CocoaPods, add the two following lines to your Podfile:
+If you want to use CocoaPods, add the following two lines to your Podfile:
 
     pod 'STTwitter'
     platform :ios, '5.0'
@@ -49,18 +49,13 @@ Then, run the following command to install the STTwitter pod:
 
     pod install
 
-STTwitter does not depend on AppKit or UIKit and can be used in a command-line Twitter client.
+STTwitter does not depend on AppKit or UIKit and hence can be used in a command-line Twitter client.
 
 STTwitter requires iOS 5+ or OS X 10.7+.
 
 Vea Software has a great written + live-demo [tutorial](http://tutorials.veasoftware.com/2013/12/23/twitter-api-version-1-1-app-authentication/) about creating a simple iOS app using STTwitter's app only mode.
 
 ### Code Snippets
-
-Notes:
-
-- STTwitter must be used from the main thread
-- all callbacks are called on the main thread
 
 ##### Instantiate STTwitterAPI
 
@@ -202,7 +197,7 @@ Contrary to what can be read here and there, you can perfectly [access direct me
 
 ### OAuth Consumer Tokens
 
-In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
+In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter's website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
 
 STTwitter demo project comes with `TwitterClients.plist` where you can enter your own consumer tokens.
 
@@ -222,11 +217,15 @@ There is also a simple iOS demo project in `demo_ios`.
 
 ### Integration Tips
 
+##### Concurrency
+
+STTwitter is supposed to be used from the main thread. The HTTP requests are performed anychronously and the callbacks are guaranteed to be called on main thread.
+
 ##### Remove Asserts in Release Mode
 
 There are several asserts in the code. They are very useful in debug mode but you should not include them in release.
 
-New projects created with XCode 5 already remove NSAssert logic by default in release.
+New projects created with Xcode 5 already remove NSAssert logic by default in release.
 
 In older projects, you can set the compilation flag `-DNS_BLOCK_ASSERTIONS=1`.
 
@@ -252,13 +251,27 @@ In order to expand shortened URLs such as Twitter's `t.co` service, use:
         //
     }];
 
+##### API Responses Text Processing
+
+You may want to use Twitter's own Objective-C library for text processing: [https://github.com/twitter/twitter-text-objc/](https://github.com/twitter/twitter-text-objc/).
+
+`twitter-text-objc` provides you with methods such as:
+
+	+ (NSArray*)entitiesInText:(NSString*)text;
+	+ (NSArray*)URLsInText:(NSString*)text;
+	+ (NSArray*)hashtagsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
+	+ (NSArray*)symbolsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
+	+ (NSArray*)mentionedScreenNamesInText:(NSString*)text;
+	+ (NSArray*)mentionsOrListsInText:(NSString*)text;
+	+ (TwitterTextEntity*)repliedScreenNameInText:(NSString*)text;
+
 ##### Boolean Parameters
 
-There are a lot of optional parameters In Twitter API. In STTwitter, you can ignore such parameters by passing `nil`. Regarding boolean parameters, STTwitter can't just use Objective-C `YES` and `NO` because `NO` has the same value as `nil` (zero). So boolean parameters are wrapped into `NSNumber` objects, which are pretty easy to use with boolean values thanks to Objective-C literals. So, with STTwitter, you will give an optional parameter of Twitter API either `@(YES)`, `@(NO)` or `nil`.
+There are a lot of optional parameters in Twitter API. In STTwitter, you can ignore such parameters by passing `nil`. Regarding boolean parameters, STTwitter can't just use Objective-C `YES` and `NO` because `NO` has the same value as `nil` (zero). So boolean parameters are wrapped into `NSNumber` objects, which are pretty easy to use with boolean values thanks to Objective-C literals. So, with STTwitter, you will assign an optional parameter of Twitter API either as `@(YES)`, `@(NO)` or `nil`.
 
 ##### Long Methods
 
-STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST API. It often results in long methd names with many parameters. In your application, you may want to add your own simplified methods on top of STTwitterAPI. A good idea is to create an Objective-C category for your application, such as shown in the following code.
+STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST API. It often results in long methd names with many parameters. In your application, you may want to add your own, simplified methods on top of STTwitterAPI. A good idea is to create an Objective-C category for your application, such as in the following code.
 
 `STTwitterAPI+MyApp.h`
 
@@ -301,7 +314,7 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
 
 ##### Stream Request and Connection Losses
 
-Streaming requests may be lost when your iOS application comes back to foreground after a while in background. To handle this case properly you can detect the connection loss in the error block and restart the stream request from there.
+Streaming requests may be lost when your iOS application comes back to foreground after a while in background. In order to handle this case properly, you can detect the connection loss in the error block and restart the stream request from there.
 
     // ...
     } errorBlock:^(NSError *error) {
@@ -312,29 +325,11 @@ Streaming requests may be lost when your iOS application comes back to foregroun
 
     }];
 
-##### API Responses Text Processing
-
-You may want to use Twitter's own Objective-C library for text processing: [https://github.com/twitter/twitter-text-objc/](https://github.com/twitter/twitter-text-objc/).
-
-`twitter-text-objc` provides you with methods such as:
-
-	+ (NSArray*)entitiesInText:(NSString*)text;
-	+ (NSArray*)URLsInText:(NSString*)text;
-	+ (NSArray*)hashtagsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
-	+ (NSArray*)symbolsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
-	+ (NSArray*)mentionedScreenNamesInText:(NSString*)text;
-	+ (NSArray*)mentionsOrListsInText:(NSString*)text;
-	+ (TwitterTextEntity*)repliedScreenNameInText:(NSString*)text;
-
 ### Troubleshooting
 
 ##### xAuth
 
-Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So if you get an error like `The consumer tokens are probably not xAuth enabled.` while accessing `https://api.twitter.com/oauth/access_token` see Twitter website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
-
-##### Concurrency
-
-STTwitter is supposed to be used from main thread. The network requests are performed anychronously and the callbacks are guaranteed to be called on main thread.
+Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So, if you get an error like `The consumer tokens are probably not xAuth enabled.` while accessing `https://api.twitter.com/oauth/access_token`, see Twitter's website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
 
 ##### Anything Else
 
@@ -344,9 +339,9 @@ Please [fill an issue](https://github.com/nst/STTwitter/issues) on GitHub.
 
 The application only interacts with `STTwitterAPI`.
 
-`STTwitterAPI` maps Objective-C methods with all documented Twitter API endpoints.
+`STTwitterAPI` maps Objective-C methods with all Twitter API endpoints.
 
-You can create your own convenience methods with fewer parameters. You can also use this generic methods directly:
+You can create your own convenience methods with fewer parameters. You can also use this generic method directly:
 
         - (id)fetchResource:(NSString *)resource
                  HTTPMethod:(NSString *)HTTPMethod
@@ -363,12 +358,12 @@ You can create your own convenience methods with fewer parameters. You can also 
      |                         Your Application                        |
      +-------------------------------------------------+---------------+
      |                  STTwitterAPI                   | STTwitterHTML |
-     +-------------------------------------------------+---------------+
-     + - - - - - - - - - - - - - - - - - - - - - - - - +
-     |              STTwitterOAuthProtocol             |
-     + - - - - - - - - - - - - - - - - - - - - - - - - +
-     +-------------+----------------+------------------+
-     | STTwitterOS | STTwitterOAuth | STTwitterAppOnly |
+     +-------------------------------------------------+               |
+     + - - - - - - - - - - - - - - - - - - - - - - - - +               |
+     |              STTwitterOAuthProtocol             |               |
+     + - - - - - - - - - - - - - - - - - - - - - - - - +               |
+     +-------------+----------------+------------------+               |
+     | STTwitterOS | STTwitterOAuth | STTwitterAppOnly |               |
      |             +----------------+------------------+---------------+
      |             |                   STHTTPRequest                   |
      +-------------+---------------------------------------------------+
@@ -387,7 +382,7 @@ You can create your own convenience methods with fewer parameters. You can also 
         - it can break at anytime, your app should not rely on it in production
 
      * STTwitterOAuthProtocol
-        - provides generic methods to POST and GET resources on Twitter hosts
+        - provides generic methods to POST and GET resources on Twitter's hosts
      
      * STTwitterOS
         - uses Twitter accounts defined in OS X Preferences or iOS Settings
