@@ -782,6 +782,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)getFriendsListForUserID:(NSString *)userID
                    orScreenName:(NSString *)screenName
                          cursor:(NSString *)cursor
+                          count:(NSString *)count
                      skipStatus:(NSNumber *)skipStatus
             includeUserEntities:(NSNumber *)includeUserEntities
                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock

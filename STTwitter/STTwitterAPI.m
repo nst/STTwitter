@@ -1807,6 +1807,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)getFriendsListForUserID:(NSString *)userID
                    orScreenName:(NSString *)screenName
                          cursor:(NSString *)cursor
+                          count:(NSString *)count
                      skipStatus:(NSNumber *)skipStatus
             includeUserEntities:(NSNumber *)includeUserEntities
                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
@@ -1818,6 +1819,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
     if(cursor) md[@"cursor"] = cursor;
+    if(count) md[@"count"] = count;
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
     
@@ -1845,6 +1847,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     [self getFriendsListForUserID:nil
                      orScreenName:screenName
                            cursor:nil
+                            count:nil
                        skipStatus:NO
               includeUserEntities:@(YES)
                      successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
