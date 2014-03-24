@@ -69,60 +69,60 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:@""
 ##### Verify the credentials
 
 ```Objective-C
-    [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
-        // ...
-    } errorBlock:^(NSError *error) {
-        // ...
-    }];
+[twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+    // ...
+} errorBlock:^(NSError *error) {
+    // ...
+}];
 ```
 
 ##### Get the timeline statuses
 
 ```Objective-C
-    [twitter getHomeTimelineSinceID:nil
-                              count:100
-                       successBlock:^(NSArray *statuses) {
-        // ...
-    } errorBlock:^(NSError *error) {
-        // ...
-    }];
+[twitter getHomeTimelineSinceID:nil
+                          count:100
+                   successBlock:^(NSArray *statuses) {
+    // ...
+} errorBlock:^(NSError *error) {
+    // ...
+}];
 ```
 
 ##### Streaming API
 
 ```Objective-C
-    id request = [twitter getStatusesSampleDelimited:nil
-                                       stallWarnings:nil
-                                       progressBlock:^(id response) {
-        // ...
-    } stallWarningBlock:nil
-             errorBlock:^(NSError *error) {
-        // ...
-    }];
-    
+id request = [twitter getStatusesSampleDelimited:nil
+                                   stallWarnings:nil
+                                   progressBlock:^(id response) {
     // ...
-    
-    [request cancel]; // when you're done with it
+} stallWarningBlock:nil
+         errorBlock:^(NSError *error) {
+    // ...
+}];
+
+// ...
+
+[request cancel]; // when you're done with it
 ```
 
 ##### App Only Authentication
 
 ```Objective-C
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
-                                                            consumerSecret:@""];
+STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
+                                                        consumerSecret:@""];
+
+[twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
     
-    [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
-        
-        [twitter getUserTimelineWithScreenName:@"barackobama"
-                                  successBlock:^(NSArray *statuses) {
-            // ...
-        } errorBlock:^(NSError *error) {
-            // ...
-        }];
-    
+    [twitter getUserTimelineWithScreenName:@"barackobama"
+                              successBlock:^(NSArray *statuses) {
+        // ...
     } errorBlock:^(NSError *error) {
         // ...
     }];
+
+} errorBlock:^(NSError *error) {
+    // ...
+}];
 ```
 
 ### Various Kinds of OAuth Connections
@@ -139,23 +139,23 @@ You can instantiate `STTwitterAPI` in three ways:
 So there are five cases altogether, hence these five methods:
 
 ```Objective-C
-    + (STTwitterAPI *)twitterAPIOSWithFirstAccount;
++ (STTwitterAPI *)twitterAPIOSWithFirstAccount;
 
-    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                      consumerSecret:(NSString *)consumerSecret;
++ (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                  consumerSecret:(NSString *)consumerSecret;
 
-    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                      consumerSecret:(NSString *)consumerSecret
-                                            username:(NSString *)username
-                                            password:(NSString *)password;
++ (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                  consumerSecret:(NSString *)consumerSecret
+                                        username:(NSString *)username
+                                        password:(NSString *)password;
 
-    + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
-                                      consumerSecret:(NSString *)consumerSecret
-                                          oauthToken:(NSString *)oauthToken
-                                    oauthTokenSecret:(NSString *)oauthTokenSecret;
-                   
-    + (STTwitterAPI *)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
-                                        consumerSecret:(NSString *)consumerSecret;
++ (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
+                                  consumerSecret:(NSString *)consumerSecret
+                                      oauthToken:(NSString *)oauthToken
+                                oauthTokenSecret:(NSString *)oauthTokenSecret;
+               
++ (STTwitterAPI *)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
+                                    consumerSecret:(NSString *)consumerSecret;
 ```
 
 ##### Reverse Authentication
@@ -176,35 +176,35 @@ The most common use case of reverse authentication is letting users register/log
 Here is how to use reverse authentication with STTwitter:
 
 ```Objective-C
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
-                                                              consumerKey:@"CONSUMER_KEY"
-                                                           consumerSecret:@"CONSUMER_SECRET"];
+STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                          consumerKey:@"CONSUMER_KEY"
+                                                       consumerSecret:@"CONSUMER_SECRET"];
+
+[twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
     
-    [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
+    STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
+    
+    [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
         
-        STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
-        
-        [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
-            
-            [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
-                                                                successBlock:^(NSString *oAuthToken,
-                                                                               NSString *oAuthTokenSecret,
-                                                                               NSString *userID,
-                                                                               NSString *screenName) {
-                                                                    
-                                                                    // use the tokens...
-                                                                    
-                                                                } errorBlock:^(NSError *error) {
-                                                                    // ...
-                                                                }];
-            
-        } errorBlock:^(NSError *error) {
-            // ...
-        }];
+        [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
+                                                            successBlock:^(NSString *oAuthToken,
+                                                                           NSString *oAuthTokenSecret,
+                                                                           NSString *userID,
+                                                                           NSString *screenName) {
+                                                                
+                                                                // use the tokens...
+                                                                
+                                                            } errorBlock:^(NSError *error) {
+                                                                // ...
+                                                            }];
         
     } errorBlock:^(NSError *error) {
         // ...
     }];
+    
+} errorBlock:^(NSError *error) {
+    // ...
+}];
 ```
 
 Contrary to what can be read here and there, you can perfectly [access direct messages from iOS Twitter accounts](http://stackoverflow.com/questions/17990484/accessing-twitter-direct-messages-using-slrequest-ios/18760445#18760445).
@@ -252,20 +252,22 @@ Use the method `-[NSString numberOfCharactersInATweet]` to let the user know how
 In order to convert the string in the `created_at` field from Twitter's JSON into an NSDate instance, you can use the `+[NSDateFormatter stTwitterDateFormatter]`.
 
 ```Objective-C
-    NSDateFormatter *df = [NSDateFormatter stTwitterDateFormatter];
-    NSString *dateString = [d valueForKey:@"created_at"]; // "Sun Jun 28 20:33:01 +0000 2009"
-    NSDate *date = [df dateFromString:dateString];
+NSDateFormatter *df = [NSDateFormatter stTwitterDateFormatter];
+NSString *dateString = [d valueForKey:@"created_at"]; // "Sun Jun 28 20:33:01 +0000 2009"
+NSDate *date = [df dateFromString:dateString];
 ```
 
 ##### URLs Shorteners
 
 In order to expand shortened URLs such as Twitter's `t.co` service, use:
 
-    [STHTTPRequest expandedURLStringForShortenedURLString:@"http://t.co/tmoxbSfDWc" successBlock:^(NSString *expandedURLString) {
-        //
-    } errorBlock:^(NSError *error) {
-        //
-    }];
+```Objective-C
+[STHTTPRequest expandedURLStringForShortenedURLString:@"http://t.co/tmoxbSfDWc" successBlock:^(NSString *expandedURLString) {
+    //
+} errorBlock:^(NSError *error) {
+    //
+}];
+```
 
 ##### API Responses Text Processing
 
@@ -274,13 +276,13 @@ You may want to use Twitter's own Objective-C library for text processing: [http
 `twitter-text-objc` provides you with methods such as:
 
 ```Objective-C
-	+ (NSArray*)entitiesInText:(NSString*)text;
-	+ (NSArray*)URLsInText:(NSString*)text;
-	+ (NSArray*)hashtagsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
-	+ (NSArray*)symbolsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
-	+ (NSArray*)mentionedScreenNamesInText:(NSString*)text;
-	+ (NSArray*)mentionsOrListsInText:(NSString*)text;
-	+ (TwitterTextEntity*)repliedScreenNameInText:(NSString*)text;
++ (NSArray*)entitiesInText:(NSString*)text;
++ (NSArray*)URLsInText:(NSString*)text;
++ (NSArray*)hashtagsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
++ (NSArray*)symbolsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
++ (NSArray*)mentionedScreenNamesInText:(NSString*)text;
++ (NSArray*)mentionsOrListsInText:(NSString*)text;
++ (TwitterTextEntity*)repliedScreenNameInText:(NSString*)text;
 ```
 
 ##### Boolean Parameters
@@ -294,44 +296,44 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
 `STTwitterAPI+MyApp.h`
 
 ```Objective-C
-    #import "STTwitterAPI.h"
+#import "STTwitterAPI.h"
 
-    @interface STTwitterAPI (MyApp)
-    
-    - (void)getStatusesShowID:(NSString *)statusID
-                 successBlock:(void(^)(NSDictionary *status))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock;
-    
-    @end
+@interface STTwitterAPI (MyApp)
+
+- (void)getStatusesShowID:(NSString *)statusID
+             successBlock:(void(^)(NSDictionary *status))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock;
+
+@end
 ```
 
 `STTwitterAPI+MyApp.m`
 
 ```Objective-C    
-    #import "STTwitterAPI+MyApp.h"
+#import "STTwitterAPI+MyApp.h"
 
-    @implementation STTwitterAPI (MyApp)
-    
-    - (void)getStatusesShowID:(NSString *)statusID
-                 successBlock:(void(^)(NSDictionary *status))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock {
-    
-        [self getStatusesShowID:statusID
-                       trimUser:@(YES)
-               includeMyRetweet:nil
-                includeEntities:@(NO)
-                   successBlock:^(NSDictionary *status) {
-    
-                       successBlock(status);
-    
-                   } errorBlock:^(NSError *error) {
-            
-                       errorBlock(error);
-    
-                   }];
-    }
-    
-    @end
+@implementation STTwitterAPI (MyApp)
+
+- (void)getStatusesShowID:(NSString *)statusID
+             successBlock:(void(^)(NSDictionary *status))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock {
+
+    [self getStatusesShowID:statusID
+                   trimUser:@(YES)
+           includeMyRetweet:nil
+            includeEntities:@(NO)
+               successBlock:^(NSDictionary *status) {
+
+                   successBlock(status);
+
+               } errorBlock:^(NSError *error) {
+        
+                   errorBlock(error);
+
+               }];
+}
+
+@end
 ```
 
 ##### Stream Request and Connection Losses
@@ -339,14 +341,14 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
 Streaming requests may be lost when your iOS application comes back to foreground after a while in background. In order to handle this case properly, you can detect the connection loss in the error block and restart the stream request from there.
 
 ```Objective-C
-    // ...
-    } errorBlock:^(NSError *error) {
+// ...
+} errorBlock:^(NSError *error) {
 
-        if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorNetworkConnectionLost) {
-            [self startStreamRequest];
-        }
+    if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorNetworkConnectionLost) {
+        [self startStreamRequest];
+    }
 
-    }];
+}];
 ```
 
 ### Troubleshooting
