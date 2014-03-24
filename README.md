@@ -59,21 +59,26 @@ Vea Software has a great written + live-demo [tutorial](http://tutorials.veasoft
 
 ##### Instantiate STTwitterAPI
 
-    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:@""
-                                                          consumerSecret:@""
-                                                                username:@""
-                                                                password:@""];
+```Objective-C
+STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:@""
+                                                      consumerSecret:@""
+                                                            username:@""
+                                                            password:@""];
+```
 
 ##### Verify the credentials
 
+```Objective-C
     [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         // ...
     } errorBlock:^(NSError *error) {
         // ...
     }];
+```
 
 ##### Get the timeline statuses
 
+```Objective-C
     [twitter getHomeTimelineSinceID:nil
                               count:100
                        successBlock:^(NSArray *statuses) {
@@ -81,9 +86,11 @@ Vea Software has a great written + live-demo [tutorial](http://tutorials.veasoft
     } errorBlock:^(NSError *error) {
         // ...
     }];
+```
 
 ##### Streaming API
 
+```Objective-C
     id request = [twitter getStatusesSampleDelimited:nil
                                        stallWarnings:nil
                                        progressBlock:^(id response) {
@@ -96,9 +103,11 @@ Vea Software has a great written + live-demo [tutorial](http://tutorials.veasoft
     // ...
     
     [request cancel]; // when you're done with it
+```
 
 ##### App Only Authentication
 
+```Objective-C
     STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
                                                             consumerSecret:@""];
     
@@ -114,6 +123,7 @@ Vea Software has a great written + live-demo [tutorial](http://tutorials.veasoft
     } errorBlock:^(NSError *error) {
         // ...
     }];
+```
 
 ### Various Kinds of OAuth Connections
 
@@ -128,6 +138,7 @@ You can instantiate `STTwitterAPI` in three ways:
 
 So there are five cases altogether, hence these five methods:
 
+```Objective-C
     + (STTwitterAPI *)twitterAPIOSWithFirstAccount;
 
     + (STTwitterAPI *)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
@@ -145,6 +156,7 @@ So there are five cases altogether, hence these five methods:
                    
     + (STTwitterAPI *)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
                                         consumerSecret:(NSString *)consumerSecret;
+```
 
 ##### Reverse Authentication
 
@@ -163,6 +175,7 @@ The most common use case of reverse authentication is letting users register/log
 
 Here is how to use reverse authentication with STTwitter:
 
+```Objective-C
     STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
                                                               consumerKey:@"CONSUMER_KEY"
                                                            consumerSecret:@"CONSUMER_SECRET"];
@@ -192,6 +205,7 @@ Here is how to use reverse authentication with STTwitter:
     } errorBlock:^(NSError *error) {
         // ...
     }];
+```
 
 Contrary to what can be read here and there, you can perfectly [access direct messages from iOS Twitter accounts](http://stackoverflow.com/questions/17990484/accessing-twitter-direct-messages-using-slrequest-ios/18760445#18760445).
 
@@ -237,9 +251,11 @@ Use the method `-[NSString numberOfCharactersInATweet]` to let the user know how
 
 In order to convert the string in the `created_at` field from Twitter's JSON into an NSDate instance, you can use the `+[NSDateFormatter stTwitterDateFormatter]`.
 
+```Objective-C
     NSDateFormatter *df = [NSDateFormatter stTwitterDateFormatter];
     NSString *dateString = [d valueForKey:@"created_at"]; // "Sun Jun 28 20:33:01 +0000 2009"
     NSDate *date = [df dateFromString:dateString];
+```
 
 ##### URLs Shorteners
 
@@ -257,6 +273,7 @@ You may want to use Twitter's own Objective-C library for text processing: [http
 
 `twitter-text-objc` provides you with methods such as:
 
+```Objective-C
 	+ (NSArray*)entitiesInText:(NSString*)text;
 	+ (NSArray*)URLsInText:(NSString*)text;
 	+ (NSArray*)hashtagsInText:(NSString*)text checkingURLOverlap:(BOOL)checkingURLOverlap;
@@ -264,6 +281,7 @@ You may want to use Twitter's own Objective-C library for text processing: [http
 	+ (NSArray*)mentionedScreenNamesInText:(NSString*)text;
 	+ (NSArray*)mentionsOrListsInText:(NSString*)text;
 	+ (TwitterTextEntity*)repliedScreenNameInText:(NSString*)text;
+```
 
 ##### Boolean Parameters
 
@@ -275,6 +293,7 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
 
 `STTwitterAPI+MyApp.h`
 
+```Objective-C
     #import "STTwitterAPI.h"
 
     @interface STTwitterAPI (MyApp)
@@ -284,9 +303,11 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
                    errorBlock:(void(^)(NSError *error))errorBlock;
     
     @end
+```
 
 `STTwitterAPI+MyApp.m`
-    
+
+```Objective-C    
     #import "STTwitterAPI+MyApp.h"
 
     @implementation STTwitterAPI (MyApp)
@@ -311,11 +332,13 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
     }
     
     @end
+```
 
 ##### Stream Request and Connection Losses
 
 Streaming requests may be lost when your iOS application comes back to foreground after a while in background. In order to handle this case properly, you can detect the connection loss in the error block and restart the stream request from there.
 
+```Objective-C
     // ...
     } errorBlock:^(NSError *error) {
 
@@ -324,6 +347,7 @@ Streaming requests may be lost when your iOS application comes back to foregroun
         }
 
     }];
+```
 
 ### Troubleshooting
 
@@ -343,6 +367,7 @@ The application only interacts with `STTwitterAPI`.
 
 You can create your own convenience methods with fewer parameters. You can also use this generic method directly:
 
+```Objective-C
         - (id)fetchResource:(NSString *)resource
                  HTTPMethod:(NSString *)HTTPMethod
               baseURLString:(NSString *)baseURLString
@@ -351,6 +376,7 @@ You can create your own convenience methods with fewer parameters. You can also 
       downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
                successBlock:(void (^)(id request, NSDictionary *headers, id response))successBlock
                  errorBlock:(void (^)(id request, NSDictionary *headers, NSError *error))errorBlock;
+```
 
 ##### Layer Model
      
