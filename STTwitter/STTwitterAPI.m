@@ -4096,7 +4096,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 @implementation NSString (STTwitterAPI)
 
 - (NSString *)htmlLinkName {
-    NSString *ahref = [self firstMatchWithRegex:@"<a href=\".*\">(.*)</a>" error:nil];
+    NSString *ahref = [self st_firstMatchWithRegex:@"<a href=\".*\">(.*)</a>" error:nil];
     
     return ahref ? ahref : self;
 }

@@ -245,14 +245,14 @@ In older projects, you can set the compilation flag `-DNS_BLOCK_ASSERTIONS=1`.
 
 ##### Number of Characters in a Tweet
 
-Use the method `-[NSString numberOfCharactersInATweet]` to let the user know how many characters she can enter before the end of the Tweet. The method may also return a negative value if the string exceeds a tweet's maximum length. The method considers the shortened URL lengths.
+Use the method `-[NSString st_numberOfCharactersInATweet]` to let the user know how many characters she can enter before the end of the Tweet. The method may also return a negative value if the string exceeds a tweet's maximum length. The method considers the shortened URL lengths.
 
 ##### Date Formatter
 
-In order to convert the string in the `created_at` field from Twitter's JSON into an NSDate instance, you can use the `+[NSDateFormatter stTwitterDateFormatter]`.
+In order to convert the string in the `created_at` field from Twitter's JSON into an NSDate instance, you can use the `+[NSDateFormatter st_TwitterDateFormatter]`.
 
 ```Objective-C
-NSDateFormatter *df = [NSDateFormatter stTwitterDateFormatter];
+NSDateFormatter *df = [NSDateFormatter st_TwitterDateFormatter];
 NSString *dateString = [d valueForKey:@"created_at"]; // "Sun Jun 28 20:33:01 +0000 2009"
 NSDate *date = [df dateFromString:dateString];
 ```

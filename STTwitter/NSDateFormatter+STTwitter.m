@@ -12,7 +12,7 @@ static NSDateFormatter *stTwitterDateFormatter = nil;
 
 @implementation NSDateFormatter (STTwitter)
 
-+ (NSDateFormatter *)stTwitterDateFormatter {
++ (NSDateFormatter *)st_TwitterDateFormatter {
 
     // parses the 'created_at' field, eg. "Sun Jun 28 20:33:01 +0000 2009"
     

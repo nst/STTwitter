@@ -10,6 +10,6 @@
 
 @interface NSDateFormatter (STTwitter)
 
-+ (NSDateFormatter *)stTwitterDateFormatter;
++ (NSDateFormatter *)st_TwitterDateFormatter;
 
 @end
