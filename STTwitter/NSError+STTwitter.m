@@ -10,7 +10,9 @@
 
 @implementation NSError (STTwitter)
 
-+ (NSError *)st_twitterErrorFromResponseData:(NSData *)responseData responseHeaders:(NSDictionary *)responseHeaders underlyingError:(NSError *)underlyingError {
++ (NSError *)st_twitterErrorFromResponseData:(NSData *)responseData
+                             responseHeaders:(NSDictionary *)responseHeaders
+                             underlyingError:(NSError *)underlyingError {
     
     NSError *jsonError = nil;
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
@@ -19,7 +21,7 @@
     NSInteger code = 0;
     
     if([json isKindOfClass:[NSDictionary class]]) {
-        // assume {"errors":[{"message":"Bad Authentication data","code":215}]}
+        // assume format: {"errors":[{"message":"Sorry, that page does not exist","code":34}]}
         
         id errors = [json valueForKey:@"errors"];
         if([errors isKindOfClass:[NSArray class]] && [(NSArray *)errors count] > 0) {
@@ -29,7 +31,7 @@
                 code = [[errorDictionary valueForKey:@"code"] integerValue];
             }
         } else if([errors isKindOfClass:[NSString class]]) {
-            // assume {errors = "Screen name can't be blank";}
+            // assume format {errors = "Screen name can't be blank";}
             message = errors;
         }
     }
