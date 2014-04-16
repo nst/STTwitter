@@ -47,7 +47,7 @@ static NSMutableArray *localCookiesStorage = nil;
 @property (nonatomic, retain) NSMutableData *responseData;
 @property (nonatomic, retain) NSString *responseStringEncodingName;
 @property (nonatomic, retain) NSDictionary *responseHeaders;
-@property (nonatomic) NSInteger responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
+@property (nonatomic) long long responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) NSError *error;
 @property (nonatomic, retain) NSMutableArray *filesToUpload; // STHTTPRequestFileUpload instances
@@ -549,6 +549,70 @@ static NSMutableArray *localCookiesStorage = nil;
     return [[NSString alloc] initWithData:data encoding:encoding];
 }
 
+#pragma mark HTTP Error Codes
+
++ (NSString *)descriptionForHTTPStatus:(NSUInteger)status {
+    NSString *s = [NSString stringWithFormat:@"HTTP Status %@", @(status)];
+    
+    NSString *description = nil;
+    // http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+    if(status == 400) description = @"Bad Request";
+    if(status == 401) description = @"Unauthorized";
+    if(status == 402) description = @"Payment Required";
+    if(status == 403) description = @"Forbidden";
+    if(status == 404) description = @"Not Found";
+    if(status == 405) description = @"Method Not Allowed";
+    if(status == 406) description = @"Not Acceptable";
+    if(status == 407) description = @"Proxy Authentication Required";
+    if(status == 408) description = @"Request Timeout";
+    if(status == 409) description = @"Conflict";
+    if(status == 410) description = @"Gone";
+    if(status == 411) description = @"Length Required";
+    if(status == 412) description = @"Precondition Failed";
+    if(status == 413) description = @"Payload Too Large";
+    if(status == 414) description = @"URI Too Long";
+    if(status == 415) description = @"Unsupported Media Type";
+    if(status == 416) description = @"Requested Range Not Satisfiable";
+    if(status == 417) description = @"Expectation Failed";
+    if(status == 422) description = @"Unprocessable Entity";
+    if(status == 423) description = @"Locked";
+    if(status == 424) description = @"Failed Dependency";
+    if(status == 425) description = @"Unassigned";
+    if(status == 426) description = @"Upgrade Required";
+    if(status == 427) description = @"Unassigned";
+    if(status == 428) description = @"Precondition Required";
+    if(status == 429) description = @"Too Many Requests";
+    if(status == 430) description = @"Unassigned";
+    if(status == 431) description = @"Request Header Fields Too Large";
+    if(status == 432) description = @"Unassigned";
+    if(status == 500) description = @"Internal Server Error";
+    if(status == 501) description = @"Not Implemented";
+    if(status == 502) description = @"Bad Gateway";
+    if(status == 503) description = @"Service Unavailable";
+    if(status == 504) description = @"Gateway Timeout";
+    if(status == 505) description = @"HTTP Version Not Supported";
+    if(status == 506) description = @"Variant Also Negotiates";
+    if(status == 507) description = @"Insufficient Storage";
+    if(status == 508) description = @"Loop Detected";
+    if(status == 509) description = @"Unassigned";
+    if(status == 510) description = @"Not Extended";
+    if(status == 511) description = @"Network Authentication Required";
+    
+    if(description) {
+        s = [s stringByAppendingFormat:@": %@", description];
+    }
+    
+    return s;
+}
+
++ (NSDictionary *)userInfoWithErrorDescriptionForHTTPStatus:(NSUInteger)status {
+    NSString *s = [self descriptionForHTTPStatus:status];
+    if(s == nil) return nil;
+    return @{ NSLocalizedDescriptionKey : s };
+}
+
+#pragma mark Descriptions
+
 - (NSString *)curlDescription {
     
     NSMutableArray *ma = [NSMutableArray array];
@@ -751,7 +815,8 @@ static NSMutableArray *localCookiesStorage = nil;
     self.responseString = [self stringWithData:_responseData encodingName:_responseStringEncodingName];
     
     if(_responseStatus >= 400) {
-        if(e) *e = [NSError errorWithDomain:NSStringFromClass([self class]) code:_responseStatus userInfo:nil];
+        NSDictionary *userInfo = [[self class] userInfoWithErrorDescriptionForHTTPStatus:_responseStatus];
+        if(e) *e = [NSError errorWithDomain:NSStringFromClass([self class]) code:_responseStatus userInfo:userInfo];
     }
     
     return _responseString;
@@ -831,7 +896,8 @@ static NSMutableArray *localCookiesStorage = nil;
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     if(_responseStatus >= 400) {
-        self.error = [NSError errorWithDomain:NSStringFromClass([self class]) code:_responseStatus userInfo:nil];
+        NSDictionary *userInfo = [[self class] userInfoWithErrorDescriptionForHTTPStatus:_responseStatus];
+        self.error = [NSError errorWithDomain:NSStringFromClass([self class]) code:_responseStatus userInfo:userInfo];
         _errorBlock(_error);
         return;
     }
@@ -860,15 +926,16 @@ static NSMutableArray *localCookiesStorage = nil;
 @implementation NSError (STHTTPRequest)
 
 - (BOOL)st_isAuthenticationError {
-    if([[self domain] isEqualToString:NSURLErrorDomain] == NO) return NO;
     
-    return ([self code] == kCFURLErrorUserCancelledAuthentication || [self code] == kCFURLErrorUserAuthenticationRequired);
+    if ([[self domain] isEqualToString:@"STHTTPRequest"] && ([self code] == 401)) return YES;
+    
+    if ([[self domain] isEqualToString:NSURLErrorDomain] && ([self code] == kCFURLErrorUserCancelledAuthentication || [self code] == kCFURLErrorUserAuthenticationRequired)) return YES;
+    
+    return NO;
 }
 
 - (BOOL)st_isCancellationError {
-    if([[self domain] isEqualToString:@"STHTTPRequest"] == NO) return NO;
-    
-    return ([self code] == kSTHTTPRequestCancellationError);
+    return ([[self domain] isEqualToString:@"STHTTPRequest"] && [self code] == kSTHTTPRequestCancellationError);
 }
 
 @end
