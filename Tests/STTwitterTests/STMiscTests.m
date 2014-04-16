@@ -34,7 +34,7 @@
         [ms appendString:s];
     }
     
-    int c = (int)[ms numberOfCharactersInATweet];
+    int c = (int)[ms st_numberOfCharactersInATweet];
     
     XCTAssertEqual(c, 140, @"c: %d", (int)c);
 }
@@ -43,7 +43,7 @@
     
     NSString *s = @"\u2070";
     
-    int c = (int)[s numberOfCharactersInATweet];
+    int c = (int)[s st_numberOfCharactersInATweet];
     
     XCTAssertEqual(c, 1, @"c: %d", (int)c);
 }
@@ -52,7 +52,7 @@
     
     NSString *s = @"caf\x65\xCC\x81";
     
-    int c = (int)[s numberOfCharactersInATweet];
+    int c = (int)[s st_numberOfCharactersInATweet];
     
     XCTAssertEqual(c, 4, @"c: %d", (int)c);
 }
@@ -61,18 +61,30 @@
     
     NSString *s = @"asd http://www.apple.com http://www.google.com sdf";
         
-    int c = (int)[s numberOfCharactersInATweet];
+    int c = (int)[s st_numberOfCharactersInATweet];
     
     int expected = 4 + (int)kSTTwitterDefaultShortURLLength + 1 + (int)kSTTwitterDefaultShortURLLength + 4;
     
     XCTAssertEqual(c, expected, @"c: %d, expected %d", c, expected);
 }
 
+//- (void)testCharactersCountWithTCO {
+//    // https://github.com/nst/STTwitter/issues/87
+//    
+//    NSString *s = @"\"The Game of Thrones season premiere will stream on Xbox and cable after last night\'s HBO Go problems http://t.co/ZTTIOJX3l9\"";
+//    
+//    int c = (int)[s st_numberOfCharactersInATweet];
+//    
+//    NSLog(@"--- %d", c);
+//    
+//    XCTAssertEqual(140 - c, 15, @"c: %d", c);
+//}
+
 - (void)testCharactersCountHTTPS {
     
     NSString *s = @"https://api.twitter.com/";
     
-    int c = (int)[s numberOfCharactersInATweet];
+    int c = (int)[s st_numberOfCharactersInATweet];
     
     XCTAssertEqual(c, (int)kSTTwitterDefaultShortURLLengthHTTPS, @"c: %d", (int)c);
 }
