@@ -68,17 +68,17 @@
     XCTAssertEqual(c, expected, @"c: %d, expected %d", c, expected);
 }
 
-//- (void)testCharactersCountWithTCO {
-//    // https://github.com/nst/STTwitter/issues/87
-//    
-//    NSString *s = @"\"The Game of Thrones season premiere will stream on Xbox and cable after last night\'s HBO Go problems http://t.co/ZTTIOJX3l9\"";
-//    
-//    int c = (int)[s st_numberOfCharactersInATweet];
-//    
-//    NSLog(@"--- %d", c);
-//    
-//    XCTAssertEqual(140 - c, 15, @"c: %d", c);
-//}
+- (void)testCharactersCountWithTCO {
+    // https://github.com/nst/STTwitter/issues/87
+    
+    NSString *s = @"\"The Game of Thrones season premiere will stream on Xbox and cable after last night\'s HBO Go problems http://t.co/ZTTIOJX3l9\"";
+    
+    int c = (int)[s st_numberOfCharactersInATweet];
+    
+    NSLog(@"--- %d", c);
+    
+    XCTAssertEqual(140 - c, 15, @"c: %d", c);
+}
 
 - (void)testCharactersCountHTTPS {
     
