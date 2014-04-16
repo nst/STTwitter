@@ -33,7 +33,7 @@
     
     r.uploadProgressBlock = uploadProgressBlock;
     
-    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, NSInteger totalBytesExpectedToReceive) {
+    r.downloadProgressBlock = ^(NSData *data, NSInteger totalBytesReceived, long long totalBytesExpectedToReceive) {
         
         if(downloadProgressBlock == nil) return;
         
