@@ -102,6 +102,8 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // reverse auth step 2
+// WARNING: if the Twitter account was set in iOS settings, the tokens may be nil after a system update.
+// In this case, you can call -[ACAccountStore renewCredentialsForAccount:completion:] to let the user enter her Twitter password again.
 - (void)postReverseAuthAccessTokenWithAuthenticationHeader:(NSString *)authenticationHeader
                                               successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock;
