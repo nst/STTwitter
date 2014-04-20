@@ -75,9 +75,17 @@
     
     int c = (int)[s st_numberOfCharactersInATweet];
     
-    NSLog(@"--- %d", c);
-    
     XCTAssertEqual(140 - c, 15, @"c: %d", c);
+}
+
+- (void)testURLWithHyphens {
+    // https://github.com/nst/STTwitter/issues/91
+    
+    NSString *s = @"asd http://www.imore.com/auki-iphone-review-ios-7-quick-reply-way-apple-would-have-done-it sdf";
+    
+    int c = (int)[s st_numberOfCharactersInATweet];
+    
+    XCTAssertEqual(140 - c, 110, @"c: %d", c);
 }
 
 - (void)testCharactersCountHTTPS {

@@ -44,7 +44,7 @@ NSUInteger kSTTwitterDefaultShortURLLengthHTTPS = 23;
     NSInteger count = [s length];
     
     NSError *error = nil;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(https?://[A-Za-z0-9_\\.-/]+)"
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(https?://[A-Za-z0-9_\\.\\-/]+)"
                                                                            options:0
                                                                              error:&error];
     
