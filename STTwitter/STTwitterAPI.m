@@ -3816,6 +3816,38 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+#pragma mark Tweets
+
+/*
+ GET statuses/lookup
+ 
+ Returns fully-hydrated tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter. This method is especially useful to get the details (hydrate) a collection of Tweet IDs. GET statuses/show/:id is used to retrieve a single tweet object.
+ */
+
+- (void)getStatusesLookupTweetIDs:(NSArray *)tweetIDs
+                  includeEntities:(NSNumber *)includeEntities
+                         trimUser:(NSNumber *)trimUser
+                              map:(NSNumber *)map
+					 successBlock:(void(^)(NSArray *tweets))successBlock
+					   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    NSParameterAssert(tweetIDs);
+    NSAssert(([tweetIDs isKindOfClass:[NSArray class]]), @"tweetIDs must be an array");
+
+    md[@"id"] = [tweetIDs componentsJoinedByString:@","];
+    if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"true" : @"false";
+    if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
+    if(map) md[@"map"] = [map boolValue] ? @"1" : @"0";
+    
+    [self getAPIResource:@"statuses/lookup.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 #pragma mark -
 #pragma mark UNDOCUMENTED APIs
 

@@ -163,7 +163,7 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
 - (void)getStatusesMentionTimelineWithCount:(NSString *)count
                                     sinceID:(NSString *)sinceID
                                       maxID:(NSString *)maxID
-                                   trimUser:(NSNumber *)timUser
+                                   trimUser:(NSNumber *)trimUser
                          contributorDetails:(NSNumber *)contributorDetails
                             includeEntities:(NSNumber *)includeEntities
                                successBlock:(void(^)(NSArray *statuses))successBlock
@@ -1831,6 +1831,21 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 - (void)getRateLimitsForResources:(NSArray *)resources // eg. statuses,friends,trends,help
 					 successBlock:(void(^)(NSDictionary *rateLimits))successBlock
+					   errorBlock:(void(^)(NSError *error))errorBlock;
+
+#pragma mark Tweets
+
+/*
+ GET statuses/lookup
+ 
+ Returns fully-hydrated tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter. This method is especially useful to get the details (hydrate) a collection of Tweet IDs. GET statuses/show/:id is used to retrieve a single tweet object.
+ */
+
+- (void)getStatusesLookupTweetIDs:(NSArray *)tweetIDs
+                  includeEntities:(NSNumber *)includeEntities
+                         trimUser:(NSNumber *)trimUser
+                              map:(NSNumber *)map
+					 successBlock:(void(^)(NSArray *tweets))successBlock
 					   errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark -
