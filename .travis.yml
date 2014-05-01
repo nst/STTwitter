@@ -1,8 +1,6 @@
 language: objective-c
 
-#script: xctool -project Tests/UnitTests.xcodeproj build
-
-script: xctool -project Tests/UnitTests.xcodeproj -scheme Tests test TEST_AFTER_BUILD=YES clean build
+script: xctool -project Tests/UnitTests.xcodeproj -scheme Tests build test clean
 
 xcode_project: Tests/UnitTests.xcodeproj # path to your xcodeproj folder
 xcode_scheme: Tests
