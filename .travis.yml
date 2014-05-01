@@ -1,6 +1,6 @@
 language: objective-c
 
-# script: xctool -project Tests/UnitTests.xcodeproj build
+script: xctool -project Tests/UnitTests.xcodeproj build
 
 script: xctool -project Tests/UnitTests.xcodeproj -scheme Tests test
 
