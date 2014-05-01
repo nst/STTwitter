@@ -63,8 +63,8 @@
     
     NSString *expectedAuthorizationHeader = @"OAuth oauth_consumer_key=\"6YBPrScvh1RIThrWYveGg\", oauth_nonce=\"0175D70F-85D7-4B5E-BAB1-F849229B\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"1372078509\", oauth_version=\"1.0\", oauth_token=\"1294332967-UsaIUBcsC4JcHv9TIYxk5ektsVIsAtClNV8KghP\", oauth_signature=\"A7c8SqW4XudyG%2BDbC5mKlsG4%2FMs%3D\"";
     
-    NSLog(@"-- expectedAuthorizationHeader: %@", expectedAuthorizationHeader);
-    NSLog(@"-- r.requestHeaders[\"Authorization\"]: %@", r.requestHeaders[@"Authorization"]);
+//    NSLog(@"-- expectedAuthorizationHeader: %@", expectedAuthorizationHeader);
+//    NSLog(@"-- r.requestHeaders[\"Authorization\"]: %@", r.requestHeaders[@"Authorization"]);
     
     XCTAssertEqualObjects(r.requestHeaders[@"Authorization"], expectedAuthorizationHeader, @"");
 }
