@@ -1,2 +1,3 @@
 language: objective-c
 xcode_project: Tests/UnitTests.xcodeproj # path to your xcodeproj folder
+xcode_scheme: Tests
