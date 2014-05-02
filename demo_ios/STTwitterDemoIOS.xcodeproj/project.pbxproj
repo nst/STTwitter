@@ -29,6 +29,20 @@
 		03426AF518B947FB00CA9ABF /* STTwitterOSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03426AF418B947FB00CA9ABF /* STTwitterOSRequest.m */; };
 		0344DB1518D9CB0E004AC0BB /* NSError+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0344DB1418D9CB0E004AC0BB /* NSError+STTwitter.m */; };
 		03ACFD3C18390F7B005CEE2A /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */; };
+		B0BCD150191401B100FB5D2B /* STTwitterAPI+Timelines.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD14F191401B100FB5D2B /* STTwitterAPI+Timelines.m */; };
+		B0BCD153191402E500FB5D2B /* STTwitterAPI+Tweets.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD152191402E500FB5D2B /* STTwitterAPI+Tweets.m */; };
+		B0BCD1561914042D00FB5D2B /* STTwitterAPI+Lists.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD1551914042D00FB5D2B /* STTwitterAPI+Lists.m */; };
+		B0BCD159191404F400FB5D2B /* STTwitterAPI+Search.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD158191404F400FB5D2B /* STTwitterAPI+Search.m */; };
+		B0BCD15C1914055200FB5D2B /* STTwitterAPI+FriendsAndFollowers.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD15B1914055200FB5D2B /* STTwitterAPI+FriendsAndFollowers.m */; };
+		B0BCD15F191405AB00FB5D2B /* STTwitterAPI+DirectMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD15E191405AB00FB5D2B /* STTwitterAPI+DirectMessages.m */; };
+		B0BCD162191405F300FB5D2B /* STTwitterAPI+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD161191405F300FB5D2B /* STTwitterAPI+Users.m */; };
+		B0BCD1651914074900FB5D2B /* STTwitterAPI+Trends.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD1641914074900FB5D2B /* STTwitterAPI+Trends.m */; };
+		B0BCD168191407EC00FB5D2B /* STTwitterAPI+Favorites.m in Sources */ = {isa = PBXBuildFile; fileRef = B0BCD167191407EC00FB5D2B /* STTwitterAPI+Favorites.m */; };
+		C21705BF191412A5008E02ED /* STTwitterAPI+Streaming.m in Sources */ = {isa = PBXBuildFile; fileRef = C21705BE191412A5008E02ED /* STTwitterAPI+Streaming.m */; };
+		C21705C2191412F9008E02ED /* STTwitterAPI+PlacesAndGeo.m in Sources */ = {isa = PBXBuildFile; fileRef = C21705C1191412F9008E02ED /* STTwitterAPI+PlacesAndGeo.m */; };
+		C21705C51914134D008E02ED /* STTwitterAPI+SavedSearches.m in Sources */ = {isa = PBXBuildFile; fileRef = C21705C41914134D008E02ED /* STTwitterAPI+SavedSearches.m */; };
+		C21705C819141383008E02ED /* STTwitterAPI+SpamReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = C21705C719141383008E02ED /* STTwitterAPI+SpamReporting.m */; };
+		C21705CB191413CA008E02ED /* STTwitterAPI+Helps.m in Sources */ = {isa = PBXBuildFile; fileRef = C21705CA191413CA008E02ED /* STTwitterAPI+Helps.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +88,34 @@
 		0344DB1418D9CB0E004AC0BB /* NSError+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+STTwitter.m"; sourceTree = "<group>"; };
 		03ACFD3A18390F7B005CEE2A /* NSDateFormatter+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+STTwitter.h"; sourceTree = "<group>"; };
 		03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
+		B0BCD14E191401B100FB5D2B /* STTwitterAPI+Timelines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Timelines.h"; sourceTree = "<group>"; };
+		B0BCD14F191401B100FB5D2B /* STTwitterAPI+Timelines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Timelines.m"; sourceTree = "<group>"; };
+		B0BCD151191402E500FB5D2B /* STTwitterAPI+Tweets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Tweets.h"; sourceTree = "<group>"; };
+		B0BCD152191402E500FB5D2B /* STTwitterAPI+Tweets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Tweets.m"; sourceTree = "<group>"; };
+		B0BCD1541914042D00FB5D2B /* STTwitterAPI+Lists.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Lists.h"; sourceTree = "<group>"; };
+		B0BCD1551914042D00FB5D2B /* STTwitterAPI+Lists.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Lists.m"; sourceTree = "<group>"; };
+		B0BCD157191404F400FB5D2B /* STTwitterAPI+Search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Search.h"; sourceTree = "<group>"; };
+		B0BCD158191404F400FB5D2B /* STTwitterAPI+Search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Search.m"; sourceTree = "<group>"; };
+		B0BCD15A1914055200FB5D2B /* STTwitterAPI+FriendsAndFollowers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+FriendsAndFollowers.h"; sourceTree = "<group>"; };
+		B0BCD15B1914055200FB5D2B /* STTwitterAPI+FriendsAndFollowers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+FriendsAndFollowers.m"; sourceTree = "<group>"; };
+		B0BCD15D191405AB00FB5D2B /* STTwitterAPI+DirectMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+DirectMessages.h"; sourceTree = "<group>"; };
+		B0BCD15E191405AB00FB5D2B /* STTwitterAPI+DirectMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+DirectMessages.m"; sourceTree = "<group>"; };
+		B0BCD160191405F300FB5D2B /* STTwitterAPI+Users.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Users.h"; sourceTree = "<group>"; };
+		B0BCD161191405F300FB5D2B /* STTwitterAPI+Users.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Users.m"; sourceTree = "<group>"; };
+		B0BCD1631914074900FB5D2B /* STTwitterAPI+Trends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Trends.h"; sourceTree = "<group>"; };
+		B0BCD1641914074900FB5D2B /* STTwitterAPI+Trends.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Trends.m"; sourceTree = "<group>"; };
+		B0BCD166191407EC00FB5D2B /* STTwitterAPI+Favorites.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Favorites.h"; sourceTree = "<group>"; };
+		B0BCD167191407EC00FB5D2B /* STTwitterAPI+Favorites.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Favorites.m"; sourceTree = "<group>"; };
+		C21705BD191412A5008E02ED /* STTwitterAPI+Streaming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Streaming.h"; sourceTree = "<group>"; };
+		C21705BE191412A5008E02ED /* STTwitterAPI+Streaming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Streaming.m"; sourceTree = "<group>"; };
+		C21705C0191412F9008E02ED /* STTwitterAPI+PlacesAndGeo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+PlacesAndGeo.h"; sourceTree = "<group>"; };
+		C21705C1191412F9008E02ED /* STTwitterAPI+PlacesAndGeo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+PlacesAndGeo.m"; sourceTree = "<group>"; };
+		C21705C31914134D008E02ED /* STTwitterAPI+SavedSearches.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+SavedSearches.h"; sourceTree = "<group>"; };
+		C21705C41914134D008E02ED /* STTwitterAPI+SavedSearches.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+SavedSearches.m"; sourceTree = "<group>"; };
+		C21705C619141383008E02ED /* STTwitterAPI+SpamReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+SpamReporting.h"; sourceTree = "<group>"; };
+		C21705C719141383008E02ED /* STTwitterAPI+SpamReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+SpamReporting.m"; sourceTree = "<group>"; };
+		C21705C9191413CA008E02ED /* STTwitterAPI+Helps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTwitterAPI+Helps.h"; sourceTree = "<group>"; };
+		C21705CA191413CA008E02ED /* STTwitterAPI+Helps.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTwitterAPI+Helps.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +199,34 @@
 				03144B7C17FB6109007812DC /* STTwitter.h */,
 				03144B7D17FB6109007812DC /* STTwitterAPI.h */,
 				03144B7E17FB6109007812DC /* STTwitterAPI.m */,
+				B0BCD14E191401B100FB5D2B /* STTwitterAPI+Timelines.h */,
+				B0BCD14F191401B100FB5D2B /* STTwitterAPI+Timelines.m */,
+				B0BCD151191402E500FB5D2B /* STTwitterAPI+Tweets.h */,
+				B0BCD152191402E500FB5D2B /* STTwitterAPI+Tweets.m */,
+				B0BCD1541914042D00FB5D2B /* STTwitterAPI+Lists.h */,
+				B0BCD1551914042D00FB5D2B /* STTwitterAPI+Lists.m */,
+				B0BCD157191404F400FB5D2B /* STTwitterAPI+Search.h */,
+				B0BCD158191404F400FB5D2B /* STTwitterAPI+Search.m */,
+				B0BCD15A1914055200FB5D2B /* STTwitterAPI+FriendsAndFollowers.h */,
+				B0BCD15B1914055200FB5D2B /* STTwitterAPI+FriendsAndFollowers.m */,
+				B0BCD15D191405AB00FB5D2B /* STTwitterAPI+DirectMessages.h */,
+				B0BCD15E191405AB00FB5D2B /* STTwitterAPI+DirectMessages.m */,
+				B0BCD160191405F300FB5D2B /* STTwitterAPI+Users.h */,
+				B0BCD161191405F300FB5D2B /* STTwitterAPI+Users.m */,
+				B0BCD1631914074900FB5D2B /* STTwitterAPI+Trends.h */,
+				B0BCD1641914074900FB5D2B /* STTwitterAPI+Trends.m */,
+				B0BCD166191407EC00FB5D2B /* STTwitterAPI+Favorites.h */,
+				B0BCD167191407EC00FB5D2B /* STTwitterAPI+Favorites.m */,
+				C21705BD191412A5008E02ED /* STTwitterAPI+Streaming.h */,
+				C21705BE191412A5008E02ED /* STTwitterAPI+Streaming.m */,
+				C21705C0191412F9008E02ED /* STTwitterAPI+PlacesAndGeo.h */,
+				C21705C1191412F9008E02ED /* STTwitterAPI+PlacesAndGeo.m */,
+				C21705C31914134D008E02ED /* STTwitterAPI+SavedSearches.h */,
+				C21705C41914134D008E02ED /* STTwitterAPI+SavedSearches.m */,
+				C21705C619141383008E02ED /* STTwitterAPI+SpamReporting.h */,
+				C21705C719141383008E02ED /* STTwitterAPI+SpamReporting.m */,
+				C21705C9191413CA008E02ED /* STTwitterAPI+Helps.h */,
+				C21705CA191413CA008E02ED /* STTwitterAPI+Helps.m */,
 				03144B7F17FB6109007812DC /* STTwitterAppOnly.h */,
 				03144B8017FB6109007812DC /* STTwitterAppOnly.m */,
 				03144B8117FB6109007812DC /* STTwitterHTML.h */,
@@ -258,15 +328,29 @@
 				03ACFD3C18390F7B005CEE2A /* NSDateFormatter+STTwitter.m in Sources */,
 				03144B9117FB6109007812DC /* STTwitterHTML.m in Sources */,
 				03144B8F17FB6109007812DC /* STTwitterAPI.m in Sources */,
+				C21705C819141383008E02ED /* STTwitterAPI+SpamReporting.m in Sources */,
 				03144B9417FB6109007812DC /* JSONSyntaxHighlight.m in Sources */,
+				B0BCD15F191405AB00FB5D2B /* STTwitterAPI+DirectMessages.m in Sources */,
 				03144B9217FB6109007812DC /* STTwitterOAuth.m in Sources */,
+				C21705BF191412A5008E02ED /* STTwitterAPI+Streaming.m in Sources */,
+				C21705C2191412F9008E02ED /* STTwitterAPI+PlacesAndGeo.m in Sources */,
+				B0BCD1651914074900FB5D2B /* STTwitterAPI+Trends.m in Sources */,
+				B0BCD1561914042D00FB5D2B /* STTwitterAPI+Lists.m in Sources */,
 				03426AF518B947FB00CA9ABF /* STTwitterOSRequest.m in Sources */,
+				C21705CB191413CA008E02ED /* STTwitterAPI+Helps.m in Sources */,
 				03144B5917FB608C007812DC /* ViewController.m in Sources */,
+				B0BCD153191402E500FB5D2B /* STTwitterAPI+Tweets.m in Sources */,
+				B0BCD15C1914055200FB5D2B /* STTwitterAPI+FriendsAndFollowers.m in Sources */,
 				03144B9517FB6109007812DC /* STHTTPRequest.m in Sources */,
+				B0BCD162191405F300FB5D2B /* STTwitterAPI+Users.m in Sources */,
 				03144B5317FB608C007812DC /* AppDelegate.m in Sources */,
+				C21705C51914134D008E02ED /* STTwitterAPI+SavedSearches.m in Sources */,
 				03144B9017FB6109007812DC /* STTwitterAppOnly.m in Sources */,
+				B0BCD150191401B100FB5D2B /* STTwitterAPI+Timelines.m in Sources */,
 				03144B4F17FB608C007812DC /* main.m in Sources */,
 				03144B9317FB6109007812DC /* STTwitterOS.m in Sources */,
+				B0BCD168191407EC00FB5D2B /* STTwitterAPI+Favorites.m in Sources */,
+				B0BCD159191404F400FB5D2B /* STTwitterAPI+Search.m in Sources */,
 				03144B8E17FB6109007812DC /* STHTTPRequest+STTwitter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

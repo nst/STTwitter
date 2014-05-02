@@ -1,0 +1,342 @@
+//
+//  STTwitterAPI+Users.h
+//  STTwitterDemoIOS
+//
+//  Created by Jerôme Morissard on 02/05/14.
+//  Copyright (c) 2014 Nicolas Seriot. All rights reserved.
+//
+
+#import "STTwitterAPI.h"
+
+@interface STTwitterAPI (Users)
+
+#pragma mark Users
+
+/*
+ GET    account/settings
+ 
+ Returns settings (including current trend, geo and sleep time information) for the authenticating user.
+ */
+
+- (void)getAccountSettingsWithSuccessBlock:(void(^)(NSDictionary *settings))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET	account/verify_credentials
+ 
+ Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
+ */
+
+- (void)getAccountVerifyCredentialsWithIncludeEntites:(NSNumber *)includeEntities
+                                           skipStatus:(NSNumber *)skipStatus
+                                         successBlock:(void(^)(NSDictionary *account))successBlock
+                                           errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
+                                         errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	account/settings
+ 
+ Updates the authenticating user's settings.
+ */
+
+- (void)postAccountSettingsWithTrendLocationWOEID:(NSString *)trendLocationWOEID // eg. "1"
+                                 sleepTimeEnabled:(NSNumber *)sleepTimeEnabled // eg. @(YES)
+                                   startSleepTime:(NSString *)startSleepTime // eg. "13"
+                                     endSleepTime:(NSString *)endSleepTime // eg. "13"
+                                         timezone:(NSString *)timezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
+                                         language:(NSString *)language // eg. "it", "en", "es"
+                                     successBlock:(void(^)(NSDictionary *settings))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	account/update_delivery_device
+ 
+ Sets which device Twitter delivers updates to for the authenticating user. Sending none as the device parameter will disable SMS updates.
+ */
+
+- (void)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
+                           includeEntities:(NSNumber *)includeEntities
+                              successBlock:(void(^)(NSDictionary *response))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	account/update_profile
+ 
+ Sets values that users are able to set under the "Account" tab of their settings page. Only the parameters specified will be updated.
+ */
+
+- (void)postAccountUpdateProfileWithName:(NSString *)name
+                               URLString:(NSString *)URLString
+                                location:(NSString *)location
+                             description:(NSString *)description
+                         includeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
+                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)postUpdateProfile:(NSDictionary *)profileData
+			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
+			   errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	account/update_profile_background_image
+ 
+ Updates the authenticating user's profile background image. This method can also be used to enable or disable the profile background image. Although each parameter is marked as optional, at least one of image, tile or use must be provided when making this request.
+ */
+
+- (void)postAccountUpdateProfileBackgroundImageWithImage:(NSString *)base64EncodedImage
+                                                   title:(NSString *)title
+                                         includeEntities:(NSNumber *)includeEntities
+                                              skipStatus:(NSNumber *)skipStatus
+                                                     use:(NSNumber *)use
+                                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	account/update_profile_colors
+ 
+ Sets one or more hex values that control the color scheme of the authenticating user's profile page on twitter.com. Each parameter's value must be a valid hexidecimal value, and may be either three or six characters (ex: #fff or #ffffff).
+ */
+
+- (void)postAccountUpdateProfileColorsWithBackgroundColor:(NSString *)backgroundColor
+                                                linkColor:(NSString *)linkColor
+                                       sidebarBorderColor:(NSString *)sidebarBorderColor
+                                         sidebarFillColor:(NSString *)sidebarFillColor
+                                         profileTextColor:(NSString *)profileTextColor
+                                          includeEntities:(NSNumber *)includeEntities
+                                               skipStatus:(NSNumber *)skipStatus
+                                             successBlock:(void(^)(NSDictionary *profile))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	account/update_profile_image
+ 
+ Updates the authenticating user's profile image. Note that this method expects raw multipart data, not a URL to an image.
+ 
+ This method asynchronously processes the uploaded file before updating the user's profile image URL. You can either update your local cache the next time you request the user's information, or, at least 5 seconds after uploading the image, ask for the updated URL using GET users/show.
+ */
+
+- (void)postAccountUpdateProfileImage:(NSString *)base64EncodedImage
+                      includeEntities:(NSNumber *)includeEntities
+                           skipStatus:(NSNumber *)skipStatus
+                         successBlock:(void(^)(NSDictionary *profile))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    blocks/list
+ 
+ Returns a collection of user objects that the authenticating user is blocking.
+ */
+
+- (void)getBlocksListWithincludeEntities:(NSNumber *)includeEntities
+                              skipStatus:(NSNumber *)skipStatus
+                                  cursor:(NSString *)cursor
+                            successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    blocks/ids
+ 
+ Returns an array of numeric user ids the authenticating user is blocking.
+ */
+
+- (void)getBlocksIDsWithCursor:(NSString *)cursor
+                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                    errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	blocks/create
+ 
+ Blocks the specified user from following the authenticating user. In addition the blocked user will not show in the authenticating users mentions or timeline (unless retweeted by another user). If a follow or friend relationship exists it is destroyed.
+ */
+
+- (void)postBlocksCreateWithScreenName:(NSString *)screenName
+                              orUserID:(NSString *)userID
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
+                          successBlock:(void(^)(NSDictionary *user))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST	blocks/destroy
+ 
+ Un-blocks the user specified in the ID parameter for the authenticating user. Returns the un-blocked user in the requested format when successful. If relationships existed before the block was instated, they will not be restored.
+ */
+
+- (void)postBlocksDestroyWithScreenName:(NSString *)screenName
+                               orUserID:(NSString *)userID
+                        includeEntities:(NSNumber *)includeEntities
+                             skipStatus:(NSNumber *)skipStatus
+                           successBlock:(void(^)(NSDictionary *user))successBlock
+                             errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/lookup
+ 
+ Returns fully-hydrated user objects for up to 100 users per request, as specified by comma-separated values passed to the user_id and/or screen_name parameters.
+ 
+ This method is especially useful when used in conjunction with collections of user IDs returned from GET friends/ids and GET followers/ids.
+ 
+ GET users/show is used to retrieve a single user object.
+ 
+ There are a few things to note when using this method.
+ 
+ - You must be following a protected user to be able to see their most recent status update. If you don't follow a protected user their status will be removed.
+ - The order of user IDs or screen names may not match the order of users in the returned array.
+ - If a requested user is unknown, suspended, or deleted, then that user will not be returned in the results list.
+ - If none of your lookup criteria can be satisfied by returning a user object, a HTTP 404 will be thrown.
+ - You are strongly encouraged to use a POST for larger requests.
+ */
+
+- (void)getUsersLookupForScreenName:(NSString *)screenName
+                           orUserID:(NSString *)userID
+                    includeEntities:(NSNumber *)includeEntities
+                       successBlock:(void(^)(NSArray *users))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/show
+ 
+ Returns a variety of information about the user specified by the required user_id or screen_name parameter. The author's most recent Tweet will be returned inline when possible. GET users/lookup is used to retrieve a bulk collection of user objects.
+ 
+ You must be following a protected user to be able to see their most recent Tweet. If you don't follow a protected user, the users Tweet will be removed. A Tweet will not always be returned in the current_status field.
+ */
+
+- (void)getUsersShowForUserID:(NSString *)userID
+                 orScreenName:(NSString *)screenName
+              includeEntities:(NSNumber *)includeEntities
+                 successBlock:(void(^)(NSDictionary *user))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)getUserInformationFor:(NSString *)screenName
+				 successBlock:(void(^)(NSDictionary *user))successBlock
+				   errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (void)profileImageFor:(NSString *)screenName
+           successBlock:(void(^)(id image))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/search
+ 
+ Provides a simple, relevance-based search interface to public user accounts on Twitter. Try querying by topical interest, full name, company name, location, or other criteria. Exact match searches are not supported.
+ 
+ Only the first 1,000 matching results are available.
+ */
+
+- (void)getUsersSearchQuery:(NSString *)query
+                       page:(NSString *)page
+                      count:(NSString *)count
+            includeEntities:(NSNumber *)includeEntities
+               successBlock:(void(^)(NSArray *users))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/contributees
+ 
+ Returns a collection of users that the specified user can "contribute" to.
+ */
+
+- (void)getUsersContributeesWithUserID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
+                          successBlock:(void(^)(NSArray *contributees))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/contributors
+ 
+ Returns a collection of users who can contribute to the specified account.
+ */
+
+- (void)getUsersContributorsWithUserID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                       includeEntities:(NSNumber *)includeEntities
+                            skipStatus:(NSNumber *)skipStatus
+                          successBlock:(void(^)(NSArray *contributors))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST   account/remove_profile_banner
+ 
+ Removes the uploaded profile banner for the authenticating user. Returns HTTP 200 upon success.
+ */
+
+- (void)postAccountRemoveProfileBannerWithSuccessBlock:(void(^)(id response))successBlock
+                                            errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST    account/update_profile_banner
+ 
+ Uploads a profile banner on behalf of the authenticating user. For best results, upload an <5MB image that is exactly 1252px by 626px. Images will be resized for a number of display options. Users with an uploaded profile banner will have a profile_banner_url node in their Users objects. More information about sizing variations can be found in User Profile Images and Banners and GET users/profile_banner.
+ 
+ Profile banner images are processed asynchronously. The profile_banner_url and its variant sizes will not necessary be available directly after upload.
+ 
+ If providing any one of the height, width, offset_left, or offset_top parameters, you must provide all of the sizing parameters.
+ 
+ HTTP Response Codes
+ 200, 201, 202	Profile banner image succesfully uploaded
+ 400	Either an image was not provided or the image data could not be processed
+ 422	The image could not be resized or is too large.
+ */
+
+- (void)postAccountUpdateProfileBannerWithImage:(NSString *)base64encodedImage
+                                          width:(NSString *)width
+                                         height:(NSString *)height
+                                     offsetLeft:(NSString *)offsetLeft
+                                      offsetTop:(NSString *)offsetTop
+                                   successBlock:(void(^)(id response))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/profile_banner
+ 
+ Returns a map of the available size variations of the specified user's profile banner. If the user has not uploaded a profile banner, a HTTP 404 will be served instead. This method can be used instead of string manipulation on the profile_banner_url returned in user objects as described in User Profile Images and Banners.
+ */
+
+- (void)getUsersProfileBannerForUserID:(NSString *)userID
+                          orScreenName:(NSString *)screenName
+                          successBlock:(void(^)(NSDictionary *banner))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/suggestions/:slug
+ 
+ Access the users in a given category of the Twitter suggested user list.
+ 
+ It is recommended that applications cache this data for no more than one hour.
+ */
+
+- (void)getUsersSuggestionsForSlug:(NSString *)slug // short name of list or a category, eg. "twitter"
+                              lang:(NSString *)lang
+                      successBlock:(void(^)(NSString *name, NSString *slug, NSArray *users))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/suggestions
+ 
+ Access to Twitter's suggested user list. This returns the list of suggested user categories. The category can be used in GET users/suggestions/:slug to get the users in that category.
+ */
+
+- (void)getUsersSuggestionsWithISO6391LanguageCode:(NSString *)ISO6391LanguageCode
+                                      successBlock:(void(^)(NSArray *suggestions))successBlock
+                                        errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    users/suggestions/:slug/members
+ 
+ Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user.
+ */
+
+- (void)getUsersSuggestionsForSlugMembers:(NSString *)slug // short name of list or a category, eg. "twitter"
+                             successBlock:(void(^)(NSArray *members))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
+
+@end
