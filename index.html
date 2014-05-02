@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="STTwitter : A comprehensive Objective-C library for Twitter REST API 1.1" />
+    <meta name="description" content="STTwitter : A comprehensive Objective-C library for Twitter API 1.1" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/nst/STTwitter">View on GitHub</a>
 
           <h1 id="project_title">STTwitter</h1>
-          <h2 id="project_tagline">A comprehensive Objective-C library for Twitter REST API 1.1</h2>
+          <h2 id="project_tagline">A comprehensive Objective-C library for Twitter API 1.1</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/nst/STTwitter/zipball/master">Download this project as a .zip file</a>
@@ -31,37 +31,461 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <p><strong>[2013-10-24]</strong> STTwitter was presented at <a href="http://soft-shake.ch">SoftShake 2013</a> (<a href="http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf">slides</a>).</p>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<ol>
+<li><a href="#testimonials">Testimonials</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#code-snippets">Code Snippets</a></li>
+<li><a href="#various-kinds-of-oauth-connections">Various Kinds of OAuth Connections</a></li>
+<li><a href="#oauth-consumer-tokens">OAuth Consumer Tokens</a></li>
+<li><a href="#demo--test-project">Demo / Test Project</a></li>
+<li><a href="#integration-tips">Integration Tips</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#developers">Developers</a></li>
+<li>
+<a href="#bsd-3-clause-license">BSD 3-Clause License</a><br>
+</li>
+</ol><h3>
+<a name="testimonials" class="anchor" href="#testimonials"><span class="octicon octicon-link"></span></a>Testimonials</h3>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<blockquote>
+<p>"We are now using STTwitter"
+<a href="https://adium.im/blog/2013/07/adium-1-5-7-released/">Adium developers</a></p>
+
+<p>"An awesome Objective-C wrapper for Twitter’s HTTP API? Yes please!"
+<a href="https://twitter.com/nilsou/status/392364862472736768">@nilsou</a></p>
+
+<p>"Your Library is really great, I stopped the development of my client because I was hating twitter APIs for some reasons, this Library make me want to continue, seriously thank you!"
+<a href="https://github.com/nst/STTwitter/pull/49#issuecomment-28746249">MP0w</a></p>
+
+<p>"Powered by his own backend wrapper for HTTP calls, STTwitter writes most of the code for you for oAuth based authentication and API resource access like statuses, mentions, users, searches, friends &amp; followers, favorites, lists, places, trends. The documentation is also excellent."
+<a href="http://buddingdevelopers.com/sttwitter-delightful-twitter-library-for-ios/">STTwitter - Delightful Twitter Library for iOS / buddingdevelopers.com</a></p>
+</blockquote>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>Drag and drop STTwitter directory into your project.</p>
+
+<p>Link your project with the following frameworks:</p>
+
+<ul>
+<li>Accounts.framework</li>
+<li>Twitter.framework</li>
+<li>Security.framework (OS X only)</li>
+<li>Social.framework (iOS only, weak)</li>
+</ul><p>If you want to use CocoaPods, add the following two lines to your Podfile:</p>
+
+<pre><code>pod 'STTwitter'
+platform :ios, '5.0'
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>Then, run the following command to install the STTwitter pod:</p>
+
+<pre><code>pod install
+</code></pre>
+
+<p>STTwitter does not depend on AppKit or UIKit and hence can be used in a command-line Twitter client.</p>
+
+<p>STTwitter requires iOS 5+ or OS X 10.7+.</p>
+
+<p>Vea Software has a great written + live-demo <a href="http://tutorials.veasoftware.com/2013/12/23/twitter-api-version-1-1-app-authentication/">tutorial</a> about creating a simple iOS app using STTwitter's app only mode.</p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="code-snippets" class="anchor" href="#code-snippets"><span class="octicon octicon-link"></span></a>Code Snippets</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<h5>
+<a name="instantiate-sttwitterapi" class="anchor" href="#instantiate-sttwitterapi"><span class="octicon octicon-link"></span></a>Instantiate STTwitterAPI</h5>
+
+<div class="highlight highlight-Objective-C"><pre><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="n">twitter</span> <span class="o">=</span> <span class="p">[</span><span class="n">STTwitterAPI</span> <span class="n">twitterAPIWithOAuthConsumerKey</span><span class="o">:</span><span class="s">@""</span>
+                                                      <span class="nl">consumerSecret:</span><span class="s">@""</span>
+                                                            <span class="nl">username:</span><span class="s">@""</span>
+                                                            <span class="nl">password:</span><span class="s">@""</span><span class="p">];</span>
+</pre></div>
+
+<h5>
+<a name="verify-the-credentials" class="anchor" href="#verify-the-credentials"><span class="octicon octicon-link"></span></a>Verify the credentials</h5>
+
+<div class="highlight highlight-Objective-C"><pre><span class="p">[</span><span class="n">twitter</span> <span class="n">verifyCredentialsWithSuccessBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">username</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}];</span>
+</pre></div>
+
+<h5>
+<a name="get-the-timeline-statuses" class="anchor" href="#get-the-timeline-statuses"><span class="octicon octicon-link"></span></a>Get the timeline statuses</h5>
+
+<div class="highlight highlight-Objective-C"><pre><span class="p">[</span><span class="n">twitter</span> <span class="n">getHomeTimelineSinceID</span><span class="o">:</span><span class="nb">nil</span>
+                          <span class="nl">count:</span><span class="mi">100</span>
+                   <span class="nl">successBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="n">statuses</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}];</span>
+</pre></div>
+
+<h5>
+<a name="streaming-api" class="anchor" href="#streaming-api"><span class="octicon octicon-link"></span></a>Streaming API</h5>
+
+<div class="highlight highlight-Objective-C"><pre><span class="kt">id</span> <span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">twitter</span> <span class="n">getStatusesSampleDelimited</span><span class="o">:</span><span class="nb">nil</span>
+                                   <span class="nl">stallWarnings:</span><span class="nb">nil</span>
+                                   <span class="nl">progressBlock:</span><span class="o">^</span><span class="p">(</span><span class="kt">id</span> <span class="n">response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span> <span class="n">stallWarningBlock</span><span class="o">:</span><span class="nb">nil</span>
+         <span class="nl">errorBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}];</span>
+
+<span class="c1">// ...</span>
+
+<span class="p">[</span><span class="n">request</span> <span class="n">cancel</span><span class="p">];</span> <span class="c1">// when you're done with it</span>
+</pre></div>
+
+<h5>
+<a name="app-only-authentication" class="anchor" href="#app-only-authentication"><span class="octicon octicon-link"></span></a>App Only Authentication</h5>
+
+<div class="highlight highlight-Objective-C"><pre><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="n">twitter</span> <span class="o">=</span> <span class="p">[</span><span class="n">STTwitterAPI</span> <span class="n">twitterAPIAppOnlyWithConsumerKey</span><span class="o">:</span><span class="s">@""</span>
+                                                        <span class="nl">consumerSecret:</span><span class="s">@""</span><span class="p">];</span>
+
+<span class="p">[</span><span class="n">twitter</span> <span class="n">verifyCredentialsWithSuccessBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">bearerToken</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">[</span><span class="n">twitter</span> <span class="n">getUserTimelineWithScreenName</span><span class="o">:</span><span class="s">@"barackobama"</span>
+                              <span class="nl">successBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="n">statuses</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}];</span>
+
+<span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}];</span>
+</pre></div>
 
 <h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<a name="various-kinds-of-oauth-connections" class="anchor" href="#various-kinds-of-oauth-connections"><span class="octicon octicon-link"></span></a>Various Kinds of OAuth Connections</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>You can instantiate <code>STTwitterAPI</code> in three ways:</p>
+
+<ul>
+<li>use the Twitter account set in OS X Preferences or iOS Settings</li>
+<li>use a custom <code>consumer key</code> and <code>consumer secret</code> (three flavors)
+
+<ul>
+<li>get an URL, fetch a PIN, enter it in your app, get oauth access tokens<br>
+</li>
+<li>set <code>username</code> and <code>password</code>, get oauth access tokens with XAuth, if the app is entitled to</li>
+<li>set <code>oauth token</code> and <code>oauth token secret</code> directly</li>
+</ul>
+</li>
+<li>use the <a href="https://dev.twitter.com/docs/auth/application-only-auth">Application Only</a> authentication and get / use a "bearer token"</li>
+</ul><p>So there are five cases altogether, hence these five methods:</p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="k">+</span> <span class="p">(</span><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="p">)</span><span class="nf">twitterAPIOSWithFirstAccount</span><span class="p">;</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="p">)</span><span class="nf">twitterAPIWithOAuthConsumerKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerKey</span>
+                                  <span class="nl">consumerSecret:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerSecret</span><span class="p">;</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="p">)</span><span class="nf">twitterAPIWithOAuthConsumerKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerKey</span>
+                                  <span class="nl">consumerSecret:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerSecret</span>
+                                        <span class="nl">username:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">username</span>
+                                        <span class="nl">password:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">password</span><span class="p">;</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="p">)</span><span class="nf">twitterAPIWithOAuthConsumerKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerKey</span>
+                                  <span class="nl">consumerSecret:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerSecret</span>
+                                      <span class="nl">oauthToken:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">oauthToken</span>
+                                <span class="nl">oauthTokenSecret:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">oauthTokenSecret</span><span class="p">;</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="p">)</span><span class="nf">twitterAPIAppOnlyWithConsumerKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerKey</span>
+                                    <span class="nl">consumerSecret:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">consumerSecret</span><span class="p">;</span>
+</pre></div>
+
+<h5>
+<a name="reverse-authentication" class="anchor" href="#reverse-authentication"><span class="octicon octicon-link"></span></a>Reverse Authentication</h5>
+
+<p>Reference: <a href="https://dev.twitter.com/docs/ios/using-reverse-auth">https://dev.twitter.com/docs/ios/using-reverse-auth</a></p>
+
+<p>The most common use case of reverse authentication is letting users register/login to a remote service with their OS X or iOS Twitter account.</p>
+
+<pre><code>iOS/OSX     Twitter     Server
+--------------&gt;                 reverse auth.
+&lt; - - - - - - -                 access tokens
+
+-----------------------------&gt;  access tokens
+
+               &lt;--------------  access Twitter on user's behalf
+                - - - - - - -&gt;
+</code></pre>
+
+<p>Here is how to use reverse authentication with STTwitter:</p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="n">STTwitterAPI</span> <span class="o">*</span><span class="n">twitter</span> <span class="o">=</span> <span class="p">[</span><span class="n">STTwitterAPI</span> <span class="n">twitterAPIWithOAuthConsumerName</span><span class="o">:</span><span class="nb">nil</span>
+                                                          <span class="nl">consumerKey:</span><span class="s">@"CONSUMER_KEY"</span>
+                                                       <span class="nl">consumerSecret:</span><span class="s">@"CONSUMER_SECRET"</span><span class="p">];</span>
+
+<span class="p">[</span><span class="n">twitter</span> <span class="n">postReverseOAuthTokenRequest</span><span class="o">:^</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">authenticationHeader</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">STTwitterAPI</span> <span class="o">*</span><span class="n">twitterAPIOS</span> <span class="o">=</span> <span class="p">[</span><span class="n">STTwitterAPI</span> <span class="n">twitterAPIOSWithFirstAccount</span><span class="p">];</span>
+
+    <span class="p">[</span><span class="n">twitterAPIOS</span> <span class="n">verifyCredentialsWithSuccessBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">username</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="p">[</span><span class="n">twitterAPIOS</span> <span class="n">postReverseAuthAccessTokenWithAuthenticationHeader</span><span class="o">:</span><span class="n">authenticationHeader</span>
+                                                            <span class="nl">successBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">oAuthToken</span><span class="p">,</span>
+                                                                           <span class="n">NSString</span> <span class="o">*</span><span class="n">oAuthTokenSecret</span><span class="p">,</span>
+                                                                           <span class="n">NSString</span> <span class="o">*</span><span class="n">userID</span><span class="p">,</span>
+                                                                           <span class="n">NSString</span> <span class="o">*</span><span class="n">screenName</span><span class="p">)</span> <span class="p">{</span>
+
+                                                                <span class="c1">// use the tokens...</span>
+
+                                                            <span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+                                                                <span class="c1">// ...</span>
+                                                            <span class="p">}];</span>
+
+    <span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...</span>
+    <span class="p">}];</span>
+
+<span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}];</span>
+</pre></div>
+
+<p>Contrary to what can be read here and there, you can perfectly <a href="http://stackoverflow.com/questions/17990484/accessing-twitter-direct-messages-using-slrequest-ios/18760445#18760445">access direct messages from iOS Twitter accounts</a>.</p>
 
 <h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a name="oauth-consumer-tokens" class="anchor" href="#oauth-consumer-tokens"><span class="octicon octicon-link"></span></a>OAuth Consumer Tokens</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>In Twitter REST API v1.1, each client application must authenticate itself with <code>consumer key</code> and <code>consumer secret</code> tokens. You can request consumer tokens for your app on Twitter's website: <a href="https://dev.twitter.com/apps">https://dev.twitter.com/apps</a>.</p>
+
+<p>STTwitter demo project comes with <code>TwitterClients.plist</code> where you can enter your own consumer tokens.</p>
 
 <h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a name="demo--test-project" class="anchor" href="#demo--test-project"><span class="octicon octicon-link"></span></a>Demo / Test Project</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>There is a demo project for OS X in <code>demo_osx</code>, which lets you choose how to get the OAuth tokens (see below).</p>
+
+<p>An archive generated on 2013-10-20 10:35 is available at <a href="http://seriot.ch/temp/STTwitterDemoOSX.app.zip">http://seriot.ch/temp/STTwitterDemoOSX.app.zip</a>.</p>
+
+<p>Once you got the OAuth tokens, you can get your timeline and post a new status.</p>
+
+<p>There is also a simple iOS demo project in <code>demo_ios</code>.</p>
+
+<p><img border="1" src="Art/osx.png" width="840" alt="STTwitter Demo iOS"><img border="1" src="Art/ios.png" alt="STTwitter Demo iOS"><img border="1" src="Art/tweet.png" alt="sample tweet"></p>
+
+<h3>
+<a name="integration-tips" class="anchor" href="#integration-tips"><span class="octicon octicon-link"></span></a>Integration Tips</h3>
+
+<h5>
+<a name="concurrency" class="anchor" href="#concurrency"><span class="octicon octicon-link"></span></a>Concurrency</h5>
+
+<p>STTwitter is supposed to be used from the main thread. The HTTP requests are performed anychronously and the callbacks are guaranteed to be called on main thread.</p>
+
+<h5>
+<a name="remove-asserts-in-release-mode" class="anchor" href="#remove-asserts-in-release-mode"><span class="octicon octicon-link"></span></a>Remove Asserts in Release Mode</h5>
+
+<p>There are several asserts in the code. They are very useful in debug mode but you should not include them in release.</p>
+
+<p>New projects created with Xcode 5 already remove NSAssert logic by default in release.</p>
+
+<p>In older projects, you can set the compilation flag <code>-DNS_BLOCK_ASSERTIONS=1</code>.</p>
+
+<h5>
+<a name="number-of-characters-in-a-tweet" class="anchor" href="#number-of-characters-in-a-tweet"><span class="octicon octicon-link"></span></a>Number of Characters in a Tweet</h5>
+
+<p>Use the method <code>-[NSString st_numberOfCharactersInATweet]</code> to let the user know how many characters she can enter before the end of the Tweet. The method may also return a negative value if the string exceeds a tweet's maximum length. The method considers the shortened URL lengths.</p>
+
+<h5>
+<a name="date-formatter" class="anchor" href="#date-formatter"><span class="octicon octicon-link"></span></a>Date Formatter</h5>
+
+<p>In order to convert the string in the <code>created_at</code> field from Twitter's JSON into an NSDate instance, you can use the <code>+[NSDateFormatter st_TwitterDateFormatter]</code>.</p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">df</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDateFormatter</span> <span class="n">st_TwitterDateFormatter</span><span class="p">];</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">dateString</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="n">valueForKey</span><span class="o">:</span><span class="s">@"created_at"</span><span class="p">];</span> <span class="c1">// "Sun Jun 28 20:33:01 +0000 2009"</span>
+<span class="n">NSDate</span> <span class="o">*</span><span class="n">date</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span> <span class="n">dateFromString</span><span class="o">:</span><span class="n">dateString</span><span class="p">];</span>
+</pre></div>
+
+<h5>
+<a name="urls-shorteners" class="anchor" href="#urls-shorteners"><span class="octicon octicon-link"></span></a>URLs Shorteners</h5>
+
+<p>In order to expand shortened URLs such as Twitter's <code>t.co</code> service, use:</p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="p">[</span><span class="n">STHTTPRequest</span> <span class="n">expandedURLStringForShortenedURLString</span><span class="o">:</span><span class="s">@"http://t.co/tmoxbSfDWc"</span> <span class="n">successBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">expandedURLString</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//</span>
+<span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//</span>
+<span class="p">}];</span>
+</pre></div>
+
+<h5>
+<a name="api-responses-text-processing" class="anchor" href="#api-responses-text-processing"><span class="octicon octicon-link"></span></a>API Responses Text Processing</h5>
+
+<p>You may want to use Twitter's own Objective-C library for text processing: <a href="https://github.com/twitter/twitter-text-objc/">https://github.com/twitter/twitter-text-objc/</a>.</p>
+
+<p><code>twitter-text-objc</code> provides you with methods such as:</p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span><span class="o">*</span><span class="p">)</span><span class="nf">entitiesInText:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">text</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span><span class="o">*</span><span class="p">)</span><span class="nf">URLsInText:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">text</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span><span class="o">*</span><span class="p">)</span><span class="nf">hashtagsInText:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">text</span> <span class="nf">checkingURLOverlap:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">checkingURLOverlap</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span><span class="o">*</span><span class="p">)</span><span class="nf">symbolsInText:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">text</span> <span class="nf">checkingURLOverlap:</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nv">checkingURLOverlap</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span><span class="o">*</span><span class="p">)</span><span class="nf">mentionedScreenNamesInText:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">text</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSArray</span><span class="o">*</span><span class="p">)</span><span class="nf">mentionsOrListsInText:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">text</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">TwitterTextEntity</span><span class="o">*</span><span class="p">)</span><span class="nf">repliedScreenNameInText:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">text</span><span class="p">;</span>
+</pre></div>
+
+<h5>
+<a name="boolean-parameters" class="anchor" href="#boolean-parameters"><span class="octicon octicon-link"></span></a>Boolean Parameters</h5>
+
+<p>There are a lot of optional parameters in Twitter API. In STTwitter, you can ignore such parameters by passing <code>nil</code>. Regarding boolean parameters, STTwitter can't just use Objective-C <code>YES</code> and <code>NO</code> because <code>NO</code> has the same value as <code>nil</code> (zero). So boolean parameters are wrapped into <code>NSNumber</code> objects, which are pretty easy to use with boolean values thanks to Objective-C literals. So, with STTwitter, you will assign an optional parameter of Twitter API either as <code>@(YES)</code>, <code>@(NO)</code> or <code>nil</code>.</p>
+
+<h5>
+<a name="long-methods" class="anchor" href="#long-methods"><span class="octicon octicon-link"></span></a>Long Methods</h5>
+
+<p>STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST API. It often results in long methd names with many parameters. In your application, you may want to add your own, simplified methods on top of STTwitterAPI. A good idea is to create an Objective-C category for your application, such as in the following code.</p>
+
+<p><code>STTwitterAPI+MyApp.h</code></p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="cp">#import "STTwitterAPI.h"</span>
+
+<span class="k">@interface</span> <span class="nc">STTwitterAPI</span> <span class="nl">(MyApp)</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">getStatusesShowID:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">statusID</span>
+             <span class="nl">successBlock:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">status</span><span class="p">))</span><span class="nv">successBlock</span>
+               <span class="nl">errorBlock:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">))</span><span class="nv">errorBlock</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+<p><code>STTwitterAPI+MyApp.m</code></p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="cp">#import "STTwitterAPI+MyApp.h"</span>
+
+<span class="k">@implementation</span> <span class="nc">STTwitterAPI</span> <span class="nl">(MyApp)</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">getStatusesShowID:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">statusID</span>
+             <span class="nl">successBlock:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">status</span><span class="p">))</span><span class="nv">successBlock</span>
+               <span class="nl">errorBlock:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">))</span><span class="nv">errorBlock</span> <span class="p">{</span>
+
+    <span class="p">[</span><span class="n">self</span> <span class="n">getStatusesShowID</span><span class="o">:</span><span class="n">statusID</span>
+                   <span class="nl">trimUser:</span><span class="p">@(</span><span class="nb">YES</span><span class="p">)</span>
+           <span class="nl">includeMyRetweet:</span><span class="nb">nil</span>
+            <span class="nl">includeEntities:</span><span class="p">@(</span><span class="nb">NO</span><span class="p">)</span>
+               <span class="nl">successBlock:</span><span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">status</span><span class="p">)</span> <span class="p">{</span>
+
+                   <span class="n">successBlock</span><span class="p">(</span><span class="n">status</span><span class="p">);</span>
+
+               <span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+
+                   <span class="n">errorBlock</span><span class="p">(</span><span class="n">error</span><span class="p">);</span>
+
+               <span class="p">}];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+<h5>
+<a name="stream-request-and-connection-losses" class="anchor" href="#stream-request-and-connection-losses"><span class="octicon octicon-link"></span></a>Stream Request and Connection Losses</h5>
+
+<p>Streaming requests may be lost when your iOS application comes back to foreground after a while in background. In order to handle this case properly, you can detect the connection loss in the error block and restart the stream request from there.</p>
+
+<div class="highlight highlight-Objective-C"><pre><span class="c1">// ...</span>
+<span class="p">}</span> <span class="n">errorBlock</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">if</span><span class="p">([[</span><span class="n">error</span> <span class="n">domain</span><span class="p">]</span> <span class="n">isEqualToString</span><span class="o">:</span><span class="n">NSURLErrorDomain</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">error</span> <span class="n">code</span><span class="p">]</span> <span class="o">==</span> <span class="n">NSURLErrorNetworkConnectionLost</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="n">startStreamRequest</span><span class="p">];</span>
+    <span class="p">}</span>
+
+<span class="p">}];</span>
+</pre></div>
+
+<h3>
+<a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="octicon octicon-link"></span></a>Troubleshooting</h3>
+
+<h5>
+<a name="xauth" class="anchor" href="#xauth"><span class="octicon octicon-link"></span></a>xAuth</h5>
+
+<p>Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So, if you get an error like <code>The consumer tokens are probably not xAuth enabled.</code> while accessing <code>https://api.twitter.com/oauth/access_token</code>, see Twitter's website <a href="https://dev.twitter.com/docs/oauth/xauth">https://dev.twitter.com/docs/oauth/xauth</a> and ask Twitter to enable the xAuth authentication process for your consumer tokens.</p>
+
+<h5>
+<a name="anything-else" class="anchor" href="#anything-else"><span class="octicon octicon-link"></span></a>Anything Else</h5>
+
+<p>Please <a href="https://github.com/nst/STTwitter/issues">fill an issue</a> on GitHub.</p>
+
+<h3>
+<a name="developers" class="anchor" href="#developers"><span class="octicon octicon-link"></span></a>Developers</h3>
+
+<p>The application only interacts with <code>STTwitterAPI</code>.</p>
+
+<p><code>STTwitterAPI</code> maps Objective-C methods with all Twitter API endpoints.</p>
+
+<p>You can create your own convenience methods with fewer parameters. You can also use this generic method directly:</p>
+
+<div class="highlight highlight-Objective-C"><pre>        <span class="o">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">fetchResource</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">resource</span>
+                 <span class="nl">HTTPMethod:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">HTTPMethod</span>
+              <span class="nl">baseURLString:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">baseURLString</span>
+                 <span class="nl">parameters:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">parameters</span>
+        <span class="nl">uploadProgressBlock:</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">NSInteger</span> <span class="n">bytesWritten</span><span class="p">,</span> <span class="n">NSInteger</span> <span class="n">totalBytesWritten</span><span class="p">,</span> <span class="n">NSInteger</span> <span class="n">totalBytesExpectedToWrite</span><span class="p">))</span><span class="n">uploadProgressBlock</span>
+      <span class="nl">downloadProgressBlock:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">id</span> <span class="n">request</span><span class="p">,</span> <span class="kt">id</span> <span class="n">response</span><span class="p">))</span><span class="n">downloadProgressBlock</span>
+               <span class="nl">successBlock:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">id</span> <span class="n">request</span><span class="p">,</span> <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">headers</span><span class="p">,</span> <span class="kt">id</span> <span class="n">response</span><span class="p">))</span><span class="n">successBlock</span>
+                 <span class="nl">errorBlock:</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">id</span> <span class="n">request</span><span class="p">,</span> <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">headers</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">))</span><span class="n">errorBlock</span><span class="p">;</span>
+</pre></div>
+
+<h5>
+<a name="layer-model" class="anchor" href="#layer-model"><span class="octicon octicon-link"></span></a>Layer Model</h5>
+
+<pre><code> +-----------------------------------------------------------------+
+ |                         Your Application                        |
+ +-------------------------------------------------+---------------+
+ |                  STTwitterAPI                   | STTwitterHTML |
+ +-------------------------------------------------+               |
+ + - - - - - - - - - - - - - - - - - - - - - - - - +               |
+ |              STTwitterOAuthProtocol             |               |
+ + - - - - - - - - - - - - - - - - - - - - - - - - +               |
+ +-------------+----------------+------------------+               |
+ | STTwitterOS | STTwitterOAuth | STTwitterAppOnly |               |
+ |             +----------------+------------------+---------------+
+ |             |                   STHTTPRequest                   |
+ +-------------+---------------------------------------------------+
+  |
+  + Accounts.framework
+  + Social.framework
+</code></pre>
+
+<h5>
+<a name="summary" class="anchor" href="#summary"><span class="octicon octicon-link"></span></a>Summary</h5>
+
+<pre><code> * STTwitterAPI
+    - can be instantiated with the authentication mode you want
+    - provides methods to interact with each Twitter API endpoint
+
+ * STTwitterHTML
+    - a hackish class to login on Twitter by parsing the HTML code and get a PIN
+    - it can break at anytime, your app should not rely on it in production
+
+ * STTwitterOAuthProtocol
+    - provides generic methods to POST and GET resources on Twitter's hosts
+
+ * STTwitterOS
+    - uses Twitter accounts defined in OS X Preferences or iOS Settings
+    - uses OS X / iOS frameworks to interact with Twitter API
+
+ * STTwitterOAuth
+    - implements OAuth and xAuth authentication
+
+ * STTwitterAppOnly
+    - implements the 'app only' authentication
+    - https://dev.twitter.com/docs/auth/application-only-auth
+
+ * STHTTPRequest
+    - block-based wrapper around NSURLConnection
+    - https://github.com/nst/STHTTPRequest
+</code></pre>
+
+<h3>
+<a name="bsd-3-clause-license" class="anchor" href="#bsd-3-clause-license"><span class="octicon octicon-link"></span></a>BSD 3-Clause License</h3>
+
+<p>See <a href="LICENCE.txt">LICENCE.txt</a>.</p>
       </section>
     </div>
 
