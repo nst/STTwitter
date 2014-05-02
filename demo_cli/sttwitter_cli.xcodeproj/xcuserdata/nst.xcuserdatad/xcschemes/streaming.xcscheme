@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0500"
+   LastUpgradeVersion = "0510"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0308C376180733CF00C5D104"
-               BuildableName = "clitter"
-               BlueprintName = "clitter"
-               ReferencedContainer = "container:clitter.xcodeproj">
+               BlueprintIdentifier = "03C413151913BFA100370144"
+               BuildableName = "streaming"
+               BlueprintName = "streaming"
+               ReferencedContainer = "container:sttwitter_cli.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0308C376180733CF00C5D104"
-            BuildableName = "clitter"
-            BlueprintName = "clitter"
-            ReferencedContainer = "container:clitter.xcodeproj">
+            BlueprintIdentifier = "03C413151913BFA100370144"
+            BuildableName = "streaming"
+            BlueprintName = "streaming"
+            ReferencedContainer = "container:sttwitter_cli.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,10 +51,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0308C376180733CF00C5D104"
-            BuildableName = "clitter"
-            BlueprintName = "clitter"
-            ReferencedContainer = "container:clitter.xcodeproj">
+            BlueprintIdentifier = "03C413151913BFA100370144"
+            BuildableName = "streaming"
+            BlueprintName = "streaming"
+            ReferencedContainer = "container:sttwitter_cli.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0308C376180733CF00C5D104"
-            BuildableName = "clitter"
-            BlueprintName = "clitter"
-            ReferencedContainer = "container:clitter.xcodeproj">
+            BlueprintIdentifier = "03C413151913BFA100370144"
+            BuildableName = "streaming"
+            BlueprintName = "streaming"
+            ReferencedContainer = "container:sttwitter_cli.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
