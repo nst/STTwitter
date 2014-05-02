@@ -49,9 +49,10 @@
                            contributorDetails:nil
                               includeEntities:nil
                                  successBlock:^(NSArray *statuses) {
-                                     successBlock(statuses);
+                                     ST_BLOCK_SAFE_RUN(successBlock,statuses);
+
                                  } errorBlock:^(NSError *error) {
-                                     errorBlock(error);
+                                     ST_BLOCK_SAFE_RUN(errorBlock,error);
                                  }];
 }
 

@@ -167,7 +167,7 @@
     
     if(data == nil) {
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPIMediaDataIsEmpty userInfo:@{NSLocalizedDescriptionKey : @"data is nil"}];
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
         return;
     }
     
@@ -181,9 +181,10 @@
         displayCoordinates:@(YES)
        uploadProgressBlock:uploadProgressBlock
               successBlock:^(NSDictionary *status) {
-                  successBlock(status);
+                  ST_BLOCK_SAFE_RUN(successBlock,status);
+
               } errorBlock:^(NSError *error) {
-                  errorBlock(error);
+                  ST_BLOCK_SAFE_RUN(errorBlock,error);
               }];
 }
 
@@ -226,9 +227,10 @@
     if(lang) md[@"lang"] = lang;
     
     [self getAPIResource:@"statuses/oembed.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -246,9 +248,9 @@
     NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
     
     [self postAPIResource:resource parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -259,9 +261,9 @@
     [self postStatusRetweetWithID:statusID
                          trimUser:nil
                      successBlock:^(NSDictionary *status) {
-                         successBlock(status);
+                         ST_BLOCK_SAFE_RUN(successBlock,status);
                      } errorBlock:^(NSError *error) {
-                         errorBlock(error);
+                         ST_BLOCK_SAFE_RUN(errorBlock,error);
                      }];
 }
 
@@ -290,9 +292,10 @@
             ids = response[@"ids"];
         }
         
-        successBlock(ids, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,ids, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -320,9 +323,10 @@
     if(map) md[@"map"] = [map boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"statuses/lookup.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 

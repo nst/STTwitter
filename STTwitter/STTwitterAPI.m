@@ -279,11 +279,11 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
                       parameters:parameters
              uploadProgressBlock:nil
            downloadProgressBlock:^(id request, id response) {
-               if(downloadProgressBlock) downloadProgressBlock(response);
+               ST_BLOCK_SAFE_RUN(downloadProgressBlock,response);
            } successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-               if(successBlock) successBlock(responseHeaders, response);
+               ST_BLOCK_SAFE_RUN(successBlock,responseHeaders,response);
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-               if(errorBlock) errorBlock(error);
+               ST_BLOCK_SAFE_RUN(errorBlock,error);
            }];
 }
 
@@ -301,11 +301,11 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
                       parameters:parameters
              uploadProgressBlock:uploadProgressBlock
            downloadProgressBlock:^(id request, id response) {
-               if(downloadProgressBlock) downloadProgressBlock(response);
+               ST_BLOCK_SAFE_RUN(downloadProgressBlock,response);
            } successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-               if(successBlock) successBlock(responseHeaders, response);
+               ST_BLOCK_SAFE_RUN(successBlock,responseHeaders,response);
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-               if(errorBlock) errorBlock(error);
+               ST_BLOCK_SAFE_RUN(errorBlock,error);
            }];
 }
 
@@ -322,7 +322,7 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
                parameters:parameters
       uploadProgressBlock:uploadProgressBlock
     downloadProgressBlock:^(id request, id response) {
-        if(downloadProgressBlock) downloadProgressBlock(response);
+        ST_BLOCK_SAFE_RUN(downloadProgressBlock,response);
     } successBlock:nil
                errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                    ST_BLOCK_SAFE_RUN(errorBlock,error);
@@ -341,7 +341,7 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
                parameters:parameters
       uploadProgressBlock:nil
     downloadProgressBlock:^(id request, id response) {
-        if(downloadProgressBlock) downloadProgressBlock(response);
+        ST_BLOCK_SAFE_RUN(downloadProgressBlock,response);
     } successBlock:nil
                errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                    ST_BLOCK_SAFE_RUN(errorBlock,error);
@@ -469,9 +469,9 @@ downloadProgressBlock:nil
     if(sendErrorCodes) md[@"send_error_codes"] = [sendErrorCodes boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"activity/about_me.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -499,9 +499,9 @@ downloadProgressBlock:nil
     if(sendErrorCodes) md[@"send_error_codes"] = [sendErrorCodes boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"activity/by_friends.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -520,10 +520,9 @@ downloadProgressBlock:nil
         NSString *favoritersCount = [response valueForKey:@"favoriters_count"];
         NSString *repliersCount = [response valueForKey:@"repliers_count"];
         NSString *retweetersCount = [response valueForKey:@"retweeters_count"];
-        
-        successBlock(favoriters, repliers, retweeters, favoritersCount, repliersCount, retweetersCount);
+        ST_BLOCK_SAFE_RUN(successBlock,favoriters, repliers, retweeters, favoritersCount, repliersCount, retweetersCount);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -537,9 +536,9 @@ downloadProgressBlock:nil
     NSDictionary *d = @{@"id":statusID};
     
     [self getAPIResource:@"conversation/show.json" parameters:d successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -548,13 +547,12 @@ downloadProgressBlock:nil
                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getAPIResource:@"discover/highlight.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
-        
         NSDictionary *metadata = [response valueForKey:@"metadata"];
         NSArray *modules = [response valueForKey:@"modules"];
+        ST_BLOCK_SAFE_RUN(successBlock,metadata, modules);
         
-        successBlock(metadata, modules);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -563,13 +561,12 @@ downloadProgressBlock:nil
                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getAPIResource:@"discover/universal.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
-        
         NSDictionary *metadata = [response valueForKey:@"metadata"];
         NSArray *modules = [response valueForKey:@"modules"];
+        ST_BLOCK_SAFE_RUN(successBlock,metadata, modules);
         
-        successBlock(metadata, modules);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -578,10 +575,10 @@ downloadProgressBlock:nil
                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getAPIResource:@"statuses/media_timeline.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
-        
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -590,9 +587,9 @@ downloadProgressBlock:nil
                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getAPIResource:@"users/recommendations.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -601,9 +598,9 @@ downloadProgressBlock:nil
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getAPIResource:@"timeline/home.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -622,9 +619,9 @@ downloadProgressBlock:nil
     if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"true" : @"false";
     
     [self getAPIResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -633,9 +630,9 @@ downloadProgressBlock:nil
                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getAPIResource:@"trends/available.json" parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -654,9 +651,9 @@ downloadProgressBlock:nil
     if(blockUser) md[@"block_user"] = [blockUser boolValue] ? @"true" : @"false";
     
     [self postAPIResource:@"users/report_spam.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -693,9 +690,9 @@ downloadProgressBlock:nil
  downloadProgressBlock:^(id json) {
      //
  } successBlock:^(NSDictionary *rateLimits, id response) {
-     successBlock(response);
+     ST_BLOCK_SAFE_RUN(successBlock,response);
  } errorBlock:^(NSError *error) {
-     errorBlock(error);
+     ST_BLOCK_SAFE_RUN(errorBlock,error);
  }];
 }
 
@@ -712,9 +709,9 @@ downloadProgressBlock:nil
     if(sendErrorCodes) md[@"send_error_codes"] = @([sendErrorCodes boolValue]);
     
     [self getAPIResource:@"search/typeahead.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 

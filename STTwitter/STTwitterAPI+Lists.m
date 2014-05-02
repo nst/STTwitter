@@ -37,10 +37,10 @@
         NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
         
         NSArray *lists = (NSArray *)response;
-        
-        successBlock(lists);
+        ST_BLOCK_SAFE_RUN(successBlock,lists);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -72,10 +72,10 @@
         NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
         
         NSArray *statuses = (NSArray *)response;
-        
-        successBlock(statuses);
+        ST_BLOCK_SAFE_RUN(successBlock,statuses);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -109,10 +109,9 @@
         NSAssert([response isKindOfClass:[NSArray class]], @"bad response type");
         
         NSArray *statuses = (NSArray *)response;
-        
-        successBlock(statuses);
+        ST_BLOCK_SAFE_RUN(successBlock,statuses);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -125,9 +124,10 @@
     NSDictionary *d = @{ @"list_id" : listID };
     
     [self postAPIResource:@"lists/members/destroy" parameters:d successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -151,8 +151,9 @@
     
     [self postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock();
+        ST_BLOCK_SAFE_RUN(successBlock);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -184,9 +185,10 @@
             lists = [response valueForKey:@"lists"];
         }
         
-        successBlock(lists, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,lists, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -220,9 +222,10 @@
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
-        successBlock(users, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,users, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -245,9 +248,10 @@
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
-        successBlock(users, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,users, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -263,9 +267,10 @@
     md[@"list_id"] = listID;
     
     [self postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -284,9 +289,9 @@
     if(ownerID) md[@"owner_id"] = ownerID;
     
     [self postAPIResource:@"lists/subscribers/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -310,9 +315,9 @@
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -339,9 +344,9 @@
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"lists/subscribers/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -357,9 +362,9 @@
     md[@"list_id"] = listID;
     
     [self postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -378,9 +383,9 @@
     if(ownerID) md[@"owner_id"] = ownerID;
     
     [self postAPIResource:@"lists/subscribers/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -404,9 +409,9 @@
     }
     
     [self postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -437,9 +442,10 @@
     }
     
     [self postAPIResource:@"lists/members/create_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -463,9 +469,9 @@
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"lists/members/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -491,9 +497,9 @@
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
     [self getAPIResource:@"lists/members/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -518,9 +524,10 @@
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
-        successBlock(users, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,users, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -549,9 +556,10 @@
         NSArray *users = [response valueForKey:@"users"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
-        successBlock(users, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,users, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -572,9 +580,10 @@
     if(screenName) md[@"screen_name"] = screenName;
     
     [self postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -597,9 +606,9 @@
     md[@"screen_name"] = screenName;
     
     [self postAPIResource:@"lists/members/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -615,9 +624,9 @@
     md[@"list_id"] = listID;
     
     [self postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -636,9 +645,9 @@
     if(ownerID) md[@"owner_id"] = ownerID;
     
     [self postAPIResource:@"lists/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -660,9 +669,9 @@
     if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [self postAPIResource:@"lists/update.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -687,9 +696,9 @@
     if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [self postAPIResource:@"lists/update.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -709,9 +718,9 @@
     if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [self postAPIResource:@"lists/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -727,9 +736,9 @@
     md[@"list_id"] = listID;
     
     [self getAPIResource:@"lists/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -748,9 +757,9 @@
     if(ownerID) md[@"owner_id"] = ownerID;
     
     [self getAPIResource:@"lists/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -775,9 +784,9 @@
     }
     
     [self postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -809,9 +818,9 @@
     }
     
     [self postAPIResource:@"lists/members/destroy_all.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
+        ST_BLOCK_SAFE_RUN(successBlock,response);
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -840,9 +849,10 @@
         NSArray *lists = [response valueForKey:@"lists"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
-        successBlock(lists, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,lists, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
@@ -873,9 +883,10 @@
         NSArray *lists = [response valueForKey:@"lists"];
         NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
         NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
-        successBlock(lists, previousCursor, nextCursor);
+        ST_BLOCK_SAFE_RUN(successBlock,lists, previousCursor, nextCursor);
+
     } errorBlock:^(NSError *error) {
-        errorBlock(error);
+        ST_BLOCK_SAFE_RUN(errorBlock,error);
     }];
 }
 
