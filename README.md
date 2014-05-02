@@ -4,6 +4,8 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 
 **[2013-10-24]** STTwitter was presented at [SoftShake 2013](http://soft-shake.ch) ([slides](http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf)).
 
+[![Build Status](https://travis-ci.org/nst/STTwitter.svg?branch=master)](https://travis-ci.org/nst/STTwitter)
+
 1. [Testimonials](#testimonials)
 2. [Installation](#installation)
 3. [Code Snippets](#code-snippets)
