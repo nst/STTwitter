@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>conversation.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>favorites.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -43,6 +48,11 @@
 			<true/>
 		</dict>
 		<key>03C4136E1913C1C100370144</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>03C4144E19150EA300370144</key>
 		<dict>
 			<key>primary</key>
 			<true/>
