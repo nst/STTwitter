@@ -26,6 +26,11 @@ NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
     STTwitterAPIMediaDataIsEmpty
 };
 
+extern NSString *kBaseURLStringAPI;
+extern NSString *kBaseURLStringStream;
+extern NSString *kBaseURLStringUserStream;
+extern NSString *kBaseURLStringSiteStream;
+
 /*
  Tweet fields contents
  https://dev.twitter.com/docs/platform-objects/tweets

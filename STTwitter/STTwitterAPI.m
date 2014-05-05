@@ -14,10 +14,10 @@
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
 
-static NSString *kBaseURLStringAPI = @"https://api.twitter.com/1.1";
-static NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1";
-static NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1";
-static NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1";
+NSString *kBaseURLStringAPI = @"https://api.twitter.com/1.1";
+NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1";
+NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1";
+NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1";
 
 static NSDateFormatter *dateFormatter = nil;
 
