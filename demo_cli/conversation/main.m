@@ -26,35 +26,67 @@ void postStatus(STTwitterAPI *twitter,
     
     NSString *status = [d objectForKey:@"status"];
     NSURL *mediaURL = [d objectForKey:@"mediaURL"];
+    NSData *mediaData = [NSData dataWithContentsOfURL:mediaURL];
     
     NSLog(@"--------------------");
     NSLog(@"-- text: %@", status);
     NSLog(@"-- data: %@", [mediaURL lastPathComponent]);
     
-    [twitter postStatusUpdate:status
-            inReplyToStatusID:previousStatusID
-                     mediaURL:mediaURL
-                      placeID:nil
-                     latitude:nil
-                    longitude:nil
-          uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
-
-              NSLog(@"-- %.02f%%", 100.0 * totalBytesWritten / totalBytesExpectedToWrite);
-
-          } successBlock:^(NSDictionary *status) {
-              
-              NSString *previousStatusID = [status objectForKey:@"id_str"];
-              NSLog(@"-- status: %@", previousStatusID);
-              
-              if(firstTweetID == nil) firstTweetID = previousStatusID;
-              
-              postStatus(twitter, statusesAndMediaURLs, previousStatusID);
-              
-          } errorBlock:^(NSError *error) {
+    //    [twitter postStatusUpdate:status
+    //            inReplyToStatusID:previousStatusID
+    //                     mediaURL:mediaURL
+    //                      placeID:nil
+    //                     latitude:nil
+    //                    longitude:nil
+    //          uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
+    //
+    //              NSLog(@"-- %.02f%%", 100.0 * totalBytesWritten / totalBytesExpectedToWrite);
+    //
+    //          } successBlock:^(NSDictionary *status) {
+    //
+    //              NSString *previousStatusID = [status objectForKey:@"id_str"];
+    //              NSLog(@"-- status: %@", previousStatusID);
+    //
+    //              if(firstTweetID == nil) firstTweetID = previousStatusID;
+    //
+    //              postStatus(twitter, statusesAndMediaURLs, previousStatusID);
+    //
+    //          } errorBlock:^(NSError *error) {
+    //
+    //              NSLog(@"-- %@", error);
+    //              exit(1);
+    //          }];
+    
+    //    NSParameterAssert(status);
+    //    NSAssert([mediaDataArray count] > 0, @"media data array must not be empty");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"status"] = status;
+    if(previousStatusID) md[@"in_reply_to_status_id"] = previousStatusID;
+    md[@"media[]"] = mediaData;
+    md[@"kSTPOSTDataKey"] = @"media[]";
+    
+    [twitter postResource:@"statuses/update_with_media.json"
+            baseURLString:kBaseURLStringAPI
+               parameters:md
+      uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
+          NSLog(@"-- %.02f%%", 100.0 * totalBytesWritten / totalBytesExpectedToWrite);
           
-              NSLog(@"-- %@", error);
-              exit(1);
-          }];
+      } downloadProgressBlock:^(id json) {
+          
+      } successBlock:^(NSDictionary *rateLimits, id response) {
+          NSString *previousStatusID = [response objectForKey:@"id_str"];
+          NSLog(@"-- status: %@", previousStatusID);
+          
+          if(firstTweetID == nil) firstTweetID = previousStatusID;
+          
+          postStatus(twitter, statusesAndMediaURLs, previousStatusID);
+          
+      } errorBlock:^(NSError *error) {
+          NSLog(@"-- %@", error);
+          exit(1);
+      }];
+    
 }
 
 int main(int argc, const char * argv[])
