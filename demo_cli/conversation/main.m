@@ -32,34 +32,6 @@ void postStatus(STTwitterAPI *twitter,
     NSLog(@"-- text: %@", status);
     NSLog(@"-- data: %@", [mediaURL lastPathComponent]);
     
-    //    [twitter postStatusUpdate:status
-    //            inReplyToStatusID:previousStatusID
-    //                     mediaURL:mediaURL
-    //                      placeID:nil
-    //                     latitude:nil
-    //                    longitude:nil
-    //          uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
-    //
-    //              NSLog(@"-- %.02f%%", 100.0 * totalBytesWritten / totalBytesExpectedToWrite);
-    //
-    //          } successBlock:^(NSDictionary *status) {
-    //
-    //              NSString *previousStatusID = [status objectForKey:@"id_str"];
-    //              NSLog(@"-- status: %@", previousStatusID);
-    //
-    //              if(firstTweetID == nil) firstTweetID = previousStatusID;
-    //
-    //              postStatus(twitter, statusesAndMediaURLs, previousStatusID);
-    //
-    //          } errorBlock:^(NSError *error) {
-    //
-    //              NSLog(@"-- %@", error);
-    //              exit(1);
-    //          }];
-    
-    //    NSParameterAssert(status);
-    //    NSAssert([mediaDataArray count] > 0, @"media data array must not be empty");
-    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"status"] = status;
     if(previousStatusID) md[@"in_reply_to_status_id"] = previousStatusID;
@@ -75,6 +47,9 @@ void postStatus(STTwitterAPI *twitter,
       } downloadProgressBlock:^(id json) {
           
       } successBlock:^(NSDictionary *rateLimits, id response) {
+          
+          NSLog(@"-- x-mediaratelimit-remaining: %@", rateLimits[@"x-mediaratelimit-remaining"]);
+          
           NSString *previousStatusID = [response objectForKey:@"id_str"];
           NSLog(@"-- status: %@", previousStatusID);
           
