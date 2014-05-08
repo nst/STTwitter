@@ -4,27 +4,32 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>conversation.xcscheme</key>
+		<key>conversation.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
-		<key>favorites.xcscheme</key>
+		<key>favorites.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
-		<key>reverse_auth.xcscheme</key>
+		<key>followers.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
+		<key>reverse_auth.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
-		<key>streaming.xcscheme</key>
+		<key>streaming.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>sttwitter_cli.xcscheme</key>
+		<key>sttwitter_cli.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -32,6 +37,26 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>036F19F0191B9CE00006A013</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>036F1A79191B9E380006A013</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>036F1A87191B9E630006A013</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>036F1A95191B9E810006A013</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>03C412FA1913BF7400370144</key>
 		<dict>
 			<key>primary</key>
