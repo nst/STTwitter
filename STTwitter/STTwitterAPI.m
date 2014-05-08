@@ -30,11 +30,15 @@ static NSDateFormatter *dateFormatter = nil;
 - (id)init {
     self = [super init];
     
+    STTwitterAPI * __weak weakSelf = self;
+    
     [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         // account must be considered invalid
         
-        if([self.oauth isKindOfClass:[STTwitterOS class]]) {
-            self.oauth = nil;
+        if(weakSelf == nil) return;
+        
+        if([weakSelf.oauth isKindOfClass:[STTwitterOS class]]) {
+            weakSelf.oauth = nil;
         }
     }];
     
@@ -188,17 +192,20 @@ static NSDateFormatter *dateFormatter = nil;
 
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
+    STTwitterAPI * __weak weakSelf = self;
+    
     if([_oauth canVerifyCredentials]) {
         [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username) {
-            self.userName = username;
-            successBlock(_userName);
+            [weakSelf setUserName:username];
+            successBlock(username);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
     } else {
         [self getAccountVerifyCredentialsWithSuccessBlock:^(NSDictionary *account) {
-            self.userName = [account valueForKey:@"screen_name"];
-            successBlock(_userName);
+            NSString *username = [account valueForKey:@"screen_name"];
+            [weakSelf setUserName:username];
+            successBlock(username);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
@@ -207,6 +214,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
+
     if([self.oauth respondsToSelector:@selector(invalidateBearerTokenWithSuccessBlock:errorBlock:)]) {
         [self.oauth invalidateBearerTokenWithSuccessBlock:successBlock errorBlock:errorBlock];
     } else {
