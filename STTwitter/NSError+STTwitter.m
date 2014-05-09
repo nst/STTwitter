@@ -21,15 +21,23 @@
     NSInteger code = 0;
     
     if([json isKindOfClass:[NSDictionary class]]) {
-        // assume format: {"errors":[{"message":"Sorry, that page does not exist","code":34}]}
-        
         id errors = [json valueForKey:@"errors"];
         if([errors isKindOfClass:[NSArray class]] && [(NSArray *)errors count] > 0) {
+            // assume format: {"errors":[{"message":"Sorry, that page does not exist","code":34}]}
             NSDictionary *errorDictionary = [errors lastObject];
             if([errorDictionary isKindOfClass:[NSDictionary class]]) {
                 message = errorDictionary[@"message"];
                 code = [[errorDictionary valueForKey:@"code"] integerValue];
             }
+        } else if ([json valueForKey:@"error"]) {
+            /*
+             eg. when requesting timeline from a protected account
+             {
+             error = "Not authorized.";
+             request = "/1.1/statuses/user_timeline.json?count=20&screen_name=premfe";
+             }
+             */
+            message = [json valueForKey:@"error"];
         } else if([errors isKindOfClass:[NSString class]]) {
             // assume format {errors = "Screen name can't be blank";}
             message = errors;
