@@ -45,7 +45,6 @@ Link your project with the following frameworks:
 If you want to use CocoaPods, add the following two lines to your Podfile:
 
     pod 'STTwitter'
-    platform :ios, '5.0'
 
 Then, run the following command to install the STTwitter pod:
 
