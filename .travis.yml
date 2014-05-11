@@ -1,9 +1,3 @@
 language: objective-c
 
 script: xctool test -project Tests/UnitTests.xcodeproj -scheme Tests
-
-#
-#xctool -project Tests/UnitTests.xcodeproj -scheme Tests test
-#
-#xcode_project: Tests/UnitTests.xcodeproj # path to your xcodeproj folder
-#xcode_scheme: Tests
