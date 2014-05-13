@@ -214,7 +214,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     if([self.oauth respondsToSelector:@selector(invalidateBearerTokenWithSuccessBlock:errorBlock:)]) {
         [self.oauth invalidateBearerTokenWithSuccessBlock:successBlock errorBlock:errorBlock];
     } else {
@@ -2432,6 +2432,92 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// POST mutes/users/create
+- (void)postMutesUsersCreateForScreenName:(NSString *)screenName
+                                 orUserID:(NSString *)userID
+                             successBlock:(void(^)(NSDictionary *user))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"userID or screenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    
+    [self postAPIResource:@"mutes/users/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST mutes/users/destroy
+- (void)postMutesUsersDestroyForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSAssert((userID || screenName), @"userID or screenName is missing");
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(screenName) md[@"screen_name"] = screenName;
+    if(userID) md[@"user_id"] = userID;
+    
+    [self postAPIResource:@"mutes/users/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET mutes/users/ids
+- (void)getMutesUsersIDsWithCursor:(NSString *)cursor
+                      successBlock:(void(^)(NSArray *userIDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(cursor) md[@"cursor"] = cursor;
+    
+    [self getAPIResource:@"mutes/users/ids.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+        
+        NSArray *userIDs = [response valueForKey:@"ids"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        
+        successBlock(userIDs, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// GET mutes/users/list
+- (void)getMutesUsersListWithCursor:(NSString *)cursor
+                    includeEntities:(NSNumber *)includeEntities
+                         skipStatus:(NSNumber *)skipStatus
+                       successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(cursor) md[@"cursor"] = cursor;
+    if(includeEntities) md[@"include_entities"] = includeEntities;
+    if(skipStatus) md[@"skip_status"] = skipStatus;
+    
+    [self getAPIResource:@"mutes/users/list.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+        
+        NSArray *users = [response valueForKey:@"users"];
+        NSString *previousCursor = [response valueForKey:@"previous_cursor_str"];
+        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+        
+        successBlock(users, previousCursor, nextCursor);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 #pragma mark Suggested Users
 
 // GET users/suggestions/:slug
@@ -3116,7 +3202,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSParameterAssert(listID);
     NSAssert((userID || screenName), @"missing userID or screenName");
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
     if(userID) md[@"user_id"] = userID;
@@ -3843,7 +3929,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSParameterAssert(tweetIDs);
     NSAssert(([tweetIDs isKindOfClass:[NSArray class]]), @"tweetIDs must be an array");
-
+    
     md[@"id"] = [tweetIDs componentsJoinedByString:@","];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"true" : @"false";
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";

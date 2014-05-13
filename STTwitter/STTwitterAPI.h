@@ -1117,6 +1117,54 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                           successBlock:(void(^)(NSDictionary *banner))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
+/*
+ POST   mutes/users/create
+ 
+ Mutes the user specified in the ID parameter for the authenticating user.
+ 
+ Returns the muted user in the requested format when successful. Returns a string describing the failure condition when unsuccessful.
+ 
+ Actions taken in this method are asynchronous and changes will be eventually consistent.
+ */
+- (void)postMutesUsersCreateForScreenName:(NSString *)screenName
+                                 orUserID:(NSString *)userID
+                             successBlock:(void(^)(NSDictionary *user))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ POST   mutes/users/destroy
+ 
+ Un-mutes the user specified in the ID parameter for the authenticating user.
+ 
+ Returns the unmuted user in the requested format when successful. Returns a string describing the failure condition when unsuccessful.
+ 
+ Actions taken in this method are asynchronous and changes will be eventually consistent.
+ */
+- (void)postMutesUsersDestroyForScreenName:(NSString *)screenName
+                                  orUserID:(NSString *)userID
+                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    mutes/users/ids
+ 
+ Returns an array of numeric user ids the authenticating user has muted.
+ */
+- (void)getMutesUsersIDsWithCursor:(NSString *)cursor
+                      successBlock:(void(^)(NSArray *userIDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                        errorBlock:(void(^)(NSError *error))errorBlock;
+
+/*
+ GET    mutes/users/list
+ 
+ Returns an array of user objects the authenticating user has muted.
+ */
+- (void)getMutesUsersListWithCursor:(NSString *)cursor
+                    includeEntities:(NSNumber *)includeEntities
+                         skipStatus:(NSNumber *)skipStatus
+                       successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
+
 #pragma mark Suggested Users
 
 /*
