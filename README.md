@@ -4,6 +4,8 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 
 **[2013-10-24]** STTwitter was presented at [SoftShake 2013](http://soft-shake.ch) ([slides](http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf)).
 
+**[2014-05-22]** STTwitter will be presented at [CocoaHeads Lausanne](https://www.facebook.com/events/732041160150290/).
+
 [![Build Status](https://travis-ci.org/nst/STTwitter.svg?branch=master)](https://travis-ci.org/nst/STTwitter)
 
 1. [Testimonials](#testimonials)
@@ -113,7 +115,7 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
                                                         consumerSecret:@""];
 
 [twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
-    
+
     [twitter getUserTimelineWithScreenName:@"barackobama"
                               successBlock:^(NSArray *statuses) {
         // ...
@@ -154,7 +156,7 @@ So there are five cases altogether, hence these five methods:
                                   consumerSecret:(NSString *)consumerSecret
                                       oauthToken:(NSString *)oauthToken
                                 oauthTokenSecret:(NSString *)oauthTokenSecret;
-               
+
 + (STTwitterAPI *)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
                                     consumerSecret:(NSString *)consumerSecret;
 ```
@@ -168,9 +170,9 @@ The most common use case of reverse authentication is letting users register/log
     iOS/OSX     Twitter     Server
     -------------->                 reverse auth.
     < - - - - - - -                 access tokens
-        
+
     ----------------------------->  access tokens
-        
+
                    <--------------  access Twitter on user's behalf
                     - - - - - - ->
 
@@ -182,27 +184,27 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
                                                        consumerSecret:@"CONSUMER_SECRET"];
 
 [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
-    
+
     STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
-    
+
     [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
-        
+
         [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
                                                             successBlock:^(NSString *oAuthToken,
                                                                            NSString *oAuthTokenSecret,
                                                                            NSString *userID,
                                                                            NSString *screenName) {
-                                                                
+
                                                                 // use the tokens...
-                                                                
+
                                                             } errorBlock:^(NSError *error) {
                                                                 // ...
                                                             }];
-        
+
     } errorBlock:^(NSError *error) {
         // ...
     }];
-    
+
 } errorBlock:^(NSError *error) {
     // ...
 }];
@@ -226,8 +228,8 @@ Once you got the OAuth tokens, you can get your timeline and post a new status.
 
 There is also a simple iOS demo project in `demo_ios`.
 
-<img border="1" src="Art/osx.png" width="840" alt="STTwitter Demo iOS"></img> 
-<img border="1" src="Art/ios.png" alt="STTwitter Demo iOS"></img> 
+<img border="1" src="Art/osx.png" width="840" alt="STTwitter Demo iOS"></img>
+<img border="1" src="Art/ios.png" alt="STTwitter Demo iOS"></img>
 <img border="1" src="Art/tweet.png" alt="sample tweet"></img>
 
 ### Integration Tips
@@ -310,7 +312,7 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
 
 `STTwitterAPI+MyApp.m`
 
-```Objective-C    
+```Objective-C
 #import "STTwitterAPI+MyApp.h"
 
 @implementation STTwitterAPI (MyApp)
@@ -328,7 +330,7 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
                    successBlock(status);
 
                } errorBlock:^(NSError *error) {
-        
+
                    errorBlock(error);
 
                }];
@@ -360,7 +362,7 @@ Twitter restricts the xAuth authentication process to xAuth-enabled consumer tok
 
 ##### Anything Else
 
-Please [fill an issue](https://github.com/nst/STTwitter/issues) on GitHub.
+Please [fill an issue](https://github.com/nst/STTwitter/issues) on GitHub or use the [STTwitter tag](http://stackoverflow.com/questions/tagged/sttwitter) on StackOverflow.
 
 ### Developers
 
@@ -371,18 +373,18 @@ The application only interacts with `STTwitterAPI`.
 You can create your own convenience methods with fewer parameters. You can also use this generic method directly:
 
 ```Objective-C
-        - (id)fetchResource:(NSString *)resource
-                 HTTPMethod:(NSString *)HTTPMethod
-              baseURLString:(NSString *)baseURLString
-                 parameters:(NSDictionary *)parameters
-        uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-      downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
-               successBlock:(void (^)(id request, NSDictionary *headers, id response))successBlock
-                 errorBlock:(void (^)(id request, NSDictionary *headers, NSError *error))errorBlock;
+  - (id)fetchResource:(NSString *)resource
+           HTTPMethod:(NSString *)HTTPMethod
+        baseURLString:(NSString *)baseURLString
+           parameters:(NSDictionary *)params
+  uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
+         successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+           errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 ```
 
 ##### Layer Model
-     
+
      +-----------------------------------------------------------------+
      |                         Your Application                        |
      +-------------------------------------------------+---------------+
@@ -399,9 +401,9 @@ You can create your own convenience methods with fewer parameters. You can also 
       |
       + Accounts.framework
       + Social.framework
-     
+
 ##### Summary
-     
+
      * STTwitterAPI
         - can be instantiated with the authentication mode you want
         - provides methods to interact with each Twitter API endpoint
@@ -412,11 +414,11 @@ You can create your own convenience methods with fewer parameters. You can also 
 
      * STTwitterOAuthProtocol
         - provides generic methods to POST and GET resources on Twitter's hosts
-     
+
      * STTwitterOS
         - uses Twitter accounts defined in OS X Preferences or iOS Settings
         - uses OS X / iOS frameworks to interact with Twitter API
-     
+
      * STTwitterOAuth
         - implements OAuth and xAuth authentication
 
