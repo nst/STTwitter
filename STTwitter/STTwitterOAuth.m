@@ -462,8 +462,6 @@ NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
         [urlString appendFormat:@"?%@", parameterString];
     }
     
-    //    __block NSString *requestID = [[NSUUID UUID] UUIDString];
-    
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                              stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
