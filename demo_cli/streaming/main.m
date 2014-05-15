@@ -63,7 +63,7 @@ int main(int argc, const char * argv[])
                                      }];
 
                 
-##if BOT_MODE
+#if BOT_MODE
             } errorBlock:^(NSError *error) {
                 NSLog(@"-- %@", [error localizedDescription]);
             }];
