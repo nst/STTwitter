@@ -36,22 +36,6 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../STTwitter/STTwitterOAuth.m"
-            timestampString = "417261505.970449"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
-            landmarkName = "-fetchResource:HTTPMethod:baseURLString:parameters:uploadProgressBlock:downloadProgressBlock:successBlock:errorBlock:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../STTwitter/STTwitterOAuth.m"
             timestampString = "417261518.07274"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -75,50 +59,6 @@
             endingLineNumber = "467"
             landmarkName = "-getResource:baseURLString:parameters:downloadProgressBlock:successBlock:errorBlock:"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[STTwitterOAuth getResource:baseURLString:parameters:downloadProgressBlock:successBlock:errorBlock:]"
-                  moduleName = "STTwitterDemoOSX"
-                  urlString = "file:///Users/nst/Projects/STTwitter/STTwitter/STTwitterOAuth.m"
-                  timestampString = "421673090.160996"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "467"
-                  endingLineNumber = "467"
-                  offsetFromSymbolStart = "653">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_copy_"
-                  moduleName = "STTwitterDemoOSX"
-                  urlString = "file:///Users/nst/Projects/STTwitter/STTwitter/STTwitterOAuth.m"
-                  timestampString = "421673090.161143"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "467"
-                  endingLineNumber = "467"
-                  offsetFromSymbolStart = "16">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__Block_byref_object_dispose_"
-                  moduleName = "STTwitterDemoOSX"
-                  urlString = "file:///Users/nst/Projects/STTwitter/STTwitter/STTwitterOAuth.m"
-                  timestampString = "421673090.16127"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "467"
-                  endingLineNumber = "467"
-                  offsetFromSymbolStart = "22">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

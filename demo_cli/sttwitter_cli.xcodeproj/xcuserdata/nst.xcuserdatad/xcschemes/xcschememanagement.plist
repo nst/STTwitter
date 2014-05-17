@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>accounts_creation.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
 		<key>conversation.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -48,6 +53,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>0315A055192783B3001C6C02</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0315A0DE1927FB56001C6C02</key>
 		<dict>
 			<key>primary</key>
 			<true/>
