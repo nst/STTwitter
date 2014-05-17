@@ -60,6 +60,18 @@ Vea Software has a great written + live-demo [tutorial](http://tutorials.veasoft
 
 ### Code Snippets
 
+Here are several ways to use STTwitter.
+
+You'll find complete, minimal, command-line projects in the `demo_cli` directory:
+
+- [streaming](https://github.com/nst/STTwitter/blob/master/demo_cli/streaming/main.m) use the streaming API to filter all tweets with some word
+- [streaming_with_bot](https://github.com/nst/STTwitter/blob/master/demo_cli/streaming_with_bot/main.m) same as above, but reply instantly from another account
+- [reverse_auth](https://github.com/nst/STTwitter/blob/master/demo_cli/reverse_auth/main.m) perform reverse authentication
+- [followers](https://github.com/nst/STTwitter/blob/master/demo_cli/followers/main.m) display your followers by following Twitter's API cursors, and waiting for a while before reaching rate limits
+- [favorites](https://github.com/nst/STTwitter/blob/master/demo_cli/favorites/main.m) display tweets favorited by people you follow, set a tweet's favorite status
+- [conversation](https://github.com/nst/STTwitter/blob/master/demo_cli/conversation/main.m) post several tweets in the same conversation
+- [t2rss](https://github.com/nst/STTwitter/blob/master/demo_cli/t2rss/main.m) convert your timeline into an RSS feed
+
 ##### Instantiate STTwitterAPI
 
 ```Objective-C
