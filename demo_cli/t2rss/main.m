@@ -9,6 +9,23 @@
 #import <Foundation/Foundation.h>
 #import "STTwitter.h"
 
+@interface NSDateFormatter (STTwitter_CLI)
++ (NSDateFormatter *)rfc822Formatter;
+@end
+
+@implementation NSDateFormatter (STTwitter_CLI)
++ (NSDateFormatter *)rfc822Formatter {
+    static NSDateFormatter *formatter = nil;
+    if (formatter == nil) {
+    	formatter = [[NSDateFormatter alloc] init];
+    	NSLocale *enUS = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+    	[formatter setLocale:enUS];
+    	[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z"];
+    }
+    return formatter;
+}
+@end
+
 int main(int argc, const char * argv[])
 {
     
@@ -25,37 +42,36 @@ int main(int argc, const char * argv[])
             [lines addObject:@""];
             [lines addObject:@"<channel>"];
             [lines addObject:@""];
-            [lines addObject:@"<title>My Title</title>"];
+            [lines addObject:[NSString stringWithFormat:@"<title>%@</title>", username]];
             [lines addObject:@"<link>http://localhost/</link>"];
             [lines addObject:@"<description>xxx</description>"];
             
-            [t getStatusesUserTimelineForUserID:nil
-                                     screenName:@"nst021"
+            [t getStatusesHomeTimelineWithCount:@"100"
                                         sinceID:nil
-                                          count:@"100"
                                           maxID:nil
                                        trimUser:nil
                                  excludeReplies:nil
                              contributorDetails:nil
-                                includeRetweets:nil
+                                includeEntities:nil
                                    successBlock:^(NSArray *statuses) {
-                                       NSLog(@"-- %@ statuses", @([statuses count]));
                                        
                                        for(NSDictionary *d in statuses) {
                                            
+                                           NSString *text = [d valueForKey:@"text"];
+                                           NSString *idStr = [d valueForKey:@"id_str"];
+                                           NSString *createdAtDateString = [d valueForKey:@"created_at"];
+                                           
                                            [lines addObject:@""];
                                            [lines addObject:@"   <item>"];
-                                           
-                                           
-                                           [lines addObject:[NSString stringWithFormat:@"       <author>%@</author>", [d valueForKeyPath:@"user.screen_name"]]];
-                                           
-                                           [lines addObject:@"       <guid></guid>"];
-                                           [lines addObject:@"       <title>XML Tutorial</title>"];
+                                           [lines addObject:[NSString stringWithFormat:@"       <guid>https://www.twitter.com/statuses/%@/</guid>", idStr]];
+                                           [lines addObject:[NSString stringWithFormat:@"       <title>%@</title>", text]];
                                            [lines addObject:@"       <link>http://www.w3schools.com/xml</link>"];
+                                           [lines addObject:[NSString stringWithFormat:@"       <description>%@</description>", text]];
                                            
-                                           [lines addObject:[NSString stringWithFormat:@"       <description>%@</description>", [d valueForKey:@"text"]]];
-                                           [lines addObject:[NSString stringWithFormat:@"       <pubDate>%@</pubDate>", [d valueForKey:@"created_at"]]];
+                                           NSDate *date = [[NSDateFormatter st_TwitterDateFormatter] dateFromString:createdAtDateString];
+                                           NSString *dateString = [[NSDateFormatter rfc822Formatter] stringFromDate:date];
                                            
+                                           [lines addObject:[NSString stringWithFormat:@"       <pubDate>%@</pubDate>", dateString]];
                                            [lines addObject:@"   </item>"];
                                        }
                                        
@@ -76,7 +92,6 @@ int main(int argc, const char * argv[])
                                        NSLog(@"-- RSS contents written in: %@", path);
                                        
                                        exit(0);
-                                       
                                    } errorBlock:^(NSError *error) {
                                        NSLog(@"-- %@", error);
                                    }];
@@ -85,10 +100,7 @@ int main(int argc, const char * argv[])
             NSLog(@"-- %@", error);
         }];
         
-        /**/
-        
         [[NSRunLoop currentRunLoop] run];
-        
     }
     
     return 0;
