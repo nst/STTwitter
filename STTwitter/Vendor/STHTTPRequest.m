@@ -47,7 +47,6 @@ static NSMutableArray *localCookiesStorage = nil;
 @property (nonatomic, retain) NSMutableData *responseData;
 @property (nonatomic, retain) NSString *responseStringEncodingName;
 @property (nonatomic, retain) NSDictionary *responseHeaders;
-@property (nonatomic) long long responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) NSError *error;
 @property (nonatomic, retain) NSMutableArray *filesToUpload; // STHTTPRequestFileUpload instances

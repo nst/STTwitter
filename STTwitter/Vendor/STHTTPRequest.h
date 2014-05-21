@@ -19,7 +19,7 @@ extern NSUInteger const kSTHTTPRequestDefaultTimeout;
 @class STHTTPRequest;
 
 typedef void (^uploadProgressBlock_t)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite);
-typedef void (^downloadProgressBlock_t)(NSData *data, NSInteger totalBytesReceived, long long totalBytesExpectedToReceive);
+typedef void (^downloadProgressBlock_t)(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive);
 typedef void (^completionBlock_t)(NSDictionary *headers, NSString *body);
 typedef void (^completionDataBlock_t)(NSDictionary *headers, NSData *body);
 typedef void (^errorBlock_t)(NSError *error);
@@ -53,6 +53,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic, retain) NSString *responseString;
 @property (nonatomic, retain, readonly) NSMutableData *responseData;
 @property (nonatomic, retain, readonly) NSError *error;
+@property (nonatomic) long long responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString;
