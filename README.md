@@ -4,7 +4,9 @@ _A comprehensive Objective-C library for Twitter REST API 1.1_
 
 **[2013-10-24]** STTwitter was presented at [SoftShake 2013](http://soft-shake.ch) ([slides](http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf)).
 
-**[2014-05-22]** STTwitter will be presented at [CocoaHeads Lausanne](https://www.facebook.com/events/732041160150290/).
+**[2014-05-22]** STTwitter was presented at [CocoaHeads Lausanne](https://www.facebook.com/events/732041160150290/) ([slides](http://seriot.ch/resources/abusing_twitter_api/sttwitter_cocoaheads.pdf))
+
+**[2014-05-22]** TODO: Implement [Multiple Media Extended Entities](https://dev.twitter.com/docs/api/multiple-media-extended-entities)
 
 [![Build Status](https://travis-ci.org/nst/STTwitter.svg?branch=master)](https://travis-ci.org/nst/STTwitter)
 
