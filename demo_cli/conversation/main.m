@@ -25,12 +25,12 @@ void postStatus(STTwitterAPI *twitter,
     [statusesAndMediaURLs removeObjectAtIndex:0];
     
     NSString *status = [d objectForKey:@"status"];
-    NSURL *mediaURL = [d objectForKey:@"mediaURL"];
-    NSData *mediaData = [NSData dataWithContentsOfURL:mediaURL];
+    NSString *filePath = [d objectForKey:@"filePath"];
+    NSData *mediaData = [NSData dataWithContentsOfFile:filePath];
     
     NSLog(@"--------------------");
     NSLog(@"-- text: %@", status);
-    NSLog(@"-- data: %@", [mediaURL lastPathComponent]);
+    NSLog(@"-- data: %@", [filePath lastPathComponent]);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"status"] = status;
@@ -73,10 +73,22 @@ int main(int argc, const char * argv[])
         
         [t verifyCredentialsWithSuccessBlock:^(NSString *username) {
             
-            NSURL *mediaURL = [NSURL fileURLWithPath:@"/System/Library/CoreServices/Screen Sharing.app/Contents/Resources/DarkerTexturedBackgroundColor.png"];
+            NSString *dirPath = @"/Users/nst/Desktop/sttwitter_cocoaheads/";
             
-            NSMutableArray *statusesAndMediaURLs = [ @[ @{@"status":@"asd", @"mediaURL":mediaURL},
-                                                        @{@"status":@"sdf", @"mediaURL":mediaURL} ] mutableCopy];
+            NSError *error = nil;
+            NSArray *filenames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dirPath error:&error];
+            if(filenames == nil) {
+                NSLog(@"-- error: %@", error);
+                exit(1);
+            }
+            
+            NSMutableArray *statusesAndMediaURLs = [NSMutableArray array];
+            
+            for (NSString *filename in filenames) {
+                if([filename hasPrefix:@"."]) continue;
+                NSString *filePath = [dirPath stringByAppendingPathComponent:filename];
+                [statusesAndMediaURLs addObject:@{@"status":filename, @"filePath":filePath}];
+            }
             
             postStatus(t, statusesAndMediaURLs, nil);
             
