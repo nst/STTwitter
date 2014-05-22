@@ -60,12 +60,14 @@ int main(int argc, const char * argv[])
                                            NSString *text = [d valueForKey:@"text"];
                                            NSString *idStr = [d valueForKey:@"id_str"];
                                            NSString *createdAtDateString = [d valueForKey:@"created_at"];
+                                           NSString *urlString = [NSString stringWithFormat:@"https://www.twitter.com/statuses/%@/", idStr];
                                            
                                            [lines addObject:@""];
                                            [lines addObject:@"   <item>"];
-                                           [lines addObject:[NSString stringWithFormat:@"       <guid>https://www.twitter.com/statuses/%@/</guid>", idStr]];
+                                           [lines addObject:[NSString stringWithFormat:@"       <author>@%@</author>", [d valueForKeyPath:@"user.screen_name"]]];
+                                           [lines addObject:[NSString stringWithFormat:@"       <guid>%@</guid>", urlString]];
                                            [lines addObject:[NSString stringWithFormat:@"       <title>%@</title>", text]];
-                                           [lines addObject:@"       <link>http://www.w3schools.com/xml</link>"];
+                                           [lines addObject:[NSString stringWithFormat:@"       <link>%@</link>", urlString]];
                                            [lines addObject:[NSString stringWithFormat:@"       <description>%@</description>", text]];
                                            
                                            NSDate *date = [[NSDateFormatter st_TwitterDateFormatter] dateFromString:createdAtDateString];
