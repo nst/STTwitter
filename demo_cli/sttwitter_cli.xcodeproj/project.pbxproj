@@ -9,10 +9,8 @@
 /* Begin PBXBuildFile section */
 		0315A057192783B3001C6C02 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C412FE1913BF7400370144 /* Foundation.framework */; };
 		0315A05A192783B3001C6C02 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315A059192783B3001C6C02 /* main.m */; };
-		0315A05E192783B3001C6C02 /* streaming_with_bot.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0315A05D192783B3001C6C02 /* streaming_with_bot.1 */; };
 		0315A0E01927FB56001C6C02 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C412FE1913BF7400370144 /* Foundation.framework */; };
 		0315A0E31927FB56001C6C02 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315A0E21927FB56001C6C02 /* main.m */; };
-		0315A0E71927FB56001C6C02 /* accounts_creation.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0315A0E61927FB56001C6C02 /* accounts_creation.1 */; };
 		0315A1091927FC79001C6C02 /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315A0ED1927FC79001C6C02 /* NSDateFormatter+STTwitter.m */; };
 		0315A10A1927FC79001C6C02 /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315A0ED1927FC79001C6C02 /* NSDateFormatter+STTwitter.m */; };
 		0315A10B1927FC79001C6C02 /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0315A0ED1927FC79001C6C02 /* NSDateFormatter+STTwitter.m */; };
@@ -137,20 +135,14 @@
 		036F1A71191B9DAD0006A013 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 036F19F2191B9CE00006A013 /* CoreFoundation.framework */; };
 		036F1A97191B9E810006A013 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C412FE1913BF7400370144 /* Foundation.framework */; };
 		036F1A9A191B9E810006A013 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 036F1A99191B9E810006A013 /* main.m */; };
-		036F1A9E191B9E810006A013 /* followers.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 036F1A9D191B9E810006A013 /* followers.1 */; };
 		03C4131A1913BFA100370144 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C413191913BFA100370144 /* main.m */; };
-		03C4131E1913BFA100370144 /* streaming.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03C4131D1913BFA100370144 /* streaming.1 */; };
 		03C413551913C0BD00370144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C412FE1913BF7400370144 /* Foundation.framework */; };
 		03C413581913C0BD00370144 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C413571913C0BD00370144 /* main.m */; };
-		03C4135C1913C0BD00370144 /* reverse_auth.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03C4135B1913C0BD00370144 /* reverse_auth.1 */; };
 		03C413731913C1C100370144 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C413721913C1C100370144 /* main.m */; };
-		03C413771913C1C100370144 /* favorites.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03C413761913C1C100370144 /* favorites.1 */; };
 		03C4145019150EA300370144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C412FE1913BF7400370144 /* Foundation.framework */; };
 		03C4145319150EA300370144 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C4145219150EA300370144 /* main.m */; };
-		03C4145719150EA300370144 /* conversation.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03C4145619150EA300370144 /* conversation.1 */; };
 		03E5FD3E1922636C007BE44D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C412FE1913BF7400370144 /* Foundation.framework */; };
 		03E5FD411922636C007BE44D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E5FD401922636C007BE44D /* main.m */; };
-		03E5FD451922636C007BE44D /* t2rss.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03E5FD441922636C007BE44D /* t2rss.1 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -160,7 +152,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				0315A05E192783B3001C6C02 /* streaming_with_bot.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -170,7 +161,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				0315A0E71927FB56001C6C02 /* accounts_creation.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -180,7 +170,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				036F1A9E191B9E810006A013 /* followers.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -190,7 +179,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				03C4131E1913BFA100370144 /* streaming.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -200,7 +188,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				03C4135C1913C0BD00370144 /* reverse_auth.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -210,7 +197,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				03C413771913C1C100370144 /* favorites.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -220,7 +206,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				03C4145719150EA300370144 /* conversation.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -230,7 +215,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				03E5FD451922636C007BE44D /* t2rss.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -239,12 +223,8 @@
 /* Begin PBXFileReference section */
 		0315A056192783B3001C6C02 /* streaming_with_bot */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = streaming_with_bot; sourceTree = BUILT_PRODUCTS_DIR; };
 		0315A059192783B3001C6C02 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0315A05C192783B3001C6C02 /* streaming_with_bot-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "streaming_with_bot-Prefix.pch"; sourceTree = "<group>"; };
-		0315A05D192783B3001C6C02 /* streaming_with_bot.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = streaming_with_bot.1; sourceTree = "<group>"; };
 		0315A0DF1927FB56001C6C02 /* accounts_creation */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = accounts_creation; sourceTree = BUILT_PRODUCTS_DIR; };
 		0315A0E21927FB56001C6C02 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0315A0E51927FB56001C6C02 /* accounts_creation-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "accounts_creation-Prefix.pch"; sourceTree = "<group>"; };
-		0315A0E61927FB56001C6C02 /* accounts_creation.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = accounts_creation.1; sourceTree = "<group>"; };
 		0315A0EC1927FC79001C6C02 /* NSDateFormatter+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+STTwitter.h"; sourceTree = "<group>"; };
 		0315A0ED1927FC79001C6C02 /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
 		0315A0EE1927FC79001C6C02 /* NSError+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+STTwitter.h"; sourceTree = "<group>"; };
@@ -276,32 +256,20 @@
 		036F19F2191B9CE00006A013 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		036F1A96191B9E810006A013 /* followers */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = followers; sourceTree = BUILT_PRODUCTS_DIR; };
 		036F1A99191B9E810006A013 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		036F1A9C191B9E810006A013 /* followers-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "followers-Prefix.pch"; sourceTree = "<group>"; };
-		036F1A9D191B9E810006A013 /* followers.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = followers.1; sourceTree = "<group>"; };
 		03C412FE1913BF7400370144 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03C4130C1913BF8100370144 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		03C4130D1913BF8100370144 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		03C4130E1913BF8100370144 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		03C413161913BFA100370144 /* streaming */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = streaming; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C413191913BFA100370144 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		03C4131C1913BFA100370144 /* streaming-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "streaming-Prefix.pch"; sourceTree = "<group>"; };
-		03C4131D1913BFA100370144 /* streaming.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = streaming.1; sourceTree = "<group>"; };
 		03C413541913C0BD00370144 /* reverse_auth */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = reverse_auth; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C413571913C0BD00370144 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		03C4135A1913C0BD00370144 /* reverse_auth-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reverse_auth-Prefix.pch"; sourceTree = "<group>"; };
-		03C4135B1913C0BD00370144 /* reverse_auth.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = reverse_auth.1; sourceTree = "<group>"; };
 		03C4136F1913C1C100370144 /* favorites */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = favorites; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C413721913C1C100370144 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		03C413751913C1C100370144 /* favorites-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "favorites-Prefix.pch"; sourceTree = "<group>"; };
-		03C413761913C1C100370144 /* favorites.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = favorites.1; sourceTree = "<group>"; };
 		03C4144F19150EA300370144 /* conversation */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = conversation; sourceTree = BUILT_PRODUCTS_DIR; };
 		03C4145219150EA300370144 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		03C4145519150EA300370144 /* conversation-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "conversation-Prefix.pch"; sourceTree = "<group>"; };
-		03C4145619150EA300370144 /* conversation.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = conversation.1; sourceTree = "<group>"; };
 		03E5FD3D1922636C007BE44D /* t2rss */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = t2rss; sourceTree = BUILT_PRODUCTS_DIR; };
 		03E5FD401922636C007BE44D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		03E5FD431922636C007BE44D /* t2rss-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "t2rss-Prefix.pch"; sourceTree = "<group>"; };
-		03E5FD441922636C007BE44D /* t2rss.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = t2rss.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -392,36 +360,16 @@
 			isa = PBXGroup;
 			children = (
 				0315A059192783B3001C6C02 /* main.m */,
-				0315A05D192783B3001C6C02 /* streaming_with_bot.1 */,
-				0315A05B192783B3001C6C02 /* Supporting Files */,
 			);
 			path = streaming_with_bot;
-			sourceTree = "<group>";
-		};
-		0315A05B192783B3001C6C02 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				0315A05C192783B3001C6C02 /* streaming_with_bot-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		0315A0E11927FB56001C6C02 /* accounts_creation */ = {
 			isa = PBXGroup;
 			children = (
 				0315A0E21927FB56001C6C02 /* main.m */,
-				0315A0E61927FB56001C6C02 /* accounts_creation.1 */,
-				0315A0E41927FB56001C6C02 /* Supporting Files */,
 			);
 			path = accounts_creation;
-			sourceTree = "<group>";
-		};
-		0315A0E41927FB56001C6C02 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				0315A0E51927FB56001C6C02 /* accounts_creation-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		0315A0EB1927FC79001C6C02 /* STTwitter */ = {
@@ -472,18 +420,8 @@
 			isa = PBXGroup;
 			children = (
 				036F1A99191B9E810006A013 /* main.m */,
-				036F1A9D191B9E810006A013 /* followers.1 */,
-				036F1A9B191B9E810006A013 /* Supporting Files */,
 			);
 			path = followers;
-			sourceTree = "<group>";
-		};
-		036F1A9B191B9E810006A013 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				036F1A9C191B9E810006A013 /* followers-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		03C412F21913BF7400370144 = {
@@ -534,90 +472,40 @@
 			isa = PBXGroup;
 			children = (
 				03C413191913BFA100370144 /* main.m */,
-				03C4131D1913BFA100370144 /* streaming.1 */,
-				03C4131B1913BFA100370144 /* Supporting Files */,
 			);
 			path = streaming;
-			sourceTree = "<group>";
-		};
-		03C4131B1913BFA100370144 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				03C4131C1913BFA100370144 /* streaming-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		03C413561913C0BD00370144 /* reverse_auth */ = {
 			isa = PBXGroup;
 			children = (
 				03C413571913C0BD00370144 /* main.m */,
-				03C4135B1913C0BD00370144 /* reverse_auth.1 */,
-				03C413591913C0BD00370144 /* Supporting Files */,
 			);
 			path = reverse_auth;
-			sourceTree = "<group>";
-		};
-		03C413591913C0BD00370144 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				03C4135A1913C0BD00370144 /* reverse_auth-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		03C413711913C1C100370144 /* favorites */ = {
 			isa = PBXGroup;
 			children = (
 				03C413721913C1C100370144 /* main.m */,
-				03C413761913C1C100370144 /* favorites.1 */,
-				03C413741913C1C100370144 /* Supporting Files */,
 			);
 			path = favorites;
-			sourceTree = "<group>";
-		};
-		03C413741913C1C100370144 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				03C413751913C1C100370144 /* favorites-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		03C4145119150EA300370144 /* conversation */ = {
 			isa = PBXGroup;
 			children = (
 				03C4145219150EA300370144 /* main.m */,
-				03C4145619150EA300370144 /* conversation.1 */,
-				03C4145419150EA300370144 /* Supporting Files */,
 			);
 			path = conversation;
-			sourceTree = "<group>";
-		};
-		03C4145419150EA300370144 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				03C4145519150EA300370144 /* conversation-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		03E5FD3F1922636C007BE44D /* t2rss */ = {
 			isa = PBXGroup;
 			children = (
 				03E5FD401922636C007BE44D /* main.m */,
-				03E5FD441922636C007BE44D /* t2rss.1 */,
-				03E5FD421922636C007BE44D /* Supporting Files */,
 			);
 			path = t2rss;
-			sourceTree = "<group>";
-		};
-		03E5FD421922636C007BE44D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				03E5FD431922636C007BE44D /* t2rss-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -968,7 +856,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "streaming_with_bot/streaming_with_bot-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -981,7 +868,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "streaming_with_bot/streaming_with_bot-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -990,7 +876,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "accounts_creation/accounts_creation-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1003,7 +888,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "accounts_creation/accounts_creation-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1012,7 +896,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "followers/followers-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1025,7 +908,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "followers/followers-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1104,7 +986,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "streaming/streaming-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1117,7 +998,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "streaming/streaming-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1126,7 +1006,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "reverse_auth/reverse_auth-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1139,7 +1018,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "reverse_auth/reverse_auth-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1148,7 +1026,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "favorites/favorites-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1161,7 +1038,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "favorites/favorites-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1170,7 +1046,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "conversation/conversation-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1183,7 +1058,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "conversation/conversation-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1192,7 +1066,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "t2rss/t2rss-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1205,7 +1078,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "t2rss/t2rss-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1229,6 +1101,7 @@
 				0315A0E91927FB56001C6C02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		036F1A9F191B9E810006A013 /* Build configuration list for PBXNativeTarget "followers" */ = {
 			isa = XCConfigurationList;

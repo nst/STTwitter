@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>55FBF9D0-924D-44DA-A872-1296200192D5</string>
+	<string>0A78447B-EB57-43DE-A201-E2080FDC00C7</string>
 	<key>IDESourceControlProjectName</key>
 	<string>sttwitter_cli</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>C46D47C2-4E85-450C-8CD0-68C8DA32B03D</key>
-		<string>https://github.com/nst/STTwitter.git</string>
+		<key>F1BCCD55-C772-475B-8C8E-4FC6AFD7DC1D</key>
+		<string>https://github.com/nst/STTwitter</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>demo_cli/sttwitter_cli.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>C46D47C2-4E85-450C-8CD0-68C8DA32B03D</key>
+		<key>F1BCCD55-C772-475B-8C8E-4FC6AFD7DC1D</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/nst/STTwitter.git</string>
+	<string>https://github.com/nst/STTwitter</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>C46D47C2-4E85-450C-8CD0-68C8DA32B03D</string>
+	<string>F1BCCD55-C772-475B-8C8E-4FC6AFD7DC1D</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>C46D47C2-4E85-450C-8CD0-68C8DA32B03D</string>
+			<string>F1BCCD55-C772-475B-8C8E-4FC6AFD7DC1D</string>
 			<key>IDESourceControlWCCName</key>
 			<string>STTwitter</string>
 		</dict>
