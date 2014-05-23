@@ -3946,6 +3946,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 #pragma mark Media
 
 - (void)postMediaUpload:(NSURL *)mediaURL
+    uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
            successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -3967,7 +3968,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     [self postResource:@"media/upload.json"
          baseURLString:kBaseURLStringUpload
             parameters:md
-   uploadProgressBlock:nil
+   uploadProgressBlock:uploadProgressBlock
  downloadProgressBlock:nil
           successBlock:^(NSDictionary *rateLimits, id response) {
               
