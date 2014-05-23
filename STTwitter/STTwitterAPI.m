@@ -862,7 +862,6 @@ downloadProgressBlock:nil
 
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)existingStatusID
-                mediaIDs:(NSArray *)mediaIDs
                 latitude:(NSString *)latitude
                longitude:(NSString *)longitude
                  placeID:(NSString *)placeID // wins over lat/lon
