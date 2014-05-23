@@ -1909,9 +1909,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  https://dev.twitter.com/docs/api/multiple-media-extended-entities
  */
 
-- (void)postMediaUploadAtPath:(NSString *)path
-                 successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postMediaUpload:(NSURL *)mediaURL
+           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark -
 #pragma mark UNDOCUMENTED APIs

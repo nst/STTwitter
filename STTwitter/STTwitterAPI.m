@@ -3945,17 +3945,24 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 #pragma mark Media
 
-- (void)postMediaUploadAtPath:(NSString *)path
-                 successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock {
-
+- (void)postMediaUpload:(NSURL *)mediaURL
+           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+             errorBlock:(void(^)(NSError *error))errorBlock {
+    
     // https://dev.twitter.com/docs/api/multiple-media-extended-entities
     
+    NSData *data = [NSData dataWithContentsOfURL:mediaURL];
+    
+    if(data == nil) {
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPIMediaDataIsEmpty userInfo:@{NSLocalizedDescriptionKey : @"data is nil"}];
+        errorBlock(error);
+        return;
+    }
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    NSData *data = [NSData dataWithContentsOfFile:path];
     md[@"media"] = data;
     md[kSTPOSTDataKey] = @"media";
-    md[kSTPOSTMediaFileNameKey] = [path lastPathComponent];
+    md[kSTPOSTMediaFileNameKey] = [mediaURL isFileURL] ? [[mediaURL path] lastPathComponent] : @"media.jpg";
     
     [self postResource:@"media/upload.json"
          baseURLString:kBaseURLStringUpload
