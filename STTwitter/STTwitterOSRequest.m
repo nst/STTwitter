@@ -68,7 +68,7 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     NSData *mediaData = [_params valueForKey:postDataKey];
     
     NSMutableDictionary *paramsWithoutMedia = [_params mutableCopy];
-    [paramsWithoutMedia removeObjectForKey:postDataKey];
+    if(postDataKey) [paramsWithoutMedia removeObjectForKey:postDataKey];
     [paramsWithoutMedia removeObjectForKey:@"kSTPOSTDataKey"];
     [paramsWithoutMedia removeObjectForKey:@"kSTPOSTMediaFileNameKey"];
     
