@@ -348,6 +348,20 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock;
 
+// starting May 28th, 2014
+// https://dev.twitter.com/notifications/multiple-media-entities-in-tweets
+// https://dev.twitter.com/docs/api/multiple-media-extended-entities
+- (void)postStatusUpdate:(NSString *)status
+       inReplyToStatusID:(NSString *)existingStatusID
+                mediaIDs:(NSArray *)mediaIDs
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
+                 placeID:(NSString *)placeID
+      displayCoordinates:(NSNumber *)displayCoordinates
+                trimUser:(NSNumber *)trimUser
+            successBlock:(void(^)(NSDictionary *status))successBlock
+              errorBlock:(void(^)(NSError *error))errorBlock;
+
 /*
  POST	statuses/retweet/:id
  

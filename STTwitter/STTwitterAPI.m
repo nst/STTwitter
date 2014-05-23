@@ -818,6 +818,7 @@ downloadProgressBlock:nil
 
 - (void)postStatusUpdate:(NSString *)status
        inReplyToStatusID:(NSString *)existingStatusID
+                mediaIDs:(NSArray *)mediaIDs
                 latitude:(NSString *)latitude
                longitude:(NSString *)longitude
                  placeID:(NSString *)placeID // wins over lat/lon
@@ -826,13 +827,18 @@ downloadProgressBlock:nil
             successBlock:(void(^)(NSDictionary *status))successBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
     
-    if(status == nil) {
+    if([mediaIDs count] == 0 && status == nil) {
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPICannotPostEmptyStatus userInfo:@{NSLocalizedDescriptionKey : @"cannot post empty status"}];
         errorBlock(error);
         return;
     }
     
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"status"];
+    
+    if([mediaIDs count] > 0) {
+        NSString *mediaIDsString = [mediaIDs componentsJoinedByString:@","];
+        md[@"media_ids"] = mediaIDsString;
+    }
     
     if(existingStatusID) {
         md[@"in_reply_to_status_id"] = existingStatusID;
@@ -852,6 +858,29 @@ downloadProgressBlock:nil
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
+}
+
+- (void)postStatusUpdate:(NSString *)status
+       inReplyToStatusID:(NSString *)existingStatusID
+                mediaIDs:(NSArray *)mediaIDs
+                latitude:(NSString *)latitude
+               longitude:(NSString *)longitude
+                 placeID:(NSString *)placeID // wins over lat/lon
+      displayCoordinates:(NSNumber *)displayCoordinates
+                trimUser:(NSNumber *)trimUser
+            successBlock:(void(^)(NSDictionary *status))successBlock
+              errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postStatusUpdate:status
+         inReplyToStatusID:existingStatusID
+                  mediaIDs:nil
+                  latitude:latitude
+                 longitude:longitude
+                   placeID:placeID
+        displayCoordinates:displayCoordinates
+                  trimUser:trimUser
+              successBlock:successBlock
+                errorBlock:errorBlock];
 }
 
 - (void)postStatusUpdate:(NSString *)status
