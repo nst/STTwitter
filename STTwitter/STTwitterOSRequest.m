@@ -63,10 +63,14 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
 
 - (NSURLConnection *)startRequest {
     
-    NSData *mediaData = [_params valueForKey:@"media[]"];
+    NSString *postDataKey = [_params valueForKey:@"kSTPOSTDataKey"];
+    NSString *postDataFilename = [_params valueForKey:@"kSTPOSTMediaFileNameKey"];
+    NSData *mediaData = [_params valueForKey:postDataKey];
     
     NSMutableDictionary *paramsWithoutMedia = [_params mutableCopy];
-    [paramsWithoutMedia removeObjectForKey:@"media[]"];
+    [paramsWithoutMedia removeObjectForKey:postDataKey];
+    [paramsWithoutMedia removeObjectForKey:@"kSTPOSTDataKey"];
+    [paramsWithoutMedia removeObjectForKey:@"kSTPOSTMediaFileNameKey"];
     
     NSString *urlString = [_baseURLString stringByAppendingString:_resource];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -89,7 +93,8 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     [request setAccount:_account];
     
     if(mediaData) {
-        [request addMultipartData:mediaData withName:@"media[]" type:@"application/octet-stream" filename:@"media.jpg"];
+        NSString *filename = postDataFilename ? postDataFilename : @"media.jpg";
+        [request addMultipartData:mediaData withName:postDataKey type:@"application/octet-stream" filename:filename];
     }
     
     // we use NSURLConnection because SLRequest doesn't play well with the streaming API
