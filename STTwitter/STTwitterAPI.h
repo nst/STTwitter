@@ -1901,6 +1901,18 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 					 successBlock:(void(^)(NSArray *tweets))successBlock
 					   errorBlock:(void(^)(NSError *error))errorBlock;
 
+#pragma mark Media
+
+/*
+ POST media/upload.json
+ 
+ https://dev.twitter.com/docs/api/multiple-media-extended-entities
+ */
+
+- (void)postMediaUploadAtPath:(NSString *)path
+                 successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock;
+
 #pragma mark -
 #pragma mark UNDOCUMENTED APIs
 

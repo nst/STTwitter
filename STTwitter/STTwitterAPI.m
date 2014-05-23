@@ -15,6 +15,7 @@
 #import "STHTTPRequest.h"
 
 NSString *kBaseURLStringAPI = @"https://api.twitter.com/1.1";
+NSString *kBaseURLStringUpload = @"https://upload.twitter.com/1.1";
 NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1";
 NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1";
 NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1";
@@ -3940,6 +3941,36 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];
+}
+
+#pragma mark Media
+
+- (void)postMediaUploadAtPath:(NSString *)path
+                 successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                   errorBlock:(void(^)(NSError *error))errorBlock {
+
+    // https://dev.twitter.com/docs/api/multiple-media-extended-entities
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    md[@"media"] = data;
+    md[kSTPOSTDataKey] = @"media";
+    md[kSTPOSTMediaFileNameKey] = [path lastPathComponent];
+    
+    [self postResource:@"media/upload.json"
+         baseURLString:kBaseURLStringUpload
+            parameters:md
+   uploadProgressBlock:nil
+ downloadProgressBlock:nil
+          successBlock:^(NSDictionary *rateLimits, id response) {
+              
+              NSDictionary *imageDictionary = [response valueForKey:@"image"];
+              NSString *mediaID = [response valueForKey:@"media_id_string"];
+              NSString *size = [response valueForKey:@"size"];
+              
+              successBlock(imageDictionary, mediaID, size);
+          }
+            errorBlock:errorBlock];
 }
 
 #pragma mark -
