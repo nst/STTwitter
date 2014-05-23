@@ -397,19 +397,19 @@ downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
 
 ##### Layer Model
 
-     +-----------------------------------------------------------------+
-     |                         Your Application                        |
-     +-------------------------------------------------+---------------+
-     |                  STTwitterAPI                   | STTwitterHTML |
-     +-------------------------------------------------+               |
-     + - - - - - - - - - - - - - - - - - - - - - - - - +               |
-     |              STTwitterOAuthProtocol             |               |
-     + - - - - - - - - - - - - - - - - - - - - - - - - +               |
-     +-------------+----------------+------------------+               |
-     | STTwitterOS | STTwitterOAuth | STTwitterAppOnly |               |
-     |             +----------------+------------------+---------------+
-     |             |                   STHTTPRequest                   |
-     +-------------+---------------------------------------------------+
+     +------------------------------------------------------------------------+
+     |                         Your Application                               |
+     +--------------------------------------------------------+---------------+
+     |                  STTwitterAPI                          | STTwitterHTML |
+     +--------------------------------------------------------+               |
+     + - - - - - - - - - - - - - - - - - - - - - - - - - - - -+               |
+     |              STTwitterOAuthProtocol                    |               |
+     + - - - - - - - - - - - - - - - - - - - - - - - - - - - -+               |
+     +--------------------+----------------+------------------+               |
+     |    STTwitterOS     | STTwitterOAuth | STTwitterAppOnly |               |
+     +--------------------+----------------+------------------+---------------+
+     | STTwitterOSRequest |                   STHTTPRequest                   |
+     +--------------------+---------------------------------------------------+
       |
       + Accounts.framework
       + Social.framework
@@ -431,6 +431,9 @@ downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
         - uses Twitter accounts defined in OS X Preferences or iOS Settings
         - uses OS X / iOS frameworks to interact with Twitter API
 
+     * STTwitterOSRequest
+        - black-based wrapper around SLRequest's underlying NSURLRequest
+        
      * STTwitterOAuth
         - implements OAuth and xAuth authentication
 
