@@ -40,9 +40,9 @@ Drag and drop STTwitter directory into your project.
 Link your project with the following frameworks:
 
 - Accounts.framework
-- Twitter.framework
+- Social.framework
+- Twitter.framework (iOS only)
 - Security.framework (OS X only)
-- Social.framework (iOS only, weak)
 
 If you want to use CocoaPods, add the following two lines to your Podfile:
 
