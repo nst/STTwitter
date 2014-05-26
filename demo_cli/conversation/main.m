@@ -36,7 +36,7 @@ void postStatus(STTwitterAPI *twitter,
     md[@"status"] = status;
     if(previousStatusID) md[@"in_reply_to_status_id"] = previousStatusID;
     md[@"media[]"] = mediaData;
-    md[@"kSTPOSTDataKey"] = @"media[]";
+    md[kSTPOSTDataKey] = @"media[]";
     
     [twitter postResource:@"statuses/update_with_media.json"
             baseURLString:kBaseURLStringAPI

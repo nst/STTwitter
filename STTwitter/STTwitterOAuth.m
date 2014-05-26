@@ -19,9 +19,6 @@
 #   define STLog(...)
 #endif
 
-NSString * const kSTPOSTDataKey = @"kSTPOSTDataKey";
-NSString * const kSTPOSTMediaFileNameKey = @"kSTPOSTMediaFileNameKey";
-
 @interface NSData (Base64)
 - (NSString *)base64Encoding; // private API
 @end

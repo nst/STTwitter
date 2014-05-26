@@ -63,14 +63,14 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
 
 - (NSURLConnection *)startRequest {
     
-    NSString *postDataKey = [_params valueForKey:@"kSTPOSTDataKey"];
-    NSString *postDataFilename = [_params valueForKey:@"kSTPOSTMediaFileNameKey"];
+    NSString *postDataKey = [_params valueForKey:kSTPOSTDataKey];
+    NSString *postDataFilename = [_params valueForKey:kSTPOSTMediaFileNameKey];
     NSData *mediaData = [_params valueForKey:postDataKey];
     
     NSMutableDictionary *paramsWithoutMedia = [_params mutableCopy];
     if(postDataKey) [paramsWithoutMedia removeObjectForKey:postDataKey];
-    [paramsWithoutMedia removeObjectForKey:@"kSTPOSTDataKey"];
-    [paramsWithoutMedia removeObjectForKey:@"kSTPOSTMediaFileNameKey"];
+    [paramsWithoutMedia removeObjectForKey:kSTPOSTDataKey];
+    [paramsWithoutMedia removeObjectForKey:kSTPOSTMediaFileNameKey];
     
     NSString *urlString = [_baseURLString stringByAppendingString:_resource];
     NSURL *url = [NSURL URLWithString:urlString];

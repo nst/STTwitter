@@ -11,6 +11,9 @@
 NSUInteger kSTTwitterDefaultShortURLLength = 22;
 NSUInteger kSTTwitterDefaultShortURLLengthHTTPS = 23;
 
+NSString *kSTPOSTDataKey = @"kSTPOSTDataKey";
+NSString *kSTPOSTMediaFileNameKey = @"kSTPOSTMediaFileNameKey";
+
 @implementation NSString (STTwitter)
 
 - (NSString *)st_firstMatchWithRegex:(NSString *)regex error:(NSError **)e {
