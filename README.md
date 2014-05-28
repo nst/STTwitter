@@ -300,6 +300,12 @@ You may want to use Twitter's own Objective-C library for text processing: [http
 + (TwitterTextEntity*)repliedScreenNameInText:(NSString*)text;
 ```
 
+##### Logout
+
+The correct approach to logout a user is setint the `STTwitterAPI` instance to nil.
+
+You'll create a new one at the next login.
+
 ##### Boolean Parameters
 
 There are a lot of optional parameters in Twitter API. In STTwitter, you can ignore such parameters by passing `nil`. Regarding boolean parameters, STTwitter can't just use Objective-C `YES` and `NO` because `NO` has the same value as `nil` (zero). So boolean parameters are wrapped into `NSNumber` objects, which are pretty easy to use with boolean values thanks to Objective-C literals. So, with STTwitter, you will assign an optional parameter of Twitter API either as `@(YES)`, `@(NO)` or `nil`.
