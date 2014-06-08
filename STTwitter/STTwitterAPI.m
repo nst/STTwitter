@@ -1885,7 +1885,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                      orScreenName:screenName
                            cursor:nil
                             count:nil
-                       skipStatus:NO
+                       skipStatus:@(NO)
               includeUserEntities:@(YES)
                      successBlock:^(NSArray *users, NSString *previousCursor, NSString *nextCursor) {
                          successBlock(users);
