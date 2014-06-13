@@ -4016,9 +4016,24 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
              errorBlock:(void(^)(NSError *error))errorBlock {
     
-    // https://dev.twitter.com/docs/api/multiple-media-extended-entities
-    
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
+    
+    NSString *fileName = [mediaURL isFileURL] ? [[mediaURL path] lastPathComponent] : @"media.jpg";
+    
+    [self postMediaUploadData:data
+                     fileName:fileName
+          uploadProgressBlock:uploadProgressBlock
+                 successBlock:successBlock
+                   errorBlock:errorBlock];
+}
+
+- (void)postMediaUploadData:(NSData *)data
+                   fileName:(NSString *)fileName
+        uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    // https://dev.twitter.com/docs/api/multiple-media-extended-entities
     
     if(data == nil) {
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPIMediaDataIsEmpty userInfo:@{NSLocalizedDescriptionKey : @"data is nil"}];
@@ -4029,7 +4044,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"media"] = data;
     md[kSTPOSTDataKey] = @"media";
-    md[kSTPOSTMediaFileNameKey] = [mediaURL isFileURL] ? [[mediaURL path] lastPathComponent] : @"media.jpg";
+    md[kSTPOSTMediaFileNameKey] = fileName;
     
     [self postResource:@"media/upload.json"
          baseURLString:kBaseURLStringUpload

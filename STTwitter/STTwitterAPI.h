@@ -1929,6 +1929,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
              errorBlock:(void(^)(NSError *error))errorBlock;
 
+- (void)postMediaUploadData:(NSData *)data
+                   fileName:(NSString *)fileName
+        uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock;
+
 #pragma mark -
 #pragma mark UNDOCUMENTED APIs
 
