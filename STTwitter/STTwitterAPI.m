@@ -1513,17 +1513,55 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 }
 
 - (void)postDirectMessage:(NSString *)status
-					   to:(NSString *)screenName
+            forScreenName:(NSString *)screenName
+                 orUserID:(NSString *)userID
              successBlock:(void(^)(NSDictionary *message))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock {
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"text"];
-    [md setObject:screenName forKey:@"screen_name"];
     
-    [self postAPIResource:@"direct_messages/new.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+    NSAssert(screenName != nil || userID != nil, @"screenName OR userID is required");
+    
+    if(screenName) {
+        md[@"screen_name"] = screenName;
+    } else {
+        md[@"user_id"] = userID;
+    }
+    
+    [self postAPIResource:@"direct_messages/new.json"
+               parameters:md
+             successBlock:^(NSDictionary *rateLimits, id response) {
+                 successBlock(response);
+             } errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
+}
+
+- (void)_postDirectMessage:(NSString *)status
+             forScreenName:(NSString *)screenName
+                  orUserID:(NSString *)userID
+                   mediaID:(NSString *)mediaID
+              successBlock:(void(^)(NSDictionary *message))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"text"];
+    
+    NSAssert(screenName != nil || userID != nil, @"screenName OR userID is required");
+    
+    if(screenName) {
+        md[@"screen_name"] = screenName;
+    } else {
+        md[@"user_id"] = userID;
+    }
+    
+    if(mediaID) md[@"media_id"] = mediaID;
+    
+    [self postAPIResource:@"direct_messages/new.json"
+               parameters:md
+             successBlock:^(NSDictionary *rateLimits, id response) {
+                 successBlock(response);
+             } errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
 }
 
 #pragma mark Friends & Followers

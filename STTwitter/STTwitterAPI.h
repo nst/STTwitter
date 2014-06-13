@@ -621,7 +621,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 
 - (void)postDirectMessage:(NSString *)status
-					   to:(NSString *)screenName
+            forScreenName:(NSString *)screenName
+                 orUserID:(NSString *)userID
              successBlock:(void(^)(NSDictionary *message))successBlock
                errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -2025,5 +2026,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                   sendErrorCodes:(NSNumber *)sendErrorCodes
                     successBlock:(void(^)(id results))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
+
+// POST direct_messages/new.json
+// only the media_id is part of the private API
+- (void)_postDirectMessage:(NSString *)status
+             forScreenName:(NSString *)screenName
+                  orUserID:(NSString *)userID
+                   mediaID:(NSString *)mediaID // returned by POST media/upload.json
+              successBlock:(void(^)(NSDictionary *message))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock;
+
 
 @end
