@@ -26,7 +26,7 @@ void getFollowers(STTwitterAPI *twitter,
     md[@"include_user_entities"] = @"0";
     
     [twitter getResource:@"followers/list.json"
-           baseURLString:kBaseURLStringAPI
+           baseURLString:kBaseURLStringAPI_1_1
               parameters:md
    downloadProgressBlock:^(id json) {
        //

@@ -251,7 +251,7 @@
     return @"1.0";
 }
 
-- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock forceLogin:(NSNumber *)forceLogin screenName:(NSString *)screenName oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize forceLogin:(NSNumber *)forceLogin screenName:(NSString *)screenName oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *theOAuthCallback = [oauthCallback length] ? oauthCallback : @"oob"; // out of band, ie PIN instead of redirect
     
@@ -279,7 +279,9 @@
               
               NSString *parameterString = [parameters componentsJoinedByString:@"&"];
 
-              NSString *urlString = [NSString stringWithFormat:@"https://api.twitter.com/oauth/authorize?%@", parameterString];
+              NSString *authenticateOrAuthorizeString = authenticateInsteadOfAuthorize ? @"authenticate" : @"authorize";
+              
+              NSString *urlString = [NSString stringWithFormat:@"https://api.twitter.com/oauth/%@?%@", authenticateOrAuthorizeString, parameterString];
               
               //
               
@@ -296,7 +298,7 @@
 }
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
-    [self postTokenRequest:successBlock forceLogin:nil screenName:nil oauthCallback:oauthCallback errorBlock:errorBlock];
+    [self postTokenRequest:successBlock authenticateInsteadOfAuthorize:NO forceLogin:nil screenName:nil oauthCallback:oauthCallback errorBlock:errorBlock];
 }
 
 - (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock errorBlock:(void(^)(NSError *error))errorBlock {

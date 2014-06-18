@@ -63,7 +63,8 @@
         NSLog(@"-- oauthToken: %@", oauthToken);
         
         [[UIApplication sharedApplication] openURL:url];
-    } forceLogin:@(YES)
+    } authenticateInsteadOfAuthorize:NO
+                    forceLogin:@(YES)
                     screenName:nil
                  oauthCallback:@"myapp://twitter_access_tokens/"
                     errorBlock:^(NSError *error) {

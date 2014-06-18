@@ -31,6 +31,7 @@ downloadProgressBlock:(void(^)(id request, id response))progressBlock
 @optional
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize
               forceLogin:(NSNumber *)forceLogin
               screenName:(NSString *)screenName
            oauthCallback:(NSString *)oauthCallback

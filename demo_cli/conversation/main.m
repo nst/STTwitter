@@ -39,7 +39,7 @@ void postStatus(STTwitterAPI *twitter,
     md[kSTPOSTDataKey] = @"media[]";
     
     [twitter postResource:@"statuses/update_with_media.json"
-            baseURLString:kBaseURLStringAPI
+            baseURLString:kBaseURLStringAPI_1_1
                parameters:md
       uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
           NSLog(@"-- %.02f%%", 100.0 * totalBytesWritten / totalBytesExpectedToWrite);

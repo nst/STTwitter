@@ -41,7 +41,7 @@ int main(int argc, const char * argv[])
                                          printf("-- user: @%s\n", [[response valueForKeyPath:@"user.screen_name"] cStringUsingEncoding:NSUTF8StringEncoding]);
                                          printf("-- text: %s\n", [[response objectForKey:@"text"] cStringUsingEncoding:NSUTF8StringEncoding]);
                                          
-                                         //                                         NSString *idStr = [response objectForKey:@"id_str"];
+                                         NSString *idStr = [response objectForKey:@"id_str"];
                                          
                                          NSString *responseText = [NSString stringWithFormat:@"Cocoaheads Yeah! %@", [NSDate date]];
                                          

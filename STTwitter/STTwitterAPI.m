@@ -14,11 +14,11 @@
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
 
-NSString *kBaseURLStringAPI = @"https://api.twitter.com/1.1";
-NSString *kBaseURLStringUpload = @"https://upload.twitter.com/1.1";
-NSString *kBaseURLStringStream = @"https://stream.twitter.com/1.1";
-NSString *kBaseURLStringUserStream = @"https://userstream.twitter.com/1.1";
-NSString *kBaseURLStringSiteStream = @"https://sitestream.twitter.com/1.1";
+NSString *kBaseURLStringAPI_1_1 = @"https://api.twitter.com/1.1";
+NSString *kBaseURLStringUpload_1_1 = @"https://upload.twitter.com/1.1";
+NSString *kBaseURLStringStream_1_1 = @"https://stream.twitter.com/1.1";
+NSString *kBaseURLStringUserStream_1_1 = @"https://userstream.twitter.com/1.1";
+NSString *kBaseURLStringSiteStream_1_1 = @"https://sitestream.twitter.com/1.1";
 
 static NSDateFormatter *dateFormatter = nil;
 
@@ -175,12 +175,24 @@ static NSDateFormatter *dateFormatter = nil;
     return dateFormatter;
 }
 
-- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock forceLogin:(NSNumber *)forceLogin screenName:(NSString *)screenName oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
-    [_oauth postTokenRequest:successBlock forceLogin:forceLogin screenName:screenName oauthCallback:oauthCallback errorBlock:errorBlock];
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize
+              forceLogin:(NSNumber *)forceLogin screenName:(NSString *)screenName
+           oauthCallback:(NSString *)oauthCallback
+              errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [_oauth postTokenRequest:successBlock
+authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
+                  forceLogin:forceLogin
+                  screenName:screenName
+               oauthCallback:oauthCallback
+                  errorBlock:errorBlock];
 }
 
-- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
-    [_oauth postTokenRequest:successBlock forceLogin:nil screenName:nil oauthCallback:oauthCallback errorBlock:errorBlock];
+- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+           oauthCallback:(NSString *)oauthCallback
+              errorBlock:(void(^)(NSError *error))errorBlock {
+    [_oauth postTokenRequest:successBlock authenticateInsteadOfAuthorize:NO forceLogin:nil screenName:nil oauthCallback:oauthCallback errorBlock:errorBlock];
 }
 
 - (void)postAccessTokenRequestWithPIN:(NSString *)pin
@@ -365,7 +377,7 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
             errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getResource:resource
-        baseURLString:kBaseURLStringAPI
+        baseURLString:kBaseURLStringAPI_1_1
            parameters:parameters
 downloadProgressBlock:progressBlock
          successBlock:successBlock
@@ -379,7 +391,7 @@ downloadProgressBlock:progressBlock
             errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getResource:resource
-        baseURLString:kBaseURLStringAPI
+        baseURLString:kBaseURLStringAPI_1_1
            parameters:parameters
 downloadProgressBlock:nil
          successBlock:successBlock
@@ -394,7 +406,7 @@ downloadProgressBlock:nil
              errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:resource
-         baseURLString:kBaseURLStringAPI
+         baseURLString:kBaseURLStringAPI_1_1
             parameters:parameters
    uploadProgressBlock:uploadProgressBlock
  downloadProgressBlock:progressBlock
@@ -409,7 +421,7 @@ downloadProgressBlock:nil
              errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self postResource:resource
-         baseURLString:kBaseURLStringAPI
+         baseURLString:kBaseURLStringAPI_1_1
             parameters:parameters
    uploadProgressBlock:nil
  downloadProgressBlock:nil
@@ -909,7 +921,7 @@ downloadProgressBlock:nil
     md[kSTPOSTDataKey] = @"media[]";
     
     [self postResource:@"statuses/update_with_media.json"
-         baseURLString:kBaseURLStringAPI
+         baseURLString:kBaseURLStringAPI_1_1
             parameters:md
    uploadProgressBlock:uploadProgressBlock
  downloadProgressBlock:nil
@@ -1225,7 +1237,7 @@ downloadProgressBlock:nil
     if([locations length]) md[@"locations"] = locations;
     
     return [self postResource:@"statuses/filter.json"
-                baseURLString:kBaseURLStringStream
+                baseURLString:kBaseURLStringStream_1_1
                    parameters:md
           uploadProgressBlock:nil
         downloadProgressBlock:^(id json) {
@@ -1275,7 +1287,7 @@ downloadProgressBlock:nil
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
     return [self getResource:@"statuses/sample.json"
-               baseURLString:kBaseURLStringStream
+               baseURLString:kBaseURLStringStream_1_1
                   parameters:md
        downloadProgressBlock:^(id json) {
            
@@ -1310,7 +1322,7 @@ downloadProgressBlock:nil
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
     return [self getResource:@"statuses/firehose.json"
-               baseURLString:kBaseURLStringStream
+               baseURLString:kBaseURLStringStream_1_1
                   parameters:md
        downloadProgressBlock:^(id json) {
            
@@ -1355,7 +1367,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if([locations length]) md[@"locations"] = locations;
     
     return [self getResource:@"user.json"
-               baseURLString:kBaseURLStringUserStream
+               baseURLString:kBaseURLStringUserStream_1_1
                   parameters:md
        downloadProgressBlock:^(id json) {
            
@@ -1396,7 +1408,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if([follow length]) md[@"follow"] = follow;
     
     return [self getResource:@"site.json"
-               baseURLString:kBaseURLStringSiteStream
+               baseURLString:kBaseURLStringSiteStream_1_1
                   parameters:md
        downloadProgressBlock:^(id json) {
            
@@ -2092,8 +2104,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 }
 
 - (void)postUpdateProfile:(NSDictionary *)profileData
-			 successBlock:(void(^)(NSDictionary *myInfo))successBlock
-			   errorBlock:(void(^)(NSError *error))errorBlock {
+             successBlock:(void(^)(NSDictionary *myInfo))successBlock
+               errorBlock:(void(^)(NSError *error))errorBlock {
     [self postAPIResource:@"account/update_profile.json" parameters:profileData successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -3989,8 +4001,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                   includeEntities:(NSNumber *)includeEntities
                          trimUser:(NSNumber *)trimUser
                               map:(NSNumber *)map
-					 successBlock:(void(^)(NSArray *tweets))successBlock
-					   errorBlock:(void(^)(NSError *error))errorBlock {
+                     successBlock:(void(^)(NSArray *tweets))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
@@ -4047,7 +4059,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     md[kSTPOSTMediaFileNameKey] = fileName;
     
     [self postResource:@"media/upload.json"
-         baseURLString:kBaseURLStringUpload
+         baseURLString:kBaseURLStringUpload_1_1
             parameters:md
    uploadProgressBlock:uploadProgressBlock
  downloadProgressBlock:nil
