@@ -42,6 +42,7 @@ static NSMutableArray *localCookiesStorage = nil;
 /**/
 
 @interface STHTTPRequest ()
+
 @property (nonatomic) NSInteger responseStatus;
 @property (nonatomic, retain) NSURLConnection *connection;
 @property (nonatomic, retain) NSMutableData *responseData;
@@ -354,7 +355,7 @@ static NSMutableArray *localCookiesStorage = nil;
     }
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:theURL];
-    [request setHTTPMethod:_HTTPMethod];
+    if(_HTTPMethod) [request setHTTPMethod:_HTTPMethod];
     
     request.timeoutInterval = self.timeoutSeconds;
     
@@ -431,13 +432,13 @@ static NSMutableArray *localCookiesStorage = nil;
         
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
-        if([request HTTPMethod] == nil) [request setHTTPMethod:@"POST"];
+        if(_HTTPMethod == nil) [request setHTTPMethod:@"POST"];
         [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[body length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:body];
         
     } else if (_rawPOSTData) {
         
-        if([request HTTPMethod] == nil) [request setHTTPMethod:@"POST"];
+        if(_HTTPMethod == nil) [request setHTTPMethod:@"POST"];
         
         [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[_rawPOSTData length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:_rawPOSTData];
@@ -470,12 +471,12 @@ static NSMutableArray *localCookiesStorage = nil;
         
         NSData *data = [s dataUsingEncoding:_POSTDataEncoding allowLossyConversion:YES];
         
-        if([request HTTPMethod] == nil) [request setHTTPMethod:@"POST"];
+        if(_HTTPMethod == nil) [request setHTTPMethod:@"POST"];
         
         [request setValue:[NSString stringWithFormat:@"%u", (unsigned int)[data length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:data];
     } else {
-        if([request HTTPMethod] == nil) [request setHTTPMethod:@"GET"];
+        if(_HTTPMethod == nil) [request setHTTPMethod:@"GET"];
     }
     
     [_requestHeaders enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -839,7 +840,9 @@ static NSMutableArray *localCookiesStorage = nil;
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
     
-    if(_preventRedirections && redirectResponse) return nil;
+    if(_preventRedirections && redirectResponse) {
+        return nil;
+    }
     
     return request;
 }
