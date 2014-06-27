@@ -144,11 +144,14 @@
                        s = [error localizedDescription];
                    }
                    
-                   NSString *requestHeadersDescription = requestHeaders ? [requestHeaders description] : @"";
+                   NSString *curlDescription = [self curlDescriptionWithMethod:_genericHTTPMethod endpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
+
+                   //NSString *requestHeadersDescription = requestHeaders ? [requestHeaders description] : @"";
                    NSString *responseHeadersDescription = responseHeaders ? [responseHeaders description] : @"";
-                   self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:requestHeadersDescription attributes:attributes];
+                   self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:curlDescription attributes:attributes];
                    self.responseHeadersTextViewAttributedString = [[NSAttributedString alloc] initWithString:responseHeadersDescription attributes:attributes];
                    
+                   // TODO: display actualy body here
                    self.bodyTextViewAttributedString = [[NSAttributedString alloc] initWithString:s attributes:attributes];
                    
                    self.rootNode = nil;
