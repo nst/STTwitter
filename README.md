@@ -1,6 +1,6 @@
 ## STTwitter
 
-_A comprehensive Objective-C library for Twitter REST API 1.1_
+_A stable, mature and comprehensive Objective-C library for Twitter REST API 1.1_
 
 **[2014-06-18]** [Swifter](https://github.com/mattdonnelly/Swifter), A Twitter framework for iOS & OS X written in Swift, by [@MatthewDonnelly](htps://www.twitter.com/MatthewDonnelly/)  
 **[2014-05-31]** Follow STTwitter on Twitter: [@STTLibrary](https://www.twitter.com/STTLibrary/)  
