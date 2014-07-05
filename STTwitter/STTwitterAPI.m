@@ -4349,6 +4349,22 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+// GET conversation/show/:id.json
+- (void)_getConversationShowWithTweetID:(NSString *)tweetID
+                           successBlock:(void(^)(id results))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(tweetID);
+    
+    NSString *ressource = [NSString stringWithFormat:@"conversation/show/%@.json", tweetID];
+    
+    [self getAPIResource:ressource parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)
