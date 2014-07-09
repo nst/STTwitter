@@ -486,6 +486,8 @@ downloadProgressBlock:nil
                        r.errorBlock = ^(NSError *error) {
                            errorBlock(error);
                        };
+
+                       [r startAsynchronous];
                    } errorBlock:^(NSError *error) {
                        errorBlock(error);
                    }];
