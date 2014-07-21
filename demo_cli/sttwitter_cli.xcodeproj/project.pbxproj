@@ -256,6 +256,7 @@
 		036F19F2191B9CE00006A013 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		036F1A96191B9E810006A013 /* followers */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = followers; sourceTree = BUILT_PRODUCTS_DIR; };
 		036F1A99191B9E810006A013 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0384903819770B0C00EF3800 /* TODO.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		03C412FE1913BF7400370144 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		03C4130C1913BF8100370144 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		03C4130D1913BF8100370144 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -427,6 +428,7 @@
 		03C412F21913BF7400370144 = {
 			isa = PBXGroup;
 			children = (
+				0384903819770B0C00EF3800 /* TODO.txt */,
 				0315A0EB1927FC79001C6C02 /* STTwitter */,
 				03C413181913BFA100370144 /* streaming */,
 				0315A058192783B3001C6C02 /* streaming_with_bot */,
