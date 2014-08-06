@@ -253,7 +253,7 @@ STTwitter is supposed to be used from the main thread. The HTTP requests are per
 
 ##### Credentials verification
 
-There's no neet to verifying the credentials before each request.
+There's no need to verify the credentials before each request.
 
 Doing so when the application starts and when the application enters foreground sounds reasonable, though.
 
