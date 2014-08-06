@@ -1254,6 +1254,12 @@ downloadProgressBlock:nil
             }
             
         } successBlock:^(NSDictionary *rateLimits, id response) {
+            if([response isKindOfClass:[NSString class]] && [response length] == 0) {
+                NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPIEmptyStream userInfo:@{NSLocalizedDescriptionKey : @"stream is empty"}];
+                errorBlock(error);
+                return;
+            };
+            
             progressBlock(response);
         } errorBlock:^(NSError *error) {
             errorBlock(error);

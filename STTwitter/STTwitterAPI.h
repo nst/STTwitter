@@ -23,7 +23,8 @@
 
 NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
     STTwitterAPICannotPostEmptyStatus,
-    STTwitterAPIMediaDataIsEmpty
+    STTwitterAPIMediaDataIsEmpty,
+    STTwitterAPIEmptyStream
 };
 
 extern NSString *kBaseURLStringAPI_1_1;
