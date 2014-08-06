@@ -251,6 +251,12 @@ There is also a simple iOS demo project in `demo_ios`.
 
 STTwitter is supposed to be used from the main thread. The HTTP requests are performed anychronously and the callbacks are guaranteed to be called on main thread.
 
+##### Credentials verification
+
+There's no neet to verifying the credentials before each request.
+
+Doing so when the application starts and when the application enters foreground sounds reasonable, though.
+
 ##### Remove Asserts in Release Mode
 
 There are several asserts in the code. They are very useful in debug mode but you should not include them in release.
