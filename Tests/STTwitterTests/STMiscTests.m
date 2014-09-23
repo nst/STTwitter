@@ -48,6 +48,17 @@
     XCTAssertEqual(c, 1, @"c: %d", (int)c);
 }
 
+- (void)testCharactersCountWithDash {
+    
+    NSString *s = @"asd http://www.apple.com/#asd dfg";
+    
+    int c = (int)[s st_numberOfCharactersInATweet];
+    
+    int expected = 4 + (int)kSTTwitterDefaultShortURLLength + 4;
+    
+    XCTAssertEqual(c, expected, @"c: %d, expected %d", c, expected);
+}
+
 - (void)testCharactersCountAccentedCharacter {
     
     NSString *s = @"caf\x65\xCC\x81";
