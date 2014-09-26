@@ -35,6 +35,12 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)cancel:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:^{
+        //
+    }];
+}
+
 /*
 #pragma mark - Navigation
 

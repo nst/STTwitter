@@ -29,6 +29,7 @@
 		03426AF518B947FB00CA9ABF /* STTwitterOSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03426AF418B947FB00CA9ABF /* STTwitterOSRequest.m */; };
 		0344DB1518D9CB0E004AC0BB /* NSError+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0344DB1418D9CB0E004AC0BB /* NSError+STTwitter.m */; };
 		03ACFD3C18390F7B005CEE2A /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */; };
+		03D5C41419D5737400BE9642 /* WebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D5C41319D5737400BE9642 /* WebViewVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,8 @@
 		0344DB1418D9CB0E004AC0BB /* NSError+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+STTwitter.m"; sourceTree = "<group>"; };
 		03ACFD3A18390F7B005CEE2A /* NSDateFormatter+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+STTwitter.h"; sourceTree = "<group>"; };
 		03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
+		03D5C41219D5737400BE9642 /* WebViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewVC.h; sourceTree = "<group>"; };
+		03D5C41319D5737400BE9642 /* WebViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,8 @@
 				03144B5417FB608C007812DC /* Main.storyboard */,
 				03144B5717FB608C007812DC /* ViewController.h */,
 				03144B5817FB608C007812DC /* ViewController.m */,
+				03D5C41219D5737400BE9642 /* WebViewVC.h */,
+				03D5C41319D5737400BE9642 /* WebViewVC.m */,
 				03144B5A17FB608C007812DC /* Images.xcassets */,
 				03144B4917FB608C007812DC /* Supporting Files */,
 			);
@@ -261,6 +266,7 @@
 				03144B9417FB6109007812DC /* JSONSyntaxHighlight.m in Sources */,
 				03144B9217FB6109007812DC /* STTwitterOAuth.m in Sources */,
 				03426AF518B947FB00CA9ABF /* STTwitterOSRequest.m in Sources */,
+				03D5C41419D5737400BE9642 /* WebViewVC.m in Sources */,
 				03144B5917FB608C007812DC /* ViewController.m in Sources */,
 				03144B9517FB6109007812DC /* STHTTPRequest.m in Sources */,
 				03144B5317FB608C007812DC /* AppDelegate.m in Sources */,

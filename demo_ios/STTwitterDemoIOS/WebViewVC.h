@@ -10,4 +10,8 @@
 
 @interface WebViewVC : UIViewController
 
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
+
+- (IBAction)cancel:(id)sender;
+
 @end

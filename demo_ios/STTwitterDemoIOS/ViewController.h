@@ -17,6 +17,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *loginStatusLabel;
 @property (nonatomic, weak) IBOutlet UILabel *getTimelineStatusLabel;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UISwitch *openSafariSwitch;
 
 - (IBAction)loginWithiOSAction:(id)sender;
 - (IBAction)loginInSafariAction:(id)sender;

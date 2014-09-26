@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "STTwitter.h"
+#import "WebViewVC.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) STTwitterAPI *twitter;
@@ -62,7 +63,17 @@
         NSLog(@"-- url: %@", url);
         NSLog(@"-- oauthToken: %@", oauthToken);
         
-        [[UIApplication sharedApplication] openURL:url];
+        if([self.openSafariSwitch isOn]) {
+            [[UIApplication sharedApplication] openURL:url];
+        } else {
+            WebViewVC *webViewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"WebViewVC"];
+            
+            [self presentViewController:webViewVC animated:YES completion:^{
+                NSURLRequest *request = [NSURLRequest requestWithURL:url];
+                [webViewVC.webView loadRequest:request];
+            }];
+        }
+        
     } authenticateInsteadOfAuthorize:NO
                     forceLogin:@(YES)
                     screenName:nil
@@ -74,6 +85,11 @@
 }
 
 - (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verifier {
+    
+    // in case the user has just authenticated through WebViewVC
+    [self dismissViewControllerAnimated:YES completion:^{
+        //
+    }];
     
     [_twitter postAccessTokenRequestWithPIN:verifier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
         NSLog(@"-- screenName: %@", screenName);
