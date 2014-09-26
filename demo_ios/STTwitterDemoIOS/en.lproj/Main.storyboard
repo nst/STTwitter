@@ -28,7 +28,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="loginInSafariAction:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="lmT-Jm-igr"/>
+                                    <action selector="loginOnTheWebAction:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="hab-qq-KPK"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LOGIN STATUS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oBq-2r-B0t">

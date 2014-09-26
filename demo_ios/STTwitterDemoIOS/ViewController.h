@@ -20,7 +20,7 @@
 @property (nonatomic, weak) IBOutlet UISwitch *openSafariSwitch;
 
 - (IBAction)loginWithiOSAction:(id)sender;
-- (IBAction)loginInSafariAction:(id)sender;
+- (IBAction)loginOnTheWebAction:(id)sender;
 - (IBAction)getTimelineAction:(id)sender;
 
 - (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verfier;

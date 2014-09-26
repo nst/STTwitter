@@ -51,7 +51,7 @@
     
 }
 
-- (IBAction)loginInSafariAction:(id)sender {
+- (IBAction)loginOnTheWebAction:(id)sender {
     
     self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:_consumerKeyTextField.text
                                                  consumerSecret:_consumerSecretTextField.text];
