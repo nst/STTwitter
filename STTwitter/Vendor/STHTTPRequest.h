@@ -33,26 +33,26 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (copy) completionDataBlock_t completionDataBlock;
 
 // request
-@property (nonatomic, retain) NSString *HTTPMethod; // default: GET, or POST if POSTDictionary or files to upload
-@property (nonatomic, retain) NSMutableDictionary *requestHeaders;
-@property (nonatomic, retain) NSDictionary *POSTDictionary; // keys and values are NSString instances
-@property (nonatomic, retain) NSData *rawPOSTData; // eg. to post JSON contents
+@property (nonatomic, strong) NSString *HTTPMethod; // default: GET, or POST if POSTDictionary or files to upload
+@property (nonatomic, strong) NSMutableDictionary *requestHeaders;
+@property (nonatomic, strong) NSDictionary *POSTDictionary; // keys and values are NSString instances
+@property (nonatomic, strong) NSData *rawPOSTData; // eg. to post JSON contents
 @property (nonatomic) NSStringEncoding POSTDataEncoding;
 @property (nonatomic, assign) NSUInteger timeoutSeconds;
 @property (nonatomic) BOOL addCredentialsToURL; // default NO
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
-@property (nonatomic, retain, readonly) NSURL *url;
+@property (nonatomic, strong, readonly) NSURL *url;
 @property (nonatomic) BOOL ignoreSharedCookiesStorage;
 @property (nonatomic) BOOL preventRedirections;
 
 // response
 @property (nonatomic) NSStringEncoding forcedResponseEncoding;
 @property (nonatomic, readonly) NSInteger responseStatus;
-@property (nonatomic, retain, readonly) NSString *responseStringEncodingName;
-@property (nonatomic, retain, readonly) NSDictionary *responseHeaders;
-@property (nonatomic, retain) NSString *responseString;
-@property (nonatomic, retain, readonly) NSMutableData *responseData;
-@property (nonatomic, retain, readonly) NSError *error;
+@property (nonatomic, strong, readonly) NSString *responseStringEncodingName;
+@property (nonatomic, strong, readonly) NSDictionary *responseHeaders;
+@property (nonatomic, strong) NSString *responseString;
+@property (nonatomic, strong, readonly) NSMutableData *responseData;
+@property (nonatomic, strong, readonly) NSError *error;
 @property (nonatomic) long long responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
 
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
