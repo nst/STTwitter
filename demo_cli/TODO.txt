@@ -6,3 +6,12 @@
 4. Unfollow people who haven't tweeted in the longest time
 5. Who Follow you today
 6. Who Unfollowed you today
+
+# requests from 'Sultan'
+
+7. Top Tweet that got highest Retweet number
+8. Top Retweeters who retweet for me the most
+9. Top Tweet that got highest Favorite number
+10. Top People who favorite my tweets
+11. Top tweets that got highest Reply number
+12. Top People who reply to me the most
