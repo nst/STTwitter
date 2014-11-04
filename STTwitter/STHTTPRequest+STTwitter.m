@@ -92,7 +92,7 @@
             return;
         }
         
-        e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
+        //        e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
         
         if (wr.responseString) STLog(@"-- body: %@", wr.responseString);
         
