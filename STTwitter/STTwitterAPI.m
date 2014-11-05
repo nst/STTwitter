@@ -486,7 +486,7 @@ downloadProgressBlock:nil
                        r.errorBlock = ^(NSError *error) {
                            errorBlock(error);
                        };
-
+                       
                        [r startAsynchronous];
                    } errorBlock:^(NSError *error) {
                        errorBlock(error);
@@ -1954,6 +1954,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 - (void)getFollowersListForUserID:(NSString *)userID
                      orScreenName:(NSString *)screenName
+                            count:(NSString *)count
                            cursor:(NSString *)cursor
                        skipStatus:(NSNumber *)skipStatus
               includeUserEntities:(NSNumber *)includeUserEntities
@@ -1965,6 +1966,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(userID) md[@"user_id"] = userID;
     if(screenName) md[@"screen_name"] = screenName;
+    if(count) md[@"count"] = count;
     if(cursor) md[@"cursor"] = cursor;
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
@@ -1993,6 +1995,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     [self getFollowersListForUserID:nil
                        orScreenName:screenName
+                              count:nil
                              cursor:nil
                          skipStatus:nil
                 includeUserEntities:nil
@@ -4360,7 +4363,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // GET conversation/show/:id.json
 - (void)_getConversationShowWithTweetID:(NSString *)tweetID
                            successBlock:(void(^)(id results))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock {
+                             errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(tweetID);
     

@@ -834,6 +834,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 - (void)getFollowersListForUserID:(NSString *)userID
                      orScreenName:(NSString *)screenName
+                            count:(NSString *)count
                            cursor:(NSString *)cursor
                        skipStatus:(NSNumber *)skipStatus
               includeUserEntities:(NSNumber *)includeUserEntities
