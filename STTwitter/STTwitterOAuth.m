@@ -419,6 +419,11 @@
     NSMutableArray *oauthAndPOSTandGETParameters = [[r.url st_rawGetParametersDictionaries] mutableCopy];
     [oauthAndPOSTandGETParameters addObjectsFromArray:oauthAndPOSTParameters];
     
+    [r.GETDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSDictionary *d = @{key:obj};
+        [oauthAndPOSTandGETParameters addObject:d];
+    }];
+    
     NSString *signature = [[self class] oauthSignatureWithHTTPMethod:httpMethod
                                                                  url:r.url
                                                           parameters:isMediaUpload ? oauthParameters : oauthAndPOSTandGETParameters
@@ -449,19 +454,6 @@
     
     NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, resource];
     
-    NSMutableArray *parameters = [NSMutableArray array];
-    
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
-        [parameters addObject:s];
-    }];
-    
-    if([parameters count]) {
-        NSString *parameterString = [parameters componentsJoinedByString:@"&"];
-        
-        [urlString appendFormat:@"?%@", parameterString];
-    }
-    
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                              stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
@@ -471,6 +463,8 @@
                                            } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                                                errorBlock(r, requestHeaders, responseHeaders, error);
                                            }];
+    
+    r.GETDictionary = params;
     
     [self signRequest:r];
     

@@ -341,7 +341,32 @@ static NSMutableArray *localCookiesStorage = nil;
     return data;
 }
 
++ (NSURL *)appendURL:(NSURL *)url withGETParameters:(NSDictionary *)parameters {
+    NSMutableString *urlString = [[NSMutableString alloc] initWithString:[url absoluteString]];
+    
+    __block BOOL questionMarkFound = NO;
+    
+    [parameters enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
+        
+        if(questionMarkFound == NO) {
+            questionMarkFound = [urlString rangeOfString:@"?"].location != NSNotFound;
+        }
+        
+        [urlString appendString: (questionMarkFound ? @"&" : @"?") ];
+        
+        [urlString appendFormat:@"%@=%@",
+         [key st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding],
+         [value st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        
+    }];
+    
+    return [NSURL URLWithString:urlString];
+}
+
 - (NSMutableURLRequest *)requestByAddingCredentialsToURL:(BOOL)useCredentialsInURL {
+    
+    NSAssert((self.completionBlock || self.completionDataBlock), @"a completion block is mandatory");
+    NSAssert(self.errorBlock, @"the error block is mandatory");
     
     NSURL *theURL = nil;
     
@@ -353,6 +378,12 @@ static NSMutableArray *localCookiesStorage = nil;
     } else {
         theURL = _url;
     }
+    
+    /**/
+    
+    theURL = [[self class] appendURL:theURL withGETParameters:_GETDictionary];
+    
+    /**/
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:theURL];
     if(_HTTPMethod) [request setHTTPMethod:_HTTPMethod];
