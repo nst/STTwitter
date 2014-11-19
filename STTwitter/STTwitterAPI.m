@@ -1371,7 +1371,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSString *keywords = [keywordsToTrack componentsJoinedByString:@","];
     NSString *locations = [locationBoundingBoxes componentsJoinedByString:@","];
     
-    if([keywords length]) md[@"keywords"] = keywords;
+    if([keywords length]) md[@"track"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
     return [self getResource:@"user.json"
