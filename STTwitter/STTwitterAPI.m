@@ -3228,6 +3228,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 - (void)getListsMembersForListID:(NSString *)listID
                           cursor:(NSString *)cursor
+                           count:(NSString *)count
                  includeEntities:(NSNumber *)includeEntities
                       skipStatus:(NSNumber *)skipStatus
                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
@@ -3238,6 +3239,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
     if(cursor) md[@"cursor"] = cursor;
+    if(count) md[@"count"] = count;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
@@ -3255,6 +3257,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                ownerScreenName:(NSString *)ownerScreenName
                      orOwnerID:(NSString *)ownerID
                         cursor:(NSString *)cursor
+                         count:(NSString *)count
                includeEntities:(NSNumber *)includeEntities
                     skipStatus:(NSNumber *)skipStatus
                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
@@ -3269,6 +3272,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     if(cursor) md[@"cursor"] = cursor;
+    if(count) md[@"count"] = count;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
