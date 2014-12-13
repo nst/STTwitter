@@ -454,16 +454,17 @@
     
     NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, resource];
     
-    __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+    __block __weak STHTTPRequest *wr = nil;
+    STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                              stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
-                                               if(downloadProgressBlock) downloadProgressBlock(r, json);
+                                               if(downloadProgressBlock) downloadProgressBlock(wr, json);
                                            } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
-                                               successBlock(r, requestHeaders, responseHeaders, json);
+                                               successBlock(wr, requestHeaders, responseHeaders, json);
                                            } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                                               errorBlock(r, requestHeaders, responseHeaders, error);
+                                               errorBlock(wr, requestHeaders, responseHeaders, error);
                                            }];
-    
+    wr = r;
     r.GETDictionary = params;
     
     [self signRequest:r];
@@ -523,16 +524,17 @@ downloadProgressBlock:(void(^)(id r, id json))downloadProgressBlock
     
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
-    __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+    __block __weak STHTTPRequest *wr = nil;
+    STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
                                              stTwitterUploadProgressBlock:uploadProgressBlock
                                            stTwitterDownloadProgressBlock:^(id json) {
-                                               if(downloadProgressBlock) downloadProgressBlock(r, json);
+                                               if(downloadProgressBlock) downloadProgressBlock(wr, json);
                                            } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
-                                               successBlock(r, requestHeaders, responseHeaders, json);
+                                               successBlock(wr, requestHeaders, responseHeaders, json);
                                            } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                                               errorBlock(r, requestHeaders, responseHeaders, error);
+                                               errorBlock(wr, requestHeaders, responseHeaders, error);
                                            }];
-    
+    wr = r;
     r.POSTDictionary = params;
     
 	NSString *postKey = [params valueForKey:kSTPOSTDataKey];
