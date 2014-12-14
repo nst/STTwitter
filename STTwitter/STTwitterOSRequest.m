@@ -234,7 +234,6 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     } else {
         self.errorBlock(request, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], jsonError);
     }
-    
 }
 
 - (void)connection:(NSURLConnection *)connection
@@ -242,7 +241,12 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
  totalBytesWritten:(NSInteger)totalBytesWritten
 totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     if(self.uploadProgressBlock == nil) return;
-    self.uploadProgressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    
+    // avoid overcommit while posting big images, like 5+ MB
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        self.uploadProgressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    });
 }
 
 @end
