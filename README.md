@@ -146,10 +146,11 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
 You can instantiate `STTwitterAPI` in three ways:
 
 - use the Twitter account set in OS X Preferences or iOS Settings
-- use a custom `consumer key` and `consumer secret` (three flavors)
+- use a custom `consumer key` and `consumer secret` (four flavors)
   - get an URL, fetch a PIN, enter it in your app, get oauth access tokens  
   - set `username` and `password`, get oauth access tokens with XAuth, if the app is entitled to
   - set `oauth token` and `oauth token secret` directly
+  - open Safari (or a `UIWebView` instance if you prefer), authenticate on Twitter and receive access tokens in your app through a custom URL scheme
 - use the [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication and get / use a "bearer token"
 
 So there are five cases altogether, hence these five methods:
