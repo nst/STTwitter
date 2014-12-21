@@ -120,14 +120,26 @@
             if(self.account == nil) {
                 NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
                 
-                if([accounts count] == 0) {
+                // ignore accounts that have no indentifier
+                // possible workaround for accounts with no password stored
+                // see https://twittercommunity.com/t/ios-6-twitter-accounts-with-no-password-stored/6183
+                NSMutableArray *accountsWithIdentifiers = [NSMutableArray array];
+                [accounts enumerateObjectsUsingBlock:^(ACAccount *account, NSUInteger idx, BOOL *stop) {
+                    if([[account identifier] length] > 0) {
+                        [accountsWithIdentifiers addObject:account];
+                    } else {
+                        NSLog(@"-- ignore account %@ because identifier is empty", account);
+                    }
+                }];
+
+                if([accountsWithIdentifiers count] == 0) {
                     NSString *message = @"No Twitter account available.";
                     NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
                     errorBlock(error);
                     return;
                 }
                 
-                self.account = [accounts objectAtIndex:0];
+                self.account = [accountsWithIdentifiers firstObject];
             }
             
             successBlock(self.account.username);
