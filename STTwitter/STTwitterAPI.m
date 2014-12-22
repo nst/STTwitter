@@ -526,7 +526,7 @@ downloadProgressBlock:nil
                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getStatusesMentionTimelineWithCount:[@(count) description]
-                                      sinceID:nil
+                                      sinceID:sinceID
                                         maxID:nil
                                      trimUser:nil
                            contributorDetails:nil
