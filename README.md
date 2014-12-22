@@ -446,7 +446,7 @@ downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
         - uses OS X / iOS frameworks to interact with Twitter API
 
      * STTwitterOSRequest
-        - black-based wrapper around SLRequest's underlying NSURLRequest
+        - block-based wrapper around SLRequest's underlying NSURLRequest
         
      * STTwitterOAuth
         - implements OAuth and xAuth authentication
