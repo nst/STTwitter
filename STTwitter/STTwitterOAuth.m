@@ -10,6 +10,7 @@
 #import "STHTTPRequest.h"
 #import "NSString+STTwitter.h"
 #import "STHTTPRequest+STTwitter.h"
+#import "STTwitterClock.h"
 
 #include <CommonCrypto/CommonHMAC.h>
 
@@ -242,7 +243,13 @@
     
     if(_testOauthTimestamp) return _testOauthTimestamp;
     
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval timeInterval = 0;
+    
+    if ([STTwitterClock sharedInstance].isAvailable) {
+        timeInterval = [STTwitterClock sharedInstance].timestamp;
+    } else {
+        timeInterval = [[NSDate date] timeIntervalSince1970];
+    }
     
     return [NSString stringWithFormat:@"%d", (int)timeInterval];
 }

@@ -43,6 +43,8 @@
 		03E5FDFA19236FB9007BE44D /* STTwitterOSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E5FDDE19236FB9007BE44D /* STTwitterOSRequest.m */; };
 		03E5FDFF19236FB9007BE44D /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E5FDE619236FB9007BE44D /* STHTTPRequest.m */; };
 		03E5FE0019236FB9007BE44D /* STHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E5FDE619236FB9007BE44D /* STHTTPRequest.m */; };
+		AEAD49C31A4C34A900AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49C21A4C34A900AA8EC5 /* STTwitterClock.m */; };
+		AEAD49C41A4C34A900AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49C21A4C34A900AA8EC5 /* STTwitterClock.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +119,8 @@
 		03E5FDDF19236FB9007BE44D /* STTwitterProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterProtocol.h; sourceTree = "<group>"; };
 		03E5FDE519236FB9007BE44D /* STHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STHTTPRequest.h; sourceTree = "<group>"; };
 		03E5FDE619236FB9007BE44D /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
+		AEAD49C11A4C34A900AA8EC5 /* STTwitterClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterClock.h; sourceTree = "<group>"; };
+		AEAD49C21A4C34A900AA8EC5 /* STTwitterClock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterClock.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +250,8 @@
 				03E5FDD419236FB9007BE44D /* STTwitterAPI.m */,
 				03E5FDD519236FB9007BE44D /* STTwitterAppOnly.h */,
 				03E5FDD619236FB9007BE44D /* STTwitterAppOnly.m */,
+				AEAD49C11A4C34A900AA8EC5 /* STTwitterClock.h */,
+				AEAD49C21A4C34A900AA8EC5 /* STTwitterClock.m */,
 				03E5FDD719236FB9007BE44D /* STTwitterHTML.h */,
 				03E5FDD819236FB9007BE44D /* STTwitterHTML.m */,
 				03E5FDD919236FB9007BE44D /* STTwitterOAuth.h */,
@@ -365,6 +371,7 @@
 				03E5FDF819236FB9007BE44D /* STTwitterOS.m in Sources */,
 				03E5FDFA19236FB9007BE44D /* STTwitterOSRequest.m in Sources */,
 				03E5FDEC19236FB9007BE44D /* NSString+STTwitter.m in Sources */,
+				AEAD49C41A4C34A900AA8EC5 /* STTwitterClock.m in Sources */,
 				03E5FDEE19236FB9007BE44D /* STHTTPRequest+STTwitter.m in Sources */,
 				0315BC9117E0944900F226E6 /* STHTTPRequestTestResponse.m in Sources */,
 				03E5FE0019236FB9007BE44D /* STHTTPRequest.m in Sources */,
@@ -381,6 +388,7 @@
 			files = (
 				03E5FDEB19236FB9007BE44D /* NSString+STTwitter.m in Sources */,
 				03E5FDFF19236FB9007BE44D /* STHTTPRequest.m in Sources */,
+				AEAD49C31A4C34A900AA8EC5 /* STTwitterClock.m in Sources */,
 				03E5FDF319236FB9007BE44D /* STTwitterHTML.m in Sources */,
 				03E5FDEF19236FB9007BE44D /* STTwitterAPI.m in Sources */,
 				03E5FDF519236FB9007BE44D /* STTwitterOAuth.m in Sources */,
@@ -573,6 +581,7 @@
 				03E5FDC719236F92007BE44D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

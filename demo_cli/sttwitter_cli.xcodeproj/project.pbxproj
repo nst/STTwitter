@@ -143,6 +143,14 @@
 		03C4145319150EA300370144 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03C4145219150EA300370144 /* main.m */; };
 		03E5FD3E1922636C007BE44D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03C412FE1913BF7400370144 /* Foundation.framework */; };
 		03E5FD411922636C007BE44D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E5FD401922636C007BE44D /* main.m */; };
+		AEAD49B61A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
+		AEAD49B71A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
+		AEAD49B81A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
+		AEAD49B91A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
+		AEAD49BA1A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
+		AEAD49BB1A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
+		AEAD49BC1A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
+		AEAD49BD1A4C340100AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -271,6 +279,8 @@
 		03C4145219150EA300370144 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		03E5FD3D1922636C007BE44D /* t2rss */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = t2rss; sourceTree = BUILT_PRODUCTS_DIR; };
 		03E5FD401922636C007BE44D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		AEAD49B41A4C340100AA8EC5 /* STTwitterClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterClock.h; sourceTree = "<group>"; };
+		AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterClock.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -389,6 +399,8 @@
 				0315A0F61927FC79001C6C02 /* STTwitterAPI.m */,
 				0315A0F71927FC79001C6C02 /* STTwitterAppOnly.h */,
 				0315A0F81927FC79001C6C02 /* STTwitterAppOnly.m */,
+				AEAD49B41A4C340100AA8EC5 /* STTwitterClock.h */,
+				AEAD49B51A4C340100AA8EC5 /* STTwitterClock.m */,
 				0315A0F91927FC79001C6C02 /* STTwitterHTML.h */,
 				0315A0FA1927FC79001C6C02 /* STTwitterHTML.m */,
 				0315A0FB1927FC79001C6C02 /* STTwitterOAuth.h */,
@@ -689,6 +701,7 @@
 			files = (
 				0315A15F1927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A11F1927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49BC1A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A16F1927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A13F1927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A12F1927FC79001C6C02 /* STTwitterAPI.m in Sources */,
@@ -710,6 +723,7 @@
 			files = (
 				0315A1601927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A1201927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49BD1A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A1701927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A1401927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A1301927FC79001C6C02 /* STTwitterAPI.m in Sources */,
@@ -731,6 +745,7 @@
 			files = (
 				0315A15D1927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A11D1927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49BA1A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A16D1927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A13D1927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A12D1927FC79001C6C02 /* STTwitterAPI.m in Sources */,
@@ -752,6 +767,7 @@
 			files = (
 				0315A1591927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A1191927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49B61A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A1691927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A1391927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A1291927FC79001C6C02 /* STTwitterAPI.m in Sources */,
@@ -773,6 +789,7 @@
 			files = (
 				0315A15A1927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A11A1927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49B71A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A16A1927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A13A1927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A12A1927FC79001C6C02 /* STTwitterAPI.m in Sources */,
@@ -794,6 +811,7 @@
 			files = (
 				0315A15B1927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A11B1927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49B81A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A16B1927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A13B1927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A12B1927FC79001C6C02 /* STTwitterAPI.m in Sources */,
@@ -815,6 +833,7 @@
 			files = (
 				0315A15C1927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A11C1927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49B91A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A16C1927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A13C1927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A12C1927FC79001C6C02 /* STTwitterAPI.m in Sources */,
@@ -836,6 +855,7 @@
 			files = (
 				0315A15E1927FC79001C6C02 /* BAVPlistNode.m in Sources */,
 				0315A11E1927FC79001C6C02 /* NSString+STTwitter.m in Sources */,
+				AEAD49BB1A4C340100AA8EC5 /* STTwitterClock.m in Sources */,
 				0315A16E1927FC79001C6C02 /* STHTTPRequest.m in Sources */,
 				0315A13E1927FC79001C6C02 /* STTwitterHTML.m in Sources */,
 				0315A12E1927FC79001C6C02 /* STTwitterAPI.m in Sources */,
