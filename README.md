@@ -175,6 +175,17 @@ So there are five cases altogether, hence these five methods:
                                     consumerSecret:(NSString *)consumerSecret;
 ```
 
+##### Callbacks URLs
+
+After authenticating in Safari or in a web view, Twitter redirects to the callback URL with some additional parameters. ([Your Twitter app' settings](https://apps.twitter.com/) MUST allow the usage of callbacks by specifying a dummy URL, such as `http://www.cnn.com`. This URL is then overriden by the `oauthCallback ` parameter in:
+
+	- (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
+	authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize
+	              forceLogin:(NSNumber *)forceLogin
+	              screenName:(NSString *)screenName
+	           oauthCallback:(NSString *)oauthCallback
+	              errorBlock:(void(^)(NSError *error))errorBlock;
+
 ##### Reverse Authentication
 
 Reference: [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
