@@ -71,7 +71,7 @@ static NSDateFormatter *dateFormatter = nil;
                                                   consumerSecret:consumerSecret
                                                         username:username
                                                         password:password];
-    
+
     return twitter;
 }
 
@@ -144,13 +144,17 @@ static NSDateFormatter *dateFormatter = nil;
     STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     twitter.oauth = appOnly;
-    
+
     return twitter;
 }
 
 + (instancetype)twitterAPIAppOnlyWithConsumerKey:(NSString *)consumerKey
                                   consumerSecret:(NSString *)consumerSecret {
     return [self twitterAPIAppOnlyWithConsumerName:nil consumerKey:consumerKey consumerSecret:consumerSecret];
+}
+
+- (void)setTimeoutInSeconds:(NSTimeInterval)timeoutInSeconds {
+    _oauth.timeoutInSeconds = timeoutInSeconds;
 }
 
 - (NSString *)prettyDescription {
@@ -471,6 +475,8 @@ downloadProgressBlock:nil
                        __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
                        __weak STHTTPRequest *wr = r;
                        
+                       r.timeoutSeconds = _oauth.timeoutInSeconds;
+                       
                        r.completionBlock = ^(NSDictionary *headers, NSString *body) {
                            
                            NSData *imageData = wr.responseData;
@@ -599,63 +605,6 @@ downloadProgressBlock:nil
         errorBlock(error);
     }];
 }
-
-/*
- - (void)getTimeline:(NSString *)timeline
- withParameters:(NSDictionary *)params
- sinceID:(NSString *)optionalSinceID
- maxID:(NSString *)optionalMaxID
- count:(NSUInteger)optionalCount
- successBlock:(void(^)(NSArray *statuses))successBlock
- errorBlock:(void(^)(NSError *error))errorBlock {
- 
- NSMutableDictionary *mparams = [params mutableCopy];
- if (!mparams)
- mparams = [NSMutableDictionary new];
- 
- if (optionalSinceID) mparams[@"since_id"] = optionalSinceID;
- if (optionalCount != NSNotFound) mparams[@"count"] = [@(optionalCount) stringValue];
- if (optionalMaxID) {
- NSDecimalNumber* maxID = [NSDecimalNumber decimalNumberWithString:optionalMaxID];
- 
- if ( [maxID longLongValue] > 0 ) {
- mparams[@"max_id"] = optionalMaxID;
- }
- }
- 
- __block NSMutableArray *statuses = [NSMutableArray new];
- __block void (^requestHandler)(id response) = nil;
- __block int count = 0;
- requestHandler = [[^(id response) {
- if ([response isKindOfClass:[NSArray class]] && [response count] > 0)
- [statuses addObjectsFromArray:response];
- 
- //Only send another request if we got close to the requested limit, up to a maximum of 4 api calls
- if (count++ == 0 || (count <= 4 && [response count] >= (optionalCount - 5))) {
- //Set the max_id so that we don't get statuses we've already received
- NSString *lastID = [[statuses lastObject] objectForKey:@"id_str"];
- if (lastID) {
- NSDecimalNumber* lastIDNumber = [NSDecimalNumber decimalNumberWithString:lastID];
- 
- if ([lastIDNumber longLongValue] > 0) {
- mparams[@"max_id"] = [@([lastIDNumber longLongValue] - 1) stringValue];
- }
- }
- 
- [self getAPIResource:timeline parameters:mparams
- successBlock:requestHandler
- errorBlock:errorBlock];
- } else {
- successBlock(removeNull(statuses));
- [mparams release];
- [statuses release];
- }
- } copy] autorelease];
- 
- //Send the first request
- requestHandler(nil);
- }
- */
 
 - (void)getUserTimelineWithScreenName:(NSString *)screenName
                               sinceID:(NSString *)sinceID

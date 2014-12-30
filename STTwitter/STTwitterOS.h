@@ -20,6 +20,8 @@ NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
 
 @interface STTwitterOS : NSObject <STTwitterProtocol>
 
+@property (nonatomic) NSTimeInterval timeoutInSeconds;
+
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account;
 + (instancetype)twitterAPIOSWithFirstAccount;
 

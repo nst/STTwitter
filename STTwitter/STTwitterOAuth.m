@@ -456,6 +456,7 @@
     
     __block __weak STHTTPRequest *wr = nil;
     STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                 timeoutInSeconds:_timeoutInSeconds
                                              stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
                                                if(downloadProgressBlock) downloadProgressBlock(wr, json);
@@ -526,7 +527,8 @@ downloadProgressBlock:(void(^)(id r, id json))downloadProgressBlock
     
     __block __weak STHTTPRequest *wr = nil;
     STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                             stTwitterUploadProgressBlock:uploadProgressBlock
+                                                 timeoutInSeconds:_timeoutInSeconds
+                                     stTwitterUploadProgressBlock:uploadProgressBlock
                                            stTwitterDownloadProgressBlock:^(id json) {
                                                if(downloadProgressBlock) downloadProgressBlock(wr, json);
                                            } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {

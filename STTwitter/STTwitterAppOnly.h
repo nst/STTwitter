@@ -30,6 +30,8 @@ NS_ENUM(NSUInteger, STTwitterAppOnlyErrorCode) {
 @property (nonatomic, retain) NSString *consumerSecret;
 @property (nonatomic, retain) NSString *bearerToken;
 
+@property (nonatomic) NSTimeInterval timeoutInSeconds;
+
 + (instancetype)twitterAppOnlyWithConsumerName:(NSString *)conumerName consumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 
 + (NSString *)base64EncodedBearerTokenCredentialsWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;

@@ -129,6 +129,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSString *)prettyDescription;
 
+- (void)setTimeoutInSeconds:(NSTimeInterval)timeoutInSeconds; // optional
+
 @property (nonatomic, retain) NSString *userName; // available for osx, set after successful connection for STTwitterOAuth
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;

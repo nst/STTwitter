@@ -131,7 +131,7 @@
                         NSLog(@"-- ignore account %@ because identifier is empty", account);
                     }
                 }];
-
+                
                 if([accountsWithIdentifiers count] == 0) {
                     NSString *message = @"No Twitter account available.";
                     NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
@@ -171,13 +171,14 @@
             errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     STTwitterOSRequest *r = [[STTwitterOSRequest alloc] initWithAPIResource:resource
-                                                         baseURLString:baseURLString
-                                                            httpMethod:httpMethod
-                                                            parameters:params
-                                                               account:self.account
-                                                   uploadProgressBlock:uploadProgressBlock
-                                                       completionBlock:completionBlock
-                                                            errorBlock:errorBlock];
+                                                              baseURLString:baseURLString
+                                                                 httpMethod:httpMethod
+                                                                 parameters:params
+                                                                    account:self.account
+                                                           timeoutInSeconds:_timeoutInSeconds
+                                                        uploadProgressBlock:uploadProgressBlock
+                                                            completionBlock:completionBlock
+                                                                 errorBlock:errorBlock];
     
     return [r startRequest]; // NSURLConnection
 }

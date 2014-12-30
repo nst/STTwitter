@@ -19,6 +19,7 @@
 @implementation STHTTPRequest (STTwitter)
 
 + (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString
+                              timeoutInSeconds:(NSTimeInterval)timeoutInSeconds
                   stTwitterUploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
                 stTwitterDownloadProgressBlock:(void(^)(id json))downloadProgressBlock
                          stTwitterSuccessBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
@@ -29,7 +30,7 @@
     
     r.ignoreSharedCookiesStorage = YES;
     
-    r.timeoutSeconds = DBL_MAX;
+    r.timeoutSeconds = timeoutInSeconds;
     
     r.uploadProgressBlock = uploadProgressBlock;
     

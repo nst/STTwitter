@@ -164,6 +164,7 @@
     
     __block __weak STHTTPRequest *wr = nil;
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                         timeoutInSeconds:_timeoutInSeconds
                                              stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
                                                if(progressBlock) progressBlock(wr, json);
@@ -236,14 +237,15 @@ downloadProgressBlock:(void(^)(id request, id json))downloadProgressBlock
     
     __block __weak STHTTPRequest *wr = nil;
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                             stTwitterUploadProgressBlock:uploadProgressBlock
+                                                         timeoutInSeconds:_timeoutInSeconds
+                                             stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
                                                if(downloadProgressBlock) downloadProgressBlock(wr, json);
-                                           } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
-                                               successBlock(wr, requestHeaders, responseHeaders, json);
-                                           } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                                               errorBlock(wr, requestHeaders, responseHeaders, error);
-                                           }];
+                                             } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
+                                                 successBlock(wr, requestHeaders, responseHeaders, json);
+                                             } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                                                 errorBlock(wr, requestHeaders, responseHeaders, error);
+                                             }];
     
     wr = r;
 
