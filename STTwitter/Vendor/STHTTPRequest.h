@@ -39,7 +39,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic, strong) NSDictionary *GETDictionary; // appended to the URL string
 @property (nonatomic, strong) NSData *rawPOSTData; // eg. to post JSON contents
 @property (nonatomic) NSStringEncoding POSTDataEncoding;
-@property (nonatomic, assign) NSUInteger timeoutSeconds;
+@property (nonatomic) NSTimeInterval timeoutSeconds; // ignored if 0
 @property (nonatomic) BOOL addCredentialsToURL; // default NO
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
 @property (nonatomic, strong, readonly) NSURL *url;
@@ -106,4 +106,8 @@ typedef void (^errorBlock_t)(NSError *error);
 
 @interface NSString (RFC3986)
 - (NSString *)st_stringByAddingRFC3986PercentEscapesUsingEncoding:(NSStringEncoding)encoding;
+@end
+
+@interface NSString (STUtilities)
+- (NSString *)st_stringByAppendingGETParameters:(NSDictionary *)parameters;
 @end
