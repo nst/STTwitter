@@ -272,6 +272,14 @@ There's no need to verify the credentials before each request.
 
 Doing so when the application starts and when the application enters foreground sounds reasonable, though.
 
+##### Timeout
+
+Unless told otherwise, STTwitter will use the underling classes default timeouts.
+
+You can also set the timeout by yourself:
+
+    [twitter setTimeoutInSeconds:5.0];
+
 ##### Remove Asserts in Release Mode
 
 There are several asserts in the code. They are very useful in debug mode but you should not include them in release.
