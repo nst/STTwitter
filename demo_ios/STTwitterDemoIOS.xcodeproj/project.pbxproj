@@ -30,6 +30,7 @@
 		0344DB1518D9CB0E004AC0BB /* NSError+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0344DB1418D9CB0E004AC0BB /* NSError+STTwitter.m */; };
 		03ACFD3C18390F7B005CEE2A /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */; };
 		03D5C41419D5737400BE9642 /* WebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 03D5C41319D5737400BE9642 /* WebViewVC.m */; };
+		AEAD49B31A4C331400AA8EC5 /* STTwitterClock.m in Sources */ = {isa = PBXBuildFile; fileRef = AEAD49B21A4C331400AA8EC5 /* STTwitterClock.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +78,8 @@
 		03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
 		03D5C41219D5737400BE9642 /* WebViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewVC.h; sourceTree = "<group>"; };
 		03D5C41319D5737400BE9642 /* WebViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewVC.m; sourceTree = "<group>"; };
+		AEAD49B11A4C331400AA8EC5 /* STTwitterClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterClock.h; sourceTree = "<group>"; };
+		AEAD49B21A4C331400AA8EC5 /* STTwitterClock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterClock.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,10 +156,12 @@
 		03144B7717FB6109007812DC /* STTwitter */ = {
 			isa = PBXGroup;
 			children = (
-				03144B7817FB6109007812DC /* NSString+STTwitter.h */,
-				03144B7917FB6109007812DC /* NSString+STTwitter.m */,
 				03ACFD3A18390F7B005CEE2A /* NSDateFormatter+STTwitter.h */,
 				03ACFD3B18390F7B005CEE2A /* NSDateFormatter+STTwitter.m */,
+				0344DB1318D9CB0E004AC0BB /* NSError+STTwitter.h */,
+				0344DB1418D9CB0E004AC0BB /* NSError+STTwitter.m */,
+				03144B7817FB6109007812DC /* NSString+STTwitter.h */,
+				03144B7917FB6109007812DC /* NSString+STTwitter.m */,
 				03144B7A17FB6109007812DC /* STHTTPRequest+STTwitter.h */,
 				03144B7B17FB6109007812DC /* STHTTPRequest+STTwitter.m */,
 				03144B7C17FB6109007812DC /* STTwitter.h */,
@@ -164,6 +169,8 @@
 				03144B7E17FB6109007812DC /* STTwitterAPI.m */,
 				03144B7F17FB6109007812DC /* STTwitterAppOnly.h */,
 				03144B8017FB6109007812DC /* STTwitterAppOnly.m */,
+				AEAD49B11A4C331400AA8EC5 /* STTwitterClock.h */,
+				AEAD49B21A4C331400AA8EC5 /* STTwitterClock.m */,
 				03144B8117FB6109007812DC /* STTwitterHTML.h */,
 				03144B8217FB6109007812DC /* STTwitterHTML.m */,
 				03144B8317FB6109007812DC /* STTwitterOAuth.h */,
@@ -172,8 +179,6 @@
 				03144B8617FB6109007812DC /* STTwitterOS.m */,
 				03426AF318B947FB00CA9ABF /* STTwitterOSRequest.h */,
 				03426AF418B947FB00CA9ABF /* STTwitterOSRequest.m */,
-				0344DB1318D9CB0E004AC0BB /* NSError+STTwitter.h */,
-				0344DB1418D9CB0E004AC0BB /* NSError+STTwitter.m */,
 				03144B8717FB6109007812DC /* STTwitterProtocol.h */,
 				03144B8817FB6109007812DC /* Vendor */,
 			);
@@ -267,6 +272,7 @@
 				03144B9217FB6109007812DC /* STTwitterOAuth.m in Sources */,
 				03426AF518B947FB00CA9ABF /* STTwitterOSRequest.m in Sources */,
 				03D5C41419D5737400BE9642 /* WebViewVC.m in Sources */,
+				AEAD49B31A4C331400AA8EC5 /* STTwitterClock.m in Sources */,
 				03144B5917FB608C007812DC /* ViewController.m in Sources */,
 				03144B9517FB6109007812DC /* STHTTPRequest.m in Sources */,
 				03144B5317FB608C007812DC /* AppDelegate.m in Sources */,
