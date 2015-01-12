@@ -1091,6 +1091,18 @@ downloadProgressBlock:nil
 
 #pragma mark Search
 
+- (NSString *)urlEscapedUTF8EncodedSearchString:(NSString *)s {
+    
+    // don't encode colon ':' because we need to accept "from:username", see https://github.com/nst/STTwitter/issues/156
+    
+    NSString *s2 = (__bridge_transfer NSString *)(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                         (CFStringRef)s,
+                                                                                         NULL,
+                                                                                         CFSTR("!*'();@&=+$,/?%#[]"),
+                                                                                         kCFStringEncodingUTF8));
+    return s2;
+}
+
 - (void)getSearchTweetsWithQuery:(NSString *)q
                          geocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
                             lang:(NSString *)lang // eg. "eu"
@@ -1120,7 +1132,7 @@ downloadProgressBlock:nil
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(callback) md[@"callback"] = callback;
     
-    md[@"q"] = [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    md[@"q"] = [self urlEscapedUTF8EncodedSearchString:q];
     
     [self getAPIResource:@"search/tweets.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         
