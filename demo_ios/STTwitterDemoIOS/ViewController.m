@@ -9,9 +9,12 @@
 #import "ViewController.h"
 #import "STTwitter.h"
 #import "WebViewVC.h"
+#import <Accounts/Accounts.h>
 
 @interface ViewController ()
 @property (nonatomic, strong) STTwitterAPI *twitter;
+@property (nonatomic, strong) ACAccountStore *accountStore;
+@property (nonatomic, strong) NSArray *iOSAccounts;
 @end
 
 // https://dev.twitter.com/docs/auth/implementing-sign-twitter
@@ -21,7 +24,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    // Do any additional setup after loading the view, typically from a nib.
+    
+    self.accountStore = [[ACAccountStore alloc] init];
     
 #warning Replace these demo tokens with yours https://dev.twitter.com/apps
     _consumerKeyTextField.text = @"PdLBPYUXlhQpt4AguShUIw";
@@ -36,14 +41,61 @@
 
 - (IBAction)loginWithiOSAction:(id)sender {
     
-    self.twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
-    
     _loginStatusLabel.text = @"Trying to login with iOS...";
-    _loginStatusLabel.text = @"";
+    
+    ACAccountType *accountType = [_accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    
+    ACAccountStoreRequestAccessCompletionHandler accountStoreRequestCompletionHandler = ^(BOOL granted, NSError *error) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            if(granted == NO) {
+                _loginStatusLabel.text = @"Acccess not granted";
+                return;
+            }
+            
+            self.iOSAccounts = [_accountStore accountsWithAccountType:accountType];
+            
+            if([_iOSAccounts count] == 1) {
+                ACAccount *account = [_iOSAccounts lastObject];
+                
+                [self loginWithiOSAccount:account];
+            } else {
+                UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"Select an account:"
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Cancel"
+                                                  destructiveButtonTitle:nil otherButtonTitles:nil];
+                for(ACAccount *account in _iOSAccounts) {
+                    [as addButtonWithTitle:[NSString stringWithFormat:@"@%@", account.username]];
+                }
+                [as showInView:self.view.window];
+            }
+        }];
+    };
+    
+#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                     withCompletionHandler:accountStoreRequestCompletionHandler];
+    } else {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                                   options:NULL
+                                                completion:accountStoreRequestCompletionHandler];
+    }
+#else
+    [self.accountStore requestAccessToAccountsWithType:accountType
+                                               options:NULL
+                                            completion:accountStoreRequestCompletionHandler];
+#endif
+    
+}
+
+- (void)loginWithiOSAccount:(ACAccount *)account {
+    
+    self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account];
     
     [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
         
-        _loginStatusLabel.text = username;
+        _loginStatusLabel.text = [NSString stringWithFormat:@"@%@", username];
         
     } errorBlock:^(NSError *error) {
         _loginStatusLabel.text = [error localizedDescription];
@@ -145,9 +197,6 @@
     return [self.statuses count];
 }
 
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"STTwitterTVCellIdentifier"];
     
@@ -165,6 +214,24 @@
     cell.detailTextLabel.text = [NSString stringWithFormat:@"@%@ | %@", screenName, dateString];
     
     return cell;
+}
+
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if(buttonIndex == [actionSheet cancelButtonIndex]) {
+        NSString *username = _twitter.userName;
+        _loginStatusLabel.text = username ? [NSString stringWithFormat:@"@%@", username] : @"";
+        return;
+    }
+    
+    NSUInteger accountIndex = buttonIndex - 1;
+    ACAccount *account = [_iOSAccounts objectAtIndex:accountIndex];
+    
+    _loginStatusLabel.text = [NSString stringWithFormat:@"Did select %@", account.username];
+    
+    [self loginWithiOSAccount:account];
 }
 
 @end

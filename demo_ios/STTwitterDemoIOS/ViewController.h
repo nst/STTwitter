@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <UITableViewDataSource>
+@interface ViewController : UIViewController <UITableViewDataSource, UIActionSheetDelegate>
 
 @property (nonatomic, strong) NSArray *statuses;
 
