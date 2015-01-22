@@ -332,7 +332,7 @@ You may want to use Twitter's own Objective-C library for text processing: [http
 
 ##### Logout
 
-The correct approach to logout a user is setint the `STTwitterAPI` instance to nil.
+The correct approach to logout a user is setting the `STTwitterAPI` instance to nil.
 
 You'll create a new one at the next login.
 
