@@ -56,8 +56,13 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic, strong, readonly) NSError *error;
 @property (nonatomic) long long responseExpectedContentLength; // set by connection:didReceiveResponse: delegate method; web server must send the Content-Length header for accurate value
 
+// cache
+@property (nonatomic) BOOL ignoreCache; // requests ignore cached responses and responses don't get cached
+
 + (STHTTPRequest *)requestWithURL:(NSURL *)url;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString;
+
++ (void)setGlobalIgnoreCache:(BOOL)ignoreCache; // no cache at all when set, overrides the ignoreCache property
 
 - (NSString *)debugDescription; // logged when launched with -STHTTPRequestShowDebugDescription 1
 - (NSString *)curlDescription; // logged when launched with -STHTTPRequestShowCurlDescription 1

@@ -20,6 +20,8 @@ NSUInteger const kSTHTTPRequestDefaultTimeout = 30;
 static NSMutableDictionary *localCredentialsStorage = nil;
 static NSMutableArray *localCookiesStorage = nil;
 
+static BOOL globalIgnoreCache = NO;
+
 /**/
 
 @interface STHTTPRequestFileUpload : NSObject
@@ -71,6 +73,10 @@ static NSMutableArray *localCookiesStorage = nil;
 + (STHTTPRequest *)requestWithURLString:(NSString *)urlString {
     NSURL *url = [NSURL URLWithString:urlString];
     return [self requestWithURL:url];
+}
+
++ (void)setGlobalIgnoreCache:(BOOL)ignoreCache {
+    globalIgnoreCache = ignoreCache;
 }
 
 - (STHTTPRequest *)initWithURL:(NSURL *)theURL {
@@ -379,6 +385,10 @@ static NSMutableArray *localCookiesStorage = nil;
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:theURL];
     if(_HTTPMethod) [request setHTTPMethod:_HTTPMethod];
     
+    if(globalIgnoreCache || _ignoreCache) {
+        request.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+    }
+    
     if(self.timeoutSeconds != 0.0) {
         request.timeoutInterval = self.timeoutSeconds;
     }
@@ -640,7 +650,7 @@ static NSMutableArray *localCookiesStorage = nil;
 - (NSString *)curlDescription {
     
     NSMutableArray *ma = [NSMutableArray array];
-    [ma addObject:@"$ curl -i"];
+    [ma addObject:@"\U0001F300 curl -i"];
     
     // -u usernane:password
     
@@ -868,6 +878,14 @@ static NSMutableArray *localCookiesStorage = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         _errorBlock(_error);
     });
+}
+
+#pragma mark NSURLConnectionDataDelegate
+
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+    if(globalIgnoreCache || _ignoreCache) return nil;
+    
+    return cachedResponse;
 }
 
 #pragma mark NSURLConnectionDelegate
