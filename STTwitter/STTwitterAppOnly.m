@@ -164,6 +164,7 @@
     
     __block __weak STHTTPRequest *wr = nil;
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                               HTTPMethod:@"GET"
                                                          timeoutInSeconds:_timeoutInSeconds
                                              stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
@@ -237,6 +238,7 @@ downloadProgressBlock:(void(^)(id request, id json))downloadProgressBlock
     
     __block __weak STHTTPRequest *wr = nil;
     __block STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                               HTTPMethod:@"POST"
                                                          timeoutInSeconds:_timeoutInSeconds
                                              stTwitterUploadProgressBlock:nil
                                            stTwitterDownloadProgressBlock:^(id json) {
