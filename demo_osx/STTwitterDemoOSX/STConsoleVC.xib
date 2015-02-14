@@ -61,6 +61,7 @@
 						<string key="NSFrame">{{108, 10}, {509, 311}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="242559923"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<array class="NSMutableArray" key="NSTabViewItems">
 							<object class="NSTabViewItem" id="714398441">
@@ -164,7 +165,7 @@
 														<bytes key="NSRGB">MSAxIDEAA</bytes>
 													</object>
 													<object class="NSCursor" key="NSCursor" id="226030557">
-														<string key="NSHotSpot">{1, -1}</string>
+														<string key="NSHotSpot">{5, 5}</string>
 														<int key="NSCursorType">0</int>
 													</object>
 													<int key="NScvFlags">4</int>
@@ -245,7 +246,7 @@
 															<string key="NSFrameSize">{438, 243}</string>
 															<reference key="NSSuperview" ref="970057845"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="633375534"/>
+															<reference key="NSNextKeyView" ref="371469383"/>
 															<object class="NSTextContainer" key="NSTextContainer" id="887287713">
 																<object class="NSLayoutManager" key="NSLayoutManager">
 																	<object class="NSTextStorage" key="NSTextStorage">
@@ -321,6 +322,7 @@
 													<string key="NSFrame">{{439, 1}, {15, 243}}</string>
 													<reference key="NSSuperview" ref="383330393"/>
 													<reference key="NSWindow"/>
+													<reference key="NSNextKeyView"/>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<string key="NSControlAction">_doScroller:</string>
 													<reference key="NSControlTarget" ref="383330393"/>
@@ -333,7 +335,7 @@
 											<string key="NSFrame">{{17, 17}, {455, 245}}</string>
 											<reference key="NSSuperview" ref="242559923"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="970057845"/>
+											<reference key="NSNextKeyView" ref="633375534"/>
 											<int key="NSsFlags">133138</int>
 											<reference key="NSVScroller" ref="371469383"/>
 											<reference key="NSHScroller" ref="633375534"/>
@@ -838,7 +840,7 @@
 										<string key="NSFrameSize">{376, 117}</string>
 										<reference key="NSSuperview" ref="332800319"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="865831302"/>
+										<reference key="NSNextKeyView" ref="923856951"/>
 										<string key="NSReuseIdentifierKey">_NS:13</string>
 										<bool key="NSEnabled">YES</bool>
 										<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -996,7 +998,7 @@
 						<string key="NSFrame">{{115, 323}, {378, 135}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="332800319"/>
+						<reference key="NSNextKeyView" ref="865831302"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<int key="NSsFlags">133682</int>
 						<reference key="NSVScroller" ref="923856951"/>
@@ -1190,7 +1192,6 @@
 								<string key="NSKeyEquiv"/>
 								<int key="NSKeyEquivModMask">1048576</int>
 								<int key="NSMnemonicLoc">2147483647</int>
-								<int key="NSState">1</int>
 								<object class="NSCustomResource" key="NSOnImage" id="638402615">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">NSMenuCheckmark</string>
@@ -1212,6 +1213,26 @@
 										<string key="NSTitle">POST</string>
 										<string key="NSKeyEquiv"/>
 										<int key="NSKeyEquivModMask">1048576</int>
+										<int key="NSMnemonicLoc">2147483647</int>
+										<reference key="NSOnImage" ref="638402615"/>
+										<reference key="NSMixedImage" ref="736592400"/>
+										<string key="NSAction">_popUpItemAction:</string>
+										<reference key="NSTarget" ref="886477274"/>
+									</object>
+									<object class="NSMenuItem" id="1044059618">
+										<reference key="NSMenu" ref="305603296"/>
+										<string key="NSTitle">PUT</string>
+										<string key="NSKeyEquiv"/>
+										<int key="NSMnemonicLoc">2147483647</int>
+										<reference key="NSOnImage" ref="638402615"/>
+										<reference key="NSMixedImage" ref="736592400"/>
+										<string key="NSAction">_popUpItemAction:</string>
+										<reference key="NSTarget" ref="886477274"/>
+									</object>
+									<object class="NSMenuItem" id="91970607">
+										<reference key="NSMenu" ref="305603296"/>
+										<string key="NSTitle">DELETE</string>
+										<string key="NSKeyEquiv"/>
 										<int key="NSMnemonicLoc">2147483647</int>
 										<reference key="NSOnImage" ref="638402615"/>
 										<reference key="NSMixedImage" ref="736592400"/>
@@ -1753,6 +1774,8 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="158649653"/>
 							<reference ref="464526580"/>
+							<reference ref="1044059618"/>
+							<reference ref="91970607"/>
 						</array>
 						<reference key="parent" ref="886477274"/>
 					</object>
@@ -2002,6 +2025,16 @@
 						<reference key="object" ref="584337391"/>
 						<reference key="parent" ref="200849885"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">219</int>
+						<reference key="object" ref="1044059618"/>
+						<reference key="parent" ref="305603296"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">220</int>
+						<reference key="object" ref="91970607"/>
+						<reference key="parent" ref="305603296"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2098,8 +2131,10 @@
 				<string key="215.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<reference key="215.IBUserGuides" ref="0"/>
 				<boolean value="NO" key="215.showNotes"/>
+				<string key="219.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="22.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="NO" key="22.showNotes"/>
+				<string key="220.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="NO" key="23.showNotes"/>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2155,7 +2190,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">218</int>
+			<int key="maxID">220</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

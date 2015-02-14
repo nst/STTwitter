@@ -255,46 +255,47 @@
     
     NSString *theOAuthCallback = [oauthCallback length] ? oauthCallback : @"oob"; // out of band, ie PIN instead of redirect
     
-    [self postResource:@"oauth/request_token"
-         baseURLString:@"https://api.twitter.com"
-            parameters:@{}
-         oauthCallback:theOAuthCallback
-   uploadProgressBlock:nil
- downloadProgressBlock:nil
-          successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id body) {
-              
-              NSMutableDictionary *md = [[body st_parametersDictionary] mutableCopy];
-              
-              if([forceLogin boolValue]) md[@"force_login"] = @"1";
-              if(screenName) md[@"screen_name"] = screenName;
-              
-              //
-              
-              NSMutableArray *parameters = [NSMutableArray array];
-              
-              [md enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-                  NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
-                  [parameters addObject:s];
-              }];
-              
-              NSString *parameterString = [parameters componentsJoinedByString:@"&"];
-
-              NSString *authenticateOrAuthorizeString = authenticateInsteadOfAuthorize ? @"authenticate" : @"authorize";
-              
-              NSString *urlString = [NSString stringWithFormat:@"https://api.twitter.com/oauth/%@?%@", authenticateOrAuthorizeString, parameterString];
-              
-              //
-              
-              NSURL *url = [NSURL URLWithString:urlString];
-              
-              self.oauthRequestToken = md[@"oauth_token"];
-              self.oauthRequestTokenSecret = md[@"oauth_token_secret"]; // unused
-              
-              successBlock(url, _oauthRequestToken);
-              
-          } errorBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-              errorBlock(error);
-          }];
+    [self fetchResource:@"oauth/request_token"
+             HTTPMethod:@"POST"
+          baseURLString:@"https://api.twitter.com"
+             parameters:@{}
+          oauthCallback:theOAuthCallback
+    uploadProgressBlock:nil
+  downloadProgressBlock:nil
+           successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id body) {
+               
+               NSMutableDictionary *md = [[body st_parametersDictionary] mutableCopy];
+               
+               if([forceLogin boolValue]) md[@"force_login"] = @"1";
+               if(screenName) md[@"screen_name"] = screenName;
+               
+               //
+               
+               NSMutableArray *parameters = [NSMutableArray array];
+               
+               [md enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                   NSString *s = [NSString stringWithFormat:@"%@=%@", key, obj];
+                   [parameters addObject:s];
+               }];
+               
+               NSString *parameterString = [parameters componentsJoinedByString:@"&"];
+               
+               NSString *authenticateOrAuthorizeString = authenticateInsteadOfAuthorize ? @"authenticate" : @"authorize";
+               
+               NSString *urlString = [NSString stringWithFormat:@"https://api.twitter.com/oauth/%@?%@", authenticateOrAuthorizeString, parameterString];
+               
+               //
+               
+               NSURL *url = [NSURL URLWithString:urlString];
+               
+               self.oauthRequestToken = md[@"oauth_token"];
+               self.oauthRequestTokenSecret = md[@"oauth_token_secret"]; // unused
+               
+               successBlock(url, _oauthRequestToken);
+               
+           } errorBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               errorBlock(error);
+           }];
 }
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock oauthCallback:(NSString *)oauthCallback errorBlock:(void(^)(NSError *error))errorBlock {
@@ -303,19 +304,20 @@
 
 - (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
-    [self postResource:@"oauth/request_token"
-         baseURLString:@"https://api.twitter.com"
-            parameters:@{@"x_auth_mode" : @"reverse_auth"}
-         oauthCallback:nil
-   uploadProgressBlock:nil
- downloadProgressBlock:nil
-          successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id body) {
-              
-              successBlock(body);
-              
-          } errorBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-              errorBlock(error);
-          }];
+    [self fetchResource:@"oauth/request_token"
+             HTTPMethod:@"POST"
+          baseURLString:@"https://api.twitter.com"
+             parameters:@{@"x_auth_mode" : @"reverse_auth"}
+          oauthCallback:nil
+    uploadProgressBlock:nil
+  downloadProgressBlock:nil
+           successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id body) {
+               
+               successBlock(body);
+               
+           } errorBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               errorBlock(error);
+           }];
 }
 
 - (void)postXAuthAccessTokenRequestWithUsername:(NSString *)username
@@ -403,8 +405,6 @@
         [oauthParameters addObject:@{@"oauth_token" : [self oauthRequestToken]}];
     }
     
-    NSString *httpMethod = r.POSTDictionary ? @"POST" : @"GET";
-    
     NSMutableArray *oauthAndPOSTParameters = [oauthParameters mutableCopy];
     
     if(r.POSTDictionary) {
@@ -424,7 +424,7 @@
         [oauthAndPOSTandGETParameters addObject:d];
     }];
     
-    NSString *signature = [[self class] oauthSignatureWithHTTPMethod:httpMethod
+    NSString *signature = [[self class] oauthSignatureWithHTTPMethod:r.HTTPMethod
                                                                  url:r.url
                                                           parameters:isMediaUpload ? oauthParameters : oauthAndPOSTandGETParameters
                                                       consumerSecret:_oauthConsumerSecret
@@ -445,124 +445,89 @@
     [self signRequest:r isMediaUpload:NO];
 }
 
-- (STHTTPRequest *)getResource:(NSString *)resource
-                 baseURLString:(NSString *)baseURLString
-                    parameters:(NSDictionary *)params
-         downloadProgressBlock:(void (^)(STHTTPRequest *r, id json))downloadProgressBlock
-                  successBlock:(void (^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
-                    errorBlock:(void (^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
-    
-    NSMutableString *urlString = [NSMutableString stringWithFormat:@"%@/%@", baseURLString, resource];
-    
-    __block __weak STHTTPRequest *wr = nil;
-    STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                                       HTTPMethod:@"GET"
-                                                 timeoutInSeconds:_timeoutInSeconds
-                                             stTwitterUploadProgressBlock:nil
-                                           stTwitterDownloadProgressBlock:^(id json) {
-                                               if(downloadProgressBlock) downloadProgressBlock(wr, json);
-                                           } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
-                                               successBlock(wr, requestHeaders, responseHeaders, json);
-                                           } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                                               errorBlock(wr, requestHeaders, responseHeaders, error);
-                                           }];
-    wr = r;
-    r.GETDictionary = params;
-    
-    [self signRequest:r];
-    
-    [r startAsynchronous];
-    
-    return r;
-}
-
 - (id)fetchResource:(NSString *)resource
          HTTPMethod:(NSString *)HTTPMethod
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
 uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void(^)(id r, id json))downloadProgressBlock
-       successBlock:(void(^)(id r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
-         errorBlock:(void(^)(id r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+downloadProgressBlock:(void(^)(id request, id response))progressBlock
+       successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+         errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+    
+    return [self fetchResource:resource
+                    HTTPMethod:HTTPMethod
+                 baseURLString:baseURLString
+                    parameters:params
+                 oauthCallback:nil
+           uploadProgressBlock:uploadProgressBlock
+         downloadProgressBlock:progressBlock
+                  successBlock:successBlock
+                    errorBlock:errorBlock];
+}
+
+- (STHTTPRequest *)fetchResource:(NSString *)resource
+                      HTTPMethod:(NSString *)HTTPMethod
+                   baseURLString:(NSString *)baseURLString
+                      parameters:(NSDictionary *)params
+                   oauthCallback:(NSString *)oauthCallback
+             uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+           downloadProgressBlock:(void(^)(STHTTPRequest *r, id json))downloadProgressBlock
+                    successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+                      errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     if([baseURLString hasSuffix:@"/"]) {
         baseURLString = [baseURLString substringToIndex:[baseURLString length]-1];
     }
     
-    if([HTTPMethod isEqualToString:@"GET"]) {
-        
-        return [self getResource:resource
-                   baseURLString:baseURLString
-                      parameters:params
-           downloadProgressBlock:downloadProgressBlock
-                    successBlock:successBlock
-                      errorBlock:errorBlock];
-        
-    } else if ([HTTPMethod isEqualToString:@"POST"]) {
-        
-        return [self postResource:resource
-                    baseURLString:baseURLString
-                       parameters:params
-                    oauthCallback:nil
-              uploadProgressBlock:uploadProgressBlock
-            downloadProgressBlock:downloadProgressBlock
-                     successBlock:successBlock
-                       errorBlock:errorBlock];
-        
-    } else {
-        NSAssert(NO, @"unsupported HTTP method");
-        return nil;
-    }
-}
-
-- (STHTTPRequest *)postResource:(NSString *)resource
-                  baseURLString:(NSString *)baseURLString // no trailing slash
-                     parameters:(NSDictionary *)params
-                  oauthCallback:(NSString *)oauthCallback
-            uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-          downloadProgressBlock:(void(^)(STHTTPRequest *r, id json))downloadProgressBlock
-                   successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
-                     errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
-    
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", baseURLString, resource];
     
     __block __weak STHTTPRequest *wr = nil;
     STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
-                                                       HTTPMethod:@"POST"
+                                                       HTTPMethod:HTTPMethod
                                                  timeoutInSeconds:_timeoutInSeconds
                                      stTwitterUploadProgressBlock:uploadProgressBlock
-                                           stTwitterDownloadProgressBlock:^(id json) {
-                                               if(downloadProgressBlock) downloadProgressBlock(wr, json);
-                                           } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
-                                               successBlock(wr, requestHeaders, responseHeaders, json);
-                                           } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-                                               errorBlock(wr, requestHeaders, responseHeaders, error);
-                                           }];
+                                   stTwitterDownloadProgressBlock:^(id json) {
+                                       if(downloadProgressBlock) downloadProgressBlock(wr, json);
+                                   } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
+                                       successBlock(wr, requestHeaders, responseHeaders, json);
+                                   } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                                       errorBlock(wr, requestHeaders, responseHeaders, error);
+                                   }];
     wr = r;
-    r.POSTDictionary = params;
     
-	NSString *postKey = [params valueForKey:kSTPOSTDataKey];
-    // https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
-    NSData *postData = [params valueForKey:postKey];
-    NSString *postMediaFileName = [params valueForKey:kSTPOSTMediaFileNameKey];
+    r.HTTPMethod = HTTPMethod;
     
-    NSMutableDictionary *mutableParams = [params mutableCopy];
-    [mutableParams removeObjectForKey:kSTPOSTDataKey];
-    [mutableParams removeObjectForKey:kSTPOSTMediaFileNameKey];
-    if(postData) {
-        [mutableParams removeObjectForKey:postKey];
+    NSString *postKey = [params valueForKey:kSTPOSTDataKey];
+    NSData *postData = [params valueForKey:postKey];;
+    
+    if([HTTPMethod isEqualToString:@"GET"]) {
+        r.GETDictionary = params;
+        [self signRequest:r];
+    } else {
+        // https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
         
-        NSString *filename = postMediaFileName ? postMediaFileName : @"media.jpg";
+        r.POSTDictionary = params;
         
-        [r addDataToUpload:postData parameterName:postKey mimeType:@"application/octet-stream" fileName:filename];
+        NSString *postMediaFileName = [params valueForKey:kSTPOSTMediaFileNameKey];
+        
+        NSMutableDictionary *mutableParams = [params mutableCopy];
+        [mutableParams removeObjectForKey:kSTPOSTDataKey];
+        [mutableParams removeObjectForKey:kSTPOSTMediaFileNameKey];
+        if(postData) {
+            [mutableParams removeObjectForKey:postKey];
+            
+            NSString *filename = postMediaFileName ? postMediaFileName : @"media.jpg";
+            
+            [r addDataToUpload:postData parameterName:postKey mimeType:@"application/octet-stream" fileName:filename];
+        }
+        
+        [self signRequest:r isMediaUpload:(postData != nil) oauthCallback:oauthCallback];
+        
+        // POST parameters must not be encoded while posting media, or spaces will appear as %20 in the status
+        r.encodePOSTDictionary = (postData == nil);
+        
+        r.POSTDictionary = mutableParams ? mutableParams : @{};
     }
-    
-    [self signRequest:r isMediaUpload:(postData != nil) oauthCallback:oauthCallback];
-    
-    // POST parameters must not be encoded while posting media, or spaces will appear as %20 in the status
-    r.encodePOSTDictionary = (postData == nil);
-    
-    r.POSTDictionary = mutableParams ? mutableParams : @{};
     
     [r startAsynchronous];
     
@@ -577,14 +542,15 @@ downloadProgressBlock:(void(^)(id r, id json))downloadProgressBlock
                    successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                      errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
-    return [self postResource:resource
-                baseURLString:baseURLString
-                   parameters:params
-                oauthCallback:nil
-          uploadProgressBlock:nil
-        downloadProgressBlock:progressBlock
-                 successBlock:successBlock
-                   errorBlock:errorBlock];
+    return [self fetchResource:resource
+                    HTTPMethod:@"POST"
+                 baseURLString:baseURLString
+                    parameters:params
+                 oauthCallback:nil
+           uploadProgressBlock:nil
+         downloadProgressBlock:progressBlock
+                  successBlock:successBlock
+                    errorBlock:errorBlock];
 }
 
 // convenience
@@ -595,14 +561,15 @@ downloadProgressBlock:(void(^)(id r, id json))downloadProgressBlock
                    successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                      errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
-    return [self postResource:resource
-                baseURLString:baseURLString
-                   parameters:params
-                oauthCallback:oauthCallback
-          uploadProgressBlock:nil
-        downloadProgressBlock:nil
-                 successBlock:successBlock
-                   errorBlock:errorBlock];
+    return [self fetchResource:resource
+                    HTTPMethod:@"POST"
+                 baseURLString:baseURLString
+                    parameters:params
+                 oauthCallback:oauthCallback
+           uploadProgressBlock:nil
+         downloadProgressBlock:nil
+                  successBlock:successBlock
+                    errorBlock:errorBlock];
 }
 
 // convenience
@@ -612,14 +579,15 @@ downloadProgressBlock:(void(^)(id r, id json))downloadProgressBlock
                    successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                      errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
-    return [self postResource:resource
-                baseURLString:baseURLString
-                   parameters:params
-                oauthCallback:nil
-          uploadProgressBlock:nil
-        downloadProgressBlock:nil
-                 successBlock:successBlock
-                   errorBlock:errorBlock];
+    return [self fetchResource:resource
+                    HTTPMethod:@"POST"
+                 baseURLString:baseURLString
+                    parameters:params
+                 oauthCallback:nil
+           uploadProgressBlock:nil
+         downloadProgressBlock:nil
+                  successBlock:successBlock
+                    errorBlock:errorBlock];
 }
 
 @end
