@@ -33,7 +33,7 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (copy) completionDataBlock_t completionDataBlock;
 
 // request
-@property (nonatomic, strong) NSString *HTTPMethod; // default: GET, or POST if POSTDictionary or files to upload
+@property (nonatomic, strong) NSString *HTTPMethod; // default: GET, overridden by POST if POSTDictionary or files to upload
 @property (nonatomic, strong) NSMutableDictionary *requestHeaders;
 @property (nonatomic, strong) NSDictionary *POSTDictionary; // keys and values are NSString instances
 @property (nonatomic, strong) NSDictionary *GETDictionary; // appended to the URL string
