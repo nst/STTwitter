@@ -4341,6 +4341,109 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
+#pragma mark UNDOCUMENTED APIS VALID ONLY FOR TWEETDECK
+
+// GET schedule/status/list.json
+- (void)_getScheduleStatusesWithCount:(NSString *)count
+                      includeEntities:(NSNumber *)includeEntities
+                  includeUserEntities:(NSNumber *)includeUserEntities
+                         includeCards:(NSNumber *)includeCards
+                         successBlock:(void(^)(NSArray *scheduledTweets))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(count) md[@"count"] = count;
+    if(includeEntities) md[@"include_entities"] = @([includeEntities boolValue]);
+    if(includeUserEntities) md[@"include_user_entities"] = @([includeUserEntities boolValue]);
+    if(includeCards) md[@"include_cards"] = @([includeCards boolValue]);
+    
+    [self getAPIResource:@"schedule/status/list.json"
+              parameters:md
+            successBlock:^(NSDictionary *rateLimits, id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// POST schedule/status/tweet.json
+- (void)_postScheduleStatus:(NSString *)status
+                  executeAt:(NSString *)executeAtUnixTimestamp
+                   mediaIDs:(NSArray *)mediaIDs
+               successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(status);
+    NSParameterAssert(executeAtUnixTimestamp);
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"status"] = status;
+    md[@"execute_at"] = executeAtUnixTimestamp;
+    if(mediaIDs) md[@"media_ids"] = [mediaIDs componentsJoinedByString:@","];
+    
+    [self postAPIResource:@"schedule/status/tweet.json"
+               parameters:md
+             successBlock:^(NSDictionary *rateLimits, id response) {
+        successBlock(response);
+    } errorBlock:^(NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// DELETE schedule/status/:id.json
+// delete a scheduled tweet
+- (void)_deleteScheduleStatusWithID:(NSString *)statusID
+                       successBlock:(void(^)(NSDictionary *deletedTweet))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(statusID);
+
+    NSString *resource = [NSString stringWithFormat:@"schedule/status/%@.json", statusID];
+    
+    [self fetchResource:resource
+             HTTPMethod:@"DELETE"
+          baseURLString:kBaseURLStringAPI_1_1
+             parameters:nil
+    uploadProgressBlock:nil
+  downloadProgressBlock:nil
+           successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+               successBlock(response);
+    } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+        errorBlock(error);
+    }];
+}
+
+// PUT schedule/status/:id.json
+// edit a scheduled tweet
+- (void)_putScheduleStatusWithID:(NSString *)statusID
+                          status:(NSString *)status
+                 executeAt:(NSString *)executeAtUnixTimestamp
+                  mediaIDs:(NSArray *)mediaIDs
+              successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
+                errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSParameterAssert(statusID);
+    
+    NSString *resource = [NSString stringWithFormat:@"schedule/status/%@.json", statusID];
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(status) md[@"status"] = status;
+    if(executeAtUnixTimestamp) md[@"execute_at"] = executeAtUnixTimestamp;
+    if(mediaIDs) md[@"media_ids"] = [mediaIDs componentsJoinedByString:@","];
+
+    [self fetchResource:resource
+             HTTPMethod:@"PUT"
+          baseURLString:kBaseURLStringAPI_1_1
+             parameters:md
+    uploadProgressBlock:nil
+  downloadProgressBlock:nil
+           successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+               successBlock(response);
+           } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               errorBlock(error);
+           }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)

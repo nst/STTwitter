@@ -2063,4 +2063,37 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                            successBlock:(void(^)(id results))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock;
 
+#pragma mark UNDOCUMENTED APIS VALID ONLY FOR TWEETDECK
+
+// GET schedule/status/list.json
+- (void)_getScheduleStatusesWithCount:(NSString *)count
+                      includeEntities:(NSNumber *)includeEntities
+                  includeUserEntities:(NSNumber *)includeUserEntities
+                         includeCards:(NSNumber *)includeCards
+                         successBlock:(void(^)(NSArray *scheduledTweets))successBlock
+                           errorBlock:(void(^)(NSError *error))errorBlock;
+
+// POST schedule/status/tweet.json
+- (void)_postScheduleStatus:(NSString *)status
+                  executeAt:(NSString *)executeAtUnixTimestamp
+                   mediaIDs:(NSArray *)mediaIDs
+               successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock;
+
+// DELETE schedule/status/:id.json
+// delete a scheduled tweet
+- (void)_deleteScheduleStatusWithID:(NSString *)statusID
+                       successBlock:(void(^)(NSDictionary *deletedTweet))successBlock
+                         errorBlock:(void(^)(NSError *error))errorBlock;
+
+// PUT schedule/status/:id.json
+// edit a scheduled tweet
+- (void)_putScheduleStatusWithID:(NSString *)statusID
+                          status:(NSString *)status
+                       executeAt:(NSString *)executeAtUnixTimestamp
+                        mediaIDs:(NSArray *)mediaIDs
+                    successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+
 @end
