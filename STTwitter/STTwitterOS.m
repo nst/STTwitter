@@ -183,6 +183,16 @@
     return [r startRequest]; // NSURLConnection
 }
 
++ (SLRequestMethod)slRequestMethodForString:(NSString *)HTTPMethod {
+    if([HTTPMethod isEqualToString:@"POST"]) return SLRequestMethodPOST;
+    if([HTTPMethod isEqualToString:@"PUT"]) return SLRequestMethodPUT;
+    if([HTTPMethod isEqualToString:@"DELETE"]) return SLRequestMethodDELETE;
+    if([HTTPMethod isEqualToString:@"GET"] == NO) {
+        NSAssert(NO, @"Unsupported HTTP method");
+    }
+    return SLRequestMethodGET;
+}
+
 - (id)fetchResource:(NSString *)resource
          HTTPMethod:(NSString *)HTTPMethod
       baseURLString:(NSString *)baseURLString
@@ -192,15 +202,12 @@ downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME:
        successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
          errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
-    NSAssert(([ @[@"GET", @"POST"] containsObject:HTTPMethod]), @"unsupported HTTP method");
-    
-    NSInteger slRequestMethod = SLRequestMethodGET;
+    NSInteger slRequestMethod = [[self class] slRequestMethodForString:HTTPMethod];
     
     NSDictionary *d = params;
     
-    if([HTTPMethod isEqualToString:@"POST"]) {
+    if([HTTPMethod isEqualToString:@"GET"] == NO) {
         if (d == nil) d = @{};
-        slRequestMethod = SLRequestMethodPOST;
     }
     
     NSString *baseURLStringWithTrailingSlash = baseURLString;
