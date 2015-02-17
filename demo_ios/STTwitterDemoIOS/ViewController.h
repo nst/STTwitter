@@ -21,6 +21,7 @@
 
 - (IBAction)loginWithiOSAction:(id)sender;
 - (IBAction)loginOnTheWebAction:(id)sender;
+- (IBAction)reverseAuthAction:(id)sender;
 - (IBAction)getTimelineAction:(id)sender;
 
 - (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verfier;

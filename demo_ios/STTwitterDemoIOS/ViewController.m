@@ -11,10 +11,13 @@
 #import "WebViewVC.h"
 #import <Accounts/Accounts.h>
 
+typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage); // don't bother with NSError for that
+
 @interface ViewController ()
 @property (nonatomic, strong) STTwitterAPI *twitter;
 @property (nonatomic, strong) ACAccountStore *accountStore;
 @property (nonatomic, strong) NSArray *iOSAccounts;
+@property (nonatomic, strong) accountChooserBlock_t accountChooserBlock;
 @end
 
 // https://dev.twitter.com/docs/auth/implementing-sign-twitter
@@ -42,51 +45,24 @@
 - (IBAction)loginWithiOSAction:(id)sender {
     
     _loginStatusLabel.text = @"Trying to login with iOS...";
+
+    __weak typeof(self) weakSelf = self;
     
-    ACAccountType *accountType = [_accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    
-    ACAccountStoreRequestAccessCompletionHandler accountStoreRequestCompletionHandler = ^(BOOL granted, NSError *error) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+    self.accountChooserBlock = ^(ACAccount *account, NSString *errorMessage) {
+        
+        NSString *status = nil;
+        if(account) {
+            status = [NSString stringWithFormat:@"Did select %@", account.username];
             
-            if(granted == NO) {
-                _loginStatusLabel.text = @"Acccess not granted";
-                return;
-            }
-            
-            self.iOSAccounts = [_accountStore accountsWithAccountType:accountType];
-            
-            if([_iOSAccounts count] == 1) {
-                ACAccount *account = [_iOSAccounts lastObject];
-                
-                [self loginWithiOSAccount:account];
-            } else {
-                UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"Select an account:"
-                                                                delegate:self
-                                                       cancelButtonTitle:@"Cancel"
-                                                  destructiveButtonTitle:nil otherButtonTitles:nil];
-                for(ACAccount *account in _iOSAccounts) {
-                    [as addButtonWithTitle:[NSString stringWithFormat:@"@%@", account.username]];
-                }
-                [as showInView:self.view.window];
-            }
-        }];
+            [weakSelf loginWithiOSAccount:account];
+        } else {
+            status = errorMessage;
+        }
+        
+        weakSelf.loginStatusLabel.text = status;
     };
     
-#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
-        [self.accountStore requestAccessToAccountsWithType:accountType
-                                     withCompletionHandler:accountStoreRequestCompletionHandler];
-    } else {
-        [self.accountStore requestAccessToAccountsWithType:accountType
-                                                   options:NULL
-                                                completion:accountStoreRequestCompletionHandler];
-    }
-#else
-    [self.accountStore requestAccessToAccountsWithType:accountType
-                                               options:NULL
-                                            completion:accountStoreRequestCompletionHandler];
-#endif
-    
+    [self chooseAccount];
 }
 
 - (void)loginWithiOSAccount:(ACAccount *)account {
@@ -170,6 +146,51 @@
     }];
 }
 
+- (IBAction)reverseAuthAction:(id)sender {
+    
+    STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil consumerKey:_consumerKeyTextField.text consumerSecret:_consumerSecretTextField.text];
+
+    __weak typeof(self) weakSelf = self;
+
+    [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
+        
+        self.accountChooserBlock = ^(ACAccount *account, NSString *errorMessage) {
+
+            if(account == nil) {
+                weakSelf.loginStatusLabel.text = errorMessage;
+                return;
+            }
+            
+            STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithAccount:account];
+            
+            [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
+                
+                [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
+                    
+                    weakSelf.loginStatusLabel.text = [NSString stringWithFormat:@"Reverse auth. success for @%@", screenName];
+                    
+                    NSLog(@"-- REVERSE AUTH OK");
+                    NSLog(@"-- you can now access @%@ account (ID: %@) with specified consumer tokens and the following access tokens:", screenName, userID);
+                    NSLog(@"-- oAuthToken: %@", oAuthToken);
+                    NSLog(@"-- oAuthTokenSecret: %@", oAuthTokenSecret);
+                    
+                } errorBlock:^(NSError *error) {
+                    weakSelf.loginStatusLabel.text = [error localizedDescription];
+                }];
+                
+            } errorBlock:^(NSError *error) {
+                weakSelf.loginStatusLabel.text = [error localizedDescription];
+            }];
+
+        };
+        
+        [self chooseAccount];
+        
+    } errorBlock:^(NSError *error) {
+        _loginStatusLabel.text = [error localizedDescription];
+    }];
+}
+
 - (IBAction)getTimelineAction:(id)sender {
     
     self.getTimelineStatusLabel.text = @"";
@@ -189,6 +210,53 @@
                         } errorBlock:^(NSError *error) {
                             self.getTimelineStatusLabel.text = [error localizedDescription];
                         }];
+}
+
+- (void)chooseAccount {
+    
+    ACAccountType *accountType = [_accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    
+    ACAccountStoreRequestAccessCompletionHandler accountStoreRequestCompletionHandler = ^(BOOL granted, NSError *error) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            if(granted == NO) {
+                _accountChooserBlock(nil, @"Acccess not granted.");
+                return;
+            }
+            
+            self.iOSAccounts = [_accountStore accountsWithAccountType:accountType];
+            
+            if([_iOSAccounts count] == 1) {
+                ACAccount *account = [_iOSAccounts lastObject];
+                _accountChooserBlock(account, nil);
+            } else {
+                UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"Select an account:"
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Cancel"
+                                                  destructiveButtonTitle:nil otherButtonTitles:nil];
+                for(ACAccount *account in _iOSAccounts) {
+                    [as addButtonWithTitle:[NSString stringWithFormat:@"@%@", account.username]];
+                }
+                [as showInView:self.view.window];
+            }
+        }];
+    };
+    
+#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
+    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                     withCompletionHandler:accountStoreRequestCompletionHandler];
+    } else {
+        [self.accountStore requestAccessToAccountsWithType:accountType
+                                                   options:NULL
+                                                completion:accountStoreRequestCompletionHandler];
+    }
+#else
+    [self.accountStore requestAccessToAccountsWithType:accountType
+                                               options:NULL
+                                            completion:accountStoreRequestCompletionHandler];
+#endif
+
 }
 
 #pragma mark UITableViewDataSource
@@ -221,17 +289,14 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if(buttonIndex == [actionSheet cancelButtonIndex]) {
-        NSString *username = _twitter.userName;
-        _loginStatusLabel.text = username ? [NSString stringWithFormat:@"@%@", username] : @"";
+        _accountChooserBlock(nil, @"Account selection was cancelled.");
         return;
     }
     
     NSUInteger accountIndex = buttonIndex - 1;
     ACAccount *account = [_iOSAccounts objectAtIndex:accountIndex];
     
-    _loginStatusLabel.text = [NSString stringWithFormat:@"Did select %@", account.username];
-    
-    [self loginWithiOSAccount:account];
+    _accountChooserBlock(account, nil);
 }
 
 @end
