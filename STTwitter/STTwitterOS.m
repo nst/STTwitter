@@ -294,6 +294,12 @@ downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME:
            successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                
                if([response containsString:@"<error code=\"87\">Client is not permitted to perform this action</error>"]) {
+                   /*
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <errors>
+                    <error code="87">Client is not permitted to perform this action</error>
+                    </errors>
+                    */
                    NSString *message = @"Client is not permitted to perform this action";
                    NSError *error = [NSError errorWithDomain:@"STTwitterTwitterErrorDomain" code:87 userInfo:@{NSLocalizedDescriptionKey : message}];
                    errorBlock(error);
