@@ -43,6 +43,14 @@
             message = errors;
         }
     }
+
+    // TODO: handle XML errors with NSXMLParser or regex, eg.
+    /*
+     <?xml version="1.0" encoding="UTF-8"?>
+     <errors>
+     <error code="87">Client is not permitted to perform this action</error>
+     </errors>
+     */
     
     if(message) {
         NSString *rateLimitLimit = [responseHeaders valueForKey:@"x-rate-limit-limit"];
