@@ -141,6 +141,24 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
 }];
 ```
 
+##### Enumerate results with cursors, pause according to rate limits
+
+```Objective-C
+[_twitter fetchAndFollowCursorsForResource:@"followers/ids.json"
+                                HTTPMethod:@"GET"
+                             baseURLString:@"https://api.twitter.com/1.1"
+                                parameters:@{@"screen_name":@"0xcharlie"}
+                       uploadProgressBlock:nil
+                     downloadProgressBlock:nil
+                              successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome, BOOL *stop) {
+    NSLog(@"-- success, more to come: %d, %@", morePagesToCome, response);
+} pauseBlock:^(NSDate *nextRequestDate) {
+    NSLog(@"-- rate limit exhausted, nextRequestDate: %@", nextRequestDate);
+} errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+    NSLog(@"-- %@", error);
+}];
+```
+
 ### Various Kinds of OAuth Connections
 
 You can instantiate `STTwitterAPI` in three ways:
