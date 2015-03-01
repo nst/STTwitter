@@ -71,7 +71,7 @@ static NSDateFormatter *dateFormatter = nil;
                                                   consumerSecret:consumerSecret
                                                         username:username
                                                         password:password];
-
+    
     return twitter;
 }
 
@@ -144,7 +144,7 @@ static NSDateFormatter *dateFormatter = nil;
     STTwitterAppOnly *appOnly = [STTwitterAppOnly twitterAppOnlyWithConsumerName:consumerName consumerKey:consumerKey consumerSecret:consumerSecret];
     
     twitter.oauth = appOnly;
-
+    
     return twitter;
 }
 
@@ -289,6 +289,78 @@ downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
            downloadProgressBlock:downloadProgressBlock
                     successBlock:successBlock
                       errorBlock:errorBlock];
+}
+
+- (id)fetchResource:(NSString *)resource
+         HTTPMethod:(NSString *)HTTPMethod
+      baseURLString:(NSString *)baseURLString
+         parameters:(NSDictionary *)params
+uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
+       followCursor:(BOOL)followCursor
+       successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome))successBlock // TODO: add *stop
+         pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
+         errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+    
+    return [_oauth fetchResource:resource
+                      HTTPMethod:HTTPMethod
+                   baseURLString:baseURLString
+                      parameters:params
+             uploadProgressBlock:uploadProgressBlock
+           downloadProgressBlock:downloadProgressBlock
+                    successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+                        
+                        // https://dev.twitter.com/overview/api/cursoring
+                        
+                        NSString *nextCursor = [response valueForKey:@"next_cursor_str"];
+                        
+                        BOOL morePagesToCome = NO;
+                        
+                        NSMutableDictionary *paramsWithCursor = [params mutableCopy];
+                        if(followCursor && [nextCursor integerValue] > 0) {
+                            paramsWithCursor[@"cursor"] = nextCursor;
+                            morePagesToCome = YES;
+                        }
+                        
+                        successBlock(request, requestHeaders, responseHeaders, response, morePagesToCome);
+                        
+                        if(morePagesToCome == NO) return;
+                        
+                        /**/
+                        
+                        NSString *remainingString = [responseHeaders objectForKey:@"x-rate-limit-remaining"];
+                        NSString *resetString = [responseHeaders objectForKey:@"x-rate-limit-reset"];
+                        
+                        NSInteger remainingInteger = [remainingString integerValue];
+                        NSInteger resetInteger = [resetString integerValue];
+                        NSTimeInterval timeInterval = 0;
+                        
+                        if(remainingInteger == 0) {
+                            NSDate *resetDate = [[NSDate alloc] initWithTimeIntervalSince1970:resetInteger];
+                            timeInterval = [resetDate timeIntervalSinceDate:[NSDate date]] + 5;
+                            pauseBlock([NSDate dateWithTimeIntervalSinceNow:timeInterval]);
+                            //NSLog(@"-- wait for %@ seconds", @(timeInterval));
+                        }
+                        
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            
+                            [self fetchResource:resource
+                                     HTTPMethod:HTTPMethod
+                                  baseURLString:baseURLString
+                                     parameters:paramsWithCursor
+                            uploadProgressBlock:uploadProgressBlock
+                          downloadProgressBlock:downloadProgressBlock
+                                   followCursor:followCursor
+                                   successBlock:successBlock
+                                     pauseBlock:pauseBlock
+                                     errorBlock:errorBlock];
+                            
+                        });
+                        
+                        /**/
+                        
+                        
+                    } errorBlock:errorBlock];
 }
 
 - (id)getResource:(NSString *)resource
@@ -1096,10 +1168,10 @@ downloadProgressBlock:nil
     // don't encode colon ':' because we need to accept "from:username", see https://github.com/nst/STTwitter/issues/156
     
     NSString *s2 = (__bridge_transfer NSString *)(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                         (CFStringRef)s,
-                                                                                         NULL,
-                                                                                         CFSTR("!*'();@&=+$,/?%#[]"),
-                                                                                         kCFStringEncodingUTF8));
+                                                                                          (CFStringRef)s,
+                                                                                          NULL,
+                                                                                          CFSTR("!*'();@&=+$,/?%#[]"),
+                                                                                          kCFStringEncodingUTF8));
     return s2;
 }
 
@@ -4350,7 +4422,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                          includeCards:(NSNumber *)includeCards
                          successBlock:(void(^)(NSArray *scheduledTweets))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(count) md[@"count"] = count;
     if(includeEntities) md[@"include_entities"] = @([includeEntities boolValue]);
@@ -4360,10 +4432,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     [self getAPIResource:@"schedule/status/list.json"
               parameters:md
             successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                successBlock(response);
+            } errorBlock:^(NSError *error) {
+                errorBlock(error);
+            }];
 }
 
 // POST schedule/status/tweet.json
@@ -4372,7 +4444,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                    mediaIDs:(NSArray *)mediaIDs
                successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
                  errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(status);
     NSParameterAssert(executeAtUnixTimestamp);
     
@@ -4384,10 +4456,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     [self postAPIResource:@"schedule/status/tweet.json"
                parameters:md
              successBlock:^(NSDictionary *rateLimits, id response) {
-        successBlock(response);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+                 successBlock(response);
+             } errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
 }
 
 // DELETE schedule/status/:id.json
@@ -4395,9 +4467,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 - (void)_deleteScheduleStatusWithID:(NSString *)statusID
                        successBlock:(void(^)(NSDictionary *deletedTweet))successBlock
                          errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSParameterAssert(statusID);
-
+    
     NSString *resource = [NSString stringWithFormat:@"schedule/status/%@.json", statusID];
     
     [self fetchResource:resource
@@ -4408,29 +4480,29 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
   downloadProgressBlock:nil
            successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                successBlock(response);
-    } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-        errorBlock(error);
-    }];
+           } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               errorBlock(error);
+           }];
 }
 
 // PUT schedule/status/:id.json
 // edit a scheduled tweet
 - (void)_putScheduleStatusWithID:(NSString *)statusID
                           status:(NSString *)status
-                 executeAt:(NSString *)executeAtUnixTimestamp
-                  mediaIDs:(NSArray *)mediaIDs
-              successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
-                errorBlock:(void(^)(NSError *error))errorBlock {
-
+                       executeAt:(NSString *)executeAtUnixTimestamp
+                        mediaIDs:(NSArray *)mediaIDs
+                    successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock {
+    
     NSParameterAssert(statusID);
     
     NSString *resource = [NSString stringWithFormat:@"schedule/status/%@.json", statusID];
-
+    
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(status) md[@"status"] = status;
     if(executeAtUnixTimestamp) md[@"execute_at"] = executeAtUnixTimestamp;
     if(mediaIDs) md[@"media_ids"] = [mediaIDs componentsJoinedByString:@","];
-
+    
     [self fetchResource:resource
              HTTPMethod:@"PUT"
           baseURLString:kBaseURLStringAPI_1_1
