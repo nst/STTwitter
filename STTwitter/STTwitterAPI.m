@@ -291,16 +291,17 @@ downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
                       errorBlock:errorBlock];
 }
 
-- (id)fetchResource:(NSString *)resource
-         HTTPMethod:(NSString *)HTTPMethod
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)params
-uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
-       followCursor:(BOOL)followCursor
-       successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome))successBlock // TODO: add *stop
-         pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
-         errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+- (id)fetchAndFollowCursorsForResource:(NSString *)resource
+                            HTTPMethod:(NSString *)HTTPMethod
+                         baseURLString:(NSString *)baseURLString
+                            parameters:(NSDictionary *)params
+                   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                 downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
+                          successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome, BOOL *stop))successBlock
+                            pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
+                            errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+    
+    __block BOOL shouldStop = NO;
     
     return [_oauth fetchResource:resource
                       HTTPMethod:HTTPMethod
@@ -317,16 +318,16 @@ downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
                         BOOL morePagesToCome = NO;
                         
                         NSMutableDictionary *paramsWithCursor = [params mutableCopy];
-                        if(followCursor && [nextCursor integerValue] > 0) {
+                        if([nextCursor integerValue] > 0) {
                             paramsWithCursor[@"cursor"] = nextCursor;
                             morePagesToCome = YES;
                         }
                         
-                        successBlock(request, requestHeaders, responseHeaders, response, morePagesToCome);
+                        successBlock(request, requestHeaders, responseHeaders, response, morePagesToCome, &shouldStop);
                         
-                        if(morePagesToCome == NO) return;
+                        if(shouldStop || morePagesToCome == NO) return;
                         
-                        /**/
+                        // now consider rate limits
                         
                         NSString *remainingString = [responseHeaders objectForKey:@"x-rate-limit-remaining"];
                         NSString *resetString = [responseHeaders objectForKey:@"x-rate-limit-reset"];
@@ -339,26 +340,21 @@ downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
                             NSDate *resetDate = [[NSDate alloc] initWithTimeIntervalSince1970:resetInteger];
                             timeInterval = [resetDate timeIntervalSinceDate:[NSDate date]] + 5;
                             pauseBlock([NSDate dateWithTimeIntervalSinceNow:timeInterval]);
-                            //NSLog(@"-- wait for %@ seconds", @(timeInterval));
                         }
                         
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             
-                            [self fetchResource:resource
-                                     HTTPMethod:HTTPMethod
-                                  baseURLString:baseURLString
-                                     parameters:paramsWithCursor
-                            uploadProgressBlock:uploadProgressBlock
-                          downloadProgressBlock:downloadProgressBlock
-                                   followCursor:followCursor
-                                   successBlock:successBlock
-                                     pauseBlock:pauseBlock
-                                     errorBlock:errorBlock];
+                            [self fetchAndFollowCursorsForResource:resource
+                                                        HTTPMethod:HTTPMethod
+                                                     baseURLString:baseURLString
+                                                        parameters:paramsWithCursor
+                                               uploadProgressBlock:uploadProgressBlock
+                                             downloadProgressBlock:downloadProgressBlock
+                                                      successBlock:successBlock
+                                                        pauseBlock:pauseBlock
+                                                        errorBlock:errorBlock];
                             
                         });
-                        
-                        /**/
-                        
                         
                     } errorBlock:errorBlock];
 }

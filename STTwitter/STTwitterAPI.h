@@ -148,16 +148,15 @@ downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
        successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
          errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
-- (id)fetchResource:(NSString *)resource
-         HTTPMethod:(NSString *)HTTPMethod
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)params
-uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
-       followCursor:(BOOL)followCursor
-       successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome))successBlock // TODO: add *stop
-         pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
-         errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
+- (id)fetchAndFollowCursorsForResource:(NSString *)resource
+                            HTTPMethod:(NSString *)HTTPMethod
+                         baseURLString:(NSString *)baseURLString
+                            parameters:(NSDictionary *)params
+                   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                 downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
+                          successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome, BOOL *stop))successBlock
+                            pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
+                            errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
 - (id)getResource:(NSString *)resource
     baseURLString:(NSString *)baseURLString
