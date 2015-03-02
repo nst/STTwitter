@@ -3629,7 +3629,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSString *resource = [NSString stringWithFormat:@"saved_searches/destroy/%@.json", savedSearchID];
     
-    [self postAPIResource:resource parameters:nil successBlock:^(NSDictionary *rateLimits, id response) {
+    [self postAPIResource:resource parameters:@{} successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
