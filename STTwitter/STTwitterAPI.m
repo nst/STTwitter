@@ -240,11 +240,17 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSString *)oauthAccessTokenSecret {
-    return [_oauth oauthAccessTokenSecret];
+    if([_oauth respondsToSelector:@selector(oauthAccessTokenSecret)]) {
+        return [_oauth oauthAccessTokenSecret];
+    }
+    return nil;
 }
 
 - (NSString *)oauthAccessToken {
-    return [_oauth oauthAccessToken];
+    if([_oauth respondsToSelector:@selector(oauthAccessToken)]) {
+        return [_oauth oauthAccessToken];
+    }
+    return nil;
 }
 
 - (NSString *)bearerToken {
