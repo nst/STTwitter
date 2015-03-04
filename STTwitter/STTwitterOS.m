@@ -100,10 +100,14 @@
         errorBlock(error);
         return;
     }
-    
+
+    __weak typeof(self) weakSelf = self;
+
     ACAccountStoreRequestAccessCompletionHandler accountStoreRequestCompletionHandler = ^(BOOL granted, NSError *error) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
+            typeof(self) strongSelf = weakSelf;
+
             if(granted == NO) {
                 
                 if(error) {
@@ -117,15 +121,18 @@
                 return;
             }
             
-            if(self.account == nil) {
-                NSArray *accounts = [self.accountStore accountsWithAccountType:accountType];
+            if(strongSelf.account == nil) {
+                NSArray *accounts = [strongSelf.accountStore accountsWithAccountType:accountType];
                 
                 // ignore accounts that have no indentifier
                 // possible workaround for accounts with no password stored
                 // see https://twittercommunity.com/t/ios-6-twitter-accounts-with-no-password-stored/6183
                 NSMutableArray *accountsWithIdentifiers = [NSMutableArray array];
                 [accounts enumerateObjectsUsingBlock:^(ACAccount *account, NSUInteger idx, BOOL *stop) {
-                    if([[account identifier] length] > 0) {
+
+                    NSString *accountID = [account identifier];
+                    
+                    if([accountID length] > 0) {
                         [accountsWithIdentifiers addObject:account];
                     } else {
                         NSLog(@"-- ignore account %@ because identifier is empty", account);
@@ -139,10 +146,10 @@
                     return;
                 }
                 
-                self.account = [accountsWithIdentifiers firstObject];
+                strongSelf.account = [accountsWithIdentifiers firstObject];
             }
             
-            successBlock(self.account.username);
+            successBlock(strongSelf.account.username);
         }];
     };
     

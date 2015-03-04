@@ -35,11 +35,13 @@ static NSDateFormatter *dateFormatter = nil;
     
     [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         // account must be considered invalid
-        
+
         if(weakSelf == nil) return;
+
+        typeof(self) strongSelf = weakSelf;
         
-        if([weakSelf.oauth isKindOfClass:[STTwitterOS class]]) {
-            weakSelf.oauth = nil;
+        if([strongSelf.oauth isKindOfClass:[STTwitterOS class]]) {
+            strongSelf.oauth = nil;
         }
     }];
     
@@ -213,15 +215,19 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     if([_oauth canVerifyCredentials]) {
         [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username) {
-            [weakSelf setUserName:username];
+            typeof(self) strongSelf = weakSelf;
+
+            [strongSelf setUserName:username];
             successBlock(username);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
     } else {
         [self getAccountVerifyCredentialsWithSuccessBlock:^(NSDictionary *account) {
+            typeof(self) strongSelf = weakSelf;
+
             NSString *username = [account valueForKey:@"screen_name"];
-            [weakSelf setUserName:username];
+            [strongSelf setUserName:username];
             successBlock(username);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
@@ -542,18 +548,25 @@ downloadProgressBlock:nil
 
              errorBlock:(void(^)(NSError *error))errorBlock {
     
+    __weak typeof(self) weakSelf = self;
+
     [self getUserInformationFor:screenName
                    successBlock:^(NSDictionary *response) {
+                       
+                       typeof(self) strongSelf = weakSelf;
+
                        NSString *imageURLString = [response objectForKey:@"profile_image_url"];
                        
-                       __block STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
+                       STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
                        __weak STHTTPRequest *wr = r;
                        
-                       r.timeoutSeconds = _oauth.timeoutInSeconds;
+                       r.timeoutSeconds = strongSelf.oauth.timeoutInSeconds;
                        
                        r.completionBlock = ^(NSDictionary *headers, NSString *body) {
+
+                           STHTTPRequest *sr = wr; // strong request
                            
-                           NSData *imageData = wr.responseData;
+                           NSData *imageData = sr.responseData;
                            
 #if TARGET_OS_IPHONE
                            Class STImageClass = NSClassFromString(@"UIImage");

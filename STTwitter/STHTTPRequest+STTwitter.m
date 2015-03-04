@@ -72,38 +72,42 @@
     
     r.completionDataBlock = ^(NSDictionary *responseHeaders, NSData *responseData) {
         
+        STHTTPRequest *sr = wr; // strong request
+
         NSError *jsonError = nil;
         id json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&jsonError];
         
         if(json == nil) {
-            successBlock(wr.requestHeaders, wr.responseHeaders, wr.responseString); // response is not necessarily json
+            successBlock(sr.requestHeaders, sr.responseHeaders, sr.responseString); // response is not necessarily json
             return;
         }
         
-        successBlock(wr.requestHeaders, wr.responseHeaders, json);
+        successBlock(sr.requestHeaders, sr.responseHeaders, json);
     };
     
     r.errorBlock = ^(NSError *error) {
         
-        NSError *e = [NSError st_twitterErrorFromResponseData:wr.responseData responseHeaders:wr.responseHeaders underlyingError:error];
+        STHTTPRequest *sr = wr; // strong request
+
+        NSError *e = [NSError st_twitterErrorFromResponseData:sr.responseData responseHeaders:sr.responseHeaders underlyingError:error];
         if(e) {
-            errorBlock(wr.requestHeaders, wr.responseHeaders, e);
+            errorBlock(sr.requestHeaders, sr.responseHeaders, e);
             return;
         }
 
         if(error) {
-            errorBlock(wr.requestHeaders, wr.responseHeaders, error);
+            errorBlock(sr.requestHeaders, sr.responseHeaders, error);
             return;
         }
         
-        e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : wr.responseString}];
+        e = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : sr.responseString}];
         
-        if (wr.responseString) STLog(@"-- body: %@", wr.responseString);
+        if (sr.responseString) STLog(@"-- body: %@", sr.responseString);
         
         //        BOOL isCancellationError = [[error domain] isEqualToString:@"STHTTPRequest"] && ([error code] == kSTHTTPRequestCancellationError);
         //        if(isCancellationError) return;
         
-        errorBlock(wr.requestHeaders, wr.responseHeaders, e);
+        errorBlock(sr.requestHeaders, sr.responseHeaders, e);
     };
     
     return r;

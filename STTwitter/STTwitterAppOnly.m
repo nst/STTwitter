@@ -112,6 +112,8 @@
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock {
     
+    __weak typeof(self) weakSelf = self;
+
     [self postResource:@"oauth2/token"
          baseURLString:@"https://api.twitter.com"
             parameters:@{ @"grant_type" : @"client_credentials" }
@@ -120,6 +122,8 @@
  downloadProgressBlock:nil
           successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
               
+              typeof(self) strongSelf = weakSelf;
+
               if([json isKindOfClass:[NSDictionary class]] == NO) {
                   NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAppOnlyCannotFindJSONInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find JSON dictionary in response"}];
                   errorBlock(error);
@@ -133,9 +137,9 @@
                   return;
               }
               
-              self.bearerToken = [json valueForKey:@"access_token"];
+              strongSelf.bearerToken = [json valueForKey:@"access_token"];
               
-              successBlock(_bearerToken);
+              successBlock(strongSelf.bearerToken);
               
           } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
               errorBlock(error);
