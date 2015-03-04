@@ -265,10 +265,13 @@ static BOOL globalIgnoreCache = NO;
 
 - (NSArray *)requestCookies {
     
+    __weak typeof(self) weakSelf = self;
+    
     if(_ignoreSharedCookiesStorage) {
         NSArray *filteredCookies = [[[self class] localCookiesStorage] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            typeof(self) strongSelf = weakSelf;
             NSHTTPCookie *cookie = (NSHTTPCookie *)evaluatedObject;
-            return [[cookie domain] isEqualToString:[_url host]];
+            return [[cookie domain] isEqualToString:[strongSelf.url host]];
         }]];
         return filteredCookies;
     } else {
@@ -379,7 +382,7 @@ static BOOL globalIgnoreCache = NO;
     /**/
     
     theURL = [[self class] appendURL:theURL withGETParameters:_GETDictionary];
-
+    
     /**/
     
     if([_HTTPMethod isEqualToString:@"GET"]) {
@@ -407,12 +410,16 @@ static BOOL globalIgnoreCache = NO;
         [request setAllHTTPHeaderFields:d];
     }
     
+    __weak typeof(self) weakSelf = self;
+    
     // escape POST dictionary keys and values if needed
     if(_encodePOSTDictionary) {
         NSMutableDictionary *escapedPOSTDictionary = _POSTDictionary ? [NSMutableDictionary dictionary] : nil;
         [_POSTDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            NSString *k = [key st_stringByAddingRFC3986PercentEscapesUsingEncoding:_POSTDataEncoding];
-            NSString *v = [[obj description] st_stringByAddingRFC3986PercentEscapesUsingEncoding:_POSTDataEncoding];
+            typeof(self) strongSelf = weakSelf;
+            
+            NSString *k = [key st_stringByAddingRFC3986PercentEscapesUsingEncoding:strongSelf.POSTDataEncoding];
+            NSString *v = [[obj description] st_stringByAddingRFC3986PercentEscapesUsingEncoding:strongSelf.POSTDataEncoding];
             [escapedPOSTDictionary setValue:v forKey:k];
         }];
         self.POSTDictionary = escapedPOSTDictionary;
@@ -683,7 +690,7 @@ static BOOL globalIgnoreCache = NO;
         id jsonObject = [NSJSONSerialization JSONObjectWithData:_rawPOSTData options:NSJSONReadingMutableContainers error:nil];
         if(jsonObject) {
             NSString *jsonString = [[NSString alloc] initWithData:_rawPOSTData encoding:NSUTF8StringEncoding];
-//            [ma addObject:@"-X POST"];
+            //            [ma addObject:@"-X POST"];
             [ma addObject:[NSString stringWithFormat:@"-d \'%@\'", jsonString]];
         }
     }
@@ -833,8 +840,11 @@ static BOOL globalIgnoreCache = NO;
                                          code:0
                                      userInfo:userInfo];
         
+        __weak typeof(self) weakSelf = self;
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            _errorBlock(_error);
+            typeof(self) strongSelf = weakSelf;
+            strongSelf.errorBlock(strongSelf.error);
         });
     }
 }
@@ -881,8 +891,11 @@ static BOOL globalIgnoreCache = NO;
                                      code:kSTHTTPRequestCancellationError
                                  userInfo:userInfo];
     
+    __weak typeof(self) weakSelf = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        _errorBlock(_error);
+        typeof(self) strongSelf = weakSelf;
+        strongSelf.errorBlock(strongSelf.error);
     });
 }
 
