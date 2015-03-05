@@ -35,9 +35,9 @@ static NSDateFormatter *dateFormatter = nil;
     
     [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         // account must be considered invalid
-
+        
         if(weakSelf == nil) return;
-
+        
         typeof(self) strongSelf = weakSelf;
         
         if([strongSelf.oauth isKindOfClass:[STTwitterOS class]]) {
@@ -216,7 +216,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if([_oauth canVerifyCredentials]) {
         [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username) {
             typeof(self) strongSelf = weakSelf;
-
+            
             [strongSelf setUserName:username];
             successBlock(username);
         } errorBlock:^(NSError *error) {
@@ -225,7 +225,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     } else {
         [self getAccountVerifyCredentialsWithSuccessBlock:^(NSDictionary *account) {
             typeof(self) strongSelf = weakSelf;
-
+            
             NSString *username = [account valueForKey:@"screen_name"];
             [strongSelf setUserName:username];
             successBlock(username);
@@ -549,12 +549,12 @@ downloadProgressBlock:nil
              errorBlock:(void(^)(NSError *error))errorBlock {
     
     __weak typeof(self) weakSelf = self;
-
+    
     [self getUserInformationFor:screenName
                    successBlock:^(NSDictionary *response) {
                        
                        typeof(self) strongSelf = weakSelf;
-
+                       
                        NSString *imageURLString = [response objectForKey:@"profile_image_url"];
                        
                        STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
@@ -563,7 +563,7 @@ downloadProgressBlock:nil
                        r.timeoutSeconds = strongSelf.oauth.timeoutInSeconds;
                        
                        r.completionBlock = ^(NSDictionary *headers, NSString *body) {
-
+                           
                            STHTTPRequest *sr = wr; // strong request
                            
                            NSData *imageData = sr.responseData;
@@ -1178,18 +1178,6 @@ downloadProgressBlock:nil
 
 #pragma mark Search
 
-- (NSString *)urlEscapedUTF8EncodedSearchString:(NSString *)s {
-    
-    // don't encode colon ':' because we need to accept "from:username", see https://github.com/nst/STTwitter/issues/156
-    
-    NSString *s2 = (__bridge_transfer NSString *)(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                          (CFStringRef)s,
-                                                                                          NULL,
-                                                                                          CFSTR("!*'();@&=+$,/?%#[]"),
-                                                                                          kCFStringEncodingUTF8));
-    return s2;
-}
-
 - (void)getSearchTweetsWithQuery:(NSString *)q
                          geocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
                             lang:(NSString *)lang // eg. "eu"
@@ -1219,7 +1207,8 @@ downloadProgressBlock:nil
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(callback) md[@"callback"] = callback;
     
-    md[@"q"] = [self urlEscapedUTF8EncodedSearchString:q];
+    // eg. "(from:nst021 OR to:nst021)" -> "%28from%3Anst021%20OR%20to%3Anst021%29"
+    md[@"q"] = [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [self getAPIResource:@"search/tweets.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         
