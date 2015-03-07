@@ -227,9 +227,9 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     } else {
         [self getAccountVerifyCredentialsWithSuccessBlock:^(NSDictionary *account) {
             typeof(self) strongSelf = weakSelf;
-
+            
             if(strongSelf == nil) return;
-
+            
             NSString *username = [account valueForKey:@"screen_name"];
             [strongSelf setUserName:username];
             successBlock(username);
@@ -2686,7 +2686,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // GET favorites/list
 - (void)getFavoritesListWithUserID:(NSString *)userID
-                        screenName:(NSString *)screenName
+                      orScreenName:(NSString *)screenName
                              count:(NSString *)count
                            sinceID:(NSString *)sinceID
                              maxID:(NSString *)maxID
@@ -2713,7 +2713,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     [self getFavoritesListWithUserID:nil
-                          screenName:nil
+                        orScreenName:nil
                                count:nil
                              sinceID:nil
                                maxID:nil
