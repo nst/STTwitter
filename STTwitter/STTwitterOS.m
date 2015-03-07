@@ -108,6 +108,8 @@
             
             typeof(self) strongSelf = weakSelf;
 
+            if(strongSelf == nil) return;
+            
             if(granted == NO) {
                 
                 if(error) {
@@ -116,7 +118,7 @@
                 }
                 
                 NSString *message = @"User denied access to their account(s).";
-                NSError *grantError = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSUserDeniedAccessToTheirAccounts userInfo:@{NSLocalizedDescriptionKey : message}];
+                NSError *grantError = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterOSUserDeniedAccessToTheirAccounts userInfo:@{NSLocalizedDescriptionKey : message}];
                 errorBlock(grantError);
                 return;
             }
@@ -141,7 +143,7 @@
                 
                 if([accountsWithIdentifiers count] == 0) {
                     NSString *message = @"No Twitter account available.";
-                    NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
+                    NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
                     errorBlock(error);
                     return;
                 }

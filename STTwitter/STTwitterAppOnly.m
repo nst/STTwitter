@@ -123,16 +123,18 @@
           successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
               
               typeof(self) strongSelf = weakSelf;
+              
+              if(strongSelf == nil) return;
 
               if([json isKindOfClass:[NSDictionary class]] == NO) {
-                  NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAppOnlyCannotFindJSONInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find JSON dictionary in response"}];
+                  NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterAppOnlyCannotFindJSONInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find JSON dictionary in response"}];
                   errorBlock(error);
                   return;
               }
               
               NSString *tokenType = [json valueForKey:@"token_type"];
               if([tokenType isEqualToString:@"bearer"] == NO) {
-                  NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAppOnlyCannotFindBearerTokenInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find bearer token in server response"}];
+                  NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterAppOnlyCannotFindBearerTokenInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find bearer token in server response"}];
                   errorBlock(error);
                   return;
               }

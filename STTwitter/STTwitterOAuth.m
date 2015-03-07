@@ -268,6 +268,8 @@
                
                typeof(self) strongSelf = weakSelf;
                
+               if(strongSelf == nil) return;
+               
                NSMutableDictionary *md = [[body st_parametersDictionary] mutableCopy];
                
                if([forceLogin boolValue]) md[@"force_login"] = @"1";
@@ -344,6 +346,8 @@
 
               typeof(self) strongSelf = weakSelf;
 
+              if(strongSelf == nil) return;
+
               // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
               
               self.oauthAccessToken = dict[@"oauth_token"];
@@ -351,9 +355,13 @@
               
               successBlock(strongSelf.oauthAccessToken, strongSelf.oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
           } errorBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+
+              typeof(self) strongSelf = weakSelf;
               
+              if(strongSelf == nil) return;
+
               if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorUserCancelledAuthentication) {
-                  NSError *xAuthNotEnabledError = [NSError errorWithDomain:NSStringFromClass([self class])
+                  NSError *xAuthNotEnabledError = [NSError errorWithDomain:NSStringFromClass([strongSelf class])
                                                                       code:STTwitterOAuthBadCredentialsOrConsumerTokensNotXAuthEnabled
                                                                   userInfo:@{NSLocalizedDescriptionKey : @"Bad credentials, or tokens not xAuth enabled."}];
                   errorBlock(xAuthNotEnabledError);
@@ -386,12 +394,14 @@
 
               typeof(self) strongSelf = weakSelf;
 
+              if(strongSelf == nil) return;
+              
               NSDictionary *dict = [body st_parametersDictionary];
               
               // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
               
-              self.oauthAccessToken = dict[@"oauth_token"];
-              self.oauthAccessTokenSecret = dict[@"oauth_token_secret"];
+              strongSelf.oauthAccessToken = dict[@"oauth_token"];
+              strongSelf.oauthAccessTokenSecret = dict[@"oauth_token_secret"];
               
               successBlock(strongSelf.oauthAccessToken, strongSelf.oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
               

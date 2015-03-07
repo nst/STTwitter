@@ -217,6 +217,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username) {
             typeof(self) strongSelf = weakSelf;
             
+            if(strongSelf == nil) return;
+            
             [strongSelf setUserName:username];
             successBlock(username);
         } errorBlock:^(NSError *error) {
@@ -225,7 +227,9 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     } else {
         [self getAccountVerifyCredentialsWithSuccessBlock:^(NSDictionary *account) {
             typeof(self) strongSelf = weakSelf;
-            
+
+            if(strongSelf == nil) return;
+
             NSString *username = [account valueForKey:@"screen_name"];
             [strongSelf setUserName:username];
             successBlock(username);
@@ -554,6 +558,8 @@ downloadProgressBlock:nil
                    successBlock:^(NSDictionary *response) {
                        
                        typeof(self) strongSelf = weakSelf;
+                       
+                       if(strongSelf == nil) return;
                        
                        NSString *imageURLString = [response objectForKey:@"profile_image_url"];
                        
