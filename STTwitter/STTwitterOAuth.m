@@ -469,6 +469,19 @@
     [self signRequest:r isMediaUpload:NO];
 }
 
+- (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
+    NSString *verifyCredentialsURLString = @"https://api.twitter.com/1.1/account/verify_credentials.json";
+    
+    STHTTPRequest *r = [STHTTPRequest requestWithURLString:verifyCredentialsURLString];
+    [self signRequest:r];
+    NSString *authorization = [r.requestHeaders valueForKey:@"Authorization"];
+    
+    if(authorization == nil) return nil;
+    
+    return @{@"X-Auth-Service-Provider" : verifyCredentialsURLString,
+             @"X-Verify-Credentials-Authorization" : authorization};
+}
+
 - (id)fetchResource:(NSString *)resource
          HTTPMethod:(NSString *)HTTPMethod
       baseURLString:(NSString *)baseURLString

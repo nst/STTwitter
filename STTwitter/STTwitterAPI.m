@@ -271,6 +271,14 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     return nil;
 }
 
+- (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
+    if([_oauth respondsToSelector:@selector(OAuthEchoHeadersToVerifyCredentials)]) {
+        return [_oauth OAuthEchoHeadersToVerifyCredentials];
+    }
+    
+    return nil;
+}
+
 - (NSString *)userName {
     
 #if TARGET_OS_IPHONE

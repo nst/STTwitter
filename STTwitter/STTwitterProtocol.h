@@ -61,4 +61,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize
                                               successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
+// 'OAuth Echo' https://dev.twitter.com/twitter-kit/ios/oauth-echo
+
+- (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
+
 @end

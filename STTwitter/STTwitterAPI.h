@@ -137,6 +137,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
 
+- (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
+
 #pragma mark Generic methods to GET and POST
 
 - (id)fetchResource:(NSString *)resource
