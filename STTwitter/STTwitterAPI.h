@@ -1250,7 +1250,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  */
 
 - (void)getFavoritesListWithUserID:(NSString *)userID
-                        screenName:(NSString *)screenName
+                      orScreenName:(NSString *)screenName
                              count:(NSString *)count
                            sinceID:(NSString *)sinceID
                              maxID:(NSString *)maxID
