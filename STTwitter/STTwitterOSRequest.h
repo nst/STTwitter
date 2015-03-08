@@ -23,5 +23,6 @@
                errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
 - (NSURLConnection *)startRequest;
+- (NSURLRequest *)preparedURLRequest;
 
 @end

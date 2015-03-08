@@ -64,8 +64,7 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     return self;
 }
 
-- (NSURLConnection *)startRequest {
-    
+- (NSURLRequest *)preparedURLRequest {
     NSString *postDataKey = [_params valueForKey:kSTPOSTDataKey];
     NSString *postDataFilename = [_params valueForKey:kSTPOSTMediaFileNameKey];
     NSData *mediaData = [_params valueForKey:postDataKey];
@@ -112,12 +111,21 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
 #else
     preparedURLRequest = [request preparedURLRequest];
 #endif
+
+    return preparedURLRequest;
+}
+
+- (NSURLConnection *)startRequest {
     
+    NSURLRequest *preparedURLRequest = [self preparedURLRequest];
+
     NSMutableURLRequest *mutablePreparedURLRequest = [preparedURLRequest mutableCopy];
     mutablePreparedURLRequest.timeoutInterval = _timeoutInSeconds;
     
     NSURLConnection *connection = [NSURLConnection connectionWithRequest:mutablePreparedURLRequest delegate:self];
+    
     [connection start];
+    
     return connection;
 }
 

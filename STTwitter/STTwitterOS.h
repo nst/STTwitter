@@ -30,4 +30,8 @@ NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
 
 - (NSString *)username;
 
+// useful for the so-called 'OAuth Echo' https://dev.twitter.com/twitter-kit/ios/oauth-echo
+
+- (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
+
 @end

@@ -188,8 +188,47 @@
                                                         uploadProgressBlock:uploadProgressBlock
                                                             completionBlock:completionBlock
                                                                  errorBlock:errorBlock];
-    
+        
     return [r startRequest]; // NSURLConnection
+}
+
+- (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
+
+    // https://api.twitter.com/1.1/account/verify_credentials.json
+    
+    STTwitterOSRequest *r = [[STTwitterOSRequest alloc] initWithAPIResource:@"/account/verify_credentials.json"
+                                                              baseURLString:@"https://api.twitter.com/1.1"
+                                                                 httpMethod:SLRequestMethodGET
+                                                                 parameters:nil
+                                                                    account:self.account
+                                                           timeoutInSeconds:0
+                                                        uploadProgressBlock:nil
+                                                            completionBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+                                                                //
+                                                            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                                                                //
+                                                            }];
+    
+    NSURLRequest *preparedURLRequest = [r preparedURLRequest];
+    
+    NSDictionary *headers = [preparedURLRequest allHTTPHeaderFields];
+
+    NSString *authorization = [headers valueForKey:@"Authorization"];
+    
+    if(authorization == nil) return nil;
+    
+    /*
+     Please note that one should use the URL provided to them by X-Auth-Service-Provider to perform the look up,
+     not a hard coded value on your servers. Apple iOS5, for example, adds an additional application_id parameter
+     to all OAuth requests, and its existence should be maintained at each stage of OAuth Echo.
+     https://dev.twitter.com/oauth/echo
+     */
+    NSString *verifyCredentialsURLString = [[preparedURLRequest URL] description];//@"https://api.twitter.com/1.1/account/verify_credentials.json";
+    
+    return @{@"X-Auth-Service-Provider" : verifyCredentialsURLString,
+             @"X-Verify-Credentials-Authorization" : authorization};
+    
+    return headers;
 }
 
 + (SLRequestMethod)slRequestMethodForString:(NSString *)HTTPMethod {
