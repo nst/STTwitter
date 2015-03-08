@@ -4534,6 +4534,48 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            }];
 }
 
+
+// POST device/register.json
+- (void)_postDeviceRegisterPhoneNumber:(NSString *)phoneNumber // eg. @"+41764948273"
+                          successBlock:(void(^)(id response))successBlock
+                            errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(phoneNumber);
+    
+    NSDictionary *parameters = @{@"raw_phone_number":phoneNumber,
+                                 @"text_key":@"third_party_confirmation_code",
+                                 @"send_numeric_pin":@"true"};
+    
+    [self postAPIResource:@"device/register.json"
+               parameters:parameters
+             successBlock:^(NSDictionary *rateLimits, id response) {
+                 successBlock(response);
+             } errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
+}
+
+// POST sdk/account.json
+- (void)_postSDKAccountNumericPIN:(NSString *)numericPIN
+                   forPhoneNumber:(NSString *)phoneNumber
+                     successBlock:(void(^)(id response))successBlock
+                       errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(numericPIN);
+    NSParameterAssert(phoneNumber);
+    
+    NSDictionary *parameters = @{@"numeric_pin":numericPIN,
+                                 @"phone_number":phoneNumber};
+    
+    [self postAPIResource:@"sdk/account.json"
+               parameters:parameters
+             successBlock:^(NSDictionary *rateLimits, id response) {
+                 successBlock(response);
+             } errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
+}
+
 @end
 
 @implementation NSString (STTwitterAPI)
