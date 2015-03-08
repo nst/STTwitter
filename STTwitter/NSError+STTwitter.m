@@ -38,12 +38,17 @@ static NSRegularExpression *xmlErrorRegex = nil;
                 message = errorDictionary[@"message"];
                 code = [[errorDictionary valueForKey:@"code"] integerValue];
             }
-        } else if ([json valueForKey:@"error"]) {
+        } else if ([json valueForKey:@"error"] && [json valueForKey:@"error"] != [NSNull null]) {
             /*
              eg. when requesting timeline from a protected account
              {
              error = "Not authorized.";
              request = "/1.1/statuses/user_timeline.json?count=20&screen_name=premfe";
+             }
+             also, be robust to null errors such as in:
+             {
+             error = "<null>";
+             state = AwaitingComplete;
              }
              */
             message = [json valueForKey:@"error"];
