@@ -2107,6 +2107,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                     successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
+// POST guest/activate.json
+- (void)_postGuestActivateWithSuccessBlock:(void(^)(NSString *guestToken))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock;
+
 // POST device/register.json
 - (void)_postDeviceRegisterPhoneNumber:(NSString *)phoneNumber // eg. @"+41764948273"
                           successBlock:(void(^)(id response))successBlock
@@ -2115,7 +2119,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST sdk/account.json
 - (void)_postSDKAccountNumericPIN:(NSString *)numericPIN
                    forPhoneNumber:(NSString *)phoneNumber
-                     successBlock:(void(^)(id response))successBlock
+                     successBlock:(void(^)(id response, NSString *accessToken, NSString *accessTokenSecret))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
  
  @end

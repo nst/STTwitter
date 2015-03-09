@@ -4534,6 +4534,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            }];
 }
 
+// POST guest/activate.json
+- (void)_postGuestActivateWithSuccessBlock:(void(^)(NSString *guestToken))successBlock
+                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    [self postAPIResource:@"guest/activate.json"
+               parameters:nil
+             successBlock:^(NSDictionary *rateLimits, id response) {
+                 NSString *guestToken = [response valueForKey:@"guest_token"];
+                 successBlock(guestToken);
+             } errorBlock:^(NSError *error) {
+                 errorBlock(error);
+             }];
+}
 
 // POST device/register.json
 - (void)_postDeviceRegisterPhoneNumber:(NSString *)phoneNumber // eg. @"+41764948273"
@@ -4558,7 +4571,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST sdk/account.json
 - (void)_postSDKAccountNumericPIN:(NSString *)numericPIN
                    forPhoneNumber:(NSString *)phoneNumber
-                     successBlock:(void(^)(id response))successBlock
+                     successBlock:(void(^)(id response, NSString *accessToken, NSString *accessTokenSecret))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(numericPIN);
@@ -4567,13 +4580,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSDictionary *parameters = @{@"numeric_pin":numericPIN,
                                  @"phone_number":phoneNumber};
     
-    [self postAPIResource:@"sdk/account.json"
-               parameters:parameters
-             successBlock:^(NSDictionary *rateLimits, id response) {
-                 successBlock(response);
-             } errorBlock:^(NSError *error) {
-                 errorBlock(error);
-             }];
+    [self fetchResource:@"sdk/account.json"
+             HTTPMethod:@"POST"
+          baseURLString:kBaseURLStringAPI_1_1
+             parameters:parameters
+    uploadProgressBlock:nil
+  downloadProgressBlock:nil
+           successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+               NSString *accessToken = [requestHeaders valueForKey:@"x-twitter-new-account-oauth-access-token"];
+               NSString *accessTokenSecret = [requestHeaders valueForKey:@"x-twitter-new-account-oauth-secret"];
+               successBlock(response, accessToken, accessTokenSecret);
+           } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               errorBlock(error);
+           }];
 }
 
 @end
