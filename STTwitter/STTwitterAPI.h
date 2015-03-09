@@ -2113,12 +2113,14 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // POST device/register.json
 - (void)_postDeviceRegisterPhoneNumber:(NSString *)phoneNumber // eg. @"+41764948273"
+                            guestToken:(NSString *)guestToken
                           successBlock:(void(^)(id response))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST sdk/account.json
 - (void)_postSDKAccountNumericPIN:(NSString *)numericPIN
                    forPhoneNumber:(NSString *)phoneNumber
+                       guestToken:(NSString *)guestToken
                      successBlock:(void(^)(id response, NSString *accessToken, NSString *accessTokenSecret))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
  

@@ -254,12 +254,24 @@ downloadProgressBlock:(void(^)(id request, id json))downloadProgressBlock
                                              } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                                                  errorBlock(wr, requestHeaders, responseHeaders, error);
                                              }];
+
+    NSMutableDictionary *paramsToBeSent = [NSMutableDictionary dictionaryWithCapacity:[params count]];
+    
+    NSString *stTwitterHeaderPrefix = @"[STTWITTER_HEADER_APPONLY_POST]";
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+        if([key hasPrefix:stTwitterHeaderPrefix]) {
+            NSString *headerName = [key substringFromIndex:[stTwitterHeaderPrefix length]];
+            [r setHeaderWithName:headerName value:obj];
+        } else {
+            paramsToBeSent[key] = obj;
+        }
+    }];
     
     wr = r;
 
-    r.POSTDictionary = params;
+    r.POSTDictionary = paramsToBeSent;
     
-    NSMutableDictionary *mutableParams = [params mutableCopy];
+    NSMutableDictionary *mutableParams = [paramsToBeSent mutableCopy];
     
     r.encodePOSTDictionary = NO;
     

@@ -4550,6 +4550,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // POST device/register.json
 - (void)_postDeviceRegisterPhoneNumber:(NSString *)phoneNumber // eg. @"+41764948273"
+                            guestToken:(NSString *)guestToken
                           successBlock:(void(^)(id response))successBlock
                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -4557,7 +4558,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     
     NSDictionary *parameters = @{@"raw_phone_number":phoneNumber,
                                  @"text_key":@"third_party_confirmation_code",
-                                 @"send_numeric_pin":@"true"};
+                                 @"send_numeric_pin":@"true",
+                                 @"[STTWITTER_HEADER_APPONLY_POST]x-guest-token":guestToken};
     
     [self postAPIResource:@"device/register.json"
                parameters:parameters
@@ -4571,6 +4573,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 // POST sdk/account.json
 - (void)_postSDKAccountNumericPIN:(NSString *)numericPIN
                    forPhoneNumber:(NSString *)phoneNumber
+                       guestToken:(NSString *)guestToken
                      successBlock:(void(^)(id response, NSString *accessToken, NSString *accessTokenSecret))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -4578,7 +4581,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     NSParameterAssert(phoneNumber);
     
     NSDictionary *parameters = @{@"numeric_pin":numericPIN,
-                                 @"phone_number":phoneNumber};
+                                 @"phone_number":phoneNumber,
+                                 @"[STTWITTER_HEADER_APPONLY_POST]x-guest-token":guestToken};
     
     [self fetchResource:@"sdk/account.json"
              HTTPMethod:@"POST"
@@ -4587,8 +4591,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     uploadProgressBlock:nil
   downloadProgressBlock:nil
            successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-               NSString *accessToken = [requestHeaders valueForKey:@"x-twitter-new-account-oauth-access-token"];
-               NSString *accessTokenSecret = [requestHeaders valueForKey:@"x-twitter-new-account-oauth-secret"];
+               NSString *accessToken = [responseHeaders valueForKey:@"x-twitter-new-account-oauth-access-token"];
+               NSString *accessTokenSecret = [responseHeaders valueForKey:@"x-twitter-new-account-oauth-secret"];
                successBlock(response, accessToken, accessTokenSecret);
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                errorBlock(error);
