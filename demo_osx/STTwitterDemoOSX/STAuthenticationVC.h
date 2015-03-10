@@ -61,6 +61,13 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 @property (nonatomic, retain) NSString *oauthTokenSecret;
 @property (nonatomic, retain) NSString *oauthTokensStatus;
 
+@property (nonatomic, retain) NSString *digitsGuestToken;
+@property (nonatomic, retain) NSString *digitsPhoneNumber;
+@property (nonatomic, retain) NSString *digitsPINCode;
+@property (nonatomic, retain) NSString *digitsOAuthToken;
+@property (nonatomic, retain) NSString *digitsOAuthTokenSecret;
+@property (nonatomic, retain) NSString *digitsStatus;
+
 - (void)reloadTokenFile;
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender;
@@ -84,5 +91,10 @@ typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 // Application Only
 - (IBAction)fetchBearer:(id)sender;
 - (IBAction)invalidateBearer:(id)sender;
+
+// Digits
+- (IBAction)fetchGuestToken:(id)sender;
+- (IBAction)requestPINCode:(id)sender;
+- (IBAction)sendPINCode:(id)sender;
 
 @end

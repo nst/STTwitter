@@ -365,4 +365,45 @@ static NSString *kCustomString = @"Custom...";
     }];
 }
 
+// Digits
+- (IBAction)fetchGuestToken:(id)sender {
+
+    [_twitter _postGuestActivateWithSuccessBlock:^(NSString *guestToken) {
+        self.digitsGuestToken = guestToken;
+        self.digitsStatus = @"OK";
+    } errorBlock:^(NSError *error) {
+        self.digitsStatus = [error localizedDescription];
+    }];
+}
+
+- (IBAction)requestPINCode:(id)sender {
+
+    [_twitter _postDeviceRegisterPhoneNumber:_digitsPhoneNumber
+                                  guestToken:_digitsGuestToken
+                                successBlock:^(id response) {
+                                    self.digitsStatus = @"OK";
+                                    NSLog(@"-- %@", response);
+                                } errorBlock:^(NSError *error) {
+                                    self.digitsStatus = [error localizedDescription];
+                                }];
+    
+}
+
+- (IBAction)sendPINCode:(id)sender {
+
+    [_twitter _postSDKAccountNumericPIN:_digitsPINCode
+                         forPhoneNumber:_digitsPhoneNumber
+                             guestToken:_digitsGuestToken
+                           successBlock:^(id response, NSString *accessToken, NSString *accessTokenSecret) {
+                               self.digitsStatus = @"OK";
+                               NSLog(@"-- %@", response);
+                               
+                               self.digitsOAuthToken = accessToken;
+                               self.digitsOAuthTokenSecret = accessTokenSecret;
+                               
+                           } errorBlock:^(NSError *error) {
+                               self.digitsStatus = [error localizedDescription];
+                           }];
+}
+
 @end
