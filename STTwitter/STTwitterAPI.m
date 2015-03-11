@@ -231,6 +231,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             if(strongSelf == nil) return;
             
             NSString *username = [account valueForKey:@"screen_name"];
+            if(username == nil) username = [account valueForKey:@"id_str"];
+            
             [strongSelf setUserName:username];
             successBlock(username);
         } errorBlock:^(NSError *error) {
