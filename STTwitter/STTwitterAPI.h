@@ -42,6 +42,8 @@ extern NSString *kBaseURLStringSiteStream_1_1;
 
 @interface STTwitterAPI : NSObject
 
++ (NSString *)versionString;
+
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *) account;
 + (instancetype)twitterAPIOSWithFirstAccount;
 

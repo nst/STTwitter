@@ -48,6 +48,10 @@ static NSDateFormatter *dateFormatter = nil;
     return self;
 }
 
++ (NSString *)versionString {
+    return @"0.0.0";
+}
+
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:account];
