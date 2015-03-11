@@ -2,6 +2,8 @@
 
 _A stable, mature and comprehensive Objective-C library for Twitter REST API 1.1_
 
+_Like a FOSS version of Twitter Fabric TwitterKit, without the UI parts but with much more flexibility_
+
 **[2014-06-18]** [Swifter](https://github.com/mattdonnelly/Swifter), A Twitter framework for iOS & OS X written in Swift, by [@MatthewDonnelly](htps://www.twitter.com/MatthewDonnelly/)  
 **[2014-05-31]** Follow STTwitter on Twitter: [@STTLibrary](https://www.twitter.com/STTLibrary/)  
 **[2014-05-22]** STTwitter was presented at [CocoaHeads Lausanne](https://www.facebook.com/events/732041160150290/) ([slides](http://seriot.ch/resources/abusing_twitter_api/sttwitter_cocoaheads.pdf))  
@@ -13,12 +15,13 @@ _A stable, mature and comprehensive Objective-C library for Twitter REST API 1.1
 2. [Installation](#installation)
 3. [Code Snippets](#code-snippets)
 4. [Various Kinds of OAuth Connections](#various-kinds-of-oauth-connections)
-5. [OAuth Consumer Tokens](#oauth-consumer-tokens)
-6. [Demo / Test Project](#demo--test-project)
-7. [Integration Tips](#integration-tips)
-8. [Troubleshooting](#troubleshooting)
-9. [Developers](#developers)
-10. [BSD 3-Clause License](#bsd-3-clause-license)  
+5. [Twitter Digits](#twitter-digits)
+6. [OAuth Consumer Tokens](#oauth-consumer-tokens)
+7. [Demo / Test Project](#demo--test-project)
+8. [Integration Tips](#integration-tips)
+9. [Troubleshooting](#troubleshooting)
+10. [Developers](#developers)
+11. [BSD 3-Clause License](#bsd-3-clause-license)  
 
 ### Testimonials
 
@@ -257,6 +260,23 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
 ```
 
 Contrary to what can be read here and there, you can perfectly [access direct messages from iOS Twitter accounts](http://stackoverflow.com/questions/17990484/accessing-twitter-direct-messages-using-slrequest-ios/18760445#18760445).
+
+### Twitter Digits
+
+[https://dev.twitter.com/twitter-kit/ios/digits](https://dev.twitter.com/twitter-kit/ios/digits)
+
+In this flow, you start with consumer tokens and app only mode, and end up with access tokens, after verifying a phone number with a PIN sent by SMS.
+
+It goes like this:
+
+	1. start with consumer tokens
+	2. get a bearer token (ie. app only mode)
+	2. get a guest token, (ie. temporary user id)
+	3. post a phone number, using the guest token
+	4. post the received PIN code for the phone number, using the guest token
+	5. receive access tokens in return
+
+See a working example in [STAuthenticationVC.m](https://github.com/nst/STTwitter/blob/master/demo_osx/STTwitterDemoOSX/STAuthenticationVC.m#L368-L407).
 
 ### OAuth Consumer Tokens
 
