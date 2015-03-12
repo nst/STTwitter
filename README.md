@@ -37,7 +37,7 @@ _Like a FOSS version of Twitter Fabric TwitterKit, without the UI parts but with
 > "Powered by his own backend wrapper for HTTP calls, STTwitter writes most of the code for you for oAuth based authentication and API resource access like statuses, mentions, users, searches, friends & followers, favorites, lists, places, trends. The documentation is also excellent."
 [STTwitter - Delightful Twitter Library for iOS / buddingdevelopers.com](http://buddingdevelopers.com/sttwitter-delightful-twitter-library-for-ios/)
 
-> "@sttlibrary @nst021 I love STTwitter - it made things a breeze when building [@entourageio](http://bit.ly/entourageio)" [_jeffreyjackson](https://twitter.com/_jeffreyjackson/status/573961997747773441)
+> "I love STTwitter - it made things a breeze when building [@entourageio](http://bit.ly/entourageio)" [@_jeffreyjackson](https://twitter.com/_jeffreyjackson/status/573961997747773441)
 
 ### Installation
 
