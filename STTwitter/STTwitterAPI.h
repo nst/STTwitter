@@ -92,7 +92,7 @@ extern NSString *kBaseURLStringSiteStream_1_1;
  authenticateInsteadOfAuthorize == NO  will return an URL to oauth/authorize
  authenticateInsteadOfAuthorize == YES will return an URL to oauth/authenticate
  
- oauth/authorize differs from oauth/authenticate in that if the user has already granted the application permission, the redirect will occur without the user having to re-approve the application. To realize this behavior, you must enable the Use Sign in with Twitter setting on your application record.
+ GET oauth/authenticate differs from GET oauth/authorize in that if the user has already granted the application permission, the redirect will occur without the user having to re-approve the application. To realize this behavior, you must enable the Use Sign in with Twitter setting on your application record.
  */
 
 - (void)postTokenRequest:(void(^)(NSURL *url, NSString *oauthToken))successBlock
