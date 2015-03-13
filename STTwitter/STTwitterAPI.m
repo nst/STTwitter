@@ -49,7 +49,7 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (NSString *)versionString {
-    return @"0.0.0";
+    return @"0.2.0";
 }
 
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
