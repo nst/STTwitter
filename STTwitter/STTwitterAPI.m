@@ -4437,7 +4437,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
-#pragma mark UNDOCUMENTED APIS VALID ONLY FOR TWEETDECK
+#pragma mark UNDOCUMENTED APIS SCHEDULED TWEETS - VALID ONLY FOR TWEETDECK
 
 // GET schedule/status/list.json
 - (void)_getScheduleStatusesWithCount:(NSString *)count
@@ -4540,6 +4540,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            }];
 }
 
+#pragma mark UNDOCUMENTED APIS FOR DIGITS AUTH
+
 // POST guest/activate.json
 - (void)_postGuestActivateWithSuccessBlock:(void(^)(NSString *guestToken))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
@@ -4603,6 +4605,46 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                errorBlock(error);
            }];
+}
+
+#pragma mark UNDOCUMENTED APIS FOR CONTACTS
+
+//// POST contacts/upload.json
+//- (void)_postContactsUpload:(NSArray *)vCards
+//               successBlock:(void(^)(id response))successBlock
+//                 errorBlock:(void(^)(NSError *error))errorBlock {
+//    
+//        // TODO: implement
+//}
+
+// GET contacts/users_and_uploaded_by.json
+- (void)_getContactsUsersAndUploadedByWithCount:(NSString *)count
+                                   successBlock:(void(^)(id response))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(count) md[@"count"] = count;
+    
+    [self getAPIResource:@"contacts/users_and_uploaded_by.json"
+              parameters:md
+            successBlock:^(NSDictionary *rateLimits, id response) {
+                successBlock(response);
+            } errorBlock:^(NSError *error) {
+                errorBlock(error);
+            }];
+}
+
+// POST contacts/destroy/all.json
+- (void)_getContactsDestroyAllWithSuccessBlock:(void(^)(id response))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock {
+
+    [self postAPIResource:@"contacts/destroy/all.json"
+              parameters:nil
+            successBlock:^(NSDictionary *rateLimits, id response) {
+                successBlock(response);
+            } errorBlock:^(NSError *error) {
+                errorBlock(error);
+            }];
 }
 
 @end

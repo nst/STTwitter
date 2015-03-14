@@ -2077,7 +2077,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                            successBlock:(void(^)(id results))successBlock
                              errorBlock:(void(^)(NSError *error))errorBlock;
 
-#pragma mark UNDOCUMENTED APIS VALID ONLY FOR TWEETDECK
+#pragma mark UNDOCUMENTED APIS SCHEDULED TWEETS - VALID ONLY FOR TWEETDECK
 
 // GET schedule/status/list.json
 - (void)_getScheduleStatusesWithCount:(NSString *)count
@@ -2109,6 +2109,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                     successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
                       errorBlock:(void(^)(NSError *error))errorBlock;
 
+#pragma mark UNDOCUMENTED APIS FOR DIGITS AUTH
+
 // POST guest/activate.json
 - (void)_postGuestActivateWithSuccessBlock:(void(^)(NSString *guestToken))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock;
@@ -2125,5 +2127,29 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
                        guestToken:(NSString *)guestToken
                      successBlock:(void(^)(id response, NSString *accessToken, NSString *accessTokenSecret))successBlock
                        errorBlock:(void(^)(NSError *error))errorBlock;
- 
- @end
+
+#pragma mark UNDOCUMENTED APIS FOR CONTACTS
+
+// POST contacts/upload.json
+/*
+ {
+ "vcards": [
+ "BEGIN:VCARD\r\nVERSION:3.0\r\nPRODID:-//Apple Inc.//iOS 8.1.2//EN\r\nN:Obama;Barack Obama;;;\r\nFN:Barack Obama\r\nTEL;type=CELL;type=VOICE;type=pref:00 33 6 11 22 33 44\r\nEND:VCARD\r\n",
+ "BEGIN:VCARD\r\nVERSION:3.0\r\nPRODID:-//Apple Inc.//iOS 8.1.2//EN\r\nN:Bush ;Georges Bush;;;\r\nFN:Georges Bush\r\nTEL;type=CELL;type=VOICE;type=pref:00 33 6 22 33 44 55\r\nEND:VCARD\r\n"
+ ]
+ }
+*/
+//- (void)_postContactsUpload:(NSArray *)vcards
+//               successBlock:(void(^)(id response))successBlock
+//                 errorBlock:(void(^)(NSError *error))errorBlock;
+
+// GET contacts/users_and_uploaded_by.json?count=50
+- (void)_getContactsUsersAndUploadedByWithCount:(NSString *)count
+                                   successBlock:(void(^)(id response))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock;
+
+// POST contacts/destroy/all.json
+- (void)_getContactsDestroyAllWithSuccessBlock:(void(^)(id response))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock;
+
+@end
