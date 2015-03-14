@@ -2139,9 +2139,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  ]
  }
 */
-//- (void)_postContactsUpload:(NSArray *)vcards
-//               successBlock:(void(^)(id response))successBlock
-//                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)_postContactsUpload:(NSArray *)vcards
+               successBlock:(void(^)(id response))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET contacts/users_and_uploaded_by.json?count=50
 - (void)_getContactsUsersAndUploadedByWithCount:(NSString *)count

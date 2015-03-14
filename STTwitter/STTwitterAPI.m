@@ -13,6 +13,7 @@
 #import "STTwitterAppOnly.h"
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
+#import "STHTTPRequest+STTwitter.h"
 
 NSString *kBaseURLStringAPI_1_1 = @"https://api.twitter.com/1.1";
 NSString *kBaseURLStringUpload_1_1 = @"https://upload.twitter.com/1.1";
@@ -4609,13 +4610,41 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 #pragma mark UNDOCUMENTED APIS FOR CONTACTS
 
-//// POST contacts/upload.json
-//- (void)_postContactsUpload:(NSArray *)vCards
-//               successBlock:(void(^)(id response))successBlock
-//                 errorBlock:(void(^)(NSError *error))errorBlock {
-//    
-//        // TODO: implement
-//}
+// POST contacts/upload.json
+- (void)_postContactsUpload:(NSArray *)vCards
+               successBlock:(void(^)(id response))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSDictionary *d = @{@"vcards":vCards};
+    
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:d options:0 error:&error];
+    if(data == nil) {
+        errorBlock(error);
+        return;
+    }
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@", kBaseURLStringAPI_1_1, @"contacts/upload.json"];
+    
+    STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                       HTTPMethod:@"POST"
+                                                 timeoutInSeconds:10
+                                     stTwitterUploadProgressBlock:nil
+                                   stTwitterDownloadProgressBlock:nil
+                                            stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
+                                                successBlock(json);
+                                            } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                                                errorBlock(error);
+                                            }];
+    
+    STTwitterOAuth *oAuth = (STTwitterOAuth *)self.oauth;
+    [oAuth signRequest:r isMediaUpload:NO oauthCallback:nil];
+
+    [r setRawPOSTData:data];
+    [r setHeaderWithName:@"Content-Type" value:@"application/json"];
+
+    [r startAsynchronous];
+}
 
 // GET contacts/users_and_uploaded_by.json
 - (void)_getContactsUsersAndUploadedByWithCount:(NSString *)count
