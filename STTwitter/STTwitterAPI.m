@@ -48,6 +48,10 @@ static NSDateFormatter *dateFormatter = nil;
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ACAccountStoreDidChangeNotification object:nil];
+}
+
 + (NSString *)versionString {
     return @"0.0.0";
 }
