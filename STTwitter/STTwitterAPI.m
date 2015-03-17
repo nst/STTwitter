@@ -13,6 +13,7 @@
 #import "STTwitterAppOnly.h"
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
+#import "STHTTPRequest+STTwitter.h"
 
 NSString *kBaseURLStringAPI_1_1 = @"https://api.twitter.com/1.1";
 NSString *kBaseURLStringUpload_1_1 = @"https://upload.twitter.com/1.1";
@@ -53,7 +54,7 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (NSString *)versionString {
-    return @"0.0.0";
+    return @"0.2.0";
 }
 
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
@@ -4441,7 +4442,7 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
     }];
 }
 
-#pragma mark UNDOCUMENTED APIS VALID ONLY FOR TWEETDECK
+#pragma mark UNDOCUMENTED APIS SCHEDULED TWEETS - VALID ONLY FOR TWEETDECK
 
 // GET schedule/status/list.json
 - (void)_getScheduleStatusesWithCount:(NSString *)count
@@ -4544,6 +4545,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            }];
 }
 
+#pragma mark UNDOCUMENTED APIS FOR DIGITS AUTH
+
 // POST guest/activate.json
 - (void)_postGuestActivateWithSuccessBlock:(void(^)(NSString *guestToken))successBlock
                                 errorBlock:(void(^)(NSError *error))errorBlock {
@@ -4607,6 +4610,74 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                errorBlock(error);
            }];
+}
+
+#pragma mark UNDOCUMENTED APIS FOR CONTACTS
+
+// POST contacts/upload.json
+- (void)_postContactsUpload:(NSArray *)vCards
+               successBlock:(void(^)(id response))successBlock
+                 errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSDictionary *d = @{@"vcards":vCards};
+    
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:d options:0 error:&error];
+    if(data == nil) {
+        errorBlock(error);
+        return;
+    }
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@", kBaseURLStringAPI_1_1, @"contacts/upload.json"];
+    
+    STHTTPRequest *r = [STHTTPRequest twitterRequestWithURLString:urlString
+                                                       HTTPMethod:@"POST"
+                                                 timeoutInSeconds:10
+                                     stTwitterUploadProgressBlock:nil
+                                   stTwitterDownloadProgressBlock:nil
+                                            stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
+                                                successBlock(json);
+                                            } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                                                errorBlock(error);
+                                            }];
+    
+    STTwitterOAuth *oAuth = (STTwitterOAuth *)self.oauth;
+    [oAuth signRequest:r isMediaUpload:NO oauthCallback:nil];
+
+    [r setRawPOSTData:data];
+    [r setHeaderWithName:@"Content-Type" value:@"application/json"];
+
+    [r startAsynchronous];
+}
+
+// GET contacts/users_and_uploaded_by.json
+- (void)_getContactsUsersAndUploadedByWithCount:(NSString *)count
+                                   successBlock:(void(^)(id response))successBlock
+                                     errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    if(count) md[@"count"] = count;
+    
+    [self getAPIResource:@"contacts/users_and_uploaded_by.json"
+              parameters:md
+            successBlock:^(NSDictionary *rateLimits, id response) {
+                successBlock(response);
+            } errorBlock:^(NSError *error) {
+                errorBlock(error);
+            }];
+}
+
+// POST contacts/destroy/all.json
+- (void)_getContactsDestroyAllWithSuccessBlock:(void(^)(id response))successBlock
+                                    errorBlock:(void(^)(NSError *error))errorBlock {
+
+    [self postAPIResource:@"contacts/destroy/all.json"
+              parameters:nil
+            successBlock:^(NSDictionary *rateLimits, id response) {
+                successBlock(response);
+            } errorBlock:^(NSError *error) {
+                errorBlock(error);
+            }];
 }
 
 @end
