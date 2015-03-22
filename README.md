@@ -112,9 +112,9 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:@""
 ##### Streaming API
 
 ```Objective-C
-id request = [twitter getStatusesSampleDelimited:nil
-                                   stallWarnings:nil
-                                   progressBlock:^(id response) {
+NSObject <STTwitterRequestProtocol> *request = [twitter getStatusesSampleDelimited:nil
+                                                                     stallWarnings:nil
+                                                                     progressBlock:^(id response) {
     // ...
 } stallWarningBlock:nil
          errorBlock:^(NSError *error) {
@@ -466,9 +466,9 @@ You can create your own convenience methods with fewer parameters. You can also 
         baseURLString:(NSString *)baseURLString
            parameters:(NSDictionary *)params
   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
-         successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
-           errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
+downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, id response))downloadProgressBlock
+         successBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+           errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 ```
 
 ##### Layer Model
