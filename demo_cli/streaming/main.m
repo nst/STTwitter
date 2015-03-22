@@ -22,19 +22,18 @@ int main(int argc, const char * argv[])
             [twitter postStatusesFilterUserIDs:nil
                                keywordsToTrack:@[@"Apple"]
                          locationBoundingBoxes:nil
-                                     delimited:nil
                                  stallWarnings:nil
-                                 progressBlock:^(id response) {
+                                 progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
                                      
-                                     if ([response isKindOfClass:[NSDictionary class]] == NO) {
-                                         NSLog(@"Invalid tweet (class %@): %@", [response class], response);
+                                     if (type != STTwitterStreamJSONTypeTweet) {
+                                         NSLog(@"Invalid tweet (class %@): %@", [json class], json);
                                          exit(1);
                                          return;
                                      }
                                      
                                      printf("-----------------------------------------------------------------\n");
-                                     printf("-- user: @%s\n", [[response valueForKeyPath:@"user.screen_name"] cStringUsingEncoding:NSUTF8StringEncoding]);
-                                     printf("-- text: %s\n", [[response objectForKey:@"text"] cStringUsingEncoding:NSUTF8StringEncoding]);
+                                     printf("-- user: @%s\n", [[json valueForKeyPath:@"user.screen_name"] cStringUsingEncoding:NSUTF8StringEncoding]);
+                                     printf("-- text: %s\n", [[json objectForKey:@"text"] cStringUsingEncoding:NSUTF8StringEncoding]);
                                      
                                      
                                  } stallWarningBlock:nil errorBlock:^(NSError *error) {
