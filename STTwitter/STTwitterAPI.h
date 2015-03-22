@@ -20,6 +20,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STTwitterParser.h"
 
 NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
     STTwitterAPICannotPostEmptyStatus,
@@ -148,7 +149,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
 uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
+downloadProgressBlock:(void(^)(id request, NSData *data))downloadProgressBlock
        successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
          errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
@@ -157,7 +158,7 @@ downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
                          baseURLString:(NSString *)baseURLString
                             parameters:(NSDictionary *)params
                    uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                 downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
+                 downloadProgressBlock:(void(^)(id request, NSData *data))downloadProgressBlock
                           successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome, BOOL *stop))successBlock
                             pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
                             errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
@@ -165,7 +166,7 @@ downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
 - (id)getResource:(NSString *)resource
     baseURLString:(NSString *)baseURLString
        parameters:(NSDictionary *)parameters
-downloadProgressBlock:(void(^)(id json))progredownloadProgressBlockssBlock
+downloadProgressBlock:(void(^)(NSData *data))downloadProgressBlock
      successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -173,7 +174,7 @@ downloadProgressBlock:(void(^)(id json))progredownloadProgressBlockssBlock
      baseURLString:(NSString *)baseURLString
         parameters:(NSDictionary *)parameters
 uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void(^)(id json))downloadProgressBlock
+downloadProgressBlock:(void(^)(NSData *data))downloadProgressBlock
       successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
         errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -514,15 +515,14 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
 - (id)postStatusesFilterUserIDs:(NSArray *)userIDs
                 keywordsToTrack:(NSArray *)keywordsToTrack
           locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                      delimited:(NSNumber *)delimited
                   stallWarnings:(NSNumber *)stallWarnings
-                  progressBlock:(void(^)(NSDictionary *tweet))progressBlock
+                  progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
               stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (id)postStatusesFilterKeyword:(NSString *)keyword
-                  progressBlock:(void(^)(NSDictionary *tweet))progressBlock
+                  progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -531,11 +531,10 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Returns a small random sample of all public statuses. The Tweets returned by the default access level are the same, so if two different clients connect to this endpoint, they will see the same Tweets.
  */
 
-- (id)getStatusesSampleDelimited:(NSNumber *)delimited
-                   stallWarnings:(NSNumber *)stallWarnings
-                   progressBlock:(void(^)(id response))progressBlock
-               stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (id)getStatusesSampleStallWarnings:(NSNumber *)stallWarnings
+                       progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
+                   stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/firehose
@@ -546,9 +545,8 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  */
 
 - (id)getStatusesFirehoseWithCount:(NSString *)count
-                         delimited:(NSNumber *)delimited
                      stallWarnings:(NSNumber *)stallWarnings
-                     progressBlock:(void(^)(id response))progressBlock
+                     progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
                  stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                         errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -558,16 +556,15 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Streams messages for a single user, as described in User streams https://dev.twitter.com/docs/streaming-apis/streams/user
  */
 
-- (id)getUserStreamDelimited:(NSNumber *)delimited
-               stallWarnings:(NSNumber *)stallWarnings
+- (id)getUserStreamStallWarnings:(NSNumber *)stallWarnings
 includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-              includeReplies:(NSNumber *)includeReplies
-             keywordsToTrack:(NSArray *)keywordsToTrack
-       locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-               progressBlock:(void(^)(id response))progressBlock
-           stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                  errorBlock:(void(^)(NSError *error))errorBlock;
-
+                  includeReplies:(NSNumber *)includeReplies
+                 keywordsToTrack:(NSArray *)keywordsToTrack
+           locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                   progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
+               stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                      errorBlock:(void(^)(NSError *error))errorBlock;
+    
 /*
  GET    site
  

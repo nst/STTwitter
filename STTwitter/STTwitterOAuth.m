@@ -487,7 +487,7 @@
       baseURLString:(NSString *)baseURLString
          parameters:(NSDictionary *)params
 uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void(^)(id request, id response))progressBlock
+downloadProgressBlock:(void (^)(id request, NSData *data))progressBlock
        successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
          errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -508,7 +508,7 @@ downloadProgressBlock:(void(^)(id request, id response))progressBlock
                       parameters:(NSDictionary *)params
                    oauthCallback:(NSString *)oauthCallback
              uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-           downloadProgressBlock:(void(^)(STHTTPRequest *r, id json))downloadProgressBlock
+           downloadProgressBlock:(void(^)(STHTTPRequest *r, NSData *data))downloadProgressBlock
                     successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                       errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -523,8 +523,8 @@ downloadProgressBlock:(void(^)(id request, id response))progressBlock
                                                        HTTPMethod:HTTPMethod
                                                  timeoutInSeconds:_timeoutInSeconds
                                      stTwitterUploadProgressBlock:uploadProgressBlock
-                                   stTwitterDownloadProgressBlock:^(id json) {
-                                       if(downloadProgressBlock) downloadProgressBlock(wr, json);
+                                   stTwitterDownloadProgressBlock:^(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive) {
+                                       if(downloadProgressBlock) downloadProgressBlock(wr, data);
                                    } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
                                        successBlock(wr, requestHeaders, responseHeaders, json);
                                    } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
@@ -575,7 +575,7 @@ downloadProgressBlock:(void(^)(id request, id response))progressBlock
 - (STHTTPRequest *)postResource:(NSString *)resource
                   baseURLString:(NSString *)baseURLString // no trailing slash
                      parameters:(NSDictionary *)params
-                  progressBlock:(void(^)(STHTTPRequest *r, id json))progressBlock
+                  progressBlock:(void(^)(STHTTPRequest *r, NSData *data))progressBlock
                    successBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                      errorBlock:(void(^)(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
