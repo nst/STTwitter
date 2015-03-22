@@ -12,6 +12,7 @@
 #if TARGET_OS_IPHONE
 #import <Twitter/Twitter.h> // iOS 5
 #endif
+#import "STHTTPRequest.h"
 #import "NSString+STTwitter.h"
 #import "NSError+STTwitter.h"
 
@@ -23,6 +24,7 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
 @property (nonatomic, copy) completion_block_t completionBlock;
 @property (nonatomic, copy) error_block_t errorBlock;
 @property (nonatomic, copy) upload_progress_block_t uploadProgressBlock;
+@property (nonatomic, retain) NSURLConnection *connection;
 @property (nonatomic, retain) NSHTTPURLResponse *httpURLResponse; // only used with streaming API
 @property (nonatomic, retain) NSMutableData *data; // only used with non-streaming API
 @property (nonatomic, retain) ACAccount *account;
@@ -115,18 +117,32 @@ typedef void (^upload_progress_block_t)(NSInteger bytesWritten, NSInteger totalB
     return preparedURLRequest;
 }
 
-- (NSURLConnection *)startRequest {
+- (void)startRequest {
     
     NSURLRequest *preparedURLRequest = [self preparedURLRequest];
 
     NSMutableURLRequest *mutablePreparedURLRequest = [preparedURLRequest mutableCopy];
     mutablePreparedURLRequest.timeoutInterval = _timeoutInSeconds;
     
-    NSURLConnection *connection = [NSURLConnection connectionWithRequest:mutablePreparedURLRequest delegate:self];
+    if (_connection) {
+        [self cancel];
+    }
+    _connection = [NSURLConnection connectionWithRequest:mutablePreparedURLRequest delegate:self];
     
-    [connection start];
+    [_connection start];
+}
+
+- (void)cancel {
+    [_connection cancel];
+
+    NSURLRequest *request = [_connection currentRequest];
     
-    return connection;
+    NSString *s = @"Connection was cancelled.";
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey];
+    NSError *error = [NSError errorWithDomain:NSStringFromClass([self class])
+                                         code:kSTHTTPRequestCancellationError
+                                     userInfo:userInfo];
+    self.errorBlock([_connection currentRequest], [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], error);
 }
 
 - (NSDictionary *)requestHeadersForRequest:(id)request {

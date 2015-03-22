@@ -22,7 +22,8 @@
           completionBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
                errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
-- (NSURLConnection *)startRequest;
+- (void)startRequest;
+- (void)cancel;
 - (NSURLRequest *)preparedURLRequest;
 
 @end

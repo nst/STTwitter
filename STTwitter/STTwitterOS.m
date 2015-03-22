@@ -188,8 +188,9 @@
                                                         uploadProgressBlock:uploadProgressBlock
                                                             completionBlock:completionBlock
                                                                  errorBlock:errorBlock];
-        
-    return [r startRequest]; // NSURLConnection
+    
+    [r startRequest];
+    return r;
 }
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
