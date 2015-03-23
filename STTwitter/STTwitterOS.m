@@ -171,13 +171,13 @@
 #endif
 }
 
-- (id)fetchAPIResource:(NSString *)resource
-         baseURLString:(NSString *)baseURLString
-            httpMethod:(NSInteger)httpMethod
-            parameters:(NSDictionary *)params
-   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-       completionBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
-            errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)fetchAPIResource:(NSString *)resource
+                                           baseURLString:(NSString *)baseURLString
+                                              httpMethod:(NSInteger)httpMethod
+                                              parameters:(NSDictionary *)params
+                                     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                         completionBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
+                                              errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     STTwitterOSRequest *r = [[STTwitterOSRequest alloc] initWithAPIResource:resource
                                                               baseURLString:baseURLString
@@ -188,8 +188,9 @@
                                                         uploadProgressBlock:uploadProgressBlock
                                                             completionBlock:completionBlock
                                                                  errorBlock:errorBlock];
-        
-    return [r startRequest]; // NSURLConnection
+    
+    [r startRequest];
+    return r;
 }
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
@@ -241,14 +242,14 @@
     return SLRequestMethodGET;
 }
 
-- (id)fetchResource:(NSString *)resource
-         HTTPMethod:(NSString *)HTTPMethod
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)params
-uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void (^)(id request, id response))progressBlock // FIXME: how to handle progressBlock?
-       successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
-         errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)fetchResource:(NSString *)resource
+                                           HTTPMethod:(NSString *)HTTPMethod
+                                        baseURLString:(NSString *)baseURLString
+                                           parameters:(NSDictionary *)params
+                                  uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                downloadProgressBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, id response))progressBlock // FIXME: how to handle progressBlock?
+                                         successBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+                                           errorBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
     NSInteger slRequestMethod = [[self class] slRequestMethodForString:HTTPMethod];
     

@@ -7,8 +7,9 @@
 //
 
 #import "STHTTPRequest.h"
+#import "STTwitterRequestProtocol.h"
 
-@interface STHTTPRequest (STTwitter)
+@interface STHTTPRequest (STTwitter) <STTwitterRequestProtocol>
 
 + (STHTTPRequest *)twitterRequestWithURLString:(NSString *)urlString
                                     HTTPMethod:(NSString *)HTTPMethod

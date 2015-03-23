@@ -20,6 +20,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STTwitterRequestProtocol.h"
 
 NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
     STTwitterAPICannotPostEmptyStatus,
@@ -143,39 +144,39 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 #pragma mark Generic methods to GET and POST
 
-- (id)fetchResource:(NSString *)resource
-         HTTPMethod:(NSString *)HTTPMethod
-      baseURLString:(NSString *)baseURLString
-         parameters:(NSDictionary *)params
-uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void (^)(id request, id response))downloadProgressBlock
-       successBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
-         errorBlock:(void (^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)fetchResource:(NSString *)resource
+                                           HTTPMethod:(NSString *)HTTPMethod
+                                        baseURLString:(NSString *)baseURLString
+                                           parameters:(NSDictionary *)params
+                                  uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                downloadProgressBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, id response))downloadProgressBlock
+                                         successBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
+                                           errorBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
-- (id)fetchAndFollowCursorsForResource:(NSString *)resource
-                            HTTPMethod:(NSString *)HTTPMethod
-                         baseURLString:(NSString *)baseURLString
-                            parameters:(NSDictionary *)params
-                   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                 downloadProgressBlock:(void(^)(id request, id response))downloadProgressBlock
-                          successBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome, BOOL *stop))successBlock
-                            pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
-                            errorBlock:(void(^)(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)fetchAndFollowCursorsForResource:(NSString *)resource
+                                                              HTTPMethod:(NSString *)HTTPMethod
+                                                           baseURLString:(NSString *)baseURLString
+                                                              parameters:(NSDictionary *)params
+                                                     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                                   downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, id response))downloadProgressBlock
+                                                            successBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome, BOOL *stop))successBlock
+                                                              pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
+                                                              errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
-- (id)getResource:(NSString *)resource
-    baseURLString:(NSString *)baseURLString
-       parameters:(NSDictionary *)parameters
-downloadProgressBlock:(void(^)(id json))progredownloadProgressBlockssBlock
-     successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
-       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getResource:(NSString *)resource
+                                      baseURLString:(NSString *)baseURLString
+                                         parameters:(NSDictionary *)parameters
+                              downloadProgressBlock:(void(^)(id json))progredownloadProgressBlockssBlock
+                                       successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
+                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (id)postResource:(NSString *)resource
-     baseURLString:(NSString *)baseURLString
-        parameters:(NSDictionary *)parameters
-uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-downloadProgressBlock:(void(^)(id json))downloadProgressBlock
-      successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
-        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postResource:(NSString *)resource
+                                       baseURLString:(NSString *)baseURLString
+                                          parameters:(NSDictionary *)parameters
+                                 uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                               downloadProgressBlock:(void(^)(id json))downloadProgressBlock
+                                        successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
+                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Timelines
 
@@ -190,20 +191,20 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  This method can only return up to 800 tweets.
  */
 
-- (void)getStatusesMentionTimelineWithCount:(NSString *)count
-                                    sinceID:(NSString *)sinceID
-                                      maxID:(NSString *)maxID
-                                   trimUser:(NSNumber *)trimUser
-                         contributorDetails:(NSNumber *)contributorDetails
-                            includeEntities:(NSNumber *)includeEntities
-                               successBlock:(void(^)(NSArray *statuses))successBlock
-                                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesMentionTimelineWithCount:(NSString *)count
+                                                                    sinceID:(NSString *)sinceID
+                                                                      maxID:(NSString *)maxID
+                                                                   trimUser:(NSNumber *)trimUser
+                                                         contributorDetails:(NSNumber *)contributorDetails
+                                                            includeEntities:(NSNumber *)includeEntities
+                                                               successBlock:(void(^)(NSArray *statuses))successBlock
+                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getMentionsTimelineSinceID:(NSString *)sinceID
-                             count:(NSUInteger)count
-                      successBlock:(void(^)(NSArray *statuses))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getMentionsTimelineSinceID:(NSString *)sinceID
+                                                             count:(NSUInteger)count
+                                                      successBlock:(void(^)(NSArray *statuses))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	statuses/user_timeline
@@ -218,36 +219,36 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  This method can only return up to 3,200 of a user's most recent Tweets. Native retweets of other statuses by the user is included in this total, regardless of whether include_rts is set to false when requesting this resource.
  */
 
-- (void)getStatusesUserTimelineForUserID:(NSString *)userID
-                              screenName:(NSString *)screenName
-                                 sinceID:(NSString *)sinceID
-                                   count:(NSString *)count
-                                   maxID:(NSString *)maxID
-                                trimUser:(NSNumber *)trimUser
-                          excludeReplies:(NSNumber *)excludeReplies
-                      contributorDetails:(NSNumber *)contributorDetails
-                         includeRetweets:(NSNumber *)includeRetweets
-                            successBlock:(void(^)(NSArray *statuses))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesUserTimelineForUserID:(NSString *)userID
+                                                              screenName:(NSString *)screenName
+                                                                 sinceID:(NSString *)sinceID
+                                                                   count:(NSString *)count
+                                                                   maxID:(NSString *)maxID
+                                                                trimUser:(NSNumber *)trimUser
+                                                          excludeReplies:(NSNumber *)excludeReplies
+                                                      contributorDetails:(NSNumber *)contributorDetails
+                                                         includeRetweets:(NSNumber *)includeRetweets
+                                                            successBlock:(void(^)(NSArray *statuses))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getUserTimelineWithScreenName:(NSString *)screenName
-                              sinceID:(NSString *)sinceID
-                                maxID:(NSString *)maxID
-                                count:(NSUInteger)count
-                         successBlock:(void(^)(NSArray *statuses))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUserTimelineWithScreenName:(NSString *)screenName
+                                                              sinceID:(NSString *)sinceID
+                                                                maxID:(NSString *)maxID
+                                                                count:(NSUInteger)count
+                                                         successBlock:(void(^)(NSArray *statuses))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getUserTimelineWithScreenName:(NSString *)screenName
-                                count:(NSUInteger)count
-                         successBlock:(void(^)(NSArray *statuses))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUserTimelineWithScreenName:(NSString *)screenName
+                                                                count:(NSUInteger)count
+                                                         successBlock:(void(^)(NSArray *statuses))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getUserTimelineWithScreenName:(NSString *)screenName
-                         successBlock:(void(^)(NSArray *statuses))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUserTimelineWithScreenName:(NSString *)screenName
+                                                         successBlock:(void(^)(NSArray *statuses))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	statuses/home_timeline
@@ -259,21 +260,21 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Up to 800 Tweets are obtainable on the home timeline. It is more volatile for users that follow many users or follow users who tweet frequently.
  */
 
-- (void)getStatusesHomeTimelineWithCount:(NSString *)count
-                                 sinceID:(NSString *)sinceID
-                                   maxID:(NSString *)maxID
-                                trimUser:(NSNumber *)trimUser
-                          excludeReplies:(NSNumber *)excludeReplies
-                      contributorDetails:(NSNumber *)contributorDetails
-                         includeEntities:(NSNumber *)includeEntities
-                            successBlock:(void(^)(NSArray *statuses))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesHomeTimelineWithCount:(NSString *)count
+                                                                 sinceID:(NSString *)sinceID
+                                                                   maxID:(NSString *)maxID
+                                                                trimUser:(NSNumber *)trimUser
+                                                          excludeReplies:(NSNumber *)excludeReplies
+                                                      contributorDetails:(NSNumber *)contributorDetails
+                                                         includeEntities:(NSNumber *)includeEntities
+                                                            successBlock:(void(^)(NSArray *statuses))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getHomeTimelineSinceID:(NSString *)sinceID
-                         count:(NSUInteger)count
-                  successBlock:(void(^)(NSArray *statuses))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getHomeTimelineSinceID:(NSString *)sinceID
+                                                         count:(NSUInteger)count
+                                                  successBlock:(void(^)(NSArray *statuses))successBlock
+                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/retweets_of_me
@@ -281,18 +282,18 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Returns the most recent tweets authored by the authenticating user that have been retweeted by others. This timeline is a subset of the user's GET statuses/user_timeline. See Working with Timelines for instructions on traversing timelines.
  */
 
-- (void)getStatusesRetweetsOfMeWithCount:(NSString *)count
-                                 sinceID:(NSString *)sinceID
-                                   maxID:(NSString *)maxID
-                                trimUser:(NSNumber *)trimUser
-                         includeEntities:(NSNumber *)includeEntities
-                     includeUserEntities:(NSNumber *)includeUserEntities
-                            successBlock:(void(^)(NSArray *statuses))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetsOfMeWithCount:(NSString *)count
+                                                                 sinceID:(NSString *)sinceID
+                                                                   maxID:(NSString *)maxID
+                                                                trimUser:(NSNumber *)trimUser
+                                                         includeEntities:(NSNumber *)includeEntities
+                                                     includeUserEntities:(NSNumber *)includeUserEntities
+                                                            successBlock:(void(^)(NSArray *statuses))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getStatusesRetweetsOfMeWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
-                                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetsOfMeWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
+                                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Tweets
 
@@ -301,11 +302,11 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  
  Returns up to 100 of the first retweets of a given tweet.
  */
-- (void)getStatusesRetweetsForID:(NSString *)statusID
-                           count:(NSString *)count
-                        trimUser:(NSNumber *)trimUser
-                    successBlock:(void(^)(NSArray *statuses))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetsForID:(NSString *)statusID
+                                                           count:(NSString *)count
+                                                        trimUser:(NSNumber *)trimUser
+                                                    successBlock:(void(^)(NSArray *statuses))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/show/:id
@@ -327,12 +328,12 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  This object contains an array of user IDs for users who have contributed to this status (an example of a status that has been contributed to is this one). In practice, there is usually only one ID in this array. The JSON renders as such "contributors":[8285392].
  */
 
-- (void)getStatusesShowID:(NSString *)statusID
-                 trimUser:(NSNumber *)trimUser
-         includeMyRetweet:(NSNumber *)includeMyRetweet
-          includeEntities:(NSNumber *)includeEntities
-             successBlock:(void(^)(NSDictionary *status))successBlock
-               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesShowID:(NSString *)statusID
+                                                 trimUser:(NSNumber *)trimUser
+                                         includeMyRetweet:(NSNumber *)includeMyRetweet
+                                          includeEntities:(NSNumber *)includeEntities
+                                             successBlock:(void(^)(NSDictionary *status))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	statuses/destroy/:id
@@ -340,10 +341,10 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Destroys the status specified by the required ID parameter. The authenticating user must be the author of the specified status. Returns the destroyed status if successful.
  */
 
-- (void)postStatusesDestroy:(NSString *)statusID
-                   trimUser:(NSNumber *)trimUser
-               successBlock:(void(^)(NSDictionary *status))successBlock
-                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusesDestroy:(NSString *)statusID
+                                                   trimUser:(NSNumber *)trimUser
+                                               successBlock:(void(^)(NSDictionary *status))successBlock
+                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	statuses/update
@@ -363,29 +364,29 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  - Users will have the ability, from their settings page, to remove all the geotags from all their tweets en masse. Currently we are not doing any automatic scrubbing nor providing a method to remove geotags from individual tweets.
  */
 
-- (void)postStatusUpdate:(NSString *)status
-       inReplyToStatusID:(NSString *)existingStatusID
-                latitude:(NSString *)latitude
-               longitude:(NSString *)longitude
-                 placeID:(NSString *)placeID
-      displayCoordinates:(NSNumber *)displayCoordinates
-                trimUser:(NSNumber *)trimUser
-            successBlock:(void(^)(NSDictionary *status))successBlock
-              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
+                                       inReplyToStatusID:(NSString *)existingStatusID
+                                                latitude:(NSString *)latitude
+                                               longitude:(NSString *)longitude
+                                                 placeID:(NSString *)placeID
+                                      displayCoordinates:(NSNumber *)displayCoordinates
+                                                trimUser:(NSNumber *)trimUser
+                                            successBlock:(void(^)(NSDictionary *status))successBlock
+                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // starting May 28th, 2014
 // https://dev.twitter.com/notifications/multiple-media-entities-in-tweets
 // https://dev.twitter.com/docs/api/multiple-media-extended-entities
-- (void)postStatusUpdate:(NSString *)status
-       inReplyToStatusID:(NSString *)existingStatusID
-                mediaIDs:(NSArray *)mediaIDs
-                latitude:(NSString *)latitude
-               longitude:(NSString *)longitude
-                 placeID:(NSString *)placeID
-      displayCoordinates:(NSNumber *)displayCoordinates
-                trimUser:(NSNumber *)trimUser
-            successBlock:(void(^)(NSDictionary *status))successBlock
-              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
+                                       inReplyToStatusID:(NSString *)existingStatusID
+                                                mediaIDs:(NSArray *)mediaIDs
+                                                latitude:(NSString *)latitude
+                                               longitude:(NSString *)longitude
+                                                 placeID:(NSString *)placeID
+                                      displayCoordinates:(NSNumber *)displayCoordinates
+                                                trimUser:(NSNumber *)trimUser
+                                            successBlock:(void(^)(NSDictionary *status))successBlock
+                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	statuses/retweet/:id
@@ -399,15 +400,15 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Returns Tweets (1: the new tweet)
  */
 
-- (void)postStatusRetweetWithID:(NSString *)statusID
-                       trimUser:(NSNumber *)trimUser
-                   successBlock:(void(^)(NSDictionary *status))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
+                                                       trimUser:(NSNumber *)trimUser
+                                                   successBlock:(void(^)(NSDictionary *status))successBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postStatusRetweetWithID:(NSString *)statusID
-                   successBlock:(void(^)(NSDictionary *status))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
+                                                   successBlock:(void(^)(NSDictionary *status))successBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	statuses/update_with_media
@@ -419,28 +420,28 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  The Tweet text will be rewritten to include the media URL(s), which will reduce the number of characters allowed in the Tweet text. If the URL(s) cannot be appended without text truncation, the tweet will be rejected and this method will return an HTTP 403 error.
  */
 
-- (void)postStatusUpdate:(NSString *)status
-          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
-       possiblySensitive:(NSNumber *)possiblySensitive
-       inReplyToStatusID:(NSString *)inReplyToStatusID
-                latitude:(NSString *)latitude
-               longitude:(NSString *)longitude
-                 placeID:(NSString *)placeID
-      displayCoordinates:(NSNumber *)displayCoordinates
-     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-            successBlock:(void(^)(NSDictionary *status))successBlock
-              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
+                                          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
+                                       possiblySensitive:(NSNumber *)possiblySensitive
+                                       inReplyToStatusID:(NSString *)inReplyToStatusID
+                                                latitude:(NSString *)latitude
+                                               longitude:(NSString *)longitude
+                                                 placeID:(NSString *)placeID
+                                      displayCoordinates:(NSNumber *)displayCoordinates
+                                     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                            successBlock:(void(^)(NSDictionary *status))successBlock
+                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postStatusUpdate:(NSString *)status
-       inReplyToStatusID:(NSString *)existingStatusID
-                mediaURL:(NSURL *)mediaURL
-                 placeID:(NSString *)placeID
-                latitude:(NSString *)latitude
-               longitude:(NSString *)longitude
-     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-            successBlock:(void(^)(NSDictionary *status))successBlock
-              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
+                                       inReplyToStatusID:(NSString *)existingStatusID
+                                                mediaURL:(NSURL *)mediaURL
+                                                 placeID:(NSString *)placeID
+                                                latitude:(NSString *)latitude
+                                               longitude:(NSString *)longitude
+                                     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                            successBlock:(void(^)(NSDictionary *status))successBlock
+                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/oembed
@@ -450,17 +451,17 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  While this endpoint allows a bit of customization for the final appearance of the embedded Tweet, be aware that the appearance of the rendered Tweet may change over time to be consistent with Twitter's Display Requirements. Do not rely on any class or id parameters to stay constant in the returned markup.
  */
 
-- (void)getStatusesOEmbedForStatusID:(NSString *)statusID
-                           urlString:(NSString *)urlString
-                            maxWidth:(NSString *)maxWidth
-                           hideMedia:(NSNumber *)hideMedia
-                          hideThread:(NSNumber *)hideThread
-                          omitScript:(NSNumber *)omitScript
-                               align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
-                             related:(NSString *)related // eg. twitterapi,twittermedia,twitter
-                                lang:(NSString *)lang
-                        successBlock:(void(^)(NSDictionary *status))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesOEmbedForStatusID:(NSString *)statusID
+                                                           urlString:(NSString *)urlString
+                                                            maxWidth:(NSString *)maxWidth
+                                                           hideMedia:(NSNumber *)hideMedia
+                                                          hideThread:(NSNumber *)hideThread
+                                                          omitScript:(NSNumber *)omitScript
+                                                               align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
+                                                             related:(NSString *)related // eg. twitterapi,twittermedia,twitter
+                                                                lang:(NSString *)lang
+                                                        successBlock:(void(^)(NSDictionary *status))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/retweeters/ids
@@ -470,32 +471,32 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  This method offers similar data to GET statuses/retweets/:id and replaces API v1's GET statuses/:id/retweeted_by/ids method.
  */
 
-- (void)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
-                                     cursor:(NSString *)cursor
-                               successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
-                                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetersIDsForStatusID:(NSString *)statusID
+                                                                     cursor:(NSString *)cursor
+                                                               successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Search
 
 //	GET		search/tweets
-- (void)getSearchTweetsWithQuery:(NSString *)q
-                         geocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
-                            lang:(NSString *)lang // eg. "eu"
-                          locale:(NSString *)locale // eg. "ja"
-                      resultType:(NSString *)resultType // eg. "mixed, recent, popular"
-                           count:(NSString *)count // eg. "100"
-                           until:(NSString *)until // eg. "2012-09-01"
-                         sinceID:(NSString *)sinceID // eg. "12345"
-                           maxID:(NSString *)maxID // eg. "54321"
-                 includeEntities:(NSNumber *)includeEntities
-                        callback:(NSString *)callback // eg. "processTweets"
-                    successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getSearchTweetsWithQuery:(NSString *)q
+                                                         geocode:(NSString *)geoCode // eg. "37.781157,-122.398720,1mi"
+                                                            lang:(NSString *)lang // eg. "eu"
+                                                          locale:(NSString *)locale // eg. "ja"
+                                                      resultType:(NSString *)resultType // eg. "mixed, recent, popular"
+                                                           count:(NSString *)count // eg. "100"
+                                                           until:(NSString *)until // eg. "2012-09-01"
+                                                         sinceID:(NSString *)sinceID // eg. "12345"
+                                                           maxID:(NSString *)maxID // eg. "54321"
+                                                 includeEntities:(NSNumber *)includeEntities
+                                                        callback:(NSString *)callback // eg. "processTweets"
+                                                    successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience method
-- (void)getSearchTweetsWithQuery:(NSString *)q
-                    successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getSearchTweetsWithQuery:(NSString *)q
+                                                    successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Streaming
 
@@ -511,19 +512,19 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  At least one predicate parameter (follow, locations, or track) must be specified.
  */
 
-- (id)postStatusesFilterUserIDs:(NSArray *)userIDs
-                keywordsToTrack:(NSArray *)keywordsToTrack
-          locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                      delimited:(NSNumber *)delimited
-                  stallWarnings:(NSNumber *)stallWarnings
-                  progressBlock:(void(^)(NSDictionary *tweet))progressBlock
-              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusesFilterUserIDs:(NSArray *)userIDs
+                                                  keywordsToTrack:(NSArray *)keywordsToTrack
+                                            locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                        delimited:(NSNumber *)delimited
+                                                    stallWarnings:(NSNumber *)stallWarnings
+                                                    progressBlock:(void(^)(NSDictionary *tweet))progressBlock
+                                                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (id)postStatusesFilterKeyword:(NSString *)keyword
-                  progressBlock:(void(^)(NSDictionary *tweet))progressBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
+                                                    progressBlock:(void(^)(NSDictionary *tweet))progressBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/sample
@@ -531,11 +532,11 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Returns a small random sample of all public statuses. The Tweets returned by the default access level are the same, so if two different clients connect to this endpoint, they will see the same Tweets.
  */
 
-- (id)getStatusesSampleDelimited:(NSNumber *)delimited
-                   stallWarnings:(NSNumber *)stallWarnings
-                   progressBlock:(void(^)(id response))progressBlock
-               stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleDelimited:(NSNumber *)delimited
+                                                     stallWarnings:(NSNumber *)stallWarnings
+                                                     progressBlock:(void(^)(id response))progressBlock
+                                                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    statuses/firehose
@@ -545,12 +546,12 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Returns all public statuses. Few applications require this level of access. Creative use of a combination of other resources and various access levels can satisfy nearly every application use case.
  */
 
-- (id)getStatusesFirehoseWithCount:(NSString *)count
-                         delimited:(NSNumber *)delimited
-                     stallWarnings:(NSNumber *)stallWarnings
-                     progressBlock:(void(^)(id response))progressBlock
-                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count
+                                                           delimited:(NSNumber *)delimited
+                                                       stallWarnings:(NSNumber *)stallWarnings
+                                                       progressBlock:(void(^)(id response))progressBlock
+                                                   stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    user
@@ -558,15 +559,15 @@ downloadProgressBlock:(void(^)(id json))downloadProgressBlock
  Streams messages for a single user, as described in User streams https://dev.twitter.com/docs/streaming-apis/streams/user
  */
 
-- (id)getUserStreamDelimited:(NSNumber *)delimited
-               stallWarnings:(NSNumber *)stallWarnings
-includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-              includeReplies:(NSNumber *)includeReplies
-             keywordsToTrack:(NSArray *)keywordsToTrack
-       locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-               progressBlock:(void(^)(id response))progressBlock
-           stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                  errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUserStreamDelimited:(NSNumber *)delimited
+                                                 stallWarnings:(NSNumber *)stallWarnings
+                           includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                includeReplies:(NSNumber *)includeReplies
+                                               keywordsToTrack:(NSArray *)keywordsToTrack
+                                         locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                 progressBlock:(void(^)(id response))progressBlock
+                                             stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    site
@@ -574,14 +575,14 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Streams messages for a set of users, as described in Site streams https://dev.twitter.com/docs/streaming-apis/streams/site
  */
 
-- (id)getSiteStreamForUserIDs:(NSArray *)userIDs
-                    delimited:(NSNumber *)delimited
-                stallWarnings:(NSNumber *)stallWarnings
-       restrictToUserMessages:(NSNumber *)restrictToUserMessages
-               includeReplies:(NSNumber *)includeReplies
-                progressBlock:(void(^)(id response))progressBlock
-            stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getSiteStreamForUserIDs:(NSArray *)userIDs
+                                                      delimited:(NSNumber *)delimited
+                                                  stallWarnings:(NSNumber *)stallWarnings
+                                         restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                                                 includeReplies:(NSNumber *)includeReplies
+                                                  progressBlock:(void(^)(id response))progressBlock
+                                              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Direct Messages
 
@@ -591,18 +592,18 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the 20 most recent direct messages sent to the authenticating user. Includes detailed information about the sender and recipient user. You can request up to 200 direct messages per call, up to a maximum of 800 incoming DMs.
  */
 
-- (void)getDirectMessagesSinceID:(NSString *)sinceID
-                           maxID:(NSString *)maxID
-                           count:(NSString *)count
-                 includeEntities:(NSNumber *)includeEntities
-                      skipStatus:(NSNumber *)skipStatus
-                    successBlock:(void(^)(NSArray *messages))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getDirectMessagesSinceID:(NSString *)sinceID
+                                                           maxID:(NSString *)maxID
+                                                           count:(NSString *)count
+                                                 includeEntities:(NSNumber *)includeEntities
+                                                      skipStatus:(NSNumber *)skipStatus
+                                                    successBlock:(void(^)(NSArray *messages))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 // convenience
-- (void)getDirectMessagesSinceID:(NSString *)sinceID
-                           count:(NSUInteger)count
-                    successBlock:(void(^)(NSArray *messages))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getDirectMessagesSinceID:(NSString *)sinceID
+                                                           count:(NSUInteger)count
+                                                    successBlock:(void(^)(NSArray *messages))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    direct_messages/sent
@@ -610,13 +611,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the 20 most recent direct messages sent by the authenticating user. Includes detailed information about the sender and recipient user. You can request up to 200 direct messages per call, up to a maximum of 800 outgoing DMs.
  */
 
-- (void)getDirectMessagesSinceID:(NSString *)sinceID
-                           maxID:(NSString *)maxID
-                           count:(NSString *)count
-                            page:(NSString *)page
-                 includeEntities:(NSNumber *)includeEntities
-                    successBlock:(void(^)(NSArray *messages))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getDirectMessagesSinceID:(NSString *)sinceID
+                                                           maxID:(NSString *)maxID
+                                                           count:(NSString *)count
+                                                            page:(NSString *)page
+                                                 includeEntities:(NSNumber *)includeEntities
+                                                    successBlock:(void(^)(NSArray *messages))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    direct_messages/show
@@ -624,9 +625,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a single direct message, specified by an id parameter. Like the /1.1/direct_messages.format request, this method will include the user objects of the sender and recipient.
  */
 
-- (void)getDirectMessagesShowWithID:(NSString *)messageID
-                       successBlock:(void(^)(NSArray *statuses))successBlock
-                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getDirectMessagesShowWithID:(NSString *)messageID
+                                                       successBlock:(void(^)(NSArray *statuses))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	direct_messages/destroy
@@ -634,10 +635,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Destroys the direct message specified in the required ID parameter. The authenticating user must be the recipient of the specified direct message.
  */
 
-- (void)postDestroyDirectMessageWithID:(NSString *)messageID
-                       includeEntities:(NSNumber *)includeEntities
-                          successBlock:(void(^)(NSDictionary *message))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postDestroyDirectMessageWithID:(NSString *)messageID
+                                                       includeEntities:(NSNumber *)includeEntities
+                                                          successBlock:(void(^)(NSDictionary *message))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	direct_messages/new
@@ -645,11 +646,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Sends a new direct message to the specified user from the authenticating user. Requires both the user and text parameters and must be a POST. Returns the sent message in the requested format if successful.
  */
 
-- (void)postDirectMessage:(NSString *)status
-            forScreenName:(NSString *)screenName
-                 orUserID:(NSString *)userID
-             successBlock:(void(^)(NSDictionary *message))successBlock
-               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postDirectMessage:(NSString *)status
+                                            forScreenName:(NSString *)screenName
+                                                 orUserID:(NSString *)userID
+                                             successBlock:(void(^)(NSDictionary *message))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Friends & Followers
 
@@ -659,8 +660,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from. Use POST friendships/update to set the "no retweets" status for a given user account on behalf of the current user.
  */
 
-- (void)getFriendshipNoRetweetsIDsWithSuccessBlock:(void(^)(NSArray *ids))successBlock
-                                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendshipNoRetweetsIDsWithSuccessBlock:(void(^)(NSArray *ids))successBlock
+                                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friends/ids
@@ -673,17 +674,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This method is especially powerful when used in conjunction with GET users/lookup, a method that allows you to convert user IDs into full user objects in bulk.
  */
 
-- (void)getFriendsIDsForUserID:(NSString *)userID
-                  orScreenName:(NSString *)screenName
-                        cursor:(NSString *)cursor
-                         count:(NSString *)count
-                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendsIDsForUserID:(NSString *)userID
+                                                  orScreenName:(NSString *)screenName
+                                                        cursor:(NSString *)cursor
+                                                         count:(NSString *)count
+                                                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getFriendsIDsForScreenName:(NSString *)screenName
-                      successBlock:(void(^)(NSArray *friends))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendsIDsForScreenName:(NSString *)screenName
+                                                      successBlock:(void(^)(NSArray *friends))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    followers/ids
@@ -695,17 +696,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This method is especially powerful when used in conjunction with GET users/lookup, a method that allows you to convert user IDs into full user objects in bulk.
  */
 
-- (void)getFollowersIDsForUserID:(NSString *)userID
-                    orScreenName:(NSString *)screenName
-                          cursor:(NSString *)cursor
-                           count:(NSString *)count
-                    successBlock:(void(^)(NSArray *followersIDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFollowersIDsForUserID:(NSString *)userID
+                                                    orScreenName:(NSString *)screenName
+                                                          cursor:(NSString *)cursor
+                                                           count:(NSString *)count
+                                                    successBlock:(void(^)(NSArray *followersIDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getFollowersIDsForScreenName:(NSString *)screenName
-                        successBlock:(void(^)(NSArray *followers))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFollowersIDsForScreenName:(NSString *)screenName
+                                                        successBlock:(void(^)(NSArray *followers))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/lookup
@@ -713,10 +714,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the relationships of the authenticating user to the comma-separated list of up to 100 screen_names or user_ids provided. Values for connections can be: following, following_requested, followed_by, none.
  */
 
-- (void)getFriendshipsLookupForScreenNames:(NSArray *)screenNames
-                                 orUserIDs:(NSArray *)userIDs
-                              successBlock:(void(^)(NSArray *users))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendshipsLookupForScreenNames:(NSArray *)screenNames
+                                                                 orUserIDs:(NSArray *)userIDs
+                                                              successBlock:(void(^)(NSArray *users))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/incoming
@@ -724,9 +725,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a collection of numeric IDs for every user who has a pending request to follow the authenticating user.
  */
 
-- (void)getFriendshipIncomingWithCursor:(NSString *)cursor
-                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendshipIncomingWithCursor:(NSString *)cursor
+                                                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/outgoing
@@ -734,9 +735,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a collection of numeric IDs for every protected user for whom the authenticating user has a pending follow request.
  */
 
-- (void)getFriendshipOutgoingWithCursor:(NSString *)cursor
-                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendshipOutgoingWithCursor:(NSString *)cursor
+                                                           successBlock:(void(^)(NSArray *IDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST   friendships/create
@@ -748,15 +749,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Actions taken in this method are asynchronous and changes will be eventually consistent.
  */
 
-- (void)postFriendshipsCreateForScreenName:(NSString *)screenName
-                                  orUserID:(NSString *)userID
-                              successBlock:(void(^)(NSDictionary *befriendedUser))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFriendshipsCreateForScreenName:(NSString *)screenName
+                                                                  orUserID:(NSString *)userID
+                                                              successBlock:(void(^)(NSDictionary *befriendedUser))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postFollow:(NSString *)screenName
-      successBlock:(void(^)(NSDictionary *user))successBlock
-        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFollow:(NSString *)screenName
+                                      successBlock:(void(^)(NSDictionary *user))successBlock
+                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	friendships/destroy
@@ -768,15 +769,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Actions taken in this method are asynchronous and changes will be eventually consistent.
  */
 
-- (void)postFriendshipsDestroyScreenName:(NSString *)screenName
-                                orUserID:(NSString *)userID
-                            successBlock:(void(^)(NSDictionary *unfollowedUser))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFriendshipsDestroyScreenName:(NSString *)screenName
+                                                                orUserID:(NSString *)userID
+                                                            successBlock:(void(^)(NSDictionary *unfollowedUser))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postUnfollow:(NSString *)screenName
-        successBlock:(void(^)(NSDictionary *user))successBlock
-          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postUnfollow:(NSString *)screenName
+                                        successBlock:(void(^)(NSDictionary *user))successBlock
+                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	friendships/update
@@ -784,26 +785,26 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Allows one to enable or disable retweets and device notifications from the specified user.
  */
 
-- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
-                                  orUserID:(NSString *)userID
-                 enableDeviceNotifications:(NSNumber *)enableDeviceNotifications
-                            enableRetweets:(NSNumber *)enableRetweets
-                              successBlock:(void(^)(NSDictionary *user))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                                                  orUserID:(NSString *)userID
+                                                 enableDeviceNotifications:(NSNumber *)enableDeviceNotifications
+                                                            enableRetweets:(NSNumber *)enableRetweets
+                                                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
-                                  orUserID:(NSString *)userID
-                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
-                              successBlock:(void(^)(NSDictionary *user))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                                                  orUserID:(NSString *)userID
+                                                 enableDeviceNotifications:(BOOL)enableDeviceNotifications
+                                                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postFriendshipsUpdateForScreenName:(NSString *)screenName
-                                  orUserID:(NSString *)userID
-                            enableRetweets:(BOOL)enableRetweets
-                              successBlock:(void(^)(NSDictionary *user))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFriendshipsUpdateForScreenName:(NSString *)screenName
+                                                                  orUserID:(NSString *)userID
+                                                            enableRetweets:(BOOL)enableRetweets
+                                                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friendships/show
@@ -811,12 +812,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns detailed information about the relationship between two arbitrary users.
  */
 
-- (void)getFriendshipShowForSourceID:(NSString *)sourceID
-                  orSourceScreenName:(NSString *)sourceScreenName
-                            targetID:(NSString *)targetID
-                  orTargetScreenName:(NSString *)targetScreenName
-                        successBlock:(void(^)(id relationship))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendshipShowForSourceID:(NSString *)sourceID
+                                                  orSourceScreenName:(NSString *)sourceScreenName
+                                                            targetID:(NSString *)targetID
+                                                  orTargetScreenName:(NSString *)targetScreenName
+                                                        successBlock:(void(^)(id relationship))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    friends/list
@@ -826,19 +827,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 20 users and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
  */
 
-- (void)getFriendsListForUserID:(NSString *)userID
-                   orScreenName:(NSString *)screenName
-                         cursor:(NSString *)cursor
-                          count:(NSString *)count
-                     skipStatus:(NSNumber *)skipStatus
-            includeUserEntities:(NSNumber *)includeUserEntities
-                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendsListForUserID:(NSString *)userID
+                                                   orScreenName:(NSString *)screenName
+                                                         cursor:(NSString *)cursor
+                                                          count:(NSString *)count
+                                                     skipStatus:(NSNumber *)skipStatus
+                                            includeUserEntities:(NSNumber *)includeUserEntities
+                                                   successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getFriendsForScreenName:(NSString *)screenName
-                   successBlock:(void(^)(NSArray *friends))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFriendsForScreenName:(NSString *)screenName
+                                                   successBlock:(void(^)(NSArray *friends))successBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    followers/list
@@ -848,19 +849,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  At this time, results are ordered with the most recent following first — however, this ordering is subject to unannounced change and eventual consistency issues. Results are given in groups of 20 users and multiple "pages" of results can be navigated through using the next_cursor value in subsequent requests. See Using cursors to navigate collections for more information.
  */
 
-- (void)getFollowersListForUserID:(NSString *)userID
-                     orScreenName:(NSString *)screenName
-                            count:(NSString *)count
-                           cursor:(NSString *)cursor
-                       skipStatus:(NSNumber *)skipStatus
-              includeUserEntities:(NSNumber *)includeUserEntities
-                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFollowersListForUserID:(NSString *)userID
+                                                     orScreenName:(NSString *)screenName
+                                                            count:(NSString *)count
+                                                           cursor:(NSString *)cursor
+                                                       skipStatus:(NSNumber *)skipStatus
+                                              includeUserEntities:(NSNumber *)includeUserEntities
+                                                     successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getFollowersForScreenName:(NSString *)screenName
-                     successBlock:(void(^)(NSArray *followers))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFollowersForScreenName:(NSString *)screenName
+                                                     successBlock:(void(^)(NSArray *followers))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Users
 
@@ -870,8 +871,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns settings (including current trend, geo and sleep time information) for the authenticating user.
  */
 
-- (void)getAccountSettingsWithSuccessBlock:(void(^)(NSDictionary *settings))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getAccountSettingsWithSuccessBlock:(void(^)(NSDictionary *settings))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	account/verify_credentials
@@ -879,14 +880,14 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
  */
 
-- (void)getAccountVerifyCredentialsWithIncludeEntites:(NSNumber *)includeEntities
-                                           skipStatus:(NSNumber *)skipStatus
-                                         successBlock:(void(^)(NSDictionary *account))successBlock
-                                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getAccountVerifyCredentialsWithIncludeEntites:(NSNumber *)includeEntities
+                                                                           skipStatus:(NSNumber *)skipStatus
+                                                                         successBlock:(void(^)(NSDictionary *account))successBlock
+                                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
-                                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
+                                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/settings
@@ -894,14 +895,14 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Updates the authenticating user's settings.
  */
 
-- (void)postAccountSettingsWithTrendLocationWOEID:(NSString *)trendLocationWOEID // eg. "1"
-                                 sleepTimeEnabled:(NSNumber *)sleepTimeEnabled // eg. @(YES)
-                                   startSleepTime:(NSString *)startSleepTime // eg. "13"
-                                     endSleepTime:(NSString *)endSleepTime // eg. "13"
-                                         timezone:(NSString *)timezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
-                                         language:(NSString *)language // eg. "it", "en", "es"
-                                     successBlock:(void(^)(NSDictionary *settings))successBlock
-                                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postAccountSettingsWithTrendLocationWOEID:(NSString *)trendLocationWOEID // eg. "1"
+                                                                 sleepTimeEnabled:(NSNumber *)sleepTimeEnabled // eg. @(YES)
+                                                                   startSleepTime:(NSString *)startSleepTime // eg. "13"
+                                                                     endSleepTime:(NSString *)endSleepTime // eg. "13"
+                                                                         timezone:(NSString *)timezone // eg. "Europe/Copenhagen", "Pacific/Tongatapu"
+                                                                         language:(NSString *)language // eg. "it", "en", "es"
+                                                                     successBlock:(void(^)(NSDictionary *settings))successBlock
+                                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_delivery_device
@@ -909,10 +910,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Sets which device Twitter delivers updates to for the authenticating user. Sending none as the device parameter will disable SMS updates.
  */
 
-- (void)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
-                           includeEntities:(NSNumber *)includeEntities
-                              successBlock:(void(^)(NSDictionary *response))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postAccountUpdateDeliveryDeviceSMS:(BOOL)deliveryDeviceSMS
+                                                           includeEntities:(NSNumber *)includeEntities
+                                                              successBlock:(void(^)(NSDictionary *response))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_profile
@@ -920,19 +921,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Sets values that users are able to set under the "Account" tab of their settings page. Only the parameters specified will be updated.
  */
 
-- (void)postAccountUpdateProfileWithName:(NSString *)name
-                               URLString:(NSString *)URLString
-                                location:(NSString *)location
-                             description:(NSString *)description
-                         includeEntities:(NSNumber *)includeEntities
-                              skipStatus:(NSNumber *)skipStatus
-                            successBlock:(void(^)(NSDictionary *profile))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postAccountUpdateProfileWithName:(NSString *)name
+                                                               URLString:(NSString *)URLString
+                                                                location:(NSString *)location
+                                                             description:(NSString *)description
+                                                         includeEntities:(NSNumber *)includeEntities
+                                                              skipStatus:(NSNumber *)skipStatus
+                                                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postUpdateProfile:(NSDictionary *)profileData
-             successBlock:(void(^)(NSDictionary *myInfo))successBlock
-               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postUpdateProfile:(NSDictionary *)profileData
+                                             successBlock:(void(^)(NSDictionary *myInfo))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_profile_background_image
@@ -940,13 +941,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Updates the authenticating user's profile background image. This method can also be used to enable or disable the profile background image. Although each parameter is marked as optional, at least one of image, tile or use must be provided when making this request.
  */
 
-- (void)postAccountUpdateProfileBackgroundImageWithImage:(NSString *)base64EncodedImage
-                                                   title:(NSString *)title
-                                         includeEntities:(NSNumber *)includeEntities
-                                              skipStatus:(NSNumber *)skipStatus
-                                                     use:(NSNumber *)use
-                                            successBlock:(void(^)(NSDictionary *profile))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postAccountUpdateProfileBackgroundImageWithImage:(NSString *)base64EncodedImage
+                                                                                   title:(NSString *)title
+                                                                         includeEntities:(NSNumber *)includeEntities
+                                                                              skipStatus:(NSNumber *)skipStatus
+                                                                                     use:(NSNumber *)use
+                                                                            successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	account/update_profile_colors
@@ -956,15 +957,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
 
 // https://twittercommunity.com/t/deprecation-of-account-update-profile-colors/28692
 
-- (void)postAccountUpdateProfileColorsWithBackgroundColor:(NSString *)backgroundColor
-                                                linkColor:(NSString *)linkColor
-                                       sidebarBorderColor:(NSString *)sidebarBorderColor
-                                         sidebarFillColor:(NSString *)sidebarFillColor
-                                         profileTextColor:(NSString *)profileTextColor
-                                          includeEntities:(NSNumber *)includeEntities
-                                               skipStatus:(NSNumber *)skipStatus
-                                             successBlock:(void(^)(NSDictionary *profile))successBlock
-                                               errorBlock:(void(^)(NSError *error))errorBlock __attribute__((deprecated));
+- (NSObject<STTwitterRequestProtocol> *)postAccountUpdateProfileColorsWithBackgroundColor:(NSString *)backgroundColor
+                                                                                linkColor:(NSString *)linkColor
+                                                                       sidebarBorderColor:(NSString *)sidebarBorderColor
+                                                                         sidebarFillColor:(NSString *)sidebarFillColor
+                                                                         profileTextColor:(NSString *)profileTextColor
+                                                                          includeEntities:(NSNumber *)includeEntities
+                                                                               skipStatus:(NSNumber *)skipStatus
+                                                                             successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                                               errorBlock:(void(^)(NSError *error))errorBlock __attribute__((deprecated));
 
 /*
  POST	account/update_profile_image
@@ -974,11 +975,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This method asynchronously processes the uploaded file before updating the user's profile image URL. You can either update your local cache the next time you request the user's information, or, at least 5 seconds after uploading the image, ask for the updated URL using GET users/show.
  */
 
-- (void)postAccountUpdateProfileImage:(NSString *)base64EncodedImage
-                      includeEntities:(NSNumber *)includeEntities
-                           skipStatus:(NSNumber *)skipStatus
-                         successBlock:(void(^)(NSDictionary *profile))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postAccountUpdateProfileImage:(NSString *)base64EncodedImage
+                                                      includeEntities:(NSNumber *)includeEntities
+                                                           skipStatus:(NSNumber *)skipStatus
+                                                         successBlock:(void(^)(NSDictionary *profile))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    blocks/list
@@ -986,11 +987,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a collection of user objects that the authenticating user is blocking.
  */
 
-- (void)getBlocksListWithincludeEntities:(NSNumber *)includeEntities
-                              skipStatus:(NSNumber *)skipStatus
-                                  cursor:(NSString *)cursor
-                            successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getBlocksListWithincludeEntities:(NSNumber *)includeEntities
+                                                              skipStatus:(NSNumber *)skipStatus
+                                                                  cursor:(NSString *)cursor
+                                                            successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    blocks/ids
@@ -998,9 +999,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns an array of numeric user ids the authenticating user is blocking.
  */
 
-- (void)getBlocksIDsWithCursor:(NSString *)cursor
-                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getBlocksIDsWithCursor:(NSString *)cursor
+                                                  successBlock:(void(^)(NSArray *ids, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	blocks/create
@@ -1008,12 +1009,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Blocks the specified user from following the authenticating user. In addition the blocked user will not show in the authenticating users mentions or timeline (unless retweeted by another user). If a follow or friend relationship exists it is destroyed.
  */
 
-- (void)postBlocksCreateWithScreenName:(NSString *)screenName
-                              orUserID:(NSString *)userID
-                       includeEntities:(NSNumber *)includeEntities
-                            skipStatus:(NSNumber *)skipStatus
-                          successBlock:(void(^)(NSDictionary *user))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postBlocksCreateWithScreenName:(NSString *)screenName
+                                                              orUserID:(NSString *)userID
+                                                       includeEntities:(NSNumber *)includeEntities
+                                                            skipStatus:(NSNumber *)skipStatus
+                                                          successBlock:(void(^)(NSDictionary *user))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	blocks/destroy
@@ -1021,12 +1022,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Un-blocks the user specified in the ID parameter for the authenticating user. Returns the un-blocked user in the requested format when successful. If relationships existed before the block was instated, they will not be restored.
  */
 
-- (void)postBlocksDestroyWithScreenName:(NSString *)screenName
-                               orUserID:(NSString *)userID
-                        includeEntities:(NSNumber *)includeEntities
-                             skipStatus:(NSNumber *)skipStatus
-                           successBlock:(void(^)(NSDictionary *user))successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postBlocksDestroyWithScreenName:(NSString *)screenName
+                                                               orUserID:(NSString *)userID
+                                                        includeEntities:(NSNumber *)includeEntities
+                                                             skipStatus:(NSNumber *)skipStatus
+                                                           successBlock:(void(^)(NSDictionary *user))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/lookup
@@ -1046,11 +1047,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  - You are strongly encouraged to use a POST for larger requests.
  */
 
-- (void)getUsersLookupForScreenName:(NSString *)screenName
-                           orUserID:(NSString *)userID
-                    includeEntities:(NSNumber *)includeEntities
-                       successBlock:(void(^)(NSArray *users))successBlock
-                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersLookupForScreenName:(NSString *)screenName
+                                                           orUserID:(NSString *)userID
+                                                    includeEntities:(NSNumber *)includeEntities
+                                                       successBlock:(void(^)(NSArray *users))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/show
@@ -1060,21 +1061,21 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  You must be following a protected user to be able to see their most recent Tweet. If you don't follow a protected user, the users Tweet will be removed. A Tweet will not always be returned in the current_status field.
  */
 
-- (void)getUsersShowForUserID:(NSString *)userID
-                 orScreenName:(NSString *)screenName
-              includeEntities:(NSNumber *)includeEntities
-                 successBlock:(void(^)(NSDictionary *user))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersShowForUserID:(NSString *)userID
+                                                 orScreenName:(NSString *)screenName
+                                              includeEntities:(NSNumber *)includeEntities
+                                                 successBlock:(void(^)(NSDictionary *user))successBlock
+                                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getUserInformationFor:(NSString *)screenName
-                 successBlock:(void(^)(NSDictionary *user))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUserInformationFor:(NSString *)screenName
+                                                 successBlock:(void(^)(NSDictionary *user))successBlock
+                                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)profileImageFor:(NSString *)screenName
-           successBlock:(void(^)(id image))successBlock
-             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)profileImageFor:(NSString *)screenName
+                                           successBlock:(void(^)(id image))successBlock
+                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/search
@@ -1084,12 +1085,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Only the first 1,000 matching results are available.
  */
 
-- (void)getUsersSearchQuery:(NSString *)query
-                       page:(NSString *)page
-                      count:(NSString *)count
-            includeEntities:(NSNumber *)includeEntities
-               successBlock:(void(^)(NSArray *users))successBlock
-                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersSearchQuery:(NSString *)query
+                                                       page:(NSString *)page
+                                                      count:(NSString *)count
+                                            includeEntities:(NSNumber *)includeEntities
+                                               successBlock:(void(^)(NSArray *users))successBlock
+                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/contributees
@@ -1097,12 +1098,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a collection of users that the specified user can "contribute" to.
  */
 
-- (void)getUsersContributeesWithUserID:(NSString *)userID
-                          orScreenName:(NSString *)screenName
-                       includeEntities:(NSNumber *)includeEntities
-                            skipStatus:(NSNumber *)skipStatus
-                          successBlock:(void(^)(NSArray *contributees))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersContributeesWithUserID:(NSString *)userID
+                                                          orScreenName:(NSString *)screenName
+                                                       includeEntities:(NSNumber *)includeEntities
+                                                            skipStatus:(NSNumber *)skipStatus
+                                                          successBlock:(void(^)(NSArray *contributees))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/contributors
@@ -1110,12 +1111,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a collection of users who can contribute to the specified account.
  */
 
-- (void)getUsersContributorsWithUserID:(NSString *)userID
-                          orScreenName:(NSString *)screenName
-                       includeEntities:(NSNumber *)includeEntities
-                            skipStatus:(NSNumber *)skipStatus
-                          successBlock:(void(^)(NSArray *contributors))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersContributorsWithUserID:(NSString *)userID
+                                                          orScreenName:(NSString *)screenName
+                                                       includeEntities:(NSNumber *)includeEntities
+                                                            skipStatus:(NSNumber *)skipStatus
+                                                          successBlock:(void(^)(NSArray *contributors))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST   account/remove_profile_banner
@@ -1123,8 +1124,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Removes the uploaded profile banner for the authenticating user. Returns HTTP 200 upon success.
  */
 
-- (void)postAccountRemoveProfileBannerWithSuccessBlock:(void(^)(id response))successBlock
-                                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postAccountRemoveProfileBannerWithSuccessBlock:(void(^)(id response))successBlock
+                                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST    account/update_profile_banner
@@ -1141,13 +1142,13 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  422	The image could not be resized or is too large.
  */
 
-- (void)postAccountUpdateProfileBannerWithImage:(NSString *)base64encodedImage
-                                          width:(NSString *)width
-                                         height:(NSString *)height
-                                     offsetLeft:(NSString *)offsetLeft
-                                      offsetTop:(NSString *)offsetTop
-                                   successBlock:(void(^)(id response))successBlock
-                                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postAccountUpdateProfileBannerWithImage:(NSString *)base64encodedImage
+                                                                          width:(NSString *)width
+                                                                         height:(NSString *)height
+                                                                     offsetLeft:(NSString *)offsetLeft
+                                                                      offsetTop:(NSString *)offsetTop
+                                                                   successBlock:(void(^)(id response))successBlock
+                                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/profile_banner
@@ -1155,10 +1156,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a map of the available size variations of the specified user's profile banner. If the user has not uploaded a profile banner, a HTTP 404 will be served instead. This method can be used instead of string manipulation on the profile_banner_url returned in user objects as described in User Profile Images and Banners.
  */
 
-- (void)getUsersProfileBannerForUserID:(NSString *)userID
-                          orScreenName:(NSString *)screenName
-                          successBlock:(void(^)(NSDictionary *banner))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersProfileBannerForUserID:(NSString *)userID
+                                                          orScreenName:(NSString *)screenName
+                                                          successBlock:(void(^)(NSDictionary *banner))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST   mutes/users/create
@@ -1169,10 +1170,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  
  Actions taken in this method are asynchronous and changes will be eventually consistent.
  */
-- (void)postMutesUsersCreateForScreenName:(NSString *)screenName
-                                 orUserID:(NSString *)userID
-                             successBlock:(void(^)(NSDictionary *user))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postMutesUsersCreateForScreenName:(NSString *)screenName
+                                                                 orUserID:(NSString *)userID
+                                                             successBlock:(void(^)(NSDictionary *user))successBlock
+                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST   mutes/users/destroy
@@ -1183,30 +1184,30 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  
  Actions taken in this method are asynchronous and changes will be eventually consistent.
  */
-- (void)postMutesUsersDestroyForScreenName:(NSString *)screenName
-                                  orUserID:(NSString *)userID
-                              successBlock:(void(^)(NSDictionary *user))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postMutesUsersDestroyForScreenName:(NSString *)screenName
+                                                                  orUserID:(NSString *)userID
+                                                              successBlock:(void(^)(NSDictionary *user))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    mutes/users/ids
  
  Returns an array of numeric user ids the authenticating user has muted.
  */
-- (void)getMutesUsersIDsWithCursor:(NSString *)cursor
-                      successBlock:(void(^)(NSArray *userIDs, NSString *previousCursor, NSString *nextCursor))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getMutesUsersIDsWithCursor:(NSString *)cursor
+                                                      successBlock:(void(^)(NSArray *userIDs, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    mutes/users/list
  
  Returns an array of user objects the authenticating user has muted.
  */
-- (void)getMutesUsersListWithCursor:(NSString *)cursor
-                    includeEntities:(NSNumber *)includeEntities
-                         skipStatus:(NSNumber *)skipStatus
-                       successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getMutesUsersListWithCursor:(NSString *)cursor
+                                                    includeEntities:(NSNumber *)includeEntities
+                                                         skipStatus:(NSNumber *)skipStatus
+                                                       successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Suggested Users
 
@@ -1218,10 +1219,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  It is recommended that applications cache this data for no more than one hour.
  */
 
-- (void)getUsersSuggestionsForSlug:(NSString *)slug // short name of list or a category, eg. "twitter"
-                              lang:(NSString *)lang
-                      successBlock:(void(^)(NSString *name, NSString *slug, NSArray *users))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersSuggestionsForSlug:(NSString *)slug // short name of list or a category, eg. "twitter"
+                                                              lang:(NSString *)lang
+                                                      successBlock:(void(^)(NSString *name, NSString *slug, NSArray *users))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/suggestions
@@ -1229,9 +1230,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Access to Twitter's suggested user list. This returns the list of suggested user categories. The category can be used in GET users/suggestions/:slug to get the users in that category.
  */
 
-- (void)getUsersSuggestionsWithISO6391LanguageCode:(NSString *)ISO6391LanguageCode
-                                      successBlock:(void(^)(NSArray *suggestions))successBlock
-                                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersSuggestionsWithISO6391LanguageCode:(NSString *)ISO6391LanguageCode
+                                                                      successBlock:(void(^)(NSArray *suggestions))successBlock
+                                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    users/suggestions/:slug/members
@@ -1239,9 +1240,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user.
  */
 
-- (void)getUsersSuggestionsForSlugMembers:(NSString *)slug // short name of list or a category, eg. "twitter"
-                             successBlock:(void(^)(NSArray *members))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUsersSuggestionsForSlugMembers:(NSString *)slug // short name of list or a category, eg. "twitter"
+                                                             successBlock:(void(^)(NSArray *members))successBlock
+                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Favorites
 
@@ -1253,18 +1254,18 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  If you do not provide either a user_id or screen_name to this method, it will assume you are requesting on behalf of the authenticating user. Specify one or the other for best results.
  */
 
-- (void)getFavoritesListWithUserID:(NSString *)userID
-                      orScreenName:(NSString *)screenName
-                             count:(NSString *)count
-                           sinceID:(NSString *)sinceID
-                             maxID:(NSString *)maxID
-                   includeEntities:(NSNumber *)includeEntities
-                      successBlock:(void(^)(NSArray *statuses))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFavoritesListWithUserID:(NSString *)userID
+                                                      orScreenName:(NSString *)screenName
+                                                             count:(NSString *)count
+                                                           sinceID:(NSString *)sinceID
+                                                             maxID:(NSString *)maxID
+                                                   includeEntities:(NSNumber *)includeEntities
+                                                      successBlock:(void(^)(NSArray *statuses))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getFavoritesListWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	favorites/destroy
@@ -1274,10 +1275,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This process invoked by this method is asynchronous. The immediately returned status may not indicate the resultant favorited status of the tweet. A 200 OK response from this method will indicate whether the intended action was successful or not.
  */
 
-- (void)postFavoriteDestroyWithStatusID:(NSString *)statusID
-                        includeEntities:(NSNumber *)includeEntities
-                           successBlock:(void(^)(NSDictionary *status))successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFavoriteDestroyWithStatusID:(NSString *)statusID
+                                                        includeEntities:(NSNumber *)includeEntities
+                                                           successBlock:(void(^)(NSDictionary *status))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	favorites/create
@@ -1287,16 +1288,16 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This process invoked by this method is asynchronous. The immediately returned status may not indicate the resultant favorited status of the tweet. A 200 OK response from this method will indicate whether the intended action was successful or not.
  */
 
-- (void)postFavoriteCreateWithStatusID:(NSString *)statusID
-                       includeEntities:(NSNumber *)includeEntities
-                          successBlock:(void(^)(NSDictionary *status))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFavoriteCreateWithStatusID:(NSString *)statusID
+                                                       includeEntities:(NSNumber *)includeEntities
+                                                          successBlock:(void(^)(NSDictionary *status))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)postFavoriteState:(BOOL)favoriteState
-              forStatusID:(NSString *)statusID
-             successBlock:(void(^)(NSDictionary *status))successBlock
-               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postFavoriteState:(BOOL)favoriteState
+                                              forStatusID:(NSString *)statusID
+                                             successBlock:(void(^)(NSDictionary *status))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Lists
 
@@ -1310,11 +1311,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  A maximum of 100 results will be returned by this call. Subscribed lists are returned first, followed by owned lists. This means that if a user subscribes to 90 lists and owns 20 lists, this method returns 90 subscriptions and 10 owned lists. The reverse method returns owned lists first, so with reverse=true, 20 owned lists and 80 subscriptions would be returned. If your goal is to obtain every list a user owns or subscribes to, use GET lists/ownerships and/or GET lists/subscriptions instead.
  */
 
-- (void)getListsSubscribedByUsername:(NSString *)username
-                            orUserID:(NSString *)userID
-                             reverse:(NSNumber *)reverse
-                        successBlock:(void(^)(NSArray *lists))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsSubscribedByUsername:(NSString *)username
+                                                            orUserID:(NSString *)userID
+                                                             reverse:(NSNumber *)reverse
+                                                        successBlock:(void(^)(NSArray *lists))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	lists/statuses
@@ -1322,25 +1323,25 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns a timeline of tweets authored by members of the specified list. Retweets are included by default. Use the include_rts=false parameter to omit retweets. Embedded Timelines is a great way to embed list timelines on your website.
  */
 
-- (void)getListsStatusesForListID:(NSString *)listID
-                          sinceID:(NSString *)sinceID
-                            maxID:(NSString *)maxID
-                            count:(NSString *)count
-                  includeEntities:(NSNumber *)includeEntities
-                  includeRetweets:(NSNumber *)includeRetweets
-                     successBlock:(void(^)(NSArray *statuses))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsStatusesForListID:(NSString *)listID
+                                                          sinceID:(NSString *)sinceID
+                                                            maxID:(NSString *)maxID
+                                                            count:(NSString *)count
+                                                  includeEntities:(NSNumber *)includeEntities
+                                                  includeRetweets:(NSNumber *)includeRetweets
+                                                     successBlock:(void(^)(NSArray *statuses))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getListsStatusesForSlug:(NSString *)slug
-                     screenName:(NSString *)ownerScreenName
-                        ownerID:(NSString *)ownerID
-                        sinceID:(NSString *)sinceID
-                          maxID:(NSString *)maxID
-                          count:(NSString *)count
-                includeEntities:(NSNumber *)includeEntities
-                includeRetweets:(NSNumber *)includeRetweets
-                   successBlock:(void(^)(NSArray *statuses))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsStatusesForSlug:(NSString *)slug
+                                                     screenName:(NSString *)ownerScreenName
+                                                        ownerID:(NSString *)ownerID
+                                                        sinceID:(NSString *)sinceID
+                                                          maxID:(NSString *)maxID
+                                                          count:(NSString *)count
+                                                includeEntities:(NSNumber *)includeEntities
+                                                includeRetweets:(NSNumber *)includeRetweets
+                                                   successBlock:(void(^)(NSArray *statuses))successBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/members/destroy
@@ -1348,17 +1349,17 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Removes the specified member from the list. The authenticated user must be the list's owner to remove members from the list.
  */
 
-- (void)postListsMembersDestroyForListID:(NSString *)listID
-                            successBlock:(void(^)(id response))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsMembersDestroyForListID:(NSString *)listID
+                                                            successBlock:(void(^)(id response))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListsMembersDestroyForSlug:(NSString *)slug
-                                userID:(NSString *)userID
-                            screenName:(NSString *)screenName
-                       ownerScreenName:(NSString *)ownerScreenName
-                               ownerID:(NSString *)ownerID
-                          successBlock:(void(^)())successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsMembersDestroyForSlug:(NSString *)slug
+                                                                userID:(NSString *)userID
+                                                            screenName:(NSString *)screenName
+                                                       ownerScreenName:(NSString *)ownerScreenName
+                                                               ownerID:(NSString *)ownerID
+                                                          successBlock:(void(^)())successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    lists/memberships
@@ -1366,12 +1367,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the lists the specified user has been added to. If user_id or screen_name are not provided the memberships for the authenticating user are returned.
  */
 
-- (void)getListsMembershipsForUserID:(NSString *)userID
-                        orScreenName:(NSString *)screenName
-                              cursor:(NSString *)cursor
-                  filterToOwnedLists:(NSNumber *)filterToOwnedLists // When set to true, t or 1, will return just lists the authenticating user owns, and the user represented by user_id or screen_name is a member of.
-                        successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsMembershipsForUserID:(NSString *)userID
+                                                        orScreenName:(NSString *)screenName
+                                                              cursor:(NSString *)cursor
+                                                  filterToOwnedLists:(NSNumber *)filterToOwnedLists // When set to true, t or 1, will return just lists the authenticating user owns, and the user represented by user_id or screen_name is a member of.
+                                                        successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	lists/subscribers
@@ -1379,21 +1380,21 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the subscribers of the specified list. Private list subscribers will only be shown if the authenticated user owns the specified list.
  */
 
-- (void)getListsSubscribersForSlug:(NSString *)slug
-                   ownerScreenName:(NSString *)ownerScreenName
-                         orOwnerID:(NSString *)ownerID
-                            cursor:(NSString *)cursor
-                   includeEntities:(NSNumber *)includeEntities
-                        skipStatus:(NSNumber *)skipStatus
-                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsSubscribersForSlug:(NSString *)slug
+                                                   ownerScreenName:(NSString *)ownerScreenName
+                                                         orOwnerID:(NSString *)ownerID
+                                                            cursor:(NSString *)cursor
+                                                   includeEntities:(NSNumber *)includeEntities
+                                                        skipStatus:(NSNumber *)skipStatus
+                                                      successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getListsSubscribersForListID:(NSString *)listID
-                              cursor:(NSString *)cursor
-                     includeEntities:(NSNumber *)includeEntities
-                          skipStatus:(NSNumber *)skipStatus
-                        successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsSubscribersForListID:(NSString *)listID
+                                                              cursor:(NSString *)cursor
+                                                     includeEntities:(NSNumber *)includeEntities
+                                                          skipStatus:(NSNumber *)skipStatus
+                                                        successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/subscribers/create
@@ -1401,15 +1402,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Subscribes the authenticated user to the specified list.
  */
 
-- (void)postListSubscribersCreateForListID:(NSString *)listID
-                              successBlock:(void(^)(id response))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListSubscribersCreateForListID:(NSString *)listID
+                                                              successBlock:(void(^)(id response))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListSubscribersCreateForSlug:(NSString *)slug
-                         ownerScreenName:(NSString *)ownerScreenName
-                               orOwnerID:(NSString *)ownerID
-                            successBlock:(void(^)(id response))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListSubscribersCreateForSlug:(NSString *)slug
+                                                         ownerScreenName:(NSString *)ownerScreenName
+                                                               orOwnerID:(NSString *)ownerID
+                                                            successBlock:(void(^)(id response))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	lists/subscribers/show
@@ -1417,23 +1418,23 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Check if the specified user is a subscriber of the specified list. Returns the user if they are subscriber.
  */
 
-- (void)getListsSubscribersShowForListID:(NSString *)listID
-                                  userID:(NSString *)userID
-                            orScreenName:(NSString *)screenName
-                         includeEntities:(NSNumber *)includeEntities
-                              skipStatus:(NSNumber *)skipStatus
-                            successBlock:(void(^)(id response))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsSubscribersShowForListID:(NSString *)listID
+                                                                  userID:(NSString *)userID
+                                                            orScreenName:(NSString *)screenName
+                                                         includeEntities:(NSNumber *)includeEntities
+                                                              skipStatus:(NSNumber *)skipStatus
+                                                            successBlock:(void(^)(id response))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getListsSubscribersShowForSlug:(NSString *)slug
-                       ownerScreenName:(NSString *)ownerScreenName
-                             orOwnerID:(NSString *)ownerID
-                                userID:(NSString *)userID
-                          orScreenName:(NSString *)screenName
-                       includeEntities:(NSNumber *)includeEntities
-                            skipStatus:(NSNumber *)skipStatus
-                          successBlock:(void(^)(id response))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsSubscribersShowForSlug:(NSString *)slug
+                                                       ownerScreenName:(NSString *)ownerScreenName
+                                                             orOwnerID:(NSString *)ownerID
+                                                                userID:(NSString *)userID
+                                                          orScreenName:(NSString *)screenName
+                                                       includeEntities:(NSNumber *)includeEntities
+                                                            skipStatus:(NSNumber *)skipStatus
+                                                          successBlock:(void(^)(id response))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/subscribers/destroy
@@ -1441,15 +1442,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Unsubscribes the authenticated user from the specified list.
  */
 
-- (void)postListSubscribersDestroyForListID:(NSString *)listID
-                               successBlock:(void(^)(id response))successBlock
-                                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListSubscribersDestroyForListID:(NSString *)listID
+                                                               successBlock:(void(^)(id response))successBlock
+                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListSubscribersDestroyForSlug:(NSString *)slug
-                          ownerScreenName:(NSString *)ownerScreenName
-                                orOwnerID:(NSString *)ownerID
-                             successBlock:(void(^)(id response))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListSubscribersDestroyForSlug:(NSString *)slug
+                                                          ownerScreenName:(NSString *)ownerScreenName
+                                                                orOwnerID:(NSString *)ownerID
+                                                             successBlock:(void(^)(id response))successBlock
+                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/members/create_all
@@ -1459,19 +1460,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Please note that there can be issues with lists that rapidly remove and add memberships. Take care when using these methods such that you are not too rapidly switching between removals and adds on the same list.
  */
 
-- (void)postListsMembersCreateAllForListID:(NSString *)listID
-                                   userIDs:(NSArray *)userIDs // array of strings
-                             orScreenNames:(NSArray *)screenNames // array of strings
-                              successBlock:(void(^)(id response))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsMembersCreateAllForListID:(NSString *)listID
+                                                                   userIDs:(NSArray *)userIDs // array of strings
+                                                             orScreenNames:(NSArray *)screenNames // array of strings
+                                                              successBlock:(void(^)(id response))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListsMembersCreateAllForSlug:(NSString *)slug
-                         ownerScreenName:(NSString *)ownerScreenName
-                               orOwnerID:(NSString *)ownerID
-                                 userIDs:(NSArray *)userIDs // array of strings
-                           orScreenNames:(NSArray *)screenNames // array of strings
-                            successBlock:(void(^)(id response))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsMembersCreateAllForSlug:(NSString *)slug
+                                                         ownerScreenName:(NSString *)ownerScreenName
+                                                               orOwnerID:(NSString *)ownerID
+                                                                 userIDs:(NSArray *)userIDs // array of strings
+                                                           orScreenNames:(NSArray *)screenNames // array of strings
+                                                            successBlock:(void(^)(id response))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	lists/members/show
@@ -1479,23 +1480,23 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Check if the specified user is a member of the specified list.
  */
 
-- (void)getListsMembersShowForListID:(NSString *)listID
-                              userID:(NSString *)userID
-                          screenName:(NSString *)screenName
-                     includeEntities:(NSNumber *)includeEntities
-                          skipStatus:(NSNumber *)skipStatus
-                        successBlock:(void(^)(NSDictionary *user))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsMembersShowForListID:(NSString *)listID
+                                                              userID:(NSString *)userID
+                                                          screenName:(NSString *)screenName
+                                                     includeEntities:(NSNumber *)includeEntities
+                                                          skipStatus:(NSNumber *)skipStatus
+                                                        successBlock:(void(^)(NSDictionary *user))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getListsMembersShowForSlug:(NSString *)slug
-                   ownerScreenName:(NSString *)ownerScreenName
-                         orOwnerID:(NSString *)ownerID
-                            userID:(NSString *)userID
-                        screenName:(NSString *)screenName
-                   includeEntities:(NSNumber *)includeEntities
-                        skipStatus:(NSNumber *)skipStatus
-                      successBlock:(void(^)(NSDictionary *user))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsMembersShowForSlug:(NSString *)slug
+                                                   ownerScreenName:(NSString *)ownerScreenName
+                                                         orOwnerID:(NSString *)ownerID
+                                                            userID:(NSString *)userID
+                                                        screenName:(NSString *)screenName
+                                                   includeEntities:(NSNumber *)includeEntities
+                                                        skipStatus:(NSNumber *)skipStatus
+                                                      successBlock:(void(^)(NSDictionary *user))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    lists/members
@@ -1503,23 +1504,23 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the members of the specified list. Private list members will only be shown if the authenticated user owns the specified list.
  */
 
-- (void)getListsMembersForListID:(NSString *)listID
-                          cursor:(NSString *)cursor
-                           count:(NSString *)count
-                 includeEntities:(NSNumber *)includeEntities
-                      skipStatus:(NSNumber *)skipStatus
-                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsMembersForListID:(NSString *)listID
+                                                          cursor:(NSString *)cursor
+                                                           count:(NSString *)count
+                                                 includeEntities:(NSNumber *)includeEntities
+                                                      skipStatus:(NSNumber *)skipStatus
+                                                    successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getListsMembersForSlug:(NSString *)slug
-               ownerScreenName:(NSString *)screenName
-                     orOwnerID:(NSString *)ownerID
-                        cursor:(NSString *)cursor
-                         count:(NSString *)count
-               includeEntities:(NSNumber *)includeEntities
-                    skipStatus:(NSNumber *)skipStatus
-                  successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsMembersForSlug:(NSString *)slug
+                                               ownerScreenName:(NSString *)screenName
+                                                     orOwnerID:(NSString *)ownerID
+                                                        cursor:(NSString *)cursor
+                                                         count:(NSString *)count
+                                               includeEntities:(NSNumber *)includeEntities
+                                                    skipStatus:(NSNumber *)skipStatus
+                                                  successBlock:(void(^)(NSArray *users, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/members/create
@@ -1527,19 +1528,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Creates a new list for the authenticated user. Note that you can't create more than 20 lists per account.
  */
 
-- (void)postListMemberCreateForListID:(NSString *)listID
-                               userID:(NSString *)userID
-                           screenName:(NSString *)screenName
-                         successBlock:(void(^)(id response))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListMemberCreateForListID:(NSString *)listID
+                                                               userID:(NSString *)userID
+                                                           screenName:(NSString *)screenName
+                                                         successBlock:(void(^)(id response))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListMemberCreateForSlug:(NSString *)slug
-                    ownerScreenName:(NSString *)ownerScreenName
-                          orOwnerID:(NSString *)ownerID
-                             userID:(NSString *)userID
-                         screenName:(NSString *)screenName
-                       successBlock:(void(^)(id response))successBlock
-                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListMemberCreateForSlug:(NSString *)slug
+                                                    ownerScreenName:(NSString *)ownerScreenName
+                                                          orOwnerID:(NSString *)ownerID
+                                                             userID:(NSString *)userID
+                                                         screenName:(NSString *)screenName
+                                                       successBlock:(void(^)(id response))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/destroy
@@ -1547,15 +1548,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Deletes the specified list. The authenticated user must own the list to be able to destroy it.
  */
 
-- (void)postListsDestroyForListID:(NSString *)listID
-                     successBlock:(void(^)(id response))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsDestroyForListID:(NSString *)listID
+                                                     successBlock:(void(^)(id response))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListsDestroyForSlug:(NSString *)slug
-                ownerScreenName:(NSString *)ownerScreenName
-                      orOwnerID:(NSString *)ownerID
-                   successBlock:(void(^)(id response))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsDestroyForSlug:(NSString *)slug
+                                                ownerScreenName:(NSString *)ownerScreenName
+                                                      orOwnerID:(NSString *)ownerID
+                                                   successBlock:(void(^)(id response))successBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/update
@@ -1563,21 +1564,21 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Updates the specified list. The authenticated user must own the list to be able to update it.
  */
 
-- (void)postListsUpdateForListID:(NSString *)listID
-                            name:(NSString *)name
-                       isPrivate:(BOOL)isPrivate
-                     description:(NSString *)description
-                    successBlock:(void(^)(id response))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsUpdateForListID:(NSString *)listID
+                                                            name:(NSString *)name
+                                                       isPrivate:(BOOL)isPrivate
+                                                     description:(NSString *)description
+                                                    successBlock:(void(^)(id response))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListsUpdateForSlug:(NSString *)slug
-               ownerScreenName:(NSString *)ownerScreenName
-                     orOwnerID:(NSString *)ownerID
-                          name:(NSString *)name
-                     isPrivate:(BOOL)isPrivate
-                   description:(NSString *)description
-                  successBlock:(void(^)(id response))successBlock
-                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsUpdateForSlug:(NSString *)slug
+                                               ownerScreenName:(NSString *)ownerScreenName
+                                                     orOwnerID:(NSString *)ownerID
+                                                          name:(NSString *)name
+                                                     isPrivate:(BOOL)isPrivate
+                                                   description:(NSString *)description
+                                                  successBlock:(void(^)(id response))successBlock
+                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/create
@@ -1585,11 +1586,11 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Creates a new list for the authenticated user. Note that you can't create more than 20 lists per account.
  */
 
-- (void)postListsCreateWithName:(NSString *)name
-                      isPrivate:(BOOL)isPrivate
-                    description:(NSString *)description
-                   successBlock:(void(^)(NSDictionary *list))successBlock
-                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsCreateWithName:(NSString *)name
+                                                      isPrivate:(BOOL)isPrivate
+                                                    description:(NSString *)description
+                                                   successBlock:(void(^)(NSDictionary *list))successBlock
+                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	lists/show
@@ -1597,15 +1598,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the specified list. Private lists will only be shown if the authenticated user owns the specified list.
  */
 
-- (void)getListsShowListID:(NSString *)listID
-              successBlock:(void(^)(NSDictionary *list))successBlock
-                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsShowListID:(NSString *)listID
+                                              successBlock:(void(^)(NSDictionary *list))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)getListsShowListSlug:(NSString *)slug
-             ownerScreenName:(NSString *)ownerScreenName
-                   orOwnerID:(NSString *)ownerID
-                successBlock:(void(^)(NSDictionary *list))successBlock
-                  errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsShowListSlug:(NSString *)slug
+                                             ownerScreenName:(NSString *)ownerScreenName
+                                                   orOwnerID:(NSString *)ownerID
+                                                successBlock:(void(^)(NSDictionary *list))successBlock
+                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET	lists/subscriptions
@@ -1613,12 +1614,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Obtain a collection of the lists the specified user is subscribed to, 20 lists per page by default. Does not include the user's own lists.
  */
 
-- (void)getListsSubscriptionsForUserID:(NSString *)userID
-                          orScreenName:(NSString *)screenName
-                                 count:(NSString *)count
-                                cursor:(NSString *)cursor
-                          successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsSubscriptionsForUserID:(NSString *)userID
+                                                          orScreenName:(NSString *)screenName
+                                                                 count:(NSString *)count
+                                                                cursor:(NSString *)cursor
+                                                          successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	lists/members/destroy_all
@@ -1628,19 +1629,19 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Please note that there can be issues with lists that rapidly remove and add memberships. Take care when using these methods such that you are not too rapidly switching between removals and adds on the same list.
  */
 
-- (void)postListsMembersDestroyAllForListID:(NSString *)listID
-                                    userIDs:(NSArray *)userIDs // array of strings
-                              orScreenNames:(NSArray *)screenNames // array of strings
-                               successBlock:(void(^)(id response))successBlock
-                                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsMembersDestroyAllForListID:(NSString *)listID
+                                                                    userIDs:(NSArray *)userIDs // array of strings
+                                                              orScreenNames:(NSArray *)screenNames // array of strings
+                                                               successBlock:(void(^)(id response))successBlock
+                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postListsMembersDestroyAllForSlug:(NSString *)slug
-                          ownerScreenName:(NSString *)ownerScreenName
-                                orOwnerID:(NSString *)ownerID
-                                  userIDs:(NSArray *)userIDs // array of strings
-                            orScreenNames:(NSArray *)screenNames // array of strings
-                             successBlock:(void(^)(id response))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postListsMembersDestroyAllForSlug:(NSString *)slug
+                                                          ownerScreenName:(NSString *)ownerScreenName
+                                                                orOwnerID:(NSString *)ownerID
+                                                                  userIDs:(NSArray *)userIDs // array of strings
+                                                            orScreenNames:(NSArray *)screenNames // array of strings
+                                                             successBlock:(void(^)(id response))successBlock
+                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    lists/ownerships
@@ -1648,12 +1649,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the lists owned by the specified Twitter user. Private lists will only be shown if the authenticated user is also the owner of the lists.
  */
 
-- (void)getListsOwnershipsForUserID:(NSString *)userID
-                       orScreenName:(NSString *)screenName
-                              count:(NSString *)count
-                             cursor:(NSString *)cursor
-                       successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
-                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getListsOwnershipsForUserID:(NSString *)userID
+                                                       orScreenName:(NSString *)screenName
+                                                              count:(NSString *)count
+                                                             cursor:(NSString *)cursor
+                                                       successBlock:(void(^)(NSArray *lists, NSString *previousCursor, NSString *nextCursor))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Saved Searches
 
@@ -1663,8 +1664,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the authenticated user's saved search queries.
  */
 
-- (void)getSavedSearchesListWithSuccessBlock:(void(^)(NSArray *savedSearches))successBlock
-                                  errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getSavedSearchesListWithSuccessBlock:(void(^)(NSArray *savedSearches))successBlock
+                                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    saved_searches/show/:id
@@ -1672,9 +1673,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Retrieve the information for the saved search represented by the given id. The authenticating user must be the owner of saved search ID being requested.
  */
 
-- (void)getSavedSearchesShow:(NSString *)savedSearchID
-                successBlock:(void(^)(NSDictionary *savedSearch))successBlock
-                  errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getSavedSearchesShow:(NSString *)savedSearchID
+                                                successBlock:(void(^)(NSDictionary *savedSearch))successBlock
+                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST   saved_searches/create
@@ -1682,9 +1683,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Create a new saved search for the authenticated user. A user may only have 25 saved searches.
  */
 
-- (void)postSavedSearchesCreateWithQuery:(NSString *)query
-                            successBlock:(void(^)(NSDictionary *createdSearch))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postSavedSearchesCreateWithQuery:(NSString *)query
+                                                            successBlock:(void(^)(NSDictionary *createdSearch))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST   saved_searches/destroy/:id
@@ -1692,9 +1693,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Destroys a saved search for the authenticating user. The authenticating user must be the owner of saved search id being destroyed.
  */
 
-- (void)postSavedSearchesDestroy:(NSString *)savedSearchID
-                    successBlock:(void(^)(NSDictionary *destroyedSearch))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postSavedSearchesDestroy:(NSString *)savedSearchID
+                                                    successBlock:(void(^)(NSDictionary *destroyedSearch))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Places & Geo
 
@@ -1704,9 +1705,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns all the information about a known place.
  */
 
-- (void)getGeoIDForPlaceID:(NSString *)placeID // A place in the world. These IDs can be retrieved from geo/reverse_geocode.
-              successBlock:(void(^)(NSDictionary *place))successBlock
-                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoIDForPlaceID:(NSString *)placeID // A place in the world. These IDs can be retrieved from geo/reverse_geocode.
+                                              successBlock:(void(^)(NSDictionary *place))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    geo/reverse_geocode
@@ -1716,20 +1717,20 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This request is an informative call and will deliver generalized results about geography.
  */
 
-- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
-                               longitude:(NSString *)longitude // eg. "-122.400612831116"
-                                accuracy:(NSString *)accuracy // eg. "5ft"
-                             granularity:(NSString *)granularity // eg. "city"
-                              maxResults:(NSString *)maxResults // eg. "3"
-                                callback:(NSString *)callback
-                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoReverseGeocodeWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                                                               longitude:(NSString *)longitude // eg. "-122.400612831116"
+                                                                accuracy:(NSString *)accuracy // eg. "5ft"
+                                                             granularity:(NSString *)granularity // eg. "city"
+                                                              maxResults:(NSString *)maxResults // eg. "3"
+                                                                callback:(NSString *)callback
+                                                            successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
-                               longitude:(NSString *)longitude
-                            successBlock:(void(^)(NSArray *places))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoReverseGeocodeWithLatitude:(NSString *)latitude
+                                                               longitude:(NSString *)longitude
+                                                            successBlock:(void(^)(NSArray *places))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    geo/search
@@ -1741,34 +1742,34 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This is the recommended method to use find places that can be attached to statuses/update. Unlike GET geo/reverse_geocode which provides raw data access, this endpoint can potentially re-order places with regards to the user who is authenticated. This approach is also preferred for interactive place matching with the user.
  */
 
-- (void)getGeoSearchWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
-                       longitude:(NSString *)longitude // eg. "-122.400612831116"
-                           query:(NSString *)query // eg. "Twitter HQ"
-                       ipAddress:(NSString *)ipAddress // eg. 74.125.19.104
-                     granularity:(NSString *)granularity // eg. "city"
-                        accuracy:(NSString *)accuracy // eg. "5ft"
-                      maxResults:(NSString *)maxResults // eg. "3"
-         placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
-          attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
-                        callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
-                    successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoSearchWithLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                                                       longitude:(NSString *)longitude // eg. "-122.400612831116"
+                                                           query:(NSString *)query // eg. "Twitter HQ"
+                                                       ipAddress:(NSString *)ipAddress // eg. 74.125.19.104
+                                                     granularity:(NSString *)granularity // eg. "city"
+                                                        accuracy:(NSString *)accuracy // eg. "5ft"
+                                                      maxResults:(NSString *)maxResults // eg. "3"
+                                         placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+                                          attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                                                        callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
+                                                    successBlock:(void(^)(NSDictionary *query, NSDictionary *result))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getGeoSearchWithLatitude:(NSString *)latitude
-                       longitude:(NSString *)longitude
-                    successBlock:(void(^)(NSArray *places))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoSearchWithLatitude:(NSString *)latitude
+                                                       longitude:(NSString *)longitude
+                                                    successBlock:(void(^)(NSArray *places))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getGeoSearchWithIPAddress:(NSString *)ipAddress
-                     successBlock:(void(^)(NSArray *places))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoSearchWithIPAddress:(NSString *)ipAddress
+                                                     successBlock:(void(^)(NSArray *places))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (void)getGeoSearchWithQuery:(NSString *)query
-                 successBlock:(void(^)(NSArray *places))successBlock
-                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoSearchWithQuery:(NSString *)query
+                                                 successBlock:(void(^)(NSArray *places))successBlock
+                                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    geo/similar_places
@@ -1780,14 +1781,14 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  The token contained in the response is the token needed to be able to create a new place.
  */
 
-- (void)getGeoSimilarPlacesToLatitude:(NSString *)latitude // eg. "37.7821120598956"
-                            longitude:(NSString *)longitude // eg. "-122.400612831116"
-                                 name:(NSString *)name // eg. "Twitter HQ"
-              placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
-               attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
-                             callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
-                         successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getGeoSimilarPlacesToLatitude:(NSString *)latitude // eg. "37.7821120598956"
+                                                            longitude:(NSString *)longitude // eg. "-122.400612831116"
+                                                                 name:(NSString *)name // eg. "Twitter HQ"
+                                              placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+                                               attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                                                             callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
+                                                         successBlock:(void(^)(NSDictionary *query, NSArray *resultPlaces, NSString *resultToken))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	geo/place
@@ -1801,15 +1802,15 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  WARNING: deprecated since December 2nd, 2013 https://dev.twitter.com/discussions/22452
  */
 
-- (void)postGeoPlaceWithName:(NSString *)name // eg. "Twitter HQ"
-     placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
-           similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"
-                    latitude:(NSString *)latitude // eg. "37.7821120598956"
-                   longitude:(NSString *)longitude // eg. "-122.400612831116"
-      attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
-                    callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
-                successBlock:(void(^)(NSDictionary *place))successBlock
-                  errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postGeoPlaceWithName:(NSString *)name // eg. "Twitter HQ"
+                                     placeIDContaintedWithin:(NSString *)placeIDContaintedWithin // eg. "247f43d441defc03"
+                                           similarPlaceToken:(NSString *)similarPlaceToken // eg. "36179c9bf78835898ebf521c1defd4be"
+                                                    latitude:(NSString *)latitude // eg. "37.7821120598956"
+                                                   longitude:(NSString *)longitude // eg. "-122.400612831116"
+                                      attributeStreetAddress:(NSString *)attributeStreetAddress // eg. "795 Folsom St"
+                                                    callback:(NSString *)callback // If supplied, the response will use the JSONP format with a callback of the given name.
+                                                successBlock:(void(^)(NSDictionary *place))successBlock
+                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Trends
 
@@ -1823,10 +1824,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  This information is cached for 5 minutes. Requesting more frequently than that will not return any more data, and will count against your rate limit usage.
  */
 
-- (void)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID', Paris is "615702"
-          excludeHashtags:(NSNumber *)excludeHashtags
-             successBlock:(void(^)(NSDate *asOf, NSDate *createdAt, NSArray *locations, NSArray *trends))successBlock
-               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getTrendsForWOEID:(NSString *)WOEID // 'Yahoo! Where On Earth ID', Paris is "615702"
+                                          excludeHashtags:(NSNumber *)excludeHashtags
+                                             successBlock:(void(^)(NSDate *asOf, NSDate *createdAt, NSArray *locations, NSArray *trends))successBlock
+                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    trends/available
@@ -1838,8 +1839,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  A WOEID is a Yahoo! Where On Earth ID.
  */
 
-- (void)getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *locations))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *locations))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    trends/closest
@@ -1851,10 +1852,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  A WOEID is a Yahoo! Where On Earth ID.
  */
 
-- (void)getTrendsClosestToLatitude:(NSString *)latitude
-                         longitude:(NSString *)longitude
-                      successBlock:(void(^)(NSArray *locations))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getTrendsClosestToLatitude:(NSString *)latitude
+                                                         longitude:(NSString *)longitude
+                                                      successBlock:(void(^)(NSArray *locations))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Spam Reporting
 
@@ -1864,10 +1865,10 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Report the specified user as a spam account to Twitter. Additionally performs the equivalent of POST blocks/create on behalf of the authenticated user.
  */
 
-- (void)postUsersReportSpamForScreenName:(NSString *)screenName
-                                orUserID:(NSString *)userID
-                            successBlock:(void(^)(id userProfile))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postUsersReportSpamForScreenName:(NSString *)screenName
+                                                                orUserID:(NSString *)userID
+                                                            successBlock:(void(^)(id userProfile))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark OAuth
 
@@ -1881,8 +1882,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  It is recommended applications request this endpoint when they are loaded, but no more than once a day.
  */
 
-- (void)getHelpConfigurationWithSuccessBlock:(void(^)(NSDictionary *currentConfiguration))successBlock
-                                  errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getHelpConfigurationWithSuccessBlock:(void(^)(NSDictionary *currentConfiguration))successBlock
+                                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    help/languages
@@ -1890,8 +1891,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the list of languages supported by Twitter along with their ISO 639-1 code. The ISO 639-1 code is the two letter value to use if you include lang with any of your requests.
  */
 
-- (void)getHelpLanguagesWithSuccessBlock:(void(^)(NSArray *languages))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getHelpLanguagesWithSuccessBlock:(void(^)(NSArray *languages))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    help/privacy
@@ -1899,8 +1900,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns Twitter's Privacy Policy.
  */
 
-- (void)getHelpPrivacyWithSuccessBlock:(void(^)(NSString *privacy))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getHelpPrivacyWithSuccessBlock:(void(^)(NSString *privacy))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    help/tos
@@ -1908,8 +1909,8 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns the Twitter Terms of Service in the requested format. These are not the same as the Developer Rules of the Road.
  */
 
-- (void)getHelpTermsOfServiceWithSuccessBlock:(void(^)(NSString *tos))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getHelpTermsOfServiceWithSuccessBlock:(void(^)(NSString *tos))successBlock
+                                                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  GET    application/rate_limit_status
@@ -1927,9 +1928,9 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Read more about REST API Rate Limiting in v1.1 and review the limits.
  */
 
-- (void)getRateLimitsForResources:(NSArray *)resources // eg. statuses,friends,trends,help
-                     successBlock:(void(^)(NSDictionary *rateLimits))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getRateLimitsForResources:(NSArray *)resources // eg. statuses,friends,trends,help
+                                                     successBlock:(void(^)(NSDictionary *rateLimits))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Tweets
 
@@ -1939,12 +1940,12 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  Returns fully-hydrated tweet objects for up to 100 tweets per request, as specified by comma-separated values passed to the id parameter. This method is especially useful to get the details (hydrate) a collection of Tweet IDs. GET statuses/show/:id is used to retrieve a single tweet object.
  */
 
-- (void)getStatusesLookupTweetIDs:(NSArray *)tweetIDs
-                  includeEntities:(NSNumber *)includeEntities
-                         trimUser:(NSNumber *)trimUser
-                              map:(NSNumber *)map
-                     successBlock:(void(^)(NSArray *tweets))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getStatusesLookupTweetIDs:(NSArray *)tweetIDs
+                                                  includeEntities:(NSNumber *)includeEntities
+                                                         trimUser:(NSNumber *)trimUser
+                                                              map:(NSNumber *)map
+                                                     successBlock:(void(^)(NSArray *tweets))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark Media
 
@@ -1954,179 +1955,179 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  https://dev.twitter.com/docs/api/multiple-media-extended-entities
  */
 
-- (void)postMediaUpload:(NSURL *)mediaURL
-    uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
-             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postMediaUpload:(NSURL *)mediaURL
+                                    uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)postMediaUploadData:(NSData *)data
-                   fileName:(NSString *)fileName
-        uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
-                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postMediaUploadData:(NSData *)data
+                                                   fileName:(NSString *)fileName
+                                        uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark -
 #pragma mark UNDOCUMENTED APIs
 
 // GET activity/about_me.json
-- (void)_getActivityAboutMeSinceID:(NSString *)sinceID
-                             count:(NSString *)count
-                      includeCards:(NSNumber *)includeCards
-                      modelVersion:(NSNumber *)modelVersion
-                    sendErrorCodes:(NSNumber *)sendErrorCodes
-                contributorDetails:(NSNumber *)contributorDetails
-                   includeEntities:(NSNumber *)includeEntities
-                  includeMyRetweet:(NSNumber *)includeMyRetweet
-                      successBlock:(void(^)(NSArray *activities))successBlock
-                        errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getActivityAboutMeSinceID:(NSString *)sinceID
+                                                             count:(NSString *)count
+                                                      includeCards:(NSNumber *)includeCards
+                                                      modelVersion:(NSNumber *)modelVersion
+                                                    sendErrorCodes:(NSNumber *)sendErrorCodes
+                                                contributorDetails:(NSNumber *)contributorDetails
+                                                   includeEntities:(NSNumber *)includeEntities
+                                                  includeMyRetweet:(NSNumber *)includeMyRetweet
+                                                      successBlock:(void(^)(NSArray *activities))successBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET activity/by_friends.json
-- (void)_getActivityByFriendsSinceID:(NSString *)sinceID
-                               count:(NSString *)count
-                  contributorDetails:(NSNumber *)contributorDetails
-                        includeCards:(NSNumber *)includeCards
-                     includeEntities:(NSNumber *)includeEntities
-                   includeMyRetweets:(NSNumber *)includeMyRetweets
-                  includeUserEntites:(NSNumber *)includeUserEntites
-                       latestResults:(NSNumber *)latestResults
-                      sendErrorCodes:(NSNumber *)sendErrorCodes
-                        successBlock:(void(^)(NSArray *activities))successBlock
-                          errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getActivityByFriendsSinceID:(NSString *)sinceID
+                                                               count:(NSString *)count
+                                                  contributorDetails:(NSNumber *)contributorDetails
+                                                        includeCards:(NSNumber *)includeCards
+                                                     includeEntities:(NSNumber *)includeEntities
+                                                   includeMyRetweets:(NSNumber *)includeMyRetweets
+                                                  includeUserEntites:(NSNumber *)includeUserEntites
+                                                       latestResults:(NSNumber *)latestResults
+                                                      sendErrorCodes:(NSNumber *)sendErrorCodes
+                                                        successBlock:(void(^)(NSArray *activities))successBlock
+                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET statuses/:id/activity/summary.json
-- (void)_getStatusesActivitySummaryForStatusID:(NSString *)statusID
-                                  successBlock:(void(^)(NSArray *favoriters, NSArray *repliers, NSArray *retweeters, NSString *favoritersCount, NSString *repliersCount, NSString *retweetersCount))successBlock
-                                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getStatusesActivitySummaryForStatusID:(NSString *)statusID
+                                                                  successBlock:(void(^)(NSArray *favoriters, NSArray *repliers, NSArray *retweeters, NSString *favoritersCount, NSString *repliersCount, NSString *retweetersCount))successBlock
+                                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET conversation/show.json
-- (void)_getConversationShowForStatusID:(NSString *)statusID
-                           successBlock:(void(^)(NSArray *statuses))successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getConversationShowForStatusID:(NSString *)statusID
+                                                           successBlock:(void(^)(NSArray *statuses))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET discover/highlight.json
-- (void)_getDiscoverHighlightWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getDiscoverHighlightWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
+                                                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET discover/universal.json
-- (void)_getDiscoverUniversalWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getDiscoverUniversalWithSuccessBlock:(void(^)(NSDictionary *metadata, NSArray *modules))successBlock
+                                                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET statuses/media_timeline.json
-- (void)_getMediaTimelineWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getMediaTimelineWithSuccessBlock:(void(^)(NSArray *statuses))successBlock
+                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET users/recommendations.json
-- (void)_getUsersRecommendationsWithSuccessBlock:(void(^)(NSArray *recommendations))successBlock
-                                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getUsersRecommendationsWithSuccessBlock:(void(^)(NSArray *recommendations))successBlock
+                                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET timeline/home.json
-- (void)_getTimelineHomeWithSuccessBlock:(void(^)(id response))successBlock
-                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getTimelineHomeWithSuccessBlock:(void(^)(id response))successBlock
+                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET statuses/mentions_timeline.json
-- (void)_getStatusesMentionsTimelineWithCount:(NSString *)count
-                          contributorsDetails:(NSNumber *)contributorsDetails
-                              includeEntities:(NSNumber *)includeEntities
-                             includeMyRetweet:(NSNumber *)includeMyRetweet
-                                 successBlock:(void(^)(NSArray *statuses))successBlock
-                                   errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getStatusesMentionsTimelineWithCount:(NSString *)count
+                                                          contributorsDetails:(NSNumber *)contributorsDetails
+                                                              includeEntities:(NSNumber *)includeEntities
+                                                             includeMyRetweet:(NSNumber *)includeMyRetweet
+                                                                 successBlock:(void(^)(NSArray *statuses))successBlock
+                                                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET trends/available.json
-- (void)_getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *places))successBlock
-                                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getTrendsAvailableWithSuccessBlock:(void(^)(NSArray *places))successBlock
+                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST users/report_spam
-- (void)_postUsersReportSpamForTweetID:(NSString *)tweetID
-                              reportAs:(NSString *)reportAs // spam, abused, compromised
-                             blockUser:(NSNumber *)blockUser
-                          successBlock:(void(^)(id userProfile))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_postUsersReportSpamForTweetID:(NSString *)tweetID
+                                                              reportAs:(NSString *)reportAs // spam, abused, compromised
+                                                             blockUser:(NSNumber *)blockUser
+                                                          successBlock:(void(^)(id userProfile))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST account/generate.json
-- (void)_postAccountGenerateWithADC:(NSString *)adc
-                discoverableByEmail:(BOOL)discoverableByEmail
-                              email:(NSString *)email
-                         geoEnabled:(BOOL)geoEnabled
-                           language:(NSString *)language
-                               name:(NSString *)name
-                           password:(NSString *)password
-                         screenName:(NSString *)screenName
-                      sendErrorCode:(BOOL)sendErrorCode
-                           timeZone:(NSString *)timeZone
-                       successBlock:(void(^)(id userProfile))successBlock
-                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_postAccountGenerateWithADC:(NSString *)adc
+                                                discoverableByEmail:(BOOL)discoverableByEmail
+                                                              email:(NSString *)email
+                                                         geoEnabled:(BOOL)geoEnabled
+                                                           language:(NSString *)language
+                                                               name:(NSString *)name
+                                                           password:(NSString *)password
+                                                         screenName:(NSString *)screenName
+                                                      sendErrorCode:(BOOL)sendErrorCode
+                                                           timeZone:(NSString *)timeZone
+                                                       successBlock:(void(^)(id userProfile))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET search/typeahead.json
-- (void)_getSearchTypeaheadQuery:(NSString *)query
-                      resultType:(NSString *)resultType // "all"
-                  sendErrorCodes:(NSNumber *)sendErrorCodes
-                    successBlock:(void(^)(id results))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getSearchTypeaheadQuery:(NSString *)query
+                                                      resultType:(NSString *)resultType // "all"
+                                                  sendErrorCodes:(NSNumber *)sendErrorCodes
+                                                    successBlock:(void(^)(id results))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST direct_messages/new.json
 // only the media_id is part of the private API
-- (void)_postDirectMessage:(NSString *)status
-             forScreenName:(NSString *)screenName
-                  orUserID:(NSString *)userID
-                   mediaID:(NSString *)mediaID // returned by POST media/upload.json
-              successBlock:(void(^)(NSDictionary *message))successBlock
-                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_postDirectMessage:(NSString *)status
+                                             forScreenName:(NSString *)screenName
+                                                  orUserID:(NSString *)userID
+                                                   mediaID:(NSString *)mediaID // returned by POST media/upload.json
+                                              successBlock:(void(^)(NSDictionary *message))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET conversation/show/:id.json
-- (void)_getConversationShowWithTweetID:(NSString *)tweetID
-                           successBlock:(void(^)(id results))successBlock
-                             errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getConversationShowWithTweetID:(NSString *)tweetID
+                                                           successBlock:(void(^)(id results))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark UNDOCUMENTED APIS SCHEDULED TWEETS - VALID ONLY FOR TWEETDECK
 
 // GET schedule/status/list.json
-- (void)_getScheduleStatusesWithCount:(NSString *)count
-                      includeEntities:(NSNumber *)includeEntities
-                  includeUserEntities:(NSNumber *)includeUserEntities
-                         includeCards:(NSNumber *)includeCards
-                         successBlock:(void(^)(NSArray *scheduledTweets))successBlock
-                           errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getScheduleStatusesWithCount:(NSString *)count
+                                                      includeEntities:(NSNumber *)includeEntities
+                                                  includeUserEntities:(NSNumber *)includeUserEntities
+                                                         includeCards:(NSNumber *)includeCards
+                                                         successBlock:(void(^)(NSArray *scheduledTweets))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST schedule/status/tweet.json
-- (void)_postScheduleStatus:(NSString *)status
-                  executeAt:(NSString *)executeAtUnixTimestamp
-                   mediaIDs:(NSArray *)mediaIDs
-               successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
-                 errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_postScheduleStatus:(NSString *)status
+                                                  executeAt:(NSString *)executeAtUnixTimestamp
+                                                   mediaIDs:(NSArray *)mediaIDs
+                                               successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
+                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // DELETE schedule/status/:id.json
 // delete a scheduled tweet
-- (void)_deleteScheduleStatusWithID:(NSString *)statusID
-                       successBlock:(void(^)(NSDictionary *deletedTweet))successBlock
-                         errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_deleteScheduleStatusWithID:(NSString *)statusID
+                                                       successBlock:(void(^)(NSDictionary *deletedTweet))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 // PUT schedule/status/:id.json
 // edit a scheduled tweet
-- (void)_putScheduleStatusWithID:(NSString *)statusID
-                          status:(NSString *)status
-                       executeAt:(NSString *)executeAtUnixTimestamp
-                        mediaIDs:(NSArray *)mediaIDs
-                    successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
-                      errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_putScheduleStatusWithID:(NSString *)statusID
+                                                          status:(NSString *)status
+                                                       executeAt:(NSString *)executeAtUnixTimestamp
+                                                        mediaIDs:(NSArray *)mediaIDs
+                                                    successBlock:(void(^)(NSDictionary *scheduledTweet))successBlock
+                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark UNDOCUMENTED APIS FOR DIGITS AUTH
 
 // POST guest/activate.json
-- (void)_postGuestActivateWithSuccessBlock:(void(^)(NSString *guestToken))successBlock
-                                errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_postGuestActivateWithSuccessBlock:(void(^)(NSString *guestToken))successBlock
+                                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST device/register.json
-- (void)_postDeviceRegisterPhoneNumber:(NSString *)phoneNumber // eg. @"+41764948273"
-                            guestToken:(NSString *)guestToken
-                          successBlock:(void(^)(id response))successBlock
-                            errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_postDeviceRegisterPhoneNumber:(NSString *)phoneNumber // eg. @"+41764948273"
+                                                            guestToken:(NSString *)guestToken
+                                                          successBlock:(void(^)(id response))successBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST sdk/account.json
-- (void)_postSDKAccountNumericPIN:(NSString *)numericPIN
-                   forPhoneNumber:(NSString *)phoneNumber
-                       guestToken:(NSString *)guestToken
-                     successBlock:(void(^)(id response, NSString *accessToken, NSString *accessTokenSecret))successBlock
-                       errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_postSDKAccountNumericPIN:(NSString *)numericPIN
+                                                   forPhoneNumber:(NSString *)phoneNumber
+                                                       guestToken:(NSString *)guestToken
+                                                     successBlock:(void(^)(id response, NSString *accessToken, NSString *accessTokenSecret))successBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark UNDOCUMENTED APIS FOR CONTACTS
 
@@ -2138,18 +2139,18 @@ includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccou
  "BEGIN:VCARD\r\nVERSION:3.0\r\nPRODID:-//Apple Inc.//iOS 8.1.2//EN\r\nN:Bush ;Georges Bush;;;\r\nFN:Georges Bush\r\nTEL;type=CELL;type=VOICE;type=pref:00 33 6 22 33 44 55\r\nEND:VCARD\r\n"
  ]
  }
-*/
-- (void)_postContactsUpload:(NSArray *)vcards
-               successBlock:(void(^)(id response))successBlock
-                 errorBlock:(void(^)(NSError *error))errorBlock;
+ */
+- (NSObject<STTwitterRequestProtocol> *)_postContactsUpload:(NSArray *)vcards
+                                               successBlock:(void(^)(id response))successBlock
+                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // GET contacts/users_and_uploaded_by.json?count=50
-- (void)_getContactsUsersAndUploadedByWithCount:(NSString *)count
-                                   successBlock:(void(^)(id response))successBlock
-                                     errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getContactsUsersAndUploadedByWithCount:(NSString *)count
+                                                                   successBlock:(void(^)(id response))successBlock
+                                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
 // POST contacts/destroy/all.json
-- (void)_getContactsDestroyAllWithSuccessBlock:(void(^)(id response))successBlock
-                                    errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)_getContactsDestroyAllWithSuccessBlock:(void(^)(id response))successBlock
+                                                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end
