@@ -121,6 +121,7 @@
 		03E5FDE619236FB9007BE44D /* STHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STHTTPRequest.m; sourceTree = "<group>"; };
 		B89441361ABF559D00FC5D6F /* STTwitterParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterParser.h; sourceTree = "<group>"; };
 		B89441371ABF559D00FC5D6F /* STTwitterParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterParser.m; sourceTree = "<group>"; };
+		B8BDD51E1AC12835003672C3 /* STTwitterRequestProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTwitterRequestProtocol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,6 +262,7 @@
 				B89441361ABF559D00FC5D6F /* STTwitterParser.h */,
 				B89441371ABF559D00FC5D6F /* STTwitterParser.m */,
 				03E5FDDF19236FB9007BE44D /* STTwitterProtocol.h */,
+				B8BDD51E1AC12835003672C3 /* STTwitterRequestProtocol.h */,
 				03E5FDE019236FB9007BE44D /* Vendor */,
 			);
 			name = STTwitter;
@@ -581,6 +583,7 @@
 				03E5FDC719236F92007BE44D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -281,6 +281,7 @@
 		03E5FD401922636C007BE44D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B894413D1ABF575900FC5D6F /* STTwitterParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterParser.h; sourceTree = "<group>"; };
 		B894413E1ABF575900FC5D6F /* STTwitterParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterParser.m; sourceTree = "<group>"; };
+		B8BDD51D1AC12815003672C3 /* STTwitterRequestProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTwitterRequestProtocol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -410,6 +411,7 @@
 				B894413D1ABF575900FC5D6F /* STTwitterParser.h */,
 				B894413E1ABF575900FC5D6F /* STTwitterParser.m */,
 				0315A1011927FC79001C6C02 /* STTwitterProtocol.h */,
+				B8BDD51D1AC12815003672C3 /* STTwitterRequestProtocol.h */,
 				0315A1021927FC79001C6C02 /* Vendor */,
 			);
 			name = STTwitter;
