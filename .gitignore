@@ -1,0 +1,23 @@
+build/
+DerivedData
+# http://lists.apple.com/archives/xcode-users/2004/Jan/msg00193.html
+*.pbxuser
+# http://lists.apple.com/archives/xcode-users/2007/Oct/msg00465.html
+*.mode1v3
+*.mode2v3
+# http://stackoverflow.com/questions/5223297/xcode-projects-what-is-a-perspectivev3-file
+*.perspectivev3
+!default.pbxuser
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
+xcuserdata
+# http://stackoverflow.com/questions/1153211/whats-that-classes-1-moved-aside-directory-in-my-classes-directory
+*.moved-aside
+*.xcuserstate
+# http://stackoverflow.com/questions/18340453/should-xccheckout-files-in-xcode5-be-ignored-under-vcs
+*.xccheckout
+Pods
+.DS_Store
+*.xcworkspace
+!default.xcworkspace
