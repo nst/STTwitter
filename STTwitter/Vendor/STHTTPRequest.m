@@ -360,14 +360,11 @@ static BOOL globalIgnoreCache = NO;
     return [NSURL URLWithString:s];
 }
 
-- (NSMutableURLRequest *)requestByAddingCredentialsToURL:(BOOL)useCredentialsInURL {
-    
-    NSAssert((self.completionBlock || self.completionDataBlock), @"a completion block is mandatory");
-    NSAssert(self.errorBlock, @"the error block is mandatory");
+- (NSMutableURLRequest *)prepareMutableURLRequest {
     
     NSURL *theURL = nil;
     
-    if(useCredentialsInURL) {
+    if(_addCredentialsToURL) {
         NSURLCredential *credential = [self credentialForCurrentHost];
         if(credential == nil) return nil;
         theURL = [[self class] urlByAddingCredentials:credential toURL:_url];
@@ -376,19 +373,13 @@ static BOOL globalIgnoreCache = NO;
         theURL = _url;
     }
     
-    /**/
-    
     theURL = [[self class] appendURL:theURL withGETParameters:_GETDictionary];
-    
-    /**/
     
     if([_HTTPMethod isEqualToString:@"GET"]) {
         if(_POSTDictionary || _rawPOSTData || [self.filesToUpload count] > 0 || [self.dataToUpload count] > 0) {
             self.HTTPMethod = @"POST";
         }
     }
-    
-    /**/
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:theURL];
     [request setHTTPMethod:_HTTPMethod];
@@ -530,10 +521,6 @@ static BOOL globalIgnoreCache = NO;
     return request;
 }
 
-- (NSURLRequest *)requestByAddingCredentialsToURL {
-    return [self requestByAddingCredentialsToURL:YES];
-}
-
 #pragma mark Upload
 
 - (void)addFileToUpload:(NSString *)path parameterName:(NSString *)parameterName {
@@ -650,6 +637,8 @@ static BOOL globalIgnoreCache = NO;
 
 - (NSString *)curlDescription {
     
+    [self prepareMutableURLRequest];
+    
     NSMutableArray *ma = [NSMutableArray array];
     [ma addObject:@"\U0001F300 curl -i"];
     
@@ -658,7 +647,7 @@ static BOOL globalIgnoreCache = NO;
         [ma addObject:s];
     }
     
-    // -u usernane:password
+    // -u username:password
     
     NSURLCredential *credential = [[self class] sessionAuthenticationCredentialsForURL:[self url]];
     if(credential) {
@@ -726,7 +715,8 @@ static BOOL globalIgnoreCache = NO;
     
     // url
     
-    [ma addObject:[NSString stringWithFormat:@"\"%@\"", [_request URL]]];
+    NSURL *url = [_request URL] ? [_request URL] : _url;
+    [ma addObject:[NSString stringWithFormat:@"\"%@\"", url]];
     
     return [ma componentsJoinedByString:@" \\\n"];
 }
@@ -783,17 +773,33 @@ static BOOL globalIgnoreCache = NO;
 
 - (void)startAsynchronous {
     
-    NSMutableURLRequest *request = [self requestByAddingCredentialsToURL:_addCredentialsToURL];
+    NSAssert((self.completionBlock || self.completionDataBlock), @"a completion block is mandatory");
+    NSAssert(self.errorBlock, @"the error block is mandatory");
+    
+    NSMutableURLRequest *request = [self prepareMutableURLRequest];
     
     [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
     
     self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    
+    if(self.willSendRequestBlock) {
+        self.willSendRequestBlock(self);
+        NSMutableURLRequest *request = [self prepareMutableURLRequest];
+        [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
+        self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+        [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    }
+    
     [_connection start];
     
     self.request = [_connection currentRequest];
     
     self.requestHeaders = [[_request allHTTPHeaderFields] mutableCopy];
+    
+    if(self.didSendRequestBlock) {
+        self.didSendRequestBlock(self);
+    }
     
     /**/
     
@@ -842,12 +848,22 @@ static BOOL globalIgnoreCache = NO;
     self.responseHeaders = nil;
     self.responseStatus = 0;
     
-    NSURLRequest *request = [self requestByAddingCredentialsToURL:_addCredentialsToURL];
+    NSMutableURLRequest *request = [self prepareMutableURLRequest];
+    [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
+    
+    if(self.willSendRequestBlock) {
+        self.willSendRequestBlock(self);
+        NSMutableURLRequest *request = [self prepareMutableURLRequest];
+        [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
+    }
     
     NSURLResponse *urlResponse = nil;
     
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:e];
-    if(data == nil) return nil;
+    
+    if(self.didSendRequestBlock) {
+        self.didSendRequestBlock(self);
+    }
     
     self.responseData = [NSMutableData dataWithData:data];
     

@@ -18,6 +18,7 @@ extern NSUInteger const kSTHTTPRequestDefaultTimeout;
 
 @class STHTTPRequest;
 
+typedef void (^sendRequestBlock_t)(STHTTPRequest *request);
 typedef void (^uploadProgressBlock_t)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite);
 typedef void (^downloadProgressBlock_t)(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive);
 typedef void (^completionBlock_t)(NSDictionary *headers, NSString *body);
@@ -25,6 +26,9 @@ typedef void (^completionDataBlock_t)(NSDictionary *headers, NSData *body);
 typedef void (^errorBlock_t)(NSError *error);
 
 @interface STHTTPRequest : NSObject <NSURLConnectionDelegate>
+
+@property (copy) sendRequestBlock_t willSendRequestBlock; // last chance to log and/or congfigure the request
+@property (copy) sendRequestBlock_t didSendRequestBlock; // called just after the request was actually sent
 
 @property (copy) uploadProgressBlock_t uploadProgressBlock;
 @property (copy) downloadProgressBlock_t downloadProgressBlock;
