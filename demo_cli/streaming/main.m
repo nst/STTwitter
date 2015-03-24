@@ -35,12 +35,10 @@ int main(int argc, const char * argv[])
                                      printf("-- user: @%s\n", [[json valueForKeyPath:@"user.screen_name"] cStringUsingEncoding:NSUTF8StringEncoding]);
                                      printf("-- text: %s\n", [[json objectForKey:@"text"] cStringUsingEncoding:NSUTF8StringEncoding]);
                                      
-                                     
-                                 } stallWarningBlock:nil errorBlock:^(NSError *error) {
+                                 } errorBlock:^(NSError *error) {
                                      NSLog(@"Stream error: %@", error);
                                      exit(1);
                                  }];
-            
             
         } errorBlock:^(NSError *error) {
             NSLog(@"-- %@", [error localizedDescription]);

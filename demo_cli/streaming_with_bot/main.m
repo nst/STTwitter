@@ -23,7 +23,7 @@ int main(int argc, const char * argv[])
             NSLog(@"-- Account: %@", username);
             
             [twitter2 verifyCredentialsWithSuccessBlock:^(NSString *username) {
-
+                
                 [twitter postStatusesFilterUserIDs:nil
                                    keywordsToTrack:@[@"CocoaHeads"]
                              locationBoundingBoxes:nil
@@ -50,7 +50,7 @@ int main(int argc, const char * argv[])
                                              NSLog(@"-- error: %@", error);
                                          }];
                                          
-                                     } stallWarningBlock:nil errorBlock:^(NSError *error) {
+                                     } errorBlock:^(NSError *error) {
                                          NSLog(@"Stream error: %@", error);
                                          exit(1);
                                      }];
