@@ -170,7 +170,7 @@
                                             completion:accountStoreRequestCompletionHandler];
 #endif
 }
-
+/*
 - (NSObject<STTwitterRequestProtocol> *)fetchAPIResource:(NSString *)resource
                                            baseURLString:(NSString *)baseURLString
                                               httpMethod:(NSInteger)httpMethod
@@ -192,7 +192,7 @@
     [r startRequest];
     return r;
 }
-
+*/
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
 
     // https://api.twitter.com/1.1/account/verify_credentials.json
@@ -204,6 +204,7 @@
                                                                     account:self.account
                                                            timeoutInSeconds:0
                                                         uploadProgressBlock:nil
+                                                                streamBlock:nil
                                                             completionBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                                                                 //
                                                             } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
@@ -247,7 +248,7 @@
                                         baseURLString:(NSString *)baseURLString
                                            parameters:(NSDictionary *)params
                                   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                downloadProgressBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, id response))progressBlock // FIXME: how to handle progressBlock?
+                                downloadProgressBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, NSData *data))progressBlock // FIXME: how to handle progressBlock?
                                          successBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                                            errorBlock:(void (^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -264,13 +265,19 @@
         baseURLStringWithTrailingSlash = [baseURLString stringByAppendingString:@"/"];
     }
     
-    return [self fetchAPIResource:resource
-                    baseURLString:baseURLStringWithTrailingSlash
-                       httpMethod:slRequestMethod
-                       parameters:d
-              uploadProgressBlock:uploadProgressBlock
-                  completionBlock:successBlock
-                       errorBlock:errorBlock];
+    STTwitterOSRequest *r = [[STTwitterOSRequest alloc] initWithAPIResource:resource
+                                                              baseURLString:baseURLStringWithTrailingSlash
+                                                                 httpMethod:slRequestMethod
+                                                                 parameters:d
+                                                                    account:self.account
+                                                           timeoutInSeconds:_timeoutInSeconds
+                                                        uploadProgressBlock:uploadProgressBlock
+                                                                streamBlock:progressBlock
+                                                            completionBlock:successBlock
+                                                                 errorBlock:errorBlock];
+    [r startRequest];
+    
+    return r;
 }
 
 + (NSDictionary *)parametersDictionaryFromCommaSeparatedParametersString:(NSString *)s {

@@ -25,6 +25,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 @interface STTwitterAPI ()
 @property (nonatomic, retain) NSObject <STTwitterProtocol> *oauth;
+@property (nonatomic, retain) STTwitterParser *streamParser;
 @end
 
 @implementation STTwitterAPI
@@ -312,7 +313,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                         baseURLString:(NSString *)baseURLString
                                            parameters:(NSDictionary *)params
                                   uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, id response))downloadProgressBlock
+                                downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSData *data))downloadProgressBlock
                                          successBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))successBlock
                                            errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -331,7 +332,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                            baseURLString:(NSString *)baseURLString
                                                               parameters:(NSDictionary *)params
                                                      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                                   downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, id response))downloadProgressBlock
+                                                   downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSData *data))downloadProgressBlock
                                                             successBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response, BOOL morePagesToCome, BOOL *stop))successBlock
                                                               pauseBlock:(void(^)(NSDate *nextRequestDate))pauseBlock
                                                               errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
@@ -398,7 +399,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                       baseURLString:(NSString *)baseURLString
                                          parameters:(NSDictionary *)parameters
 //uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                              downloadProgressBlock:(void(^)(id json))downloadProgressBlock
+                              downloadProgressBlock:(void(^)(NSData *data))downloadProgressBlock
                                        successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -407,8 +408,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                    baseURLString:baseURLString
                       parameters:parameters
              uploadProgressBlock:nil
-           downloadProgressBlock:^(id request, id response) {
-               if(downloadProgressBlock) downloadProgressBlock(response);
+           downloadProgressBlock:^(id request, NSData *data) {
+               if(downloadProgressBlock) downloadProgressBlock(data);
            } successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                if(successBlock) successBlock(responseHeaders, response);
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
@@ -420,7 +421,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                        baseURLString:(NSString *)baseURLString
                                           parameters:(NSDictionary *)parameters
                                  uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                               downloadProgressBlock:(void(^)(id json))downloadProgressBlock
+                               downloadProgressBlock:(void(^)(NSData *data))downloadProgressBlock
                                         successBlock:(void(^)(NSDictionary *rateLimits, id response))successBlock
                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -429,8 +430,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                    baseURLString:baseURLString
                       parameters:parameters
              uploadProgressBlock:uploadProgressBlock
-           downloadProgressBlock:^(id request, id response) {
-               if(downloadProgressBlock) downloadProgressBlock(response);
+           downloadProgressBlock:^(id request, NSData *data) {
+               if(downloadProgressBlock) downloadProgressBlock(data);
            } successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                if(successBlock) successBlock(responseHeaders, response);
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
@@ -442,7 +443,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                        baseURLString:(NSString *)baseURLString
                                           parameters:(NSDictionary *)parameters
                                  uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                               downloadProgressBlock:(void(^)(id json))downloadProgressBlock
+                               downloadProgressBlock:(void(^)(NSData *data))downloadProgressBlock
                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
     return [_oauth fetchResource:resource
@@ -450,8 +451,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                    baseURLString:baseURLString
                       parameters:parameters
              uploadProgressBlock:uploadProgressBlock
-           downloadProgressBlock:^(id request, id response) {
-               if(downloadProgressBlock) downloadProgressBlock(response);
+           downloadProgressBlock:^(id request, NSData *data) {
+               if(downloadProgressBlock) downloadProgressBlock(data);
            } successBlock:nil
                       errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                           errorBlock(error);
@@ -461,7 +462,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)getResource:(NSString *)resource
                                       baseURLString:(NSString *)baseURLString
                                          parameters:(NSDictionary *)parameters
-                              downloadProgressBlock:(void(^)(id json))downloadProgressBlock
+                              downloadProgressBlock:(void(^)(NSData *data))downloadProgressBlock
                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     return [_oauth fetchResource:resource
@@ -469,8 +470,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                    baseURLString:baseURLString
                       parameters:parameters
              uploadProgressBlock:nil
-           downloadProgressBlock:^(id request, id response) {
-               if(downloadProgressBlock) downloadProgressBlock(response);
+           downloadProgressBlock:^(id request, NSData *data) {
+               if(downloadProgressBlock) downloadProgressBlock(data);
            } successBlock:nil
                       errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                           errorBlock(error);
@@ -479,7 +480,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)getAPIResource:(NSString *)resource
                                             parameters:(NSDictionary *)parameters
-                                         progressBlock:(void(^)(id json))progressBlock
+                                         progressBlock:(void(^)(NSData *data))progressBlock
                                           successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
                                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -508,7 +509,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)postAPIResource:(NSString *)resource
                                              parameters:(NSDictionary *)parameters
                                     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                          progressBlock:(void(^)(id json))progressBlock
+                                          progressBlock:(void(^)(NSData *data))progressBlock
                                            successBlock:(void(^)(NSDictionary *rateLimits, id json))successBlock
                                              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1283,10 +1284,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)postStatusesFilterUserIDs:(NSArray *)userIDs
                                                   keywordsToTrack:(NSArray *)keywordsToTrack
                                             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                        delimited:(NSNumber *)delimited
                                                     stallWarnings:(NSNumber *)stallWarnings
-                                                    progressBlock:(void(^)(NSDictionary *tweet))progressBlock
-                                                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                    progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *follow = [userIDs componentsJoinedByString:@","];
@@ -1296,26 +1295,27 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSAssert(([follow length] || [keywords length] || [locations length]), @"At least one predicate parameter (follow, locations, or track) must be specified.");
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    md[@"delimited"] = @"length";
+    
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
     if([follow length]) md[@"follow"] = follow;
     if([keywords length]) md[@"track"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
+    self.streamParser = [[STTwitterParser alloc] init];
+    __weak STTwitterParser *streamParser = self.streamParser;
+    
     return [self postResource:@"statuses/filter.json"
                 baseURLString:kBaseURLStringStream_1_1
                    parameters:md
           uploadProgressBlock:nil
-        downloadProgressBlock:^(id json) {
+        downloadProgressBlock:^(NSData *data) {
             
-            NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-            if(stallWarning && stallWarningBlock) {
-                stallWarningBlock([stallWarning valueForKey:@"code"],
-                                  [stallWarning valueForKey:@"message"],
-                                  [[stallWarning valueForKey:@"percent_full"] integerValue]);
-            } else {
-                progressBlock(json);
+            if (streamParser) {
+                [streamParser parseWithStreamData:data parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                    progressBlock(json, type);
+                }];
             }
             
         } successBlock:^(NSDictionary *rateLimits, id response) {
@@ -1325,7 +1325,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                 return;
             };
             
-            progressBlock(response);
+            // reaching successBlock for a stream request is an error
+            errorBlock(response);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
@@ -1333,44 +1334,68 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 // convenience
 - (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
-                                                    progressBlock:(void(^)(NSDictionary *tweet))progressBlock
-                                                       errorBlock:(void(^)(NSError *error))errorBlock {
-    
+                                                       tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock
+{
     NSParameterAssert(keyword);
     
     return [self postStatusesFilterUserIDs:nil
                            keywordsToTrack:@[keyword]
                      locationBoundingBoxes:nil
-                                 delimited:nil
-                             stallWarnings:nil
-                             progressBlock:progressBlock
+                             stallWarnings:stallWarningBlock ? @YES : @NO
+                             progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                                 
+                                 switch (type) {
+                                     case STTwitterStreamJSONTypeTweet:
+                                         tweetBlock(json);
+                                         break;
+                                     case STTwitterStreamJSONTypeWarning:
+                                         if (stallWarningBlock) {
+                                             stallWarningBlock([json valueForKey:@"code"],
+                                                               [json valueForKey:@"message"],
+                                                               [[json valueForKey:@"percent_full"] integerValue]);
+                                         }
+                                         break;
+                                     default:
+                                         break;
+                                 }
+
+                             } errorBlock:errorBlock];
+}
+
+- (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
+                                                       tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                       errorBlock:(void(^)(NSError *error))errorBlock
+{
+    return [self postStatusesFilterKeyword:keyword
+                                tweetBlock:tweetBlock
                          stallWarningBlock:nil
                                 errorBlock:errorBlock];
 }
 
 // GET statuses/sample
-- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleDelimited:(NSNumber *)delimited
-                                                     stallWarnings:(NSNumber *)stallWarnings
-                                                     progressBlock:(void(^)(id response))progressBlock
-                                                 stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                        errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleStallWarnings:(NSNumber *)stallWarnings
+                                                         progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
+                                                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    md[@"delimited"] = @"length";
+    
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    
+    self.streamParser = [[STTwitterParser alloc] init];
+    __weak STTwitterParser *streamParser = self.streamParser;
     
     return [self getResource:@"statuses/sample.json"
                baseURLString:kBaseURLStringStream_1_1
                   parameters:md
-       downloadProgressBlock:^(id json) {
+       downloadProgressBlock:^(id response) {
            
-           NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-           if(stallWarning && stallWarningBlock) {
-               stallWarningBlock([stallWarning valueForKey:@"code"],
-                                 [stallWarning valueForKey:@"message"],
-                                 [[stallWarning valueForKey:@"percent_full"] integerValue]);
-           } else {
-               progressBlock(json);
+           if (streamParser) {
+               [streamParser parseWithStreamData:response parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                   progressBlock(json, type);
+               }];
            }
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
@@ -1381,54 +1406,87 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
        }];
 }
 
+// convenience
+- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleTweetBlock:(void (^)(NSDictionary *))tweetBlock
+                                                  stallWarningBlock:(void (^)(NSString *, NSString *, NSUInteger))stallWarningBlock
+                                                         errorBlock:(void (^)(NSError *))errorBlock
+{
+    return [self getStatusesSampleStallWarnings:stallWarningBlock ? @YES : @NO
+                                  progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                                      
+                                      switch (type) {
+                                          case STTwitterStreamJSONTypeTweet:
+                                              tweetBlock(json);
+                                              break;
+                                          case STTwitterStreamJSONTypeWarning:
+                                              if (stallWarningBlock) {
+                                                  stallWarningBlock([json valueForKey:@"code"],
+                                                                    [json valueForKey:@"message"],
+                                                                    [[json valueForKey:@"percent_full"] integerValue]);
+                                              }
+                                              break;
+                                          default:
+                                              break;
+                                      }
+                                      
+                                  } errorBlock:errorBlock];
+}
+
+- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleTweetBlock:(void (^)(NSDictionary *))tweetBlock
+                                                         errorBlock:(void (^)(NSError *))errorBlock
+{
+    return [self getStatusesSampleTweetBlock:tweetBlock
+                           stallWarningBlock:nil
+                                  errorBlock:errorBlock];
+}
+
 // GET statuses/firehose
 - (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count
-                                                           delimited:(NSNumber *)delimited
                                                        stallWarnings:(NSNumber *)stallWarnings
-                                                       progressBlock:(void(^)(id response))progressBlock
-                                                   stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                       progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
                                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"delimited"] = @"length";
+    
     if(count) md[@"count"] = count;
-    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
+    
+    self.streamParser = [[STTwitterParser alloc] init];
+    __weak STTwitterParser *streamParser = self.streamParser;
     
     return [self getResource:@"statuses/firehose.json"
                baseURLString:kBaseURLStringStream_1_1
                   parameters:md
-       downloadProgressBlock:^(id json) {
+       downloadProgressBlock:^(id response) {
            
-           NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-           if(stallWarning && stallWarningBlock) {
-               stallWarningBlock([stallWarning valueForKey:@"code"],
-                                 [stallWarning valueForKey:@"message"],
-                                 [[stallWarning valueForKey:@"percent_full"] integerValue]);
-           } else {
-               progressBlock(json);
+           if (streamParser) {
+               [streamParser parseWithStreamData:response parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                   progressBlock(json, type);
+               }];
            }
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
-           progressBlock(json);
+           // reaching successBlock for a stream request is an error
+           errorBlock(json);
        } errorBlock:^(NSError *error) {
            errorBlock(error);
        }];
 }
 
 // GET user
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamDelimited:(NSNumber *)delimited
-                                                 stallWarnings:(NSNumber *)stallWarnings
-                           includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                includeReplies:(NSNumber *)includeReplies
-                                               keywordsToTrack:(NSArray *)keywordsToTrack
-                                         locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                 progressBlock:(void(^)(id response))progressBlock
-                                             stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                    errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)getUserStreamStallWarnings:(NSNumber *)stallWarnings
+                               includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                    includeReplies:(NSNumber *)includeReplies
+                                                   keywordsToTrack:(NSArray *)keywordsToTrack
+                                             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                     progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
+                                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"stringify_friend_ids"] = @"1";
-    if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
+    md[@"delimited"] = @"length";
+    
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     if(includeMessagesFromFollowedAccounts) md[@"with"] = @"user"; // default is 'followings'
     if(includeReplies && [includeReplies boolValue]) md[@"replies"] = @"all";
@@ -1439,25 +1497,76 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if([keywords length]) md[@"track"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
+    self.streamParser = [[STTwitterParser alloc] init];
+    __weak STTwitterParser *streamParser = self.streamParser;
+    
     return [self getResource:@"user.json"
                baseURLString:kBaseURLStringUserStream_1_1
                   parameters:md
-       downloadProgressBlock:^(id json) {
+       downloadProgressBlock:^(id response) {
            
-           NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-           if(stallWarning && stallWarningBlock) {
-               stallWarningBlock([stallWarning valueForKey:@"code"],
-                                 [stallWarning valueForKey:@"message"],
-                                 [[stallWarning valueForKey:@"percent_full"] integerValue]);
-           } else {
-               progressBlock(json);
+           if (streamParser) {
+               [streamParser parseWithStreamData:response parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                   progressBlock(json, type);
+               }];
            }
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
-           progressBlock(json);
+           // reaching successBlock for a stream request is an error
+           errorBlock(json);
        } errorBlock:^(NSError *error) {
            errorBlock(error);
        }];
+}
+
+// convenience
+- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                                          includeReplies:(NSNumber *)includeReplies
+                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
+                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
+{
+    return [self getUserStreamStallWarnings:stallWarningBlock ? @YES : @NO
+        includeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
+                             includeReplies:includeReplies
+                            keywordsToTrack:keywordsToTrack
+                      locationBoundingBoxes:locationBoundingBoxes
+                              progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                                  
+                                  switch (type) {
+                                      case STTwitterStreamJSONTypeTweet:
+                                          tweetBlock(json);
+                                          break;
+                                      case STTwitterStreamJSONTypeWarning:
+                                          if (stallWarningBlock) {
+                                              stallWarningBlock([json valueForKey:@"code"],
+                                                                [json valueForKey:@"message"],
+                                                                [[json valueForKey:@"percent_full"] integerValue]);
+                                          }
+                                          break;
+                                      default:
+                                          break;
+                                  }
+                                  
+                              } errorBlock:errorBlock];
+}
+
+- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                                          includeReplies:(NSNumber *)includeReplies
+                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
+                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                              errorBlock:(void(^)(NSError *error))errorBlock
+{
+    return [self getUserStreamIncludeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
+                                                   includeReplies:includeReplies
+                                                  keywordsToTrack:keywordsToTrack
+                                            locationBoundingBoxes:locationBoundingBoxes
+                                                       tweetBlock:tweetBlock
+                                                stallWarningBlock:nil
+                                                       errorBlock:errorBlock];
 }
 
 // GET site
@@ -1466,8 +1575,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                   stallWarnings:(NSNumber *)stallWarnings
                                          restrictToUserMessages:(NSNumber *)restrictToUserMessages
                                                  includeReplies:(NSNumber *)includeReplies
-                                                  progressBlock:(void(^)(id response))progressBlock
-                                              stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                  progressBlock:(void (^)(NSDictionary *, STTwitterStreamJSONType))progressBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -1480,22 +1588,23 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSString *follow = [userIDs componentsJoinedByString:@","];
     if([follow length]) md[@"follow"] = follow;
     
+    self.streamParser = [[STTwitterParser alloc] init];
+    __weak STTwitterParser *streamParser = self.streamParser;
+    
     return [self getResource:@"site.json"
                baseURLString:kBaseURLStringSiteStream_1_1
                   parameters:md
-       downloadProgressBlock:^(id json) {
+       downloadProgressBlock:^(NSData *data) {
            
-           NSDictionary *stallWarning = [[self class] stallWarningDictionaryFromJSON:json];
-           if(stallWarning && stallWarningBlock) {
-               stallWarningBlock([stallWarning valueForKey:@"code"],
-                                 [stallWarning valueForKey:@"message"],
-                                 [[stallWarning valueForKey:@"percent_full"] integerValue]);
-           } else {
-               progressBlock(json);
+           if (streamParser) {
+               [streamParser parseWithStreamData:data parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                   progressBlock(json, type);
+               }];
            }
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
-           progressBlock(json);
+           // reaching successBlock for a stream request is an error
+           errorBlock(json);
        } errorBlock:^(NSError *error) {
            errorBlock(error);
        }];
@@ -4401,7 +4510,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                 baseURLString:@"https://api.twitter.com/1"
                    parameters:md
           uploadProgressBlock:nil
-        downloadProgressBlock:^(id json) {
+        downloadProgressBlock:^(NSData *data) {
             //
         } successBlock:^(NSDictionary *rateLimits, id response) {
             successBlock(response);

@@ -22,7 +22,7 @@
                                     HTTPMethod:(NSString *)HTTPMethod
                               timeoutInSeconds:(NSTimeInterval)timeoutInSeconds
                   stTwitterUploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                stTwitterDownloadProgressBlock:(void(^)(id json))downloadProgressBlock
+                stTwitterDownloadProgressBlock:(void(^)(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive))downloadProgressBlock
                          stTwitterSuccessBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
                            stTwitterErrorBlock:(void(^)(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
     
@@ -37,38 +37,7 @@
     
     r.uploadProgressBlock = uploadProgressBlock;
     
-    r.downloadProgressBlock = ^(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive) {
-        
-        if(downloadProgressBlock == nil) return;
-        
-        NSError *jsonError = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-        
-        if(json) {
-            downloadProgressBlock(json);
-            return;
-        }
-        
-        // we can receive several dictionaries in the same data chunk
-        // such as '{..}\r\n{..}\r\n{..}' which is not valid JSON
-        // so we split them up into a 'jsonChunks' array such as [{..},{..},{..}]
-        
-        NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        
-        NSArray *jsonChunks = [jsonString componentsSeparatedByString:@"\r\n"];
-        
-        for(NSString *jsonChunk in jsonChunks) {
-            if([jsonChunk length] == 0) continue;
-            NSData *data = [jsonChunk dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *jsonError = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
-            if(json == nil) {
-                //                errorBlock(wr.responseHeaders, jsonError);
-                return; // not enough information to say it's an error
-            }
-            downloadProgressBlock(json);
-        }
-    };
+    r.downloadProgressBlock = downloadProgressBlock;
     
     r.completionDataBlock = ^(NSDictionary *responseHeaders, NSData *responseData) {
         
