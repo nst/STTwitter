@@ -27,8 +27,8 @@ typedef void (^errorBlock_t)(NSError *error);
 
 @interface STHTTPRequest : NSObject <NSURLConnectionDelegate>
 
-@property (copy) sendRequestBlock_t willSendRequestBlock; // last chance to log and/or congfigure the request
-@property (copy) sendRequestBlock_t didSendRequestBlock; // called just after the request was actually sent
+//@property (copy) sendRequestBlock_t willSendRequestBlock; // last chance to log and/or congfigure the request
+//@property (copy) sendRequestBlock_t didSendRequestBlock; // called just after the request was actually sent
 
 @property (copy) uploadProgressBlock_t uploadProgressBlock;
 @property (copy) downloadProgressBlock_t downloadProgressBlock;
@@ -105,6 +105,9 @@ typedef void (^errorBlock_t)(NSError *error);
 
 // Session
 + (void)clearSession; // delete all credentials and cookies
+
+// DEBUG
+- (NSURLRequest *)prepareURLRequest; // prepare the request according to the STHTTPRequest instance state
 
 @end
 

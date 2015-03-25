@@ -360,7 +360,7 @@ static BOOL globalIgnoreCache = NO;
     return [NSURL URLWithString:s];
 }
 
-- (NSMutableURLRequest *)prepareMutableURLRequest {
+- (NSURLRequest *)prepareURLRequest {
     
     NSURL *theURL = nil;
     
@@ -518,6 +518,8 @@ static BOOL globalIgnoreCache = NO;
         [request addValue:authValue forHTTPHeaderField:@"Authorization"];
     }
     
+    [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
+
     return request;
 }
 
@@ -637,7 +639,7 @@ static BOOL globalIgnoreCache = NO;
 
 - (NSString *)curlDescription {
     
-    [self prepareMutableURLRequest];
+    //[self prepareURLRequest];
     
     NSMutableArray *ma = [NSMutableArray array];
     [ma addObject:@"\U0001F300 curl -i"];
@@ -776,30 +778,15 @@ static BOOL globalIgnoreCache = NO;
     NSAssert((self.completionBlock || self.completionDataBlock), @"a completion block is mandatory");
     NSAssert(self.errorBlock, @"the error block is mandatory");
     
-    NSMutableURLRequest *request = [self prepareMutableURLRequest];
-    
-    [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
+    NSURLRequest *request = [self prepareURLRequest];
     
     self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-    
-    if(self.willSendRequestBlock) {
-        self.willSendRequestBlock(self);
-        NSMutableURLRequest *request = [self prepareMutableURLRequest];
-        [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
-        self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-        [_connection scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-    }
-    
     [_connection start];
     
     self.request = [_connection currentRequest];
     
     self.requestHeaders = [[_request allHTTPHeaderFields] mutableCopy];
-    
-    if(self.didSendRequestBlock) {
-        self.didSendRequestBlock(self);
-    }
     
     /**/
     
@@ -848,23 +835,12 @@ static BOOL globalIgnoreCache = NO;
     self.responseHeaders = nil;
     self.responseStatus = 0;
     
-    NSMutableURLRequest *request = [self prepareMutableURLRequest];
-    [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
-    
-    if(self.willSendRequestBlock) {
-        self.willSendRequestBlock(self);
-        NSMutableURLRequest *request = [self prepareMutableURLRequest];
-        [request setHTTPShouldHandleCookies:(_ignoreSharedCookiesStorage == NO)];
-    }
+    NSURLRequest *request = [self prepareURLRequest];
     
     NSURLResponse *urlResponse = nil;
     
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:e];
-    
-    if(self.didSendRequestBlock) {
-        self.didSendRequestBlock(self);
-    }
-    
+
     self.responseData = [NSMutableData dataWithData:data];
     
     if([urlResponse isKindOfClass:[NSHTTPURLResponse class]]) {
