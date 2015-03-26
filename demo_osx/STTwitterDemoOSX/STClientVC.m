@@ -130,5 +130,24 @@
     }];
 }
 
+- (IBAction)startStreaming:(id)sender {
+    
+    self.timelineStatuses = [NSArray array];
+    self.twitterStreamingStatus = @"Streaming started";
+    
+    self.streamingRequest = [_twitter postStatusesFilterKeyword:_twitterStreamingKeywordsString
+                                                  tweetBlock:^(NSDictionary *tweet) {
+                                                      self.timelineStatuses = [_timelineStatuses arrayByAddingObject:tweet];
+                                                  } errorBlock:^(NSError *error) {
+                                                      self.twitterStreamingStatus = [error localizedDescription];
+                                                  }];
+}
+
+- (IBAction)stopStreaming:(id)sender {
+    
+    [_streamingRequest cancel];
+    
+    self.twitterStreamingStatus = @"Streaming stopped";
+}
 
 @end
