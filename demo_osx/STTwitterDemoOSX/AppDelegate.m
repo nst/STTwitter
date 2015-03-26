@@ -12,9 +12,14 @@
 #import "STClientVC.h"
 
 @interface AppDelegate ()
+
+@property (assign) IBOutlet NSWindow *window;
+@property (assign) IBOutlet NSTabView *tabView;
+
 @property (nonatomic, strong) STAuthenticationVC *authenticationVC;
 @property (nonatomic, strong) STConsoleVC *requestsVC;
 @property (nonatomic, strong) STClientVC *clientVC;
+
 @end
 
 @implementation AppDelegate

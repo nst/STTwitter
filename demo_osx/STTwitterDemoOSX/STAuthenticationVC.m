@@ -13,6 +13,81 @@ static NSString *kCustomString = @"Custom...";
 
 @interface STAuthenticationVC ()
 @property (nonatomic, strong) ACAccountStore *accountStore;
+
+@property (nonatomic, assign) IBOutlet NSScrollView *scrollView;
+@property (nonatomic, assign) IBOutlet NSView *contentView;
+
+@property (nonatomic, retain) STTwitterAPI *twitter;
+
+@property (nonatomic, retain) NSArray *twitterClients;
+@property (nonatomic, assign) IBOutlet NSArrayController *twitterClientsController;
+
+@property (nonatomic, retain) NSArray *osxAccounts;
+@property (nonatomic, assign) IBOutlet NSArrayController *osxAccountsController;
+
+@property (nonatomic, assign) IBOutlet NSTextField *consumerKeyTextField;
+@property (nonatomic, assign) IBOutlet NSTextField *consumerSecretTextField;
+
+@property (nonatomic, retain) NSURL *pinURL;
+
+@property (nonatomic, copy) UsernamePasswordBlock_t pinGuessLoginCompletionBlock;
+
+@property (nonatomic, retain) NSString *osxStatus;
+
+@property (nonatomic, retain) NSString *bearerToken;
+@property (nonatomic, retain) NSString *bearerStatus;
+
+@property (nonatomic, retain) NSString *oauthCallback;
+@property (nonatomic, retain) NSString *pin;
+@property (nonatomic, retain) NSString *pinStatus1;
+@property (nonatomic, retain) NSString *pinStatus2;
+@property (nonatomic, retain) NSString *pinOAuthToken;
+@property (nonatomic, retain) NSString *pinOAuthTokenSecret;
+
+@property (nonatomic, retain) NSString *xAuthUsername;
+@property (nonatomic, retain) NSString *xAuthPassword;
+@property (nonatomic, retain) NSString *xAuthStatus;
+@property (nonatomic, retain) NSString *xAuthOAuthToken;
+@property (nonatomic, retain) NSString *xAuthOAuthTokenSecret;
+
+@property (nonatomic, retain) NSString *oauthToken;
+@property (nonatomic, retain) NSString *oauthTokenSecret;
+@property (nonatomic, retain) NSString *oauthTokensStatus;
+
+@property (nonatomic, retain) NSString *digitsGuestToken;
+@property (nonatomic, retain) NSString *digitsPhoneNumber;
+@property (nonatomic, retain) NSString *digitsPINCode;
+@property (nonatomic, retain) NSString *digitsOAuthToken;
+@property (nonatomic, retain) NSString *digitsOAuthTokenSecret;
+@property (nonatomic, retain) NSString *digitsStatus;
+
+- (IBAction)popupMenuDidSelectTwitterClient:(id)sender;
+- (IBAction)revealConsumerTokensFileAction:(id)sender;
+
+// OAuth - PIN
+- (IBAction)fetchPIN:(id)sender;
+- (IBAction)openURL:(id)sender;
+- (IBAction)guessPIN:(id)sender;
+- (IBAction)loginPIN:(id)sender;
+
+// OAuth - XAuth
+- (IBAction)loginXAuth:(id)sender;
+
+// OAuth - Tokens
+- (IBAction)loginTokens:(id)sender;
+
+// OS X Twitter account
+- (IBAction)loginOSX:(id)sender;
+
+// Application Only
+- (IBAction)fetchBearer:(id)sender;
+- (IBAction)invalidateBearer:(id)sender;
+
+// Digits
+- (IBAction)fetchGuestToken:(id)sender;
+- (IBAction)requestPINCode:(id)sender;
+- (IBAction)sendPINCode:(id)sender;
+
 @end
 
 @implementation STAuthenticationVC

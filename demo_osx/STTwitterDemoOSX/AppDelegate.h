@@ -13,7 +13,4 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTabViewDelegate, STAuthenticationVCDelegate>
 
-@property (assign) IBOutlet NSWindow *window;
-@property (assign) IBOutlet NSTabView *tabView;
-
 @end

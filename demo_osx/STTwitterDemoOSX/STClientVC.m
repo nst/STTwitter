@@ -10,6 +10,27 @@
 
 @interface STClientVC ()
 
+@property (nonatomic, retain) NSObject <STTwitterRequestProtocol> *streamingRequest;
+
+@property (nonatomic, retain) NSString *twitterTimelineUsername;
+@property (nonatomic, retain) NSString *twitterStreamingKeywordsString;
+@property (nonatomic, retain) NSString *twitterGetTimelineStatus;
+@property (nonatomic, retain) NSString *twitterPostTweetText;
+@property (nonatomic, retain) NSString *twitterPostTweetStatus;
+@property (nonatomic, retain) NSString *twitterStreamingStatus;
+
+@property (nonatomic, retain) NSURL *twitterPostMediaURL;
+@property (nonatomic, retain) NSString *twitterPostLatitude;
+@property (nonatomic, retain) NSString *twitterPostLongitude;
+
+@property (nonatomic, retain) NSArray *timelineStatuses;
+
+- (IBAction)getTimeline:(id)sender;
+- (IBAction)chooseMedia:(id)sender;
+- (IBAction)postTweet:(id)sender;
+- (IBAction)startStreaming:(id)sender;
+- (IBAction)stopStreaming:(id)sender;
+
 @end
 
 @implementation STClientVC
