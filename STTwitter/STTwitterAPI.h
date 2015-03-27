@@ -2174,4 +2174,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (NSObject<STTwitterRequestProtocol> *)_getContactsDestroyAllWithSuccessBlock:(void(^)(id response))successBlock
                                                                     errorBlock:(void(^)(NSError *error))errorBlock;
 
+#pragma mark UNDOCUMENTED APIS FOR TWITTER ANALYTICS
+
+// https://analytics.twitter.com/user/nst021/tweet/581587857745289217/mobile/poll.json
+
 @end
