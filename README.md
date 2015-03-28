@@ -4,6 +4,7 @@ _A stable, mature and comprehensive Objective-C library for Twitter REST API 1.1
 
 _Like a FOSS version of Twitter Fabric TwitterKit, without the UI parts but with much more flexibility_
 
+**[2015-03-28]** Signed build of OS X demo app: [STTwitterDemoOSX.app.zip](http://www.seriot.ch/temp/STTwitterDemoOSX.app.zip) shasum `4ffd1baee15cb596ac31225e2d528524524405e6`  
 **[2014-06-18]** [Swifter](https://github.com/mattdonnelly/Swifter), A Twitter framework for iOS & OS X written in Swift, by [@MatthewDonnelly](htps://www.twitter.com/MatthewDonnelly/)  
 **[2014-05-31]** Follow STTwitter on Twitter: [@STTLibrary](https://www.twitter.com/STTLibrary/)  
 **[2014-05-22]** STTwitter was presented at [CocoaHeads Lausanne](https://www.facebook.com/events/732041160150290/) ([slides](http://seriot.ch/resources/abusing_twitter_api/sttwitter_cocoaheads.pdf))  
