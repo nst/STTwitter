@@ -1360,7 +1360,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                      default:
                                          break;
                                  }
-
+                                 
                              } errorBlock:errorBlock];
 }
 
@@ -4790,6 +4790,35 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                     successBlock:^(NSDictionary *rateLimits, id response) {
                         successBlock(response);
                     } errorBlock:^(NSError *error) {
+                        errorBlock(error);
+                    }];
+}
+
+#pragma mark UNDOCUMENTED APIS FOR TWITTER ANALYTICS
+
+// GET https://analytics.twitter.com/user/:screenname/tweet/:tweetid/mobile/poll.json
+- (NSObject<STTwitterRequestProtocol> *)_getAnalyticsWithScreenName:(NSString *)screenName
+                                                            tweetID:(NSString *)tweetID
+                                                       successBlock:(void(^)(id response))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    NSParameterAssert(successBlock);
+    NSParameterAssert(errorBlock);
+    
+    NSParameterAssert(screenName);
+    NSParameterAssert(tweetID);
+    
+    NSString *resource = [NSString stringWithFormat:@"user/%@/tweet/%@/mobile/poll.json", screenName, tweetID];
+    
+    return [_oauth fetchResource:resource
+                      HTTPMethod:@"GET"
+                   baseURLString:@"https://analytics.twitter.com"
+                      parameters:nil
+             uploadProgressBlock:nil
+           downloadProgressBlock:nil
+                    successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+                        successBlock(response);
+                    } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                         errorBlock(error);
                     }];
 }

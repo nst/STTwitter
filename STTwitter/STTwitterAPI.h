@@ -2176,6 +2176,10 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 #pragma mark UNDOCUMENTED APIS FOR TWITTER ANALYTICS
 
-// https://analytics.twitter.com/user/nst021/tweet/581587857745289217/mobile/poll.json
+// GET https://analytics.twitter.com/user/:screenname/tweet/:tweetid/mobile/poll.json
+- (NSObject<STTwitterRequestProtocol> *)_getAnalyticsWithScreenName:(NSString *)screenName
+                                                            tweetID:(NSString *)tweetID
+                                                       successBlock:(void(^)(id response))successBlock
+                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end
