@@ -2179,7 +2179,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 // GET https://analytics.twitter.com/user/:screenname/tweet/:tweetid/mobile/poll.json
 - (NSObject<STTwitterRequestProtocol> *)_getAnalyticsWithScreenName:(NSString *)screenName
                                                             tweetID:(NSString *)tweetID
-                                                       successBlock:(void(^)(id response))successBlock
+                                                       successBlock:(void(^)(id rawResponse, NSDictionary *responseDictionary))successBlock
                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end

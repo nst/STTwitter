@@ -4799,7 +4799,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // GET https://analytics.twitter.com/user/:screenname/tweet/:tweetid/mobile/poll.json
 - (NSObject<STTwitterRequestProtocol> *)_getAnalyticsWithScreenName:(NSString *)screenName
                                                             tweetID:(NSString *)tweetID
-                                                       successBlock:(void(^)(id response))successBlock
+                                                       successBlock:(void(^)(id rawResponse, NSDictionary *responseDictionary))successBlock
                                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(successBlock);
@@ -4817,7 +4817,28 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
              uploadProgressBlock:nil
            downloadProgressBlock:nil
                     successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-                        successBlock(response);
+                        
+                        NSString *prefix = @"/**/retrieveNewMetrics(";
+                        //NSString *suffix = @")";
+                        
+                        NSDictionary *json = nil;
+                        
+                        if([response hasPrefix:prefix] && [response length] >= [prefix length] + 2) {
+                            // transform jsonp into NSDictionary
+                            NSMutableString *ms = [response mutableCopy];
+                            [ms deleteCharactersInRange:NSMakeRange(0, [prefix length])];
+                            [ms deleteCharactersInRange:NSMakeRange([ms length]-2, 2)];
+                            NSLog(@"-- %@", ms);
+                            NSData *data = [ms dataUsingEncoding:NSUTF8StringEncoding];
+                            NSError *jsonError = nil;
+                            json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                            if(json == nil) {
+                                NSLog(@"-- %@", [jsonError localizedDescription]);
+                            }
+                            NSLog(@"-- %@", json);
+                        }
+                        
+                        successBlock(response, json);
                     } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                         errorBlock(error);
                     }];
