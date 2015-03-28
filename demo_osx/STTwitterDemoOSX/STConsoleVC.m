@@ -65,15 +65,15 @@
 - (NSString *)curlDescriptionWithMethod:(NSString *)method endpoint:(NSString *)endPoint baseURLString:(NSString *)baseURLString parameters:(NSDictionary *)parameters requestHeaders:(NSDictionary *)requestHeaders {
     /*
      $ curl -i -H "Authorization: OAuth oauth_consumer_key="7YBPrscvh0RIThrWYVeGg", \
-                                        oauth_nonce="DA5E6B1E-E98D-4AFB-9AAB-18A463F2", \
-                                        oauth_signature_method="HMAC-SHA1", \
-                                        oauth_timestamp="1381908706", \
-                                        oauth_version="1.0", \
-                                        oauth_token="1294332967-UsaIUBcsC4JcHv9tIYxk5EktsVisAtCLNVGKghP", \
-                                        oauth_signature="gnmc02ohamTvTmkTppz%2FbH8OjAs%3D"" \
-                                        "https://api.twitter.com/1.1/statuses/home_timeline.json?count=10"
+     oauth_nonce="DA5E6B1E-E98D-4AFB-9AAB-18A463F2", \
+     oauth_signature_method="HMAC-SHA1", \
+     oauth_timestamp="1381908706", \
+     oauth_version="1.0", \
+     oauth_token="1294332967-UsaIUBcsC4JcHv9tIYxk5EktsVisAtCLNVGKghP", \
+     oauth_signature="gnmc02ohamTvTmkTppz%2FbH8OjAs%3D"" \
+     "https://api.twitter.com/1.1/statuses/home_timeline.json?count=10"
      */
-
+    
     if([baseURLString hasSuffix:@"/"]) baseURLString = [baseURLString substringToIndex:[baseURLString length]-1];
     if([endPoint hasPrefix:@"/"]) endPoint = [endPoint substringFromIndex:1];
     
@@ -87,10 +87,10 @@
     }];
     
     NSString *POSTParameters = @"";
-
+    
     NSMutableArray *ma = [NSMutableArray array];
     NSString *parameterString = [parametersArray componentsJoinedByString:@"&"];
-
+    
     if([parameters count]) {
         if([method isEqualToString:@"POST"]) {
             [ma addObject:[NSString stringWithFormat:@"-d \"%@\"", parameterString]];
@@ -152,10 +152,18 @@
                    jsh.stringAttributes = stringAttributes;
                    jsh.nonStringAttributes = nonStringAttributes;
                    
-                   self.bodyTextViewAttributedString = [jsh highlightJSONWithPrettyPrint:YES];
+                   NSMutableAttributedString *mas = [[jsh highlightJSONWithPrettyPrint:YES] mutableCopy];
+
+                   BOOL jsonSyntaxHighlighterCouldNotParseJSON = [jsh.parsedJSON isEqualToString:[NSString stringWithFormat:@"%@", response]];
+                   if(jsonSyntaxHighlighterCouldNotParseJSON) {
+                       NSDictionary *basicAttributes = @{ NSFontAttributeName : [NSFont fontWithName:@"Menlo" size:12] };
+                       [mas setAttributes:basicAttributes range:NSMakeRange(0, [mas length])];
+                   }
+
+                   self.bodyTextViewAttributedString = mas;
                    
                    self.rootNode = [BAVPlistNode plistNodeFromObject:response key:@"Root"];
-                   
+
                    [_outlineView reloadData];
                    
                } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
@@ -165,7 +173,7 @@
                    }
                    
                    NSString *curlDescription = [self curlDescriptionWithMethod:_genericHTTPMethod endpoint:_genericAPIEndpoint baseURLString:_genericBaseURLString parameters:parameters requestHeaders:requestHeaders];
-
+                   
                    //NSString *requestHeadersDescription = requestHeaders ? [requestHeaders description] : @"";
                    NSString *responseHeadersDescription = responseHeaders ? [responseHeaders description] : @"";
                    self.curlTextViewAttributedString = [[NSAttributedString alloc] initWithString:curlDescription attributes:attributes];
