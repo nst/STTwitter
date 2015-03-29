@@ -17,13 +17,17 @@ typedef NS_ENUM(NSInteger, STTwitterStreamJSONType) {
     STTwitterStreamJSONTypeDisconnect,
     STTwitterStreamJSONTypeWarning,
     STTwitterStreamJSONTypeEvent,
+    STTwitterStreamJSONTypeStatusWithheld,
+    STTwitterStreamJSONTypeUserWithheld,
+    STTwitterStreamJSONTypeControl,
     STTwitterStreamJSONTypeUnsupported,
 };
+
 extern NSString *NSStringFromSTTwitterStreamJSONType(STTwitterStreamJSONType type);
 
 @interface STTwitterParser : NSObject
 
 - (void)parseWithStreamData:(NSData *)data
-            parsedJsonBlock:(void (^)(NSDictionary *json, STTwitterStreamJSONType type))parsedJsonBlock;
+            parsedJSONBlock:(void (^)(NSDictionary *json, STTwitterStreamJSONType type))parsedJsonBlock;
 
 @end

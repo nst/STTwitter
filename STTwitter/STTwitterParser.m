@@ -26,6 +26,12 @@ NSString *NSStringFromSTTwitterStreamJSONType(STTwitterStreamJSONType type) {
             return @"STTwitterStreamJSONTypeWarning";
         case STTwitterStreamJSONTypeEvent:
             return @"STTwitterStreamJSONTypeEvent";
+        case STTwitterStreamJSONTypeStatusWithheld:
+            return @"STTwitterStreamJSONTypeStatusWithheld";
+        case STTwitterStreamJSONTypeUserWithheld:
+            return @"STTwitterStreamJSONTypeUserWithheld";
+        case STTwitterStreamJSONTypeControl:
+            return @"STTwitterStreamJSONTypeControl";
         default:
         case STTwitterStreamJSONTypeUnsupported:
             return @"STTwitterStreamJSONTypeUnsupported";
@@ -51,12 +57,12 @@ static inline BOOL isDigitsOnlyString(NSString *str) {
 @implementation STTwitterParser
 
 - (void)parseWithStreamData:(NSData *)data
-            parsedJsonBlock:(void (^)(NSDictionary *json, STTwitterStreamJSONType type))parsedJsonBlock
-{
+            parsedJSONBlock:(void (^)(NSDictionary *json, STTwitterStreamJSONType type))parsedJsonBlock {
     static NSString * const kDelimiter = @"\r\n";
-    NSString* response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     for (NSString* part in [response componentsSeparatedByString:kDelimiter]) {
+        
         if (self.receivedMessage == nil) {
             if (isDigitsOnlyString(part)) {
                 self.receivedMessage = [NSMutableString string];
@@ -77,11 +83,12 @@ static inline BOOL isDigitsOnlyString(NSString *str) {
                     id json = [NSJSONSerialization JSONObjectWithData:[self.receivedMessage dataUsingEncoding:NSUTF8StringEncoding]
                                                               options:NSJSONReadingAllowFragments
                                                                 error:&error];
+                    if(json == nil) {
+                        NSLog(@"-- error: %@", error);
+                    }
                     
                     STTwitterStreamJSONType type = [[self class] streamJSONTypeForJSON:json];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        parsedJsonBlock(json, type);
-                    });
+                    parsedJsonBlock(json, type);
                     
                     // Reset
                     self.receivedMessage = nil;
@@ -98,9 +105,7 @@ static inline BOOL isDigitsOnlyString(NSString *str) {
     }
 }
 
-
-+ (STTwitterStreamJSONType)streamJSONTypeForJSON:(id)json
-{
++ (STTwitterStreamJSONType)streamJSONTypeForJSON:(id)json {
     if ([json isKindOfClass:[NSDictionary class]]) {
         if ([json objectForKey:@"source"] && [json objectForKey:@"text"]) {
             return STTwitterStreamJSONTypeTweet;
@@ -117,13 +122,17 @@ static inline BOOL isDigitsOnlyString(NSString *str) {
         } else if ([json objectForKey:@"warning"]) {
             return STTwitterStreamJSONTypeWarning;
         } else if ([json objectForKey:@"event"]) {
-            return STTwitterStreamJSONTypeEvent;
-        } else {
-            return STTwitterStreamJSONTypeUnsupported;
+            return STTwitterStreamJSONTypeEvent; // may be 'Event' or 'User update'
+        } else if ([json objectForKey:@"status_withheld"]) {
+            return STTwitterStreamJSONTypeStatusWithheld;
+        } else if ([json objectForKey:@"user_withheld"]) {
+            return STTwitterStreamJSONTypeUserWithheld;
+        } else if ([json objectForKey:@"control"]) {
+            return STTwitterStreamJSONTypeControl;
         }
-    } else {
-        return STTwitterStreamJSONTypeUnsupported;
     }
+    
+    return STTwitterStreamJSONTypeUnsupported;
 }
 
 @end

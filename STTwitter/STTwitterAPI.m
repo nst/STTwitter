@@ -1313,7 +1313,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         downloadProgressBlock:^(NSData *data) {
             
             if (streamParser) {
-                [streamParser parseWithStreamData:data parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                [streamParser parseWithStreamData:data parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
                     progressBlock(json, type);
                 }];
             }
@@ -1393,7 +1393,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
        downloadProgressBlock:^(id response) {
            
            if (streamParser) {
-               [streamParser parseWithStreamData:response parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+               [streamParser parseWithStreamData:response parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
                    progressBlock(json, type);
                }];
            }
@@ -1461,7 +1461,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
        downloadProgressBlock:^(id response) {
            
            if (streamParser) {
-               [streamParser parseWithStreamData:response parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+               [streamParser parseWithStreamData:response parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
                    progressBlock(json, type);
                }];
            }
@@ -1506,7 +1506,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
        downloadProgressBlock:^(id response) {
            
            if (streamParser) {
-               [streamParser parseWithStreamData:response parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+               [streamParser parseWithStreamData:response parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
                    progressBlock(json, type);
                }];
            }
@@ -1597,7 +1597,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
        downloadProgressBlock:^(NSData *data) {
            
            if (streamParser) {
-               [streamParser parseWithStreamData:data parsedJsonBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+               [streamParser parseWithStreamData:data parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
                    progressBlock(json, type);
                }];
            }
