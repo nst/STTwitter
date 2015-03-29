@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 Nicolas Seriot. All rights reserved.
 //
 
-#import "STTwitterParser.h"
+#import "STTwitterStreamParser.h"
 
 NSString *NSStringFromSTTwitterStreamJSONType(STTwitterStreamJSONType type) {
     switch (type) {
@@ -47,14 +47,14 @@ static inline BOOL isDigitsOnlyString(NSString *str) {
     return str.length && [str rangeOfCharacterFromSet:__notDigits].location == NSNotFound;
 }
 
-@interface STTwitterParser ()
+@interface STTwitterStreamParser ()
 
 @property (nonatomic) NSMutableString *receivedMessage;
 @property (nonatomic) int bytesExpected;
 
 @end
 
-@implementation STTwitterParser
+@implementation STTwitterStreamParser
 
 - (void)parseWithStreamData:(NSData *)data
             parsedJSONBlock:(void (^)(NSDictionary *json, STTwitterStreamJSONType type))parsedJsonBlock {

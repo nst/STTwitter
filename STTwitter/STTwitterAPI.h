@@ -20,7 +20,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STTwitterParser.h"
+#import "STTwitterStreamParser.h"
 #import "STTwitterRequestProtocol.h"
 
 NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {

@@ -35,7 +35,7 @@
 		0344DB1218D9C698004AC0BB /* NSError+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0344DB1118D9C698004AC0BB /* NSError+STTwitter.m */; };
 		039910E317F371A5005FFFC3 /* JSONSyntaxHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 039910E217F371A5005FFFC3 /* JSONSyntaxHighlight.m */; };
 		03ACFD3918390F68005CEE2A /* NSDateFormatter+STTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ACFD3818390F68005CEE2A /* NSDateFormatter+STTwitter.m */; };
-		B894413C1ABF571F00FC5D6F /* STTwitterParser.m in Sources */ = {isa = PBXBuildFile; fileRef = B894413B1ABF571F00FC5D6F /* STTwitterParser.m */; };
+		B894413C1ABF571F00FC5D6F /* STTwitterStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = B894413B1ABF571F00FC5D6F /* STTwitterStreamParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,8 +96,8 @@
 		039910E217F371A5005FFFC3 /* JSONSyntaxHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONSyntaxHighlight.m; sourceTree = "<group>"; };
 		03ACFD3718390F68005CEE2A /* NSDateFormatter+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+STTwitter.h"; sourceTree = "<group>"; };
 		03ACFD3818390F68005CEE2A /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
-		B894413A1ABF571F00FC5D6F /* STTwitterParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterParser.h; sourceTree = "<group>"; };
-		B894413B1ABF571F00FC5D6F /* STTwitterParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterParser.m; sourceTree = "<group>"; };
+		B894413A1ABF571F00FC5D6F /* STTwitterStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterStreamParser.h; sourceTree = "<group>"; };
+		B894413B1ABF571F00FC5D6F /* STTwitterStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterStreamParser.m; sourceTree = "<group>"; };
 		B8BDD51C1AC12807003672C3 /* STTwitterRequestProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTwitterRequestProtocol.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -214,8 +214,8 @@
 				03191E9917BF704C0001C06D /* STTwitterOS.m */,
 				03426AED18B725B200CA9ABF /* STTwitterOSRequest.h */,
 				03426AEE18B725B200CA9ABF /* STTwitterOSRequest.m */,
-				B894413A1ABF571F00FC5D6F /* STTwitterParser.h */,
-				B894413B1ABF571F00FC5D6F /* STTwitterParser.m */,
+				B894413A1ABF571F00FC5D6F /* STTwitterStreamParser.h */,
+				B894413B1ABF571F00FC5D6F /* STTwitterStreamParser.m */,
 				0344DB1018D9C698004AC0BB /* NSError+STTwitter.h */,
 				0344DB1118D9C698004AC0BB /* NSError+STTwitter.m */,
 				03191E9A17BF704C0001C06D /* STTwitterProtocol.h */,
@@ -319,7 +319,7 @@
 				0334D48617EEDBA40070B8B4 /* STConsoleVC.m in Sources */,
 				03191EA417BF704C0001C06D /* STTwitterAppOnly.m in Sources */,
 				03191EA617BF704C0001C06D /* STTwitterHTML.m in Sources */,
-				B894413C1ABF571F00FC5D6F /* STTwitterParser.m in Sources */,
+				B894413C1ABF571F00FC5D6F /* STTwitterStreamParser.m in Sources */,
 				03191EA817BF704C0001C06D /* STTwitterOAuth.m in Sources */,
 				03191EAA17BF704C0001C06D /* STTwitterOS.m in Sources */,
 				0334D48117EED32A0070B8B4 /* STAuthenticationVC.m in Sources */,
@@ -418,6 +418,7 @@
 		03191E8517BF700B0001C06D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "STTwitterDemoOSX/STTwitterDemoOSX-Prefix.pch";
@@ -430,6 +431,7 @@
 		03191E8617BF700B0001C06D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "STTwitterDemoOSX/STTwitterDemoOSX-Prefix.pch";

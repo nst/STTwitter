@@ -8,7 +8,7 @@
 
 #import "STMiscTests.h"
 #import "NSString+STTwitter.h"
-#import "STTwitterParser.h"
+#import "STTwitterStreamParser.h"
 
 @implementation STMiscTests
 
@@ -119,7 +119,7 @@
     NSDictionary *expectedDictionary = @{@"a":@"b"};
     __block NSDictionary *readDictionary = nil;
     
-    STTwitterParser *parser = [[STTwitterParser alloc] init];
+    STTwitterStreamParser *parser = [[STTwitterStreamParser alloc] init];
     
     [parser parseWithStreamData:data1 parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
         XCTAssertFalse(YES, @"shouldn't have finished parsing incomplete JSON");

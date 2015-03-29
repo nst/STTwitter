@@ -25,7 +25,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 @interface STTwitterAPI ()
 @property (nonatomic, retain) NSObject <STTwitterProtocol> *oauth;
-@property (nonatomic, retain) STTwitterParser *streamParser;
+@property (nonatomic, retain) STTwitterStreamParser *streamParser;
 @end
 
 @implementation STTwitterAPI
@@ -1303,8 +1303,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if([keywords length]) md[@"track"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    self.streamParser = [[STTwitterParser alloc] init];
-    __weak STTwitterParser *streamParser = self.streamParser;
+    self.streamParser = [[STTwitterStreamParser alloc] init];
+    __weak STTwitterStreamParser *streamParser = self.streamParser;
     
     return [self postResource:@"statuses/filter.json"
                 baseURLString:kBaseURLStringStream_1_1
@@ -1384,8 +1384,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    self.streamParser = [[STTwitterParser alloc] init];
-    __weak STTwitterParser *streamParser = self.streamParser;
+    self.streamParser = [[STTwitterStreamParser alloc] init];
+    __weak STTwitterStreamParser *streamParser = self.streamParser;
     
     return [self getResource:@"statuses/sample.json"
                baseURLString:kBaseURLStringStream_1_1
@@ -1452,8 +1452,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(count) md[@"count"] = count;
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
-    self.streamParser = [[STTwitterParser alloc] init];
-    __weak STTwitterParser *streamParser = self.streamParser;
+    self.streamParser = [[STTwitterStreamParser alloc] init];
+    __weak STTwitterStreamParser *streamParser = self.streamParser;
     
     return [self getResource:@"statuses/firehose.json"
                baseURLString:kBaseURLStringStream_1_1
@@ -1497,8 +1497,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if([keywords length]) md[@"track"] = keywords;
     if([locations length]) md[@"locations"] = locations;
     
-    self.streamParser = [[STTwitterParser alloc] init];
-    __weak STTwitterParser *streamParser = self.streamParser;
+    self.streamParser = [[STTwitterStreamParser alloc] init];
+    __weak STTwitterStreamParser *streamParser = self.streamParser;
     
     return [self getResource:@"user.json"
                baseURLString:kBaseURLStringUserStream_1_1
@@ -1588,8 +1588,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSString *follow = [userIDs componentsJoinedByString:@","];
     if([follow length]) md[@"follow"] = follow;
     
-    self.streamParser = [[STTwitterParser alloc] init];
-    __weak STTwitterParser *streamParser = self.streamParser;
+    self.streamParser = [[STTwitterStreamParser alloc] init];
+    __weak STTwitterStreamParser *streamParser = self.streamParser;
     
     return [self getResource:@"site.json"
                baseURLString:kBaseURLStringSiteStream_1_1

@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, STTwitterStreamJSONType) {
 
 extern NSString *NSStringFromSTTwitterStreamJSONType(STTwitterStreamJSONType type);
 
-@interface STTwitterParser : NSObject
+@interface STTwitterStreamParser : NSObject
 
 - (void)parseWithStreamData:(NSData *)data
             parsedJSONBlock:(void (^)(NSDictionary *json, STTwitterStreamJSONType type))parsedJsonBlock;
