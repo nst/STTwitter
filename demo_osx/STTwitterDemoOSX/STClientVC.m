@@ -44,9 +44,11 @@
     return self;
 }
 
-
 - (IBAction)postTweet:(id)sender {
     
+    [_streamingRequest cancel];
+    self.streamingRequest = nil;
+
     self.twitterPostTweetStatus = @"-";
     
     if(_twitterPostMediaURL) {
@@ -95,6 +97,9 @@
 
 - (IBAction)getTimeline:(id)sender {
     
+    [_streamingRequest cancel];
+    self.streamingRequest = nil;
+
     self.twitterGetTimelineStatus = @"-";
     self.timelineStatuses = [NSArray array];
     
@@ -167,6 +172,7 @@
 - (IBAction)stopStreaming:(id)sender {
     
     [_streamingRequest cancel];
+    self.streamingRequest = nil;
     
     self.twitterStreamingStatus = @"Streaming stopped";
 }
