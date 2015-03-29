@@ -8,6 +8,7 @@
 
 #import "STMiscTests.h"
 #import "NSString+STTwitter.h"
+#import "STTwitterParser.h"
 
 @implementation STMiscTests
 
@@ -106,6 +107,31 @@
     int c = (int)[s st_numberOfCharactersInATweet];
     
     XCTAssertEqual(c, (int)kSTTwitterDefaultShortURLLengthHTTPS, @"c: %d", (int)c);
+}
+
+- (void)testParserOK {
+    NSString *s1 = @"11\r\n{\"a\":";
+    NSString *s2 = @"\"b\"}";
+    
+    NSData *data1 = [s1 dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data2 = [s2 dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *expectedDictionary = @{@"a":@"b"};
+    __block NSDictionary *readDictionary = nil;
+    
+    STTwitterParser *parser = [[STTwitterParser alloc] init];
+    
+    [parser parseWithStreamData:data1 parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+        XCTAssertFalse(YES, @"shouldn't have finished parsing incomplete JSON");
+    }];
+
+    [parser parseWithStreamData:data2 parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+        XCTAssertEqual(STTwitterStreamJSONTypeUnsupported, type);
+        readDictionary = json;
+    }];
+
+    XCTAssertNotNil(readDictionary);
+    XCTAssertEqualObjects(expectedDictionary, readDictionary);
 }
 
 @end
