@@ -1495,7 +1495,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 // GET user
 - (NSObject<STTwitterRequestProtocol> *)getUserStreamStallWarnings:(NSNumber *)stallWarnings
-                               includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                               includeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts // default: @(NO)
                                                     includeReplies:(NSNumber *)includeReplies
                                                    keywordsToTrack:(NSArray *)keywordsToTrack
                                              locationBoundingBoxes:(NSArray *)locationBoundingBoxes
@@ -1507,7 +1507,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     md[@"delimited"] = @"length";
     
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
-    if(includeMessagesFromFollowedAccounts) md[@"with"] = @"user"; // default is 'followings'
+    if(includeMessagesFromFollowedAccounts) md[@"with"] = @"followings";
     if(includeReplies && [includeReplies boolValue]) md[@"replies"] = @"all";
     
     NSString *keywords = [keywordsToTrack componentsJoinedByString:@","];
