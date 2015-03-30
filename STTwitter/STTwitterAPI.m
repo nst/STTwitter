@@ -230,6 +230,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             if(strongSelf == nil) return;
             
             [strongSelf setUserName:username];
+            [strongSelf setUserID:userID];
+            
             successBlock(username, userID);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
@@ -244,6 +246,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             NSString *userID = account[@"id_str"];
             
             [strongSelf setUserName:username];
+            [strongSelf setUserID:userID];
+            
             successBlock(username, userID);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
@@ -293,15 +297,22 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSString *)userName {
     
-#if TARGET_OS_IPHONE
-#else
     if([_oauth isKindOfClass:[STTwitterOS class]]) {
         STTwitterOS *twitterOS = (STTwitterOS *)_oauth;
         return twitterOS.username;
     }
-#endif
     
     return _userName;
+}
+
+- (NSString *)userID {
+    
+    if([_oauth isKindOfClass:[STTwitterOS class]]) {
+        STTwitterOS *twitterOS = (STTwitterOS *)_oauth;
+        return twitterOS.userID;
+    }
+    
+    return _userID;
 }
 
 /**/
