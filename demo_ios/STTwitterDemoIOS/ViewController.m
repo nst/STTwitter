@@ -69,9 +69,9 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
     
     self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account];
     
-    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {        
         
-        _loginStatusLabel.text = [NSString stringWithFormat:@"@%@", username];
+        _loginStatusLabel.text = [NSString stringWithFormat:@"@%@ (%@)", username, userID];
         
     } errorBlock:^(NSError *error) {
         _loginStatusLabel.text = [error localizedDescription];
@@ -122,7 +122,7 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
     [_twitter postAccessTokenRequestWithPIN:verifier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
         NSLog(@"-- screenName: %@", screenName);
         
-        _loginStatusLabel.text = screenName;
+        _loginStatusLabel.text = [NSString stringWithFormat:@"%@ (%@)", screenName, userID];
         
         /*
          At this point, the user can use the API and you can read his access tokens with:
@@ -163,7 +163,7 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
             
             STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithAccount:account];
             
-            [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
+            [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
                 
                 [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
                     
