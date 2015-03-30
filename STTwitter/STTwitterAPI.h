@@ -126,7 +126,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                               successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
@@ -135,7 +136,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (void)setTimeoutInSeconds:(NSTimeInterval)timeoutInSeconds; // optional
 
-@property (nonatomic, retain) NSString *userName; // available for osx, set after successful connection for STTwitterOAuth
+@property (nonatomic, retain) NSString *userName; // set after successful connection for STTwitterOAuth
+@property (nonatomic, retain) NSString *userID; // set after successful connection for STTwitterOAuth
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;

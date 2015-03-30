@@ -220,12 +220,12 @@
     return (_username && _password);
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
     if(_username == nil || _password == nil) return;
     
     [self postXAuthAccessTokenRequestWithUsername:_username password:_password successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
-        successBlock(screenName);
+        successBlock(screenName, userID);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
     }];

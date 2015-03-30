@@ -219,18 +219,20 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                errorBlock:errorBlock];
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
     STTwitterAPI * __weak weakSelf = self;
     
     if([_oauth canVerifyCredentials]) {
-        [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username) {
+        [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
             typeof(self) strongSelf = weakSelf;
             
             if(strongSelf == nil) return;
             
             [strongSelf setUserName:username];
-            successBlock(username);
+            [strongSelf setUserID:userID];
+            
+            successBlock(username, userID);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
@@ -240,11 +242,13 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             
             if(strongSelf == nil) return;
             
-            NSString *username = [account valueForKey:@"screen_name"];
-            if(username == nil) username = [account valueForKey:@"id_str"];
+            NSString *username = account[@"screen_name"];
+            NSString *userID = account[@"id_str"];
             
             [strongSelf setUserName:username];
-            successBlock(username);
+            [strongSelf setUserID:userID];
+            
+            successBlock(username, userID);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
@@ -293,15 +297,22 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSString *)userName {
     
-#if TARGET_OS_IPHONE
-#else
     if([_oauth isKindOfClass:[STTwitterOS class]]) {
         STTwitterOS *twitterOS = (STTwitterOS *)_oauth;
         return twitterOS.username;
     }
-#endif
     
     return _userName;
+}
+
+- (NSString *)userID {
+    
+    if([_oauth isKindOfClass:[STTwitterOS class]]) {
+        STTwitterOS *twitterOS = (STTwitterOS *)_oauth;
+        return twitterOS.userID;
+    }
+    
+    return _userID;
 }
 
 /**/

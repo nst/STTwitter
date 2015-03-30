@@ -15,6 +15,10 @@
 #import <Twitter/Twitter.h> // iOS 5
 #endif
 
+@interface ACAccount (STTwitterOS)
+- (NSString*)st_userID; // private API
+@end
+
 @interface STTwitterOS ()
 @property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
 @property (nonatomic, retain) ACAccount *account; // if nil, will be set to first account available
@@ -47,6 +51,10 @@
 
 - (NSString *)username {
     return self.account.username;
+}
+
+- (NSString *)userID {
+    return [self.account st_userID];
 }
 
 - (NSString *)consumerName {
@@ -84,7 +92,7 @@
 #endif
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     if([self hasAccessToTwitter] == NO) {
         NSString *message = @"This system cannot access Twitter.";
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSSystemCannotAccessTwitter userInfo:@{NSLocalizedDescriptionKey : message}];
@@ -151,7 +159,7 @@
                 strongSelf.account = [accountsWithIdentifiers firstObject];
             }
             
-            successBlock(strongSelf.account.username);
+            successBlock(strongSelf.account.username, [strongSelf.account st_userID]);
         }];
     };
     
@@ -360,6 +368,15 @@
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                errorBlock(error);
            }];
+}
+
+@end
+
+@implementation ACAccount (STTwitterOS)
+
+- (NSString*)st_userID
+{
+    return [self valueForKeyPath:@"properties.user_id"];
 }
 
 @end

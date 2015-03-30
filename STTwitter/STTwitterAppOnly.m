@@ -108,7 +108,7 @@
     return [data base64Encoding];
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     __weak typeof(self) weakSelf = self;
@@ -140,7 +140,7 @@
               
               strongSelf.bearerToken = [json valueForKey:@"access_token"];
               
-              successBlock(strongSelf.bearerToken);
+              successBlock(strongSelf.bearerToken, nil);
               
           } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
               errorBlock(error);

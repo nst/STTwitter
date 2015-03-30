@@ -244,7 +244,7 @@ static NSString *kCustomString = @"Custom...";
     
     self.osxStatus = @"-";
     
-    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
         self.osxStatus = [NSString stringWithFormat:@"Access granted for %@", username];
         [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
     } errorBlock:^(NSError *error) {
@@ -368,8 +368,7 @@ static NSString *kCustomString = @"Custom...";
                                                         username:_xAuthUsername
                                                         password:_xAuthPassword];
     
-    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
-        
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
         self.xAuthStatus = [NSString stringWithFormat:@"Access granted for %@", username];
         
         self.xAuthOAuthToken = _twitter.oauthAccessToken;
@@ -392,7 +391,7 @@ static NSString *kCustomString = @"Custom...";
                                                        consumerKey:_consumerKeyTextField.stringValue
                                                     consumerSecret:_consumerSecretTextField.stringValue];
     
-    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken, NSString *userID) {
         self.bearerToken = [_twitter bearerToken];
         [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
     } errorBlock:^(NSError *error) {
@@ -425,7 +424,7 @@ static NSString *kCustomString = @"Custom...";
                                                       oauthToken:_oauthToken
                                                 oauthTokenSecret:_oauthTokenSecret];
     
-    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {        
         
         self.oauthTokensStatus = [NSString stringWithFormat:@"Access granted for %@", username];
         
