@@ -126,7 +126,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                               successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;

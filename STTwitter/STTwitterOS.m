@@ -84,7 +84,7 @@
 #endif
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     if([self hasAccessToTwitter] == NO) {
         NSString *message = @"This system cannot access Twitter.";
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSSystemCannotAccessTwitter userInfo:@{NSLocalizedDescriptionKey : message}];
@@ -151,7 +151,7 @@
                 strongSelf.account = [accountsWithIdentifiers firstObject];
             }
             
-            successBlock(strongSelf.account.username);
+            successBlock(strongSelf.account.username, [strongSelf.account valueForKeyPath:@"properties.user_id"]);
         }];
     };
     

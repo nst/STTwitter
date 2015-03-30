@@ -219,18 +219,18 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                errorBlock:errorBlock];
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
     STTwitterAPI * __weak weakSelf = self;
     
     if([_oauth canVerifyCredentials]) {
-        [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username) {
+        [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
             typeof(self) strongSelf = weakSelf;
             
             if(strongSelf == nil) return;
             
             [strongSelf setUserName:username];
-            successBlock(username);
+            successBlock(username, userID);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
@@ -240,11 +240,11 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             
             if(strongSelf == nil) return;
             
-            NSString *username = [account valueForKey:@"screen_name"];
-            if(username == nil) username = [account valueForKey:@"id_str"];
+            NSString *username = account[@"screen_name"];
+            NSString *userID = account[@"id_str"];
             
             [strongSelf setUserName:username];
-            successBlock(username);
+            successBlock(username, userID);
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
