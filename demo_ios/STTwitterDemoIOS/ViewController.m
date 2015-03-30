@@ -69,7 +69,7 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
     
     self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account];
     
-    [_twitter verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {        
+    [_twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
         
         _loginStatusLabel.text = [NSString stringWithFormat:@"@%@ (%@)", username, userID];
         
@@ -163,7 +163,7 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
             
             STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithAccount:account];
             
-            [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
+            [twitterAPIOS verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
                 
                 [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader successBlock:^(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName) {
                     

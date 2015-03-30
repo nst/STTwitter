@@ -19,7 +19,7 @@ int main(int argc, const char * argv[])
 #warning use your own tokens here
         STTwitterAPI *twitter2 = [STTwitterAPI twitterAPIWithOAuthConsumerKey:@"" consumerSecret:@"" username:@"" password:@""];
         
-        [twitter verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
+        [twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
             NSLog(@"-- Account: %@", username);
             
             [twitter2 verifyCredentialsWithSuccessBlock:^(NSString *username) {

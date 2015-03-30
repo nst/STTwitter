@@ -219,7 +219,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                errorBlock:errorBlock];
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsWithUserSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
     STTwitterAPI * __weak weakSelf = self;
     
@@ -253,6 +253,14 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             errorBlock(error);
         }];
     }
+}
+
+// deprecated, use verifyCredentialsWithUserSuccessBlock:errorBlock:
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
+    [self verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
+        successBlock(username);
+    } errorBlock:errorBlock];
 }
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
