@@ -131,7 +131,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 // deprecated, use verifyCredentialsWithUserSuccessBlock:errorBlock:
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock __deprecated;
+                               errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("use verifyCredentialsWithUserSuccessBlock:errorBlock: instead");
 
 - (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
