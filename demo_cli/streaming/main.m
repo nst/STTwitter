@@ -16,7 +16,7 @@ int main(int argc, const char * argv[])
         
         STTwitterAPI *twitter = [STTwitterAPI twitterAPIOSWithFirstAccount];
         
-        [twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+        [twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
             NSLog(@"-- Account: %@", username);
             
             [twitter postStatusesFilterUserIDs:nil

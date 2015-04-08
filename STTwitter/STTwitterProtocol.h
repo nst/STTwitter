@@ -16,7 +16,7 @@
 @property (nonatomic) NSTimeInterval timeoutInSeconds;
 
 - (BOOL)canVerifyCredentials;
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
+- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSObject<STTwitterRequestProtocol> *)fetchResource:(NSString *)resource

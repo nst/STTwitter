@@ -21,7 +21,7 @@ int main(int argc, const char * argv[])
                                                               username:@""
                                                               password:@""];
         
-        [t verifyCredentialsWithSuccessBlock:^(NSString *username) {
+        [t verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
             
             [t fetchAndFollowCursorsForResource:@"followers/ids.json"
                                      HTTPMethod:@"GET"

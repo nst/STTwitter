@@ -98,7 +98,7 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerKey:@""
 ##### Verify the credentials
 
 ```Objective-C
-[twitter verifyCredentialsWithSuccessBlock:^(NSString *username) {
+[twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
     // ...
 } errorBlock:^(NSError *error) {
     // ...
@@ -140,7 +140,7 @@ NSObject <STTwitterRequestProtocol> *request = [twitter getStatusesSampleDelimit
 STTwitterAPI *twitter = [STTwitterAPI twitterAPIAppOnlyWithConsumerKey:@""
                                                         consumerSecret:@""];
 
-[twitter verifyCredentialsWithSuccessBlock:^(NSString *bearerToken) {
+[twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
 
     [twitter getUserTimelineWithScreenName:@"barackobama"
                               successBlock:^(NSArray *statuses) {
@@ -246,7 +246,7 @@ STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
 
     STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithFirstAccount];
 
-    [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
+    [twitterAPIOS verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
 
         [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
                                                             successBlock:^(NSString *oAuthToken,
