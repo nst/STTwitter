@@ -72,14 +72,14 @@ extern NSString *kBaseURLStringSiteStream_1_1;
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret
-                                     oauthToken:(NSString *)oauthToken
-                               oauthTokenSecret:(NSString *)oauthTokenSecret;
+                                     oauthToken:(NSString *)oauthToken // aka accessToken
+                               oauthTokenSecret:(NSString *)oauthTokenSecret; // aka accessTokenSecret
 
 // convenience
 + (instancetype)twitterAPIWithOAuthConsumerKey:(NSString *)consumerKey
                                 consumerSecret:(NSString *)consumerSecret
-                                    oauthToken:(NSString *)oauthToken
-                              oauthTokenSecret:(NSString *)oauthTokenSecret;
+                                    oauthToken:(NSString *)oauthToken // aka accessToken
+                              oauthTokenSecret:(NSString *)oauthTokenSecret; // aka accessTokenSecret
 
 // https://dev.twitter.com/docs/auth/application-only-auth
 + (instancetype)twitterAPIAppOnlyWithConsumerName:(NSString *)consumerName
