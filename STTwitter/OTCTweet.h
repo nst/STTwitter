@@ -44,8 +44,10 @@
     NSUInteger _retweetCount;
 
     // IDs
-    NSString __strong* _tweetIDString;
+    NSString* _tweetIDString;
     NSUInteger _tweetID;
+
+    NSString* _tweetText;
     }
 
 @property ( retain, readonly ) NSDictionary* JSONArray;
@@ -84,6 +86,26 @@
               Use `tweetIDString` for fetching the identifier to stay on the safe side.
   */
 @property ( assign, readonly ) NSUInteger tweetID;
+
+#pragma mark Content
+/** The actual UTF-8 text of the status update. 
+
+  @discussion See twitter-text for details on what is currently considered valid characters.
+  */
+@property ( copy, readonly ) NSString* tweetText;
+
+/** Utility used to post the Tweet, as an HTML-formatted string. 
+
+  @discussion Tweets from the Twitter website have a source value of web.
+  */
+@property ( copy, readonly ) NSString* source;
+
+/** When present, indicates a BCP 47 language identifier corresponding to the machine-detected language 
+    of the Tweet text, or “und” if no language could be detected.
+    
+  @dicussion Nilable.
+  */
+@property ( copy, readonly ) NSString* language;
 
 #pragma mark Initialization
 + ( instancetype ) statusWithJSON: ( NSDictionary* )_JSONDict;

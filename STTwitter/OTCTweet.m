@@ -42,6 +42,11 @@
 @synthesize tweetIDString = _tweetIDString;
 @synthesize tweetID = _tweetID;
 
+#pragma mark Content
+@synthesize tweetText = _tweetText;
+@synthesize source = _source;
+@synthesize language = _language;
+
 #pragma mark Initialization
 + ( instancetype ) statusWithJSON: ( NSDictionary* )_JSONDict
     {
@@ -63,6 +68,10 @@
 
         self->_tweetIDString = [ self->_JSONDict[ @"id_str" ] copy ];
         self->_tweetID = [ self->_JSONDict[ @"id" ] unsignedIntegerValue ];
+
+        self->_tweetText = [ self->_JSONDict[ @"text" ] copy ];
+        self->_source = [ self->_JSONDict[ @"source" ] copy ];
+        self->_language = [ self->_JSONDict[ @"lang" ] copy ];
         }
 
     return self;
