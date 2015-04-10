@@ -8,7 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OTCStatus : NSObject
+/** Tweets are the basic atomic building block of all things Twitter. 
+
+  @discussion Tweets, also known more generically as “status updates.” 
+              Tweets can be embedded, replied to, favorited, unfavorited and deleted.
+  */
+@interface OTCTweet : NSObject
     {
 @private
     NSDictionary __strong* _JSONDict;
@@ -68,4 +73,4 @@
 + ( instancetype ) statusWithJSON: ( NSDictionary* )_JSONDict;
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
-@end
+@end // OTCTweet

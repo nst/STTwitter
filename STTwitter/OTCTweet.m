@@ -6,10 +6,10 @@
 //
 //
 
-#import "OTCStatus.h"
+#import "OTCTweet.h"
 #import "NSDate+WSCCocoaDate.h"
 
-@implementation OTCStatus
+@implementation OTCTweet
 
 @synthesize JSONArray = _JSONDict;
 
@@ -52,4 +52,4 @@
     return self;
     }
 
-@end
+@end // OTCTweet
