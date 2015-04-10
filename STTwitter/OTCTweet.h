@@ -163,6 +163,12 @@
   */
 @property ( assign, readonly ) NSUInteger replyToTweetID;
 
+#pragma mark Resolving Tweet
+@property ( strong, readonly ) NSArray* hashtags;
+@property ( strong, readonly ) NSArray* financialSymbols;
+@property ( strong, readonly ) NSArray* URLsEmbedded;
+@property ( strong, readonly ) NSArray* userMentions;
+
 #pragma mark Initialization
 + ( instancetype ) statusWithJSON: ( NSDictionary* )_JSONDict;
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;

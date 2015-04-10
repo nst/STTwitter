@@ -22,115 +22,11 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "OTCTweet.h"
-#import "NSDate+WSCCocoaDate.h"
+#import "OTCEmbeddedURL.h"
 
-@implementation OTCTweet
+@implementation OTCEmbeddedURL
 
-@synthesize JSONArray = _JSONDict;
-
-#pragma mark Identifier
-@synthesize tweetIDString = _tweetIDString;
-@synthesize tweetID = _tweetID;
-
-#pragma mark Actions
-@synthesize isFavoritedByMe = _isFavoritedByMe;
-@synthesize favoriteCount = _favoriteCount;
-@synthesize isRetweetedByMe = _isRetweetedByMe;
-@synthesize retweetCount = _retweetCount;
-
-#pragma mark Content
-@synthesize tweetText = _tweetText;
-@synthesize dateCreated = _dataCreated;
-@synthesize source = _source;
-@synthesize language = _language;
-@synthesize isTruncated = _isTruncated;
-
-@synthesize replyToUserScreenName = _replyToUserScreenName;
-@synthesize replyToUserIDString = _replyToUserIDString;
-@synthesize replyToUserID = _replyToUserID;
-@synthesize replyToTweetIDString = _replyToTweetIDString;
-@synthesize replyToTweetID = _replyToTweetID;
-
-#pragma mark Initialization
-+ ( instancetype ) statusWithJSON: ( NSDictionary* )_JSONDict
-    {
-    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
-    }
-
-- ( NSString* ) _stringWhichHasBeenParsedOutOfJSON: ( NSString* )_JSONProperty
-    {
-    NSString* stringValue = self->_JSONDict[ _JSONProperty ];
-
-    NSAssert( [ stringValue isKindOfClass: [ NSString class ] ]
-                    || ( ( id )stringValue == [ NSNull null ] ), nil );
-
-    if ( ( id )stringValue == [ NSNull null ] )
-        return nil;
-
-    return [ stringValue copy ];
-    }
-
-- ( NSUInteger ) _unsignedIntWhichHasBeenParsedOutOfJSON: ( NSString* )_JSONProperty
-    {
-    NSNumber* cocoaNumber = self->_JSONDict[ _JSONProperty ];
-
-    NSAssert( [ cocoaNumber isKindOfClass: [ NSNumber class ] ]
-                    || ( ( id )cocoaNumber == [ NSNull null ] ), nil );
-
-    if ( ( id )cocoaNumber == [ NSNull null ] )
-        return 0U;
-
-    return cocoaNumber.unsignedIntegerValue;
-    }
-
-- ( BOOL ) _booleanWhichHasBeenParsedOutOfJSON: ( NSString* )_JSONProperty
-    {
-    NSNumber* cocoaBool = self->_JSONDict[ _JSONProperty ];
-
-    NSAssert( [ cocoaBool isKindOfClass: [ NSNumber class ] ]
-                    || ( ( id )cocoaBool == [ NSNull null ] ), nil );
-
-    if ( ( id )cocoaBool == [ NSNull null ] )
-        return 0U;
-
-    return cocoaBool.boolValue;
-    }
-
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSON
-    {
-    if ( !_JSON )
-        return nil;
-
-    if ( self = [ super init ] )
-        {
-        self->_JSONDict = _JSON;
-
-        self->_tweetIDString = [ self _stringWhichHasBeenParsedOutOfJSON: @"id_str" ];
-        self->_tweetID = [ self _unsignedIntWhichHasBeenParsedOutOfJSON: @"id" ];
-
-        self->_isFavoritedByMe = [ self _booleanWhichHasBeenParsedOutOfJSON: @"favorited" ];
-        self->_favoriteCount = [ self _unsignedIntWhichHasBeenParsedOutOfJSON: @"favorite_count" ];
-        self->_isRetweetedByMe = [ self _booleanWhichHasBeenParsedOutOfJSON: @"retweeted" ];
-        self->_retweetCount = [ self _unsignedIntWhichHasBeenParsedOutOfJSON: @"retweet_count" ];
-
-        self->_tweetText = [ self _stringWhichHasBeenParsedOutOfJSON: @"text" ];
-        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: [ self _stringWhichHasBeenParsedOutOfJSON: @"created_at" ] ] dateWithLocalTimeZone ];
-        self->_source = [ self _stringWhichHasBeenParsedOutOfJSON: @"source" ];
-        self->_language = [ self _stringWhichHasBeenParsedOutOfJSON: @"lang" ];
-        self->_isTruncated = [ self _booleanWhichHasBeenParsedOutOfJSON: @"truncated" ];
-
-        self->_replyToUserScreenName = [ self _stringWhichHasBeenParsedOutOfJSON: @"in_reply_to_screen_name" ];
-        self->_replyToUserIDString = [ self _stringWhichHasBeenParsedOutOfJSON: @"in_reply_to_user_id_str" ];
-        self->_replyToUserID = [ self _unsignedIntWhichHasBeenParsedOutOfJSON: @"in_reply_to_user_id" ];
-        self->_replyToTweetIDString = [ self _stringWhichHasBeenParsedOutOfJSON: @"in_reply_to_status_id_str" ];
-        self->_replyToTweetID = [ self _unsignedIntWhichHasBeenParsedOutOfJSON: @"in_reply_to_status_id" ];
-        }
-
-    return self;
-    }
-
-@end // OTCTweet
+@end
 
 /*=============================================================================================┐
 |                                                                                              |
