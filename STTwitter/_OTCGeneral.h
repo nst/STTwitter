@@ -22,84 +22,11 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "OTCTweet.h"
-#import "NSDate+WSCCocoaDate.h"
+#import <Foundation/Foundation.h>
 
-#import "_OTCGeneral.h"
-
-@implementation OTCTweet
-
-@synthesize JSONArray = _JSONDict;
-
-#pragma mark Identifier
-@synthesize tweetIDString = _tweetIDString;
-@synthesize tweetID = _tweetID;
-
-#pragma mark Actions
-@synthesize isFavoritedByMe = _isFavoritedByMe;
-@synthesize favoriteCount = _favoriteCount;
-@synthesize isRetweetedByMe = _isRetweetedByMe;
-@synthesize retweetCount = _retweetCount;
-
-#pragma mark Content
-@synthesize tweetText = _tweetText;
-@synthesize dateCreated = _dataCreated;
-@synthesize source = _source;
-@synthesize language = _language;
-@synthesize isTruncated = _isTruncated;
-
-@synthesize replyToUserScreenName = _replyToUserScreenName;
-@synthesize replyToUserIDString = _replyToUserIDString;
-@synthesize replyToUserID = _replyToUserID;
-@synthesize replyToTweetIDString = _replyToTweetIDString;
-@synthesize replyToTweetID = _replyToTweetID;
-
-#pragma mark Resolving Tweet
-@synthesize hashtags = _hashtags;
-@synthesize financialSymbols = _financialSymbols;
-@synthesize URLsEmbedded = _URLsEmbedded;
-@synthesize userMentions = _userMentions;
-
-#pragma mark Initialization
-+ ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
-    {
-    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
-    }
-
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSON
-    {
-    if ( !_JSON )
-        return nil;
-
-    if ( self = [ super init ] )
-        {
-        self->_JSONDict = _JSON;
-
-        self->_tweetIDString = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id_str" );
-        self->_tweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
-
-        self->_isFavoritedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorited" );
-        self->_favoriteCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorite_count" );
-        self->_isRetweetedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"retweeted" );
-        self->_retweetCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweet_count" );
-
-        self->_tweetText = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"text" );
-        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) ] dateWithLocalTimeZone ];
-        self->_source = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"source" );
-        self->_language = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"lang" );
-        self->_isTruncated = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"truncated" );
-
-        self->_replyToUserScreenName = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_screen_name" );
-        self->_replyToUserIDString = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id_str" );
-        self->_replyToUserID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id" );
-        self->_replyToTweetIDString = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id_str" );
-        self->_replyToTweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id" );
-        }
-
-    return self;
-    }
-
-@end // OTCTweet
+NSString* _OTCStringWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
+NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
+BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
 
 /*=============================================================================================┐
 |                                                                                              |
