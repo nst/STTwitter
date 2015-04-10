@@ -25,6 +25,30 @@
 #import <Foundation/Foundation.h>
 
 @interface OTCEmbeddedURL : NSObject
+    {
+@private
+    NSURL __strong* _displayURL;
+    NSURL __strong* _expandedURL;
+    NSURL __strong* _originalURL;
+    }
+
+/** Preferred representation of the URL included in the text of a Tweet.
+  */
+@property ( strong, readonly ) NSURL* displayURL;
+
+/** Integral representation (expanded) of the URL included in the text of a Tweet.
+  */
+@property ( strong, readonly ) NSURL* expandedURL;
+
+/** Orignal URL included in the text of a Tweet.
+
+  @discussion In mose cases, it was wrapped by t.co.
+  */
+@property ( strong, readonly ) NSURL* originalURL;
+
+#pragma mark Initialization
++ ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict;
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 

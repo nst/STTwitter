@@ -26,6 +26,29 @@
 
 @implementation OTCEmbeddedURL
 
+@synthesize displayURL = _displayURL;
+@synthesize expandedURL = _expandedURL;
+@synthesize originalURL = _originalURL;
+
+#pragma mark Initialization
+//+ ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict
+//    {
+//
+//    }
+
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( !_JSONDict )
+        return nil;
+
+    if ( self = [ super init ] )
+        {
+        
+        }
+
+    return self;
+    }
+
 @end
 
 /*=============================================================================================┐
