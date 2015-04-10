@@ -29,23 +29,28 @@
 
 @synthesize JSONArray = _JSONDict;
 
-#pragma mark Attributes
-@synthesize dateCreated = _dataCreated;
+#pragma mark Identifier
+@synthesize tweetIDString = _tweetIDString;
+@synthesize tweetID = _tweetID;
 
-// Attributes
+#pragma mark Actions
 @synthesize isFavoritedByMe = _isFavoritedByMe;
 @synthesize favoriteCount = _favoriteCount;
 @synthesize isRetweetedByMe = _isRetweetedByMe;
 @synthesize retweetCount = _retweetCount;
 
-// IDs
-@synthesize tweetIDString = _tweetIDString;
-@synthesize tweetID = _tweetID;
-
 #pragma mark Content
 @synthesize tweetText = _tweetText;
+@synthesize dateCreated = _dataCreated;
 @synthesize source = _source;
 @synthesize language = _language;
+@synthesize isTruncated = _isTruncated;
+
+@synthesize replyToUserScreenName = _replyToUserScreenName;
+@synthesize replyToUserIDString = _replyToUserIDString;
+@synthesize replyToUserID = _replyToUserID;
+@synthesize replyToTweetIDString = _replyToTweetIDString;
+@synthesize replyToTweetID = _replyToTweetID;
 
 #pragma mark Initialization
 + ( instancetype ) statusWithJSON: ( NSDictionary* )_JSONDict
@@ -59,19 +64,25 @@
         {
         self->_JSONDict = _JSON;
 
-        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: self->_JSONDict[ @"created_at" ] ] dateWithLocalTimeZone ];
+        self->_tweetIDString = [ self->_JSONDict[ @"id_str" ] copy ];
+        self->_tweetID = [ self->_JSONDict[ @"id" ] unsignedIntegerValue ];
 
         self->_isFavoritedByMe = [ self->_JSONDict[ @"favorited" ] boolValue ];
         self->_favoriteCount = [ self->_JSONDict[ @"favorite_count" ] unsignedIntegerValue ];
         self->_isRetweetedByMe = [ self->_JSONDict[ @"retweeted" ] boolValue ];
         self->_retweetCount = [ self->_JSONDict[ @"retweet_count" ] unsignedIntegerValue ];
 
-        self->_tweetIDString = [ self->_JSONDict[ @"id_str" ] copy ];
-        self->_tweetID = [ self->_JSONDict[ @"id" ] unsignedIntegerValue ];
-
         self->_tweetText = [ self->_JSONDict[ @"text" ] copy ];
+        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: self->_JSONDict[ @"created_at" ] ] dateWithLocalTimeZone ];
         self->_source = [ self->_JSONDict[ @"source" ] copy ];
         self->_language = [ self->_JSONDict[ @"lang" ] copy ];
+        self->_isTruncated = [ self->_JSONDict[ @"truncated" ] boolValue ];
+
+        self->_replyToUserScreenName = [ self->_JSONDict[ @"in_reply_to_screen_name" ] copy ];
+        self->_replyToUserIDString = [ self->_JSONDict[ @"in_reply_to_user_id_str" ] copy ];
+        self->_replyToUserID = [ self->_JSONDict[ @"in_reply_to_user_id" ] unsignedIntegerValue ];
+        self->_replyToTweetIDString = [ self->_JSONDict[ @"in_reply_to_status_id_str" ] copy ];
+        self->_replyToTweetID = [ self->_JSONDict[ @"in_reply_to_status_id" ] unsignedIntegerValue ];
         }
 
     return self;
@@ -80,6 +91,8 @@
 @end // OTCTweet
 
 /*=============================================================================================┐
+|                                                                                              |
+|                                   The BSD 3-Clause License                                   |
 |                                                                                              |
 |                            Copyright (c) 2015, Tong Guo (NSTongG)                            |
 |                                     All rights reserved.                                     |
@@ -105,7 +118,5 @@
 |      EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF      |
 |    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)    |
 |   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR   |
-|      TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS      |
-|                 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                 |
 |                                                                                              |
 └=============================================================================================*/
