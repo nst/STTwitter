@@ -27,20 +27,24 @@
 @interface OTCEmbeddedURL : NSObject
     {
 @private
-    NSURL __strong* _displayURL;
+    NSDictionary __strong* _JSONObject;
+
+    NSString* _displayURL;
     NSURL __strong* _expandedURL;
     NSURL __strong* _originalURL;
     }
 
-/** Preferred representation of the URL included in the text of a Tweet.
+@property ( strong, readonly ) NSDictionary* JSONObject;
+
+/** Preferred version of the URL to display to clients.
   */
-@property ( strong, readonly ) NSURL* displayURL;
+@property ( copy, readonly ) NSString* displayURL;
 
 /** Integral representation (expanded) of the URL included in the text of a Tweet.
   */
 @property ( strong, readonly ) NSURL* expandedURL;
 
-/** Orignal URL included in the text of a Tweet.
+/** Orignal URL embedded directly into the raw Tweet text.
 
   @discussion In mose cases, it was wrapped by t.co.
   */

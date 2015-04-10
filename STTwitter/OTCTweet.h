@@ -56,6 +56,12 @@
     NSUInteger _replyToUserID;
     NSString* _replyToTweetIDString;
     NSUInteger _replyToTweetID;
+
+    // Resolving Tweet
+    NSArray __strong* _hashtags;
+    NSArray __strong* _financialSymbols;
+    NSArray __strong* _URLsEmbedded;
+    NSArray __strong* _userMentions;
     }
 
 @property ( retain, readonly ) NSDictionary* JSONArray;

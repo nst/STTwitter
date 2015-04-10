@@ -54,6 +54,12 @@
 @synthesize replyToTweetIDString = _replyToTweetIDString;
 @synthesize replyToTweetID = _replyToTweetID;
 
+#pragma mark Resolving Tweet
+@synthesize hashtags = _hashtags;
+@synthesize financialSymbols = _financialSymbols;
+@synthesize URLsEmbedded = _URLsEmbedded;
+@synthesize userMentions = _userMentions;
+
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
     {

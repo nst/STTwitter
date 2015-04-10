@@ -28,6 +28,9 @@ NSString* _OTCStringWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSSt
     {
     NSString* stringValue = _JSONObject[ _JSONPropertyKey ];
 
+    if ( !stringValue )
+        return nil;
+
     assert( [ stringValue isKindOfClass: [ NSString class ] ] || ( ( id )stringValue == [ NSNull null ] ) );
 
     if ( ( id )stringValue == [ NSNull null ] )
@@ -40,6 +43,9 @@ NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
     {
     NSNumber* cocoaNumber = _JSONObject[ _JSONPropertyKey ];
 
+    if ( !cocoaNumber )
+        return 0U;
+
     assert( [ cocoaNumber isKindOfClass: [ NSNumber class ] ] || ( ( id )cocoaNumber == [ NSNull null ] ) );
 
     if ( ( id )cocoaNumber == [ NSNull null ] )
@@ -51,6 +57,9 @@ NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
 BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
     {
     NSNumber* cocoaBool = _JSONObject[ _JSONPropertyKey ];
+
+    if ( !cocoaBool )
+        return NO;
 
     assert( [ cocoaBool isKindOfClass: [ NSNumber class ] ] || ( ( id )cocoaBool == [ NSNull null ] ) );
 

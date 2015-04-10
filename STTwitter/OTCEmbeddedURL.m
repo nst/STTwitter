@@ -24,7 +24,11 @@
 
 #import "OTCEmbeddedURL.h"
 
+#import "_OTCGeneral.h"
+
 @implementation OTCEmbeddedURL
+
+@synthesize JSONObject = _JSONObject;
 
 @synthesize displayURL = _displayURL;
 @synthesize expandedURL = _expandedURL;
@@ -43,7 +47,11 @@
 
     if ( self = [ super init ] )
         {
-        
+        self->_JSONObject = _JSONDict;
+
+        self->_displayURL = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" );
+        self->_expandedURL = [ NSURL URLWithString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) ];
+        self->_originalURL = [ NSURL URLWithString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) ];
         }
 
     return self;
