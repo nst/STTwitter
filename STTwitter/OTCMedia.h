@@ -22,166 +22,76 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCEmbeddedURL.h"
 
-/** Tweets are the basic atomic building block of all things Twitter. 
+typedef NS_ENUM( NSUInteger, OTCMediaType )
+    {
+    /// Unknown
+      OTCMediaTypeUnknown = 0
 
-  @discussion Tweets, also known more generically as “status updates.” 
-              Tweets can be embedded, replied to, favorited, unfavorited and deleted.
-  */
-@interface OTCTweet : NSObject
+    /// Identifies a photo
+    , OTCMediaTypePhoto = 1
+
+    /// Identifies a video
+    , OTCMediaTypeVideo = 2
+    };
+
+@interface OTCMedia : OTCEmbeddedURL
     {
 @private
-    NSDictionary __strong* _JSONDict;
-
     // Identifier
-    NSString* _tweetIDString;
-    NSUInteger _tweetID;
-
-    // Actions
-    BOOL _isFavoritedByMe;
-    NSUInteger _favoriteCount;
-    BOOL _isRetweetedByMe;
-    NSUInteger _retweetCount;
+    NSString* _mediaIDString;
+    NSUInteger _mediaID;
 
     // Content
-    NSString* _tweetText;
-    NSDate __strong* _dateCreated;
-    NSString* _source;
-    NSString* _language;
-    BOOL _isTruncated;
+    NSURL __strong* _mediaURL;
+    NSURL __strong* _mediaURLOverSSL;
 
-    NSString* _replyToUserScreenName;
-    NSString* _replyToUserIDString;
-    NSUInteger _replyToUserID;
-    NSString* _replyToTweetIDString;
-    NSUInteger _replyToTweetID;
-
-    // Resolving Tweet
-    NSArray __strong* _hashtags;
-    NSArray __strong* _financialSymbols;
-    NSArray __strong* _embeddedURLs;
-    NSArray __strong* _userMentions;
-    NSArray __strong* _media;
+    OTCMediaType _mediaType;
     }
 
-@property ( retain, readonly ) NSDictionary* JSONArray;
-
 #pragma mark Identifier
-/** The string representation of the unique identifier for this Tweet. 
+/** The string representation of the unique identifier for media
 
-  @discussion Your app should use this rather than the large integer returned by `tweetID`.
+  @discussion Your app should use this rather than the large integer returned by `mediaID`
   */
-@property ( copy, readonly ) NSString* tweetIDString;
+@property ( copy, readonly ) NSString* mediaIDString;
 
 /** The unsigned integer representation of the unique identifier for this Tweet. 
 
   @discussion This number is greater than 53 bits and some programming languages may have 
               difficulty/silent defects in interpreting it.
               Using a signed 64 bit integer for storing this identifier is safe.
-              Use `tweetIDString` for fetching the identifier to stay on the safe side.
+              Use `mediaIDString` for fetching the identifier to stay on the safe side.
   */
-@property ( assign, readonly ) NSUInteger tweetID;
-
-#pragma mark Actions
-/** Indicates whether this Tweet has been favorited by the authenticating user. */
-@property ( assign, readonly ) BOOL isFavoritedByMe;
-
-/** Indicates approximately how many times this Tweet has been “favorited” by Twitter users. */
-@property ( assign, readonly ) NSUInteger favoriteCount;
-
-/** Indicates whether this Tweet has been retweeted by the authenticating user.
-  */
-@property ( assign, readonly ) BOOL isRetweetedByMe;
-
-/** Number of times this Tweet has been retweeted. 
-
-  @discussion This field is no longer capped at 99 and will not turn into a String for “100+”
-  */
-@property ( assign, readonly ) NSUInteger retweetCount;
+@property ( assign, readonly ) NSUInteger mediaID;
 
 #pragma mark Content
-/** The actual UTF-8 text of the status update. 
 
-  @discussion See twitter-text for details on what is currently considered valid characters.
+/** An http:// URL pointing directly to the uploaded media file.
+
+  @discussion For media in direct messages, `mediaURL` is the same https URL as `mediaURLOverSSL` 
+              and must be accessed via an authenticated twitter.com session or by signing a request
+              with the user’s access token using OAuth 1.0A. 
+              It is not possible to directly embed these images in a web page.
   */
-@property ( copy, readonly ) NSString* tweetText;
+@property ( strong, readonly ) NSURL* mediaURL;
 
-/** UTC time when this Tweet was created. */
-@property ( retain, readonly ) NSDate* dateCreated;
 
-/** Utility used to post the Tweet, as an HTML-formatted string. 
+/** An https:// URL pointing directly to the uploaded media file, for embedding on https pages.
 
-  @discussion Tweets from the Twitter website have a source value of web.
+  @dicussion For media in direct messages, `mediaURLOverSSL` must be accessed via an authenticated twitter.com 
+             session or by signing a request with the user’s access token using OAuth 1.0A. 
+             It is not possible to directly embed these images in a web page.
   */
-@property ( copy, readonly ) NSString* source;
+@property ( strong, readonly ) NSURL* mediaURLOverSSL;
 
-/** When present, indicates a BCP 47 language identifier corresponding to the machine-detected language 
-    of the Tweet text, or “und” if no language could be detected.
-    
-  @return This property is nilable.
-  */
-@property ( copy, readonly ) NSString* language;
-
-/** Indicates whether the value of the text parameter was truncated, for example, 
-    as a result of a retweet exceeding the 140 character Tweet length. 
-    
-  @discussion Truncated text will end in ellipsis, like this ... 
-              Since Twitter now rejects long Tweets vs truncating them, 
-              the large majority of Tweets will have this set to `NO`.
-              Note that while native retweets may have their toplevel text property shortened, 
-              the original text will be available under the `retweetedTweet` property and the `isTruncated`
-              property will be set to the value of the original status (in most cases, `NO`).
-  */
-@property ( assign, readonly ) BOOL isTruncated;
-
-/** If the represented Tweet is a reply, this property represents the screen name of the original Tweet’s author.
-
-  @return This property is nilable.
-  */
-@property ( copy, readonly ) NSString* replyToUserScreenName;
-
-/** If the represented Tweet is a reply, this property represents the string
-    representation of the original Tweet’s author ID. 
-    
-  @discussion This will not necessarily always be the user directly mentioned in the Tweet.
-  
-  @return This property is nilable.
-  */
-@property ( copy, readonly ) NSString* replyToUserIDString;
-
-/** If the represented Tweet is a reply, this property represents the integer representation of the original Tweet’s author ID.
-    
-  @discussion This will not necessarily always be the user directly mentioned in the Tweet.
-  
-  @return This property is probably zero.
-  */
-@property ( assign, readonly ) NSUInteger replyToUserID;
-
-/** If the represented Tweet is a reply, this property represents the string representation of the original Tweet’s ID.
-
-  @return This property is nilable.
-  */
-@property ( copy, readonly ) NSString* replyToTweetIDString;
-
-/** If the represented Tweet is a reply, this property represents the integer representation of the original Tweet’s ID.
-
-  @return This property is probably zero.
-  */
-@property ( assign, readonly ) NSUInteger replyToTweetID;
-
-#pragma mark Resolving Tweet
-@property ( strong, readonly ) NSArray* hashtags;
-@property ( strong, readonly ) NSArray* financialSymbols;
-@property ( strong, readonly ) NSArray* embeddedURLs;
-@property ( strong, readonly ) NSArray* userMentions;
-@property ( strong, readonly ) NSArray* media;
+@property ( assign, readonly ) OTCMediaType mediaType;
 
 #pragma mark Initialization
-+ ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict;
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
++ ( instancetype ) mediaWithJSON: ( NSDictionary* )_JSONDict;
 
-@end // OTCTweet
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

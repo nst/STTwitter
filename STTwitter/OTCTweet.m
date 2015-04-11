@@ -29,6 +29,7 @@
 #import "OTCFinancialSymbol.h"
 #import "OTCEmbeddedURL.h"
 #import "OTCUserMention.h"
+#import "OTCMedia.h"
 #import "NSDate+WSCCocoaDate.h"
 
 #import "_OTCGeneral.h"
@@ -65,6 +66,7 @@
 @synthesize financialSymbols = _financialSymbols;
 @synthesize embeddedURLs = _embeddedURLs;
 @synthesize userMentions = _userMentions;
+@synthesize media = _media;
 
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
@@ -130,6 +132,11 @@
                     kindOfResolvedObject = [ OTCUserMention class ];
                     initMethodOfResolvedObject = @selector( userMentionWithJSON: );
                     }
+                else if ( [ _PropertyKey isEqualToString: @"media" ] )
+                    {
+                    kindOfResolvedObject = [ OTCMedia class ];
+                    initMethodOfResolvedObject = @selector( mediaWithJSON: );
+                    }
 
                 // As a consumers of Tweets,
                 // we should tolerate the addition of new fields and variance in ordering of fields with ease.
@@ -149,6 +156,8 @@
                         self->_financialSymbols = tmp;
                     else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
                         self->_userMentions = tmp;
+                    else if ( [ _PropertyKey isEqualToString: @"media" ] )
+                        self->_media = tmp;
                     }
                 }
             }
