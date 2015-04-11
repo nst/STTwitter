@@ -31,10 +31,20 @@
 @synthesize text = _text;
 
 #pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ @{ NSLocalizedString( @"Finacial Symbol", nil ) : ( self->_text ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
+    }
+
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
     if ( self = [ super initWithJSON: _JSONDict ] )
-        self->_text = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
+        {
+        NSString* extractedText = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
+        self->_text = extractedText ? [ [ @"$" stringByAppendingString: extractedText ] copy ] : nil;
+        }
 
     return self;
     }

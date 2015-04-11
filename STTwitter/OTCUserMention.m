@@ -34,6 +34,16 @@
 @synthesize screenName = _screenName;
 
 #pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ @{ NSLocalizedString( @"User ID", nil ) : ( self->_userIDString ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display Name", nil ) : ( self->_displayName ?: [ NSNull null ] )
+              , NSLocalizedString( @"Screen Name", nil ) : ( self->_screenName ?: [ NSNull null ] )
+              , NSLocalizedString( @"Text", nil ) : ( self->_screenName ? [ @"@" stringByAppendingString: self->_screenName ] : [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
+    }
+
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
     if ( self = [ super initWithJSON: _JSONDict ] )
