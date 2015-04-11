@@ -22,44 +22,36 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCFinancialSymbol.h"
 
-/** The `OTCResolvedObject` defines the basic property of an resolved object.
-  
-  Resolved object provides metadata and additional contextual information about content posted on Twitter,
-  such as the embedded URLs, hashtags, financial symbols and user mentions.
-  
-  You typically do not use `OTCResolvedObject` object directly, you use objects whose classes descend from this class:
-  
-  + `OTCHashtag`
-  + `OTCEmbeddedURL`
-  + `OTCFinancialSymbol`
-  + `OTCUserMention`
-  */
-@interface OTCResolvedObject : NSObject
+#import "_OTCGeneral.h"
+
+@implementation OTCFinancialSymbol
+
+#pragma mark Overrides
+- ( NSString* ) description
     {
-@protected
-    NSDictionary __strong* _JSONObject;
-
-    NSString* _displayText;
-    NSRange _position;
+    return [ @{ NSLocalizedString( @"Finacial Symbol", nil ) : ( self->_displayText ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
     }
 
-@property ( strong, readonly ) NSDictionary* JSONObject;
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        {
+        NSString* extractedText = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
+        self->_displayText = extractedText ? [ [ @"$" stringByAppendingString: extractedText ] copy ] : nil;
+        }
 
-/** Preferred version of the entities extracted from Tweet to display to clients.
-  */
-@property ( copy, readonly ) NSString* displayText;
-
-/** An NSRange data structure representing offsets within the Tweet text where the entities represented by receiver begins and ends.
-  
-  @discussion The first integer represents the location of the first character of the entity represented by receiver in the Tweet text.
-              The second integer represents the length of it.
-  */
-@property ( assign, readonly ) NSRange position;
+    return self;
+    }
 
 #pragma mark Initialization
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
++ ( instancetype ) financialSymbolWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
 
 @end
 

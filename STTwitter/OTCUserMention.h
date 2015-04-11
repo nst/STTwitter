@@ -22,9 +22,46 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "TALHashtag.h"
+#import "OTCResolvedObject.h"
 
-@implementation TALHashtag
+/** A Twitter screen names extracted from the Tweet text. 
+    Each user mention entity comes with the following attributes:
+
+  |   Property Key   |                      Description                             |
+  | :--------------: | :----------------------------------------------------------: |
+  |       id         |                The user ID (int format)                      |
+  |     id_str       |              The user ID (string format)                     |
+  |   screen_name    |                 The user screen name                         |
+  |      name        |                The user display name                         |
+  |     indices      |      The character positions the URL was extracted from      |
+  */
+@interface OTCUserMention : OTCResolvedObject
+    {
+@private
+    NSUInteger _userID;
+    NSString* _userIDString;
+    NSString* _displayName;
+    NSString* _screenName;
+    }
+
+/** ID of the mentioned user, as an integer.
+  */
+@property ( assign, readonly ) NSUInteger userID;
+
+/** If of the mentioned user, as a string.
+  */
+@property ( copy, readonly ) NSString* userIDString;
+
+/** Display name of the referenced user.
+  */
+@property ( copy, readonly ) NSString* displayName;
+
+/** Screen name of the referenced user.
+  */
+@property ( copy, readonly ) NSString* screenName;
+
+#pragma mark Initialization
++ ( instancetype ) userMentionWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 

@@ -22,44 +22,20 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCResolvedObject.h"
 
-/** The `OTCResolvedObject` defines the basic property of an resolved object.
-  
-  Resolved object provides metadata and additional contextual information about content posted on Twitter,
-  such as the embedded URLs, hashtags, financial symbols and user mentions.
-  
-  You typically do not use `OTCResolvedObject` object directly, you use objects whose classes descend from this class:
-  
-  + `OTCHashtag`
-  + `OTCEmbeddedURL`
-  + `OTCFinancialSymbol`
-  + `OTCUserMention`
+/** An financial symbols starting with the dollar sign extracted from the Tweet text. 
+    Similar to hashtags, an entity comes with the following attributes:
+    
+  |   Property Key   |                      Description                             |
+  | :--------------: | :----------------------------------------------------------: |
+  |       text       |                    The symbol text                           |
+  |     indices      |      The character positions the URL was extracted from      |
   */
-@interface OTCResolvedObject : NSObject
-    {
-@protected
-    NSDictionary __strong* _JSONObject;
-
-    NSString* _displayText;
-    NSRange _position;
-    }
-
-@property ( strong, readonly ) NSDictionary* JSONObject;
-
-/** Preferred version of the entities extracted from Tweet to display to clients.
-  */
-@property ( copy, readonly ) NSString* displayText;
-
-/** An NSRange data structure representing offsets within the Tweet text where the entities represented by receiver begins and ends.
-  
-  @discussion The first integer represents the location of the first character of the entity represented by receiver in the Tweet text.
-              The second integer represents the length of it.
-  */
-@property ( assign, readonly ) NSRange position;
+@interface OTCFinancialSymbol : OTCResolvedObject
 
 #pragma mark Initialization
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
++ ( instancetype ) financialSymbolWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 

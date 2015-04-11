@@ -27,10 +27,6 @@
 #import "_OTCGeneral.h"
 
 @implementation OTCEmbeddedURL
-
-@synthesize JSONObject = _JSONObject;
-
-@synthesize displayURL = _displayURL;
 @synthesize expandedURL = _expandedURL;
 @synthesize originalURL = _originalURL;
 
@@ -39,42 +35,27 @@
     {
     return [ @{ NSLocalizedString( @"Original URL (wrapped by t.co)", nil ) : ( self->_originalURL ?: [ NSNull null ] )
               , NSLocalizedString( @"Expanded URL", nil ) : ( self->_expandedURL ?: [ NSNull null ] )
-              , NSLocalizedString( @"Display URL", nil ) : ( self->_displayURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display URL", nil ) : ( self->_displayText ?: [ NSNull null ] )
               , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
               } description ];
+    }
+
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        {
+        self->_displayText = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" ) copy ];
+        self->_expandedURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) copy ] ];
+        self->_originalURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) copy ] ];
+        }
+
+    return self;
     }
 
 #pragma mark Initialization
 + ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict
     {
     return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
-    }
-
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
-    {
-    if ( !_JSONDict )
-        return nil;
-
-    if ( self = [ super init ] )
-        {
-        self->_JSONObject = _JSONDict;
-
-        self->_displayURL = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" ) copy ];
-        self->_expandedURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) copy ] ];
-        self->_originalURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) copy ] ];
-
-        NSArray* indices = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"indices" );
-        if ( indices )
-            {
-            NSUInteger begins = [ indices.firstObject unsignedIntegerValue ];
-            NSUInteger ends = [ indices.lastObject unsignedIntegerValue ];
-
-            self->_position.location = begins;
-            self->_position.length = ends - begins;
-            }
-        }
-
-    return self;
     }
 
 @end

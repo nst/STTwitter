@@ -22,8 +22,13 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
+#import <objc/message.h>
+
 #import "OTCTweet.h"
+#import "OTCHashtag.h"
+#import "OTCFinancialSymbol.h"
 #import "OTCEmbeddedURL.h"
+#import "OTCUserMention.h"
 #import "NSDate+WSCCocoaDate.h"
 
 #import "_OTCGeneral.h"
@@ -99,14 +104,46 @@
         NSDictionary* entitiesParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
         for ( NSString* _PropertyKey in entitiesParsedOutOfJSON )
             {
-            if ( [ _PropertyKey isEqualToString: @"urls" ] )
-                {
-                NSMutableArray* embeddedURLs = [ NSMutableArray array ];
-                NSArray* URLs_parsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesParsedOutOfJSON, @"urls" );
-                for ( NSDictionary* _URLObject in URLs_parsedOutOfJSON )
-                    [ embeddedURLs addObject: [ OTCEmbeddedURL embeddedURLWithJSON: _URLObject ] ];
+            NSArray* metaDataParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesParsedOutOfJSON, _PropertyKey );
 
-                self->_embeddedURLs = [ embeddedURLs copy ];
+            if ( metaDataParsedOutOfJSON.count > 0 )
+                {
+                Class kindOfResolvedObject = nil;
+                SEL initMethodOfResolvedObject = nil;
+                if ( [ _PropertyKey isEqualToString: @"urls" ] )
+                    {
+                    kindOfResolvedObject = [ OTCEmbeddedURL class ];
+                    initMethodOfResolvedObject = @selector( embeddedURLWithJSON: );
+                    }
+                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
+                    {
+                    kindOfResolvedObject = [ OTCHashtag class ];
+                    initMethodOfResolvedObject = @selector( hashtagWithJSON: );
+                    }
+                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
+                    {
+                    kindOfResolvedObject = [ OTCFinancialSymbol class ];
+                    initMethodOfResolvedObject = @selector( financialSymbolWithJSON: );
+                    }
+                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
+                    {
+                    kindOfResolvedObject = [ OTCUserMention class ];
+                    initMethodOfResolvedObject = @selector( userMentionWithJSON: );
+                    }
+
+                NSMutableArray* wrappedEntities = [ NSMutableArray array ];
+                for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
+                    [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
+
+                NSArray* tmp = [ wrappedEntities copy ];
+                if ( [ _PropertyKey isEqualToString: @"urls" ] )
+                    self->_embeddedURLs = tmp;
+                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
+                    self->_hashtags = tmp;
+                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
+                    self->_financialSymbols = tmp;
+                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
+                    self->_userMentions = tmp;
                 }
             }
         }

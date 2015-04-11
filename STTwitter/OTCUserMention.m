@@ -22,44 +22,47 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCUserMention.h"
 
-/** The `OTCResolvedObject` defines the basic property of an resolved object.
-  
-  Resolved object provides metadata and additional contextual information about content posted on Twitter,
-  such as the embedded URLs, hashtags, financial symbols and user mentions.
-  
-  You typically do not use `OTCResolvedObject` object directly, you use objects whose classes descend from this class:
-  
-  + `OTCHashtag`
-  + `OTCEmbeddedURL`
-  + `OTCFinancialSymbol`
-  + `OTCUserMention`
-  */
-@interface OTCResolvedObject : NSObject
+#import "_OTCGeneral.h"
+
+@implementation OTCUserMention
+
+@synthesize userID = _userID;
+@synthesize userIDString = _userIDString;
+@synthesize displayName = _displayName;
+@synthesize screenName = _screenName;
+
+#pragma mark Overrides
+- ( NSString* ) description
     {
-@protected
-    NSDictionary __strong* _JSONObject;
-
-    NSString* _displayText;
-    NSRange _position;
+    return [ @{ NSLocalizedString( @"User ID", nil ) : ( self->_userIDString ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display Name", nil ) : ( self->_displayName ?: [ NSNull null ] )
+              , NSLocalizedString( @"Screen Name", nil ) : ( self->_screenName ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display Text", nil ) : ( self->_displayText ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
     }
 
-@property ( strong, readonly ) NSDictionary* JSONObject;
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        {
+        self->_userID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id" );
+        self->_userIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id_str" ) copy ];
+        self->_displayName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"name" ) copy ];
+        self->_screenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"screen_name" ) copy ];
+        self->_displayText = self->_screenName ? [ [ @"@" stringByAppendingString: self->_screenName ] copy ] : nil;
+        }
 
-/** Preferred version of the entities extracted from Tweet to display to clients.
-  */
-@property ( copy, readonly ) NSString* displayText;
-
-/** An NSRange data structure representing offsets within the Tweet text where the entities represented by receiver begins and ends.
-  
-  @discussion The first integer represents the location of the first character of the entity represented by receiver in the Tweet text.
-              The second integer represents the length of it.
-  */
-@property ( assign, readonly ) NSRange position;
+    return self;
+    }
 
 #pragma mark Initialization
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
++ ( instancetype ) userMentionWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
 
 @end
 

@@ -22,9 +22,36 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "OTCResolvedObject.h"
+#import "OTCHashtag.h"
 
-@interface TALHashtag : OTCResolvedObject
+#import "_OTCGeneral.h"
+
+@implementation OTCHashtag
+
+#pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ @{ NSLocalizedString( @"Hashtag", nil ) : ( self->_displayText ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
+    }
+
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        {
+        NSString* extractedText = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
+        self->_displayText = extractedText ? [ [ @"#" stringByAppendingString: extractedText ] copy ] : nil;
+        }
+
+    return self;
+    }
+
+#pragma mark Initialization
++ ( instancetype ) hashtagWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
 
 @end
 
