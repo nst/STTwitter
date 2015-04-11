@@ -23,50 +23,29 @@
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
 #import "_OTCGeneral.h"
-
-NSString* _OTCStringWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+    
+id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
     {
-    NSString* stringValue = _JSONObject[ _JSONPropertyKey ];
+    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
 
-    if ( !stringValue )
+    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
         return nil;
 
-    assert( [ stringValue isKindOfClass: [ NSString class ] ] || ( ( id )stringValue == [ NSNull null ] ) );
-
-    if ( ( id )stringValue == [ NSNull null ] )
-        return nil;
-
-    return [ stringValue copy ];
+    return cocoaValue;
     }
 
 NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
     {
-    NSNumber* cocoaNumber = _JSONObject[ _JSONPropertyKey ];
-
-    if ( !cocoaNumber )
-        return 0U;
-
-    assert( [ cocoaNumber isKindOfClass: [ NSNumber class ] ] || ( ( id )cocoaNumber == [ NSNull null ] ) );
-
-    if ( ( id )cocoaNumber == [ NSNull null ] )
-        return 0U;
-
-    return cocoaNumber.unsignedIntegerValue;
+    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
+    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
+    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
     }
 
 BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
     {
-    NSNumber* cocoaBool = _JSONObject[ _JSONPropertyKey ];
-
-    if ( !cocoaBool )
-        return NO;
-
-    assert( [ cocoaBool isKindOfClass: [ NSNumber class ] ] || ( ( id )cocoaBool == [ NSNull null ] ) );
-
-    if ( ( id )cocoaBool == [ NSNull null ] )
-        return 0U;
-
-    return cocoaBool.boolValue;
+    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
+    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
+    return cocoaBool ? cocoaBool.boolValue : NO;
     }
 
 /*=============================================================================================┐

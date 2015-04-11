@@ -49,9 +49,9 @@
         {
         self->_JSONObject = _JSONDict;
 
-        self->_displayURL = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" );
-        self->_expandedURL = [ NSURL URLWithString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) ];
-        self->_originalURL = [ NSURL URLWithString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) ];
+        self->_displayURL = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" ) copy ];
+        self->_expandedURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) copy ] ];
+        self->_originalURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) copy ] ];
         }
 
     return self;
