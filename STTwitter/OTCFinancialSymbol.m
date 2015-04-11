@@ -22,136 +22,30 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <objc/message.h>
-
-#import "OTCTweet.h"
-#import "OTCHashtag.h"
 #import "OTCFinancialSymbol.h"
-#import "OTCEmbeddedURL.h"
-#import "OTCUserMention.h"
-#import "NSDate+WSCCocoaDate.h"
 
 #import "_OTCGeneral.h"
 
-@implementation OTCTweet
+@implementation OTCFinancialSymbol
 
-@synthesize JSONArray = _JSONDict;
+@synthesize text = _text;
 
-#pragma mark Identifier
-@synthesize tweetIDString = _tweetIDString;
-@synthesize tweetID = _tweetID;
-
-#pragma mark Actions
-@synthesize isFavoritedByMe = _isFavoritedByMe;
-@synthesize favoriteCount = _favoriteCount;
-@synthesize isRetweetedByMe = _isRetweetedByMe;
-@synthesize retweetCount = _retweetCount;
-
-#pragma mark Content
-@synthesize tweetText = _tweetText;
-@synthesize dateCreated = _dataCreated;
-@synthesize source = _source;
-@synthesize language = _language;
-@synthesize isTruncated = _isTruncated;
-
-@synthesize replyToUserScreenName = _replyToUserScreenName;
-@synthesize replyToUserIDString = _replyToUserIDString;
-@synthesize replyToUserID = _replyToUserID;
-@synthesize replyToTweetIDString = _replyToTweetIDString;
-@synthesize replyToTweetID = _replyToTweetID;
-
-#pragma mark Resolving Tweet
-@synthesize hashtags = _hashtags;
-@synthesize financialSymbols = _financialSymbols;
-@synthesize embeddedURLs = _embeddedURLs;
-@synthesize userMentions = _userMentions;
-
-#pragma mark Initialization
-+ ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
+#pragma mark Overrides
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
-    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
-    }
-
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSON
-    {
-    if ( !_JSON )
-        return nil;
-
-    if ( self = [ super init ] )
-        {
-        self->_JSONDict = _JSON;
-
-        self->_tweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id_str" ) copy ];
-        self->_tweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
-
-        self->_isFavoritedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorited" );
-        self->_favoriteCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorite_count" );
-        self->_isRetweetedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"retweeted" );
-        self->_retweetCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweet_count" );
-
-        self->_tweetText = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"text" ) copy ];
-        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) copy ] ] dateWithLocalTimeZone ];
-        self->_source = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"source" ) copy ];
-        self->_language = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"lang" ) copy ];
-        self->_isTruncated = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"truncated" );
-
-        self->_replyToUserScreenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_screen_name" ) copy ];
-        self->_replyToUserIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id_str" ) copy ];
-        self->_replyToUserID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id" );
-        self->_replyToTweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id_str" ) copy ];
-        self->_replyToTweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id" );
-
-        NSDictionary* entitiesParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
-        for ( NSString* _PropertyKey in entitiesParsedOutOfJSON )
-            {
-            NSArray* metaDataParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesParsedOutOfJSON, _PropertyKey );
-
-            if ( metaDataParsedOutOfJSON.count > 0 )
-                {
-                Class kindOfResolvedObject = nil;
-                SEL initMethodOfResolvedObject = nil;
-                if ( [ _PropertyKey isEqualToString: @"urls" ] )
-                    {
-                    kindOfResolvedObject = [ OTCEmbeddedURL class ];
-                    initMethodOfResolvedObject = @selector( embeddedURLWithJSON: );
-                    }
-                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
-                    {
-                    kindOfResolvedObject = [ OTCHashtag class ];
-                    initMethodOfResolvedObject = @selector( hashtagWithJSON: );
-                    }
-                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
-                    {
-                    kindOfResolvedObject = [ OTCFinancialSymbol class ];
-                    initMethodOfResolvedObject = @selector( financialSymbolWithJSON: );
-                    }
-                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
-                    {
-                    kindOfResolvedObject = [ OTCUserMention class ];
-                    initMethodOfResolvedObject = @selector( userMentionWithJSON: );
-                    }
-
-                NSMutableArray* wrappedEntities = [ NSMutableArray array ];
-                for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
-                    [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
-
-                NSArray* tmp = [ wrappedEntities copy ];
-                if ( [ _PropertyKey isEqualToString: @"urls" ] )
-                    self->_embeddedURLs = tmp;
-                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
-                    self->_hashtags = tmp;
-                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
-                    self->_financialSymbols = tmp;
-                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
-                    self->_userMentions = tmp;
-                }
-            }
-        }
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        self->_text = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
 
     return self;
     }
 
-@end // OTCTweet
+#pragma mark Initialization
++ ( instancetype ) financialSymbolWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
+
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

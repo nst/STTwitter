@@ -24,14 +24,15 @@
 
 #import "OTCResolvedObject.h"
 
-/** A hashtags extracted from the Tweet text. Each hashtag entity comes with the following attributes:
-
+/** An financial symbols starting with the dollar sign extracted from the Tweet text. 
+    Similar to hashtags, an entity comes with the following attributes:
+    
   |   Property Key   |                      Description                             |
   | :--------------: | :----------------------------------------------------------: |
-  |       text       |                    The hashtag text                          |
+  |       text       |                    The symbol text                           |
   |     indices      |      The character positions the URL was extracted from      |
   */
-@interface OTCHashtag : OTCResolvedObject
+@interface OTCFinancialSymbol : OTCResolvedObject
     {
 @private
     NSString* _text;
@@ -40,7 +41,7 @@
 @property ( copy, readonly ) NSString* text;
 
 #pragma mark Initialization
-+ ( instancetype ) hashtagWithJSON: ( NSDictionary* )_JSONDict;
++ ( instancetype ) financialSymbolWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 
