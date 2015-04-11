@@ -22,54 +22,9 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "TALHashtag.h"
 
-/** An URL extracted from the Tweet text. Each URL entity comes with the following attributes:
-
-  |   Property Key   |                      Description                             |
-  | :--------------: | :----------------------------------------------------------: |
-  |       url        |     The t.co URL that was extracted from the Tweet text      |
-  |   display_url    |   Not a valid URL but a string to display instead of the URL |
-  |   expanded_url   |                      The resolved URL                        |
-  |     indices      |      The character positions the URL was extracted from      |
-  */
-@interface OTCEmbeddedURL : NSObject
-    {
-@private
-    NSDictionary __strong* _JSONObject;
-
-    NSString* _displayURL;
-    NSURL __strong* _expandedURL;
-    NSURL __strong* _originalURL;
-    NSRange _position;
-    }
-
-@property ( strong, readonly ) NSDictionary* JSONObject;
-
-/** Preferred version of the URL to display to clients.
-  */
-@property ( copy, readonly ) NSString* displayURL;
-
-/** Integral representation (expanded) of the URL included in the text of a Tweet.
-  */
-@property ( strong, readonly ) NSURL* expandedURL;
-
-/** Orignal URL embedded directly into the raw Tweet text.
-
-  @discussion In mose cases, it was wrapped by t.co.
-  */
-@property ( strong, readonly ) NSURL* originalURL;
-
-/** An NSRange data structure representing offsets within the Tweet text where the URL begins and ends. 
-  
-  @discussion The first integer represents the location of the first character of the URL in the Tweet text. 
-              The second integer represents the length of URL.
-  */
-@property ( assign, readonly ) NSRange position;
-
-#pragma mark Initialization
-+ ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict;
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
+@implementation TALHashtag
 
 @end
 
