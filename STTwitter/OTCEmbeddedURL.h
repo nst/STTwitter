@@ -22,9 +22,18 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCResolvedObject.h"
 
-@interface OTCEmbeddedURL : NSObject
+/** An URL extracted from the Tweet text. Each URL entity comes with the following attributes:
+
+  |   Property Key   |                      Description                             |
+  | :--------------: | :----------------------------------------------------------: |
+  |       url        |     The t.co URL that was extracted from the Tweet text      |
+  |   display_url    |   Not a valid URL but a string to display instead of the URL |
+  |   expanded_url   |                      The resolved URL                        |
+  |     indices      |      The character positions the URL was extracted from      |
+  */
+@interface OTCEmbeddedURL : OTCResolvedObject
     {
 @private
     NSDictionary __strong* _JSONObject;

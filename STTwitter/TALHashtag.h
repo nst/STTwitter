@@ -22,31 +22,11 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "_OTCGeneral.h"
-    
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
+#import "OTCResolvedObject.h"
 
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
-        return nil;
+@interface TALHashtag : OTCResolvedObject
 
-    return cocoaValue;
-    }
-
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
-    }
-
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
-    }
+@end
 
 /*=============================================================================================┐
 |                                                                                              |
