@@ -24,9 +24,37 @@
 
 #import "OTCResolvedObject.h"
 
+#import "_OTCGeneral.h"
+
 @implementation OTCResolvedObject
 
+@synthesize JSONObject = _JSONObject;
+
 @synthesize position = _position;
+
+#pragma mark Initialization
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( !_JSONDict )
+        return nil;
+
+    if ( self = [ super init ] )
+        {
+        self->_JSONObject = _JSONDict;
+
+        NSArray* indices = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"indices" );
+        if ( indices )
+            {
+            NSUInteger begins = [ indices.firstObject unsignedIntegerValue ];
+            NSUInteger ends = [ indices.lastObject unsignedIntegerValue ];
+
+            self->_position.location = begins;
+            self->_position.length = ends - begins;
+            }
+        }
+
+    return self;
+    }
 
 @end
 

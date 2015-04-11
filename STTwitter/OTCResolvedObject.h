@@ -39,8 +39,12 @@
 @interface OTCResolvedObject : NSObject
     {
 @protected
+    NSDictionary __strong* _JSONObject;
+
     NSRange _position;
     }
+
+@property ( strong, readonly ) NSDictionary* JSONObject;
 
 /** An NSRange data structure representing offsets within the Tweet text where the entities represented by receiver begins and ends.
   
@@ -48,6 +52,9 @@
               The second integer represents the length of it.
   */
 @property ( assign, readonly ) NSRange position;
+
+#pragma mark Initialization
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 

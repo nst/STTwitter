@@ -28,6 +28,16 @@ id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSStrin
 NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
 BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
 
+#define __THROW_EXCEPTION__WHEN_INVOKED_PURE_VIRTUAL_METHOD__ \
+    @throw [ NSException exceptionWithName: NSGenericException \
+                         reason: [ NSString stringWithFormat: @"unimplemented pure virtual method `%@` in `%@` "\
+                                                               "from instance: %p (%@)" \
+                                                            , NSStringFromSelector( _cmd ) \
+                                                            , NSStringFromClass( [ self class ] ) \
+                                                            , self \
+                                                            , self ] \
+                         userInfo: nil ]
+
 /*=============================================================================================┐
 |                                                                                              |
 |                                   The BSD 3-Clause License                                   |

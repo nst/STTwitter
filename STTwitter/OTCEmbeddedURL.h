@@ -36,14 +36,10 @@
 @interface OTCEmbeddedURL : OTCResolvedObject
     {
 @private
-    NSDictionary __strong* _JSONObject;
-
     NSString* _displayURL;
     NSURL __strong* _expandedURL;
     NSURL __strong* _originalURL;
     }
-
-@property ( strong, readonly ) NSDictionary* JSONObject;
 
 /** Preferred version of the URL to display to clients.
   */
@@ -61,7 +57,6 @@
 
 #pragma mark Initialization
 + ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict;
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 

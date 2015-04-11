@@ -22,9 +22,28 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "TALHashtag.h"
+#import "OTCHashtag.h"
 
-@implementation TALHashtag
+#import "_OTCGeneral.h"
+
+@implementation OTCHashtag
+
+@synthesize text = _text;
+
+#pragma mark Overrides
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        self->_text = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
+
+    return self;
+    }
+
+#pragma mark Initialization
++ ( instancetype ) hashtagWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
 
 @end
 
