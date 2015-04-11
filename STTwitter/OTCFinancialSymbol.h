@@ -33,12 +33,6 @@
   |     indices      |      The character positions the URL was extracted from      |
   */
 @interface OTCFinancialSymbol : OTCResolvedObject
-    {
-@private
-    NSString* _text;
-    }
-
-@property ( copy, readonly ) NSString* text;
 
 #pragma mark Initialization
 + ( instancetype ) financialSymbolWithJSON: ( NSDictionary* )_JSONDict;

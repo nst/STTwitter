@@ -41,10 +41,15 @@
 @protected
     NSDictionary __strong* _JSONObject;
 
+    NSString* _displayText;
     NSRange _position;
     }
 
 @property ( strong, readonly ) NSDictionary* JSONObject;
+
+/** Preferred version of the entities extracted from Tweet to display to clients.
+  */
+@property ( copy, readonly ) NSString* displayText;
 
 /** An NSRange data structure representing offsets within the Tweet text where the entities represented by receiver begins and ends.
   

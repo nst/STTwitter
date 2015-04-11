@@ -30,6 +30,7 @@
 
 @synthesize JSONObject = _JSONObject;
 
+@synthesize displayText = _displayText;
 @synthesize position = _position;
 
 #pragma mark Initialization

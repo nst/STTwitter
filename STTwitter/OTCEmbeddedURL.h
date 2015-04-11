@@ -36,14 +36,9 @@
 @interface OTCEmbeddedURL : OTCResolvedObject
     {
 @private
-    NSString* _displayURL;
     NSURL __strong* _expandedURL;
     NSURL __strong* _originalURL;
     }
-
-/** Preferred version of the URL to display to clients.
-  */
-@property ( copy, readonly ) NSString* displayURL;
 
 /** Integral representation (expanded) of the URL included in the text of a Tweet.
   */

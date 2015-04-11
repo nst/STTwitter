@@ -32,12 +32,6 @@
   |     indices      |      The character positions the URL was extracted from      |
   */
 @interface OTCHashtag : OTCResolvedObject
-    {
-@private
-    NSString* _text;
-    }
-
-@property ( copy, readonly ) NSString* text;
 
 #pragma mark Initialization
 + ( instancetype ) hashtagWithJSON: ( NSDictionary* )_JSONDict;

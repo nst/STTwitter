@@ -39,7 +39,7 @@
     return [ @{ NSLocalizedString( @"User ID", nil ) : ( self->_userIDString ?: [ NSNull null ] )
               , NSLocalizedString( @"Display Name", nil ) : ( self->_displayName ?: [ NSNull null ] )
               , NSLocalizedString( @"Screen Name", nil ) : ( self->_screenName ?: [ NSNull null ] )
-              , NSLocalizedString( @"Text", nil ) : ( self->_screenName ? [ @"@" stringByAppendingString: self->_screenName ] : [ NSNull null ] )
+              , NSLocalizedString( @"Display Text", nil ) : ( self->_displayText ?: [ NSNull null ] )
               , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
               } description ];
     }
@@ -52,6 +52,7 @@
         self->_userIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id_str" ) copy ];
         self->_displayName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"name" ) copy ];
         self->_screenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"screen_name" ) copy ];
+        self->_displayText = self->_screenName ? [ [ @"@" stringByAppendingString: self->_screenName ] copy ] : nil;
         }
 
     return self;

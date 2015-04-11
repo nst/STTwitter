@@ -27,8 +27,6 @@
 #import "_OTCGeneral.h"
 
 @implementation OTCEmbeddedURL
-
-@synthesize displayURL = _displayURL;
 @synthesize expandedURL = _expandedURL;
 @synthesize originalURL = _originalURL;
 
@@ -37,7 +35,7 @@
     {
     return [ @{ NSLocalizedString( @"Original URL (wrapped by t.co)", nil ) : ( self->_originalURL ?: [ NSNull null ] )
               , NSLocalizedString( @"Expanded URL", nil ) : ( self->_expandedURL ?: [ NSNull null ] )
-              , NSLocalizedString( @"Display URL", nil ) : ( self->_displayURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display URL", nil ) : ( self->_displayText ?: [ NSNull null ] )
               , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
               } description ];
     }
@@ -46,7 +44,7 @@
     {
     if ( self = [ super initWithJSON: _JSONDict ] )
         {
-        self->_displayURL = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" ) copy ];
+        self->_displayText = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" ) copy ];
         self->_expandedURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) copy ] ];
         self->_originalURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) copy ] ];
         }

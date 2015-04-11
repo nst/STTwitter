@@ -28,12 +28,10 @@
 
 @implementation OTCFinancialSymbol
 
-@synthesize text = _text;
-
 #pragma mark Overrides
 - ( NSString* ) description
     {
-    return [ @{ NSLocalizedString( @"Finacial Symbol", nil ) : ( self->_text ?: [ NSNull null ] )
+    return [ @{ NSLocalizedString( @"Finacial Symbol", nil ) : ( self->_displayText ?: [ NSNull null ] )
               , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
               } description ];
     }
@@ -43,7 +41,7 @@
     if ( self = [ super initWithJSON: _JSONDict ] )
         {
         NSString* extractedText = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
-        self->_text = extractedText ? [ [ @"$" stringByAppendingString: extractedText ] copy ] : nil;
+        self->_displayText = extractedText ? [ [ @"$" stringByAppendingString: extractedText ] copy ] : nil;
         }
 
     return self;
