@@ -39,7 +39,7 @@
     return [ @{ NSLocalizedString( @"User ID", nil ) : ( self->_userIDString ?: [ NSNull null ] )
               , NSLocalizedString( @"Display Name", nil ) : ( self->_displayName ?: [ NSNull null ] )
               , NSLocalizedString( @"Screen Name", nil ) : ( self->_screenName ?: [ NSNull null ] )
-              , NSLocalizedString( @"Display Text", nil ) : ( self->_displayText ?: [ NSNull null ] )
+              , NSLocalizedString( @"Mention", nil ) : ( self->_displayText ?: [ NSNull null ] )
               , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
               } description ];
     }
