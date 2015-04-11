@@ -60,7 +60,7 @@
     // Resolving Tweet
     NSArray __strong* _hashtags;
     NSArray __strong* _financialSymbols;
-    NSArray __strong* _URLsEmbedded;
+    NSArray __strong* _embeddedURLs;
     NSArray __strong* _userMentions;
     }
 
@@ -172,7 +172,7 @@
 #pragma mark Resolving Tweet
 @property ( strong, readonly ) NSArray* hashtags;
 @property ( strong, readonly ) NSArray* financialSymbols;
-@property ( strong, readonly ) NSArray* URLsEmbedded;
+@property ( strong, readonly ) NSArray* embeddedURLs;
 @property ( strong, readonly ) NSArray* userMentions;
 
 #pragma mark Initialization

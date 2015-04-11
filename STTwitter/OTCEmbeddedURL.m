@@ -33,12 +33,23 @@
 @synthesize displayURL = _displayURL;
 @synthesize expandedURL = _expandedURL;
 @synthesize originalURL = _originalURL;
+@synthesize position = _position;
+
+#pragma makr Overrides
+- ( NSString* ) description
+    {
+    return [ @{ NSLocalizedString( @"Original URL (wrapped by t.co)", nil ) : ( self->_originalURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Expanded URL", nil ) : ( self->_expandedURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display URL", nil ) : ( self->_displayURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
+    }
 
 #pragma mark Initialization
-//+ ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict
-//    {
-//
-//    }
++ ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
 
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
@@ -52,6 +63,16 @@
         self->_displayURL = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" ) copy ];
         self->_expandedURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) copy ] ];
         self->_originalURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) copy ] ];
+
+        NSArray* indices = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"indices" );
+        if ( indices )
+            {
+            NSUInteger begins = [ indices.firstObject unsignedIntegerValue ];
+            NSUInteger ends = [ indices.lastObject unsignedIntegerValue ];
+
+            self->_position.location = begins;
+            self->_position.length = ends - begins;
+            }
         }
 
     return self;

@@ -23,6 +23,7 @@
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
 #import "OTCTweet.h"
+#import "OTCEmbeddedURL.h"
 #import "NSDate+WSCCocoaDate.h"
 
 #import "_OTCGeneral.h"
@@ -57,7 +58,7 @@
 #pragma mark Resolving Tweet
 @synthesize hashtags = _hashtags;
 @synthesize financialSymbols = _financialSymbols;
-@synthesize URLsEmbedded = _URLsEmbedded;
+@synthesize embeddedURLs = _embeddedURLs;
 @synthesize userMentions = _userMentions;
 
 #pragma mark Initialization
@@ -94,6 +95,20 @@
         self->_replyToUserID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id" );
         self->_replyToTweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id_str" ) copy ];
         self->_replyToTweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id" );
+
+        NSDictionary* entitiesParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
+        for ( NSString* _PropertyKey in entitiesParsedOutOfJSON )
+            {
+            if ( [ _PropertyKey isEqualToString: @"urls" ] )
+                {
+                NSMutableArray* embeddedURLs = [ NSMutableArray array ];
+                NSArray* URLs_parsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesParsedOutOfJSON, @"urls" );
+                for ( NSDictionary* _URLObject in URLs_parsedOutOfJSON )
+                    [ embeddedURLs addObject: [ OTCEmbeddedURL embeddedURLWithJSON: _URLObject ] ];
+
+                self->_embeddedURLs = [ embeddedURLs copy ];
+                }
+            }
         }
 
     return self;
