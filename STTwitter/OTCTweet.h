@@ -46,7 +46,7 @@
 
     // Content
     NSString* _tweetText;
-    NSDate __strong* _dataCreated;
+    NSDate __strong* _dateCreated;
     NSString* _source;
     NSString* _language;
     BOOL _isTruncated;

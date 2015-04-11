@@ -49,7 +49,7 @@
 
 #pragma mark Content
 @synthesize tweetText = _tweetText;
-@synthesize dateCreated = _dataCreated;
+@synthesize dateCreated = _dateCreated;
 @synthesize source = _source;
 @synthesize language = _language;
 @synthesize isTruncated = _isTruncated;
@@ -90,7 +90,7 @@
         self->_retweetCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweet_count" );
 
         self->_tweetText = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"text" ) copy ];
-        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) copy ] ] dateWithLocalTimeZone ];
+        self->_dateCreated = [ [ NSDate dateWithNaturalLanguageString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) copy ] ] dateWithLocalTimeZone ];
         self->_source = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"source" ) copy ];
         self->_language = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"lang" ) copy ];
         self->_isTruncated = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"truncated" );
@@ -131,19 +131,25 @@
                     initMethodOfResolvedObject = @selector( userMentionWithJSON: );
                     }
 
-                NSMutableArray* wrappedEntities = [ NSMutableArray array ];
-                for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
-                    [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
+                // As a consumers of Tweets,
+                // we should tolerate the addition of new fields and variance in ordering of fields with ease.
+                // (sigh)
+                if ( kindOfResolvedObject && initMethodOfResolvedObject )
+                    {
+                    NSMutableArray* wrappedEntities = [ NSMutableArray array ];
+                    for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
+                        [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
 
-                NSArray* tmp = [ wrappedEntities copy ];
-                if ( [ _PropertyKey isEqualToString: @"urls" ] )
-                    self->_embeddedURLs = tmp;
-                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
-                    self->_hashtags = tmp;
-                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
-                    self->_financialSymbols = tmp;
-                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
-                    self->_userMentions = tmp;
+                    NSArray* tmp = [ wrappedEntities copy ];
+                    if ( [ _PropertyKey isEqualToString: @"urls" ] )
+                        self->_embeddedURLs = tmp;
+                    else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
+                        self->_hashtags = tmp;
+                    else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
+                        self->_financialSymbols = tmp;
+                    else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
+                        self->_userMentions = tmp;
+                    }
                 }
             }
         }
