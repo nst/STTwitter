@@ -33,7 +33,6 @@
 @synthesize displayURL = _displayURL;
 @synthesize expandedURL = _expandedURL;
 @synthesize originalURL = _originalURL;
-@synthesize position = _position;
 
 #pragma makr Overrides
 - ( NSString* ) description

@@ -22,9 +22,32 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "OTCResolvedObject.h"
+#import <Foundation/Foundation.h>
 
-@interface TALHashtag : OTCResolvedObject
+/** The `OTCResolvedObject` defines the basic property of an resolved object.
+  
+  Resolved object provides metadata and additional contextual information about content posted on Twitter,
+  such as the embedded URLs, hashtags, financial symbols and user mentions.
+  
+  You typically do not use `OTCResolvedObject` object directly, you use objects whose classes descend from this class:
+  
+  + `OTCHashtag`
+  + `OTCEmbeddedURL`
+  + `OTCFinancialSymbol`
+  + `OTCUserMention`
+  */
+@interface OTCResolvedObject : NSObject
+    {
+@protected
+    NSRange _position;
+    }
+
+/** An NSRange data structure representing offsets within the Tweet text where the entities represented by receiver begins and ends.
+  
+  @discussion The first integer represents the location of the first character of the entity represented by receiver in the Tweet text.
+              The second integer represents the length of it.
+  */
+@property ( assign, readonly ) NSRange position;
 
 @end
 

@@ -24,7 +24,9 @@
 
 #import "OTCResolvedObject.h"
 
-@interface TALHashtag : OTCResolvedObject
+@implementation OTCResolvedObject
+
+@synthesize position = _position;
 
 @end
 

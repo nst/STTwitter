@@ -22,7 +22,7 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCResolvedObject.h"
 
 /** An URL extracted from the Tweet text. Each URL entity comes with the following attributes:
 
@@ -33,7 +33,7 @@
   |   expanded_url   |                      The resolved URL                        |
   |     indices      |      The character positions the URL was extracted from      |
   */
-@interface OTCEmbeddedURL : NSObject
+@interface OTCEmbeddedURL : OTCResolvedObject
     {
 @private
     NSDictionary __strong* _JSONObject;
@@ -41,7 +41,6 @@
     NSString* _displayURL;
     NSURL __strong* _expandedURL;
     NSURL __strong* _originalURL;
-    NSRange _position;
     }
 
 @property ( strong, readonly ) NSDictionary* JSONObject;
@@ -59,13 +58,6 @@
   @discussion In mose cases, it was wrapped by t.co.
   */
 @property ( strong, readonly ) NSURL* originalURL;
-
-/** An NSRange data structure representing offsets within the Tweet text where the URL begins and ends. 
-  
-  @discussion The first integer represents the location of the first character of the URL in the Tweet text. 
-              The second integer represents the length of URL.
-  */
-@property ( assign, readonly ) NSRange position;
 
 #pragma mark Initialization
 + ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict;
