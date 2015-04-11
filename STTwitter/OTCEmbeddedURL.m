@@ -27,34 +27,35 @@
 #import "_OTCGeneral.h"
 
 @implementation OTCEmbeddedURL
-
-@synthesize JSONObject = _JSONObject;
-
-@synthesize displayURL = _displayURL;
 @synthesize expandedURL = _expandedURL;
 @synthesize originalURL = _originalURL;
 
-#pragma mark Initialization
-//+ ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict
-//    {
-//
-//    }
+#pragma makr Overrides
+- ( NSString* ) description
+    {
+    return [ @{ NSLocalizedString( @"Original URL (wrapped by t.co)", nil ) : ( self->_originalURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Expanded URL", nil ) : ( self->_expandedURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display URL", nil ) : ( self->_displayText ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
+    }
 
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
-    if ( !_JSONDict )
-        return nil;
-
-    if ( self = [ super init ] )
+    if ( self = [ super initWithJSON: _JSONDict ] )
         {
-        self->_JSONObject = _JSONDict;
-
-        self->_displayURL = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" );
-        self->_expandedURL = [ NSURL URLWithString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) ];
-        self->_originalURL = [ NSURL URLWithString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) ];
+        self->_displayText = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"display_url" ) copy ];
+        self->_expandedURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"expanded_url" ) copy ] ];
+        self->_originalURL = [ NSURL URLWithString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) copy ] ];
         }
 
     return self;
+    }
+
+#pragma mark Initialization
++ ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
     }
 
 @end
@@ -87,5 +88,7 @@
 |      EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF      |
 |    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)    |
 |   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR   |
+|      TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS      |
+|                 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                 |
 |                                                                                              |
 └=============================================================================================*/

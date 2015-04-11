@@ -22,23 +22,23 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCResolvedObject.h"
 
-@interface OTCEmbeddedURL : NSObject
+/** An URL extracted from the Tweet text. Each URL entity comes with the following attributes:
+
+  |   Property Key   |                      Description                             |
+  | :--------------: | :----------------------------------------------------------: |
+  |       url        |     The t.co URL that was extracted from the Tweet text      |
+  |   display_url    |   Not a valid URL but a string to display instead of the URL |
+  |   expanded_url   |                      The resolved URL                        |
+  |     indices      |      The character positions the URL was extracted from      |
+  */
+@interface OTCEmbeddedURL : OTCResolvedObject
     {
 @private
-    NSDictionary __strong* _JSONObject;
-
-    NSString* _displayURL;
     NSURL __strong* _expandedURL;
     NSURL __strong* _originalURL;
     }
-
-@property ( strong, readonly ) NSDictionary* JSONObject;
-
-/** Preferred version of the URL to display to clients.
-  */
-@property ( copy, readonly ) NSString* displayURL;
 
 /** Integral representation (expanded) of the URL included in the text of a Tweet.
   */
@@ -52,7 +52,6 @@
 
 #pragma mark Initialization
 + ( instancetype ) embeddedURLWithJSON: ( NSDictionary* )_JSONDict;
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 
@@ -84,5 +83,7 @@
 |      EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF      |
 |    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)    |
 |   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR   |
+|      TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS      |
+|                 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                 |
 |                                                                                              |
 └=============================================================================================*/

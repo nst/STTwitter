@@ -22,31 +22,48 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "_OTCGeneral.h"
-    
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+#import "OTCResolvedObject.h"
+
+/** A Twitter screen names extracted from the Tweet text. 
+    Each user mention entity comes with the following attributes:
+
+  |   Property Key   |                      Description                             |
+  | :--------------: | :----------------------------------------------------------: |
+  |       id         |                The user ID (int format)                      |
+  |     id_str       |              The user ID (string format)                     |
+  |   screen_name    |                 The user screen name                         |
+  |      name        |                The user display name                         |
+  |     indices      |      The character positions the URL was extracted from      |
+  */
+@interface OTCUserMention : OTCResolvedObject
     {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
-
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
-        return nil;
-
-    return cocoaValue;
+@private
+    NSUInteger _userID;
+    NSString* _userIDString;
+    NSString* _displayName;
+    NSString* _screenName;
     }
 
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
-    }
+/** ID of the mentioned user, as an integer.
+  */
+@property ( assign, readonly ) NSUInteger userID;
 
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
-    }
+/** If of the mentioned user, as a string.
+  */
+@property ( copy, readonly ) NSString* userIDString;
+
+/** Display name of the referenced user.
+  */
+@property ( copy, readonly ) NSString* displayName;
+
+/** Screen name of the referenced user.
+  */
+@property ( copy, readonly ) NSString* screenName;
+
+#pragma mark Initialization
++ ( instancetype ) userMentionWithJSON: ( NSDictionary* )_JSONDict;
+
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

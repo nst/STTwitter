@@ -22,31 +22,22 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "_OTCGeneral.h"
+#import "OTCResolvedObject.h"
+
+/** An financial symbols starting with the dollar sign extracted from the Tweet text. 
+    Similar to hashtags, an entity comes with the following attributes:
     
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
+  |   Property Key   |                      Description                             |
+  | :--------------: | :----------------------------------------------------------: |
+  |       text       |                    The symbol text                           |
+  |     indices      |      The character positions the URL was extracted from      |
+  */
+@interface OTCFinancialSymbol : OTCResolvedObject
 
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
-        return nil;
+#pragma mark Initialization
++ ( instancetype ) financialSymbolWithJSON: ( NSDictionary* )_JSONDict;
 
-    return cocoaValue;
-    }
-
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
-    }
-
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
-    }
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

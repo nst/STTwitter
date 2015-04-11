@@ -22,31 +22,38 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
+#import "OTCFinancialSymbol.h"
+
 #import "_OTCGeneral.h"
-    
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+
+@implementation OTCFinancialSymbol
+
+#pragma mark Overrides
+- ( NSString* ) description
     {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
-
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
-        return nil;
-
-    return cocoaValue;
+    return [ @{ NSLocalizedString( @"Finacial Symbol", nil ) : ( self->_displayText ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
     }
 
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        {
+        NSString* extractedText = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"text" );
+        self->_displayText = extractedText ? [ [ @"$" stringByAppendingString: extractedText ] copy ] : nil;
+        }
+
+    return self;
     }
 
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+#pragma mark Initialization
++ ( instancetype ) financialSymbolWithJSON: ( NSDictionary* )_JSONDict
     {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
     }
+
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

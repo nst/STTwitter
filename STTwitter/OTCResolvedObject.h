@@ -22,31 +22,46 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "_OTCGeneral.h"
-    
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+#import <Foundation/Foundation.h>
+
+/** The `OTCResolvedObject` defines the basic property of an resolved object.
+  
+  Resolved object provides metadata and additional contextual information about content posted on Twitter,
+  such as the embedded URLs, hashtags, financial symbols and user mentions.
+  
+  You typically do not use `OTCResolvedObject` object directly, you use objects whose classes descend from this class:
+  
+  + `OTCHashtag`
+  + `OTCEmbeddedURL`
+  + `OTCFinancialSymbol`
+  + `OTCUserMention`
+  */
+@interface OTCResolvedObject : NSObject
     {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
+@protected
+    NSDictionary __strong* _JSONObject;
 
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
-        return nil;
-
-    return cocoaValue;
+    NSString* _displayText;
+    NSRange _position;
     }
 
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
-    }
+@property ( strong, readonly ) NSDictionary* JSONObject;
 
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
-    }
+/** Preferred version of the entities extracted from Tweet to display to clients.
+  */
+@property ( copy, readonly ) NSString* displayText;
+
+/** An NSRange data structure representing offsets within the Tweet text where the entities represented by receiver begins and ends.
+  
+  @discussion The first integer represents the location of the first character of the entity represented by receiver in the Tweet text.
+              The second integer represents the length of it.
+  */
+@property ( assign, readonly ) NSRange position;
+
+#pragma mark Initialization
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
+
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

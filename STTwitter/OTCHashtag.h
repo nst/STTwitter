@@ -22,31 +22,21 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "_OTCGeneral.h"
-    
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
+#import "OTCResolvedObject.h"
 
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
-        return nil;
+/** A hashtags extracted from the Tweet text. Each hashtag entity comes with the following attributes:
 
-    return cocoaValue;
-    }
+  |   Property Key   |                      Description                             |
+  | :--------------: | :----------------------------------------------------------: |
+  |       text       |                    The hashtag text                          |
+  |     indices      |      The character positions the URL was extracted from      |
+  */
+@interface OTCHashtag : OTCResolvedObject
 
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
-    }
+#pragma mark Initialization
++ ( instancetype ) hashtagWithJSON: ( NSDictionary* )_JSONDict;
 
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
-    }
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

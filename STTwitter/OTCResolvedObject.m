@@ -22,31 +22,42 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "_OTCGeneral.h"
-    
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
+#import "OTCResolvedObject.h"
 
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
+#import "_OTCGeneral.h"
+
+@implementation OTCResolvedObject
+
+@synthesize JSONObject = _JSONObject;
+
+@synthesize displayText = _displayText;
+@synthesize position = _position;
+
+#pragma mark Initialization
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( !_JSONDict )
         return nil;
 
-    return cocoaValue;
+    if ( self = [ super init ] )
+        {
+        self->_JSONObject = _JSONDict;
+
+        NSArray* indices = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"indices" );
+        if ( indices )
+            {
+            NSUInteger begins = [ indices.firstObject unsignedIntegerValue ];
+            NSUInteger ends = [ indices.lastObject unsignedIntegerValue ];
+
+            self->_position.location = begins;
+            self->_position.length = ends - begins;
+            }
+        }
+
+    return self;
     }
 
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
-    }
-
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
-    {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
-    }
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

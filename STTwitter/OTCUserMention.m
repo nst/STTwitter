@@ -22,31 +22,49 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
+#import "OTCUserMention.h"
+
 #import "_OTCGeneral.h"
-    
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+
+@implementation OTCUserMention
+
+@synthesize userID = _userID;
+@synthesize userIDString = _userIDString;
+@synthesize displayName = _displayName;
+@synthesize screenName = _screenName;
+
+#pragma mark Overrides
+- ( NSString* ) description
     {
-    id cocoaValue = _JSONObject[ _JSONPropertyKey ];
-
-    if ( !cocoaValue || ( ( id )cocoaValue == [ NSNull null ] ) )
-        return nil;
-
-    return cocoaValue;
+    return [ @{ NSLocalizedString( @"User ID", nil ) : ( self->_userIDString ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display Name", nil ) : ( self->_displayName ?: [ NSNull null ] )
+              , NSLocalizedString( @"Screen Name", nil ) : ( self->_screenName ?: [ NSNull null ] )
+              , NSLocalizedString( @"Display Text", nil ) : ( self->_displayText ?: [ NSNull null ] )
+              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
+              } description ];
     }
 
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
-    NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
+    if ( self = [ super initWithJSON: _JSONDict ] )
+        {
+        self->_userID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id" );
+        self->_userIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id_str" ) copy ];
+        self->_displayName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"name" ) copy ];
+        self->_screenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"screen_name" ) copy ];
+        self->_displayText = self->_screenName ? [ [ @"@" stringByAppendingString: self->_screenName ] copy ] : nil;
+        }
+
+    return self;
     }
 
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+#pragma mark Initialization
++ ( instancetype ) userMentionWithJSON: ( NSDictionary* )_JSONDict
     {
-    NSNumber* cocoaBool = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
-    assert( !cocoaBool || [ cocoaBool respondsToSelector: @selector( boolValue ) ] );
-    return cocoaBool ? cocoaBool.boolValue : NO;
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
     }
+
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

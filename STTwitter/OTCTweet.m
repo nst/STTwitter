@@ -22,7 +22,13 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
+#import <objc/message.h>
+
 #import "OTCTweet.h"
+#import "OTCHashtag.h"
+#import "OTCFinancialSymbol.h"
+#import "OTCEmbeddedURL.h"
+#import "OTCUserMention.h"
 #import "NSDate+WSCCocoaDate.h"
 
 #import "_OTCGeneral.h"
@@ -57,7 +63,7 @@
 #pragma mark Resolving Tweet
 @synthesize hashtags = _hashtags;
 @synthesize financialSymbols = _financialSymbols;
-@synthesize URLsEmbedded = _URLsEmbedded;
+@synthesize embeddedURLs = _embeddedURLs;
 @synthesize userMentions = _userMentions;
 
 #pragma mark Initialization
@@ -75,7 +81,7 @@
         {
         self->_JSONDict = _JSON;
 
-        self->_tweetIDString = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id_str" );
+        self->_tweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id_str" ) copy ];
         self->_tweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
 
         self->_isFavoritedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorited" );
@@ -83,17 +89,63 @@
         self->_isRetweetedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"retweeted" );
         self->_retweetCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweet_count" );
 
-        self->_tweetText = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"text" );
-        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) ] dateWithLocalTimeZone ];
-        self->_source = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"source" );
-        self->_language = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"lang" );
+        self->_tweetText = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"text" ) copy ];
+        self->_dataCreated = [ [ NSDate dateWithNaturalLanguageString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) copy ] ] dateWithLocalTimeZone ];
+        self->_source = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"source" ) copy ];
+        self->_language = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"lang" ) copy ];
         self->_isTruncated = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"truncated" );
 
-        self->_replyToUserScreenName = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_screen_name" );
-        self->_replyToUserIDString = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id_str" );
+        self->_replyToUserScreenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_screen_name" ) copy ];
+        self->_replyToUserIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id_str" ) copy ];
         self->_replyToUserID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id" );
-        self->_replyToTweetIDString = _OTCStringWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id_str" );
+        self->_replyToTweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id_str" ) copy ];
         self->_replyToTweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id" );
+
+        NSDictionary* entitiesParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
+        for ( NSString* _PropertyKey in entitiesParsedOutOfJSON )
+            {
+            NSArray* metaDataParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesParsedOutOfJSON, _PropertyKey );
+
+            if ( metaDataParsedOutOfJSON.count > 0 )
+                {
+                Class kindOfResolvedObject = nil;
+                SEL initMethodOfResolvedObject = nil;
+                if ( [ _PropertyKey isEqualToString: @"urls" ] )
+                    {
+                    kindOfResolvedObject = [ OTCEmbeddedURL class ];
+                    initMethodOfResolvedObject = @selector( embeddedURLWithJSON: );
+                    }
+                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
+                    {
+                    kindOfResolvedObject = [ OTCHashtag class ];
+                    initMethodOfResolvedObject = @selector( hashtagWithJSON: );
+                    }
+                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
+                    {
+                    kindOfResolvedObject = [ OTCFinancialSymbol class ];
+                    initMethodOfResolvedObject = @selector( financialSymbolWithJSON: );
+                    }
+                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
+                    {
+                    kindOfResolvedObject = [ OTCUserMention class ];
+                    initMethodOfResolvedObject = @selector( userMentionWithJSON: );
+                    }
+
+                NSMutableArray* wrappedEntities = [ NSMutableArray array ];
+                for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
+                    [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
+
+                NSArray* tmp = [ wrappedEntities copy ];
+                if ( [ _PropertyKey isEqualToString: @"urls" ] )
+                    self->_embeddedURLs = tmp;
+                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
+                    self->_hashtags = tmp;
+                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
+                    self->_financialSymbols = tmp;
+                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
+                    self->_userMentions = tmp;
+                }
+            }
         }
 
     return self;
@@ -129,5 +181,7 @@
 |      EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF      |
 |    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)    |
 |   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR   |
+|      TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS      |
+|                 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                 |
 |                                                                                              |
 └=============================================================================================*/
