@@ -39,18 +39,29 @@ typedef NS_ENUM( NSUInteger, OTCMediaType )
 @interface OTCMedia : OTCEmbeddedURL
     {
 @private
-    // Identifier
+    // Identifiers
     NSString* _mediaIDString;
     NSUInteger _mediaID;
+
+    NSString* _sourceTweetIDString;
+    NSUInteger _sourceTweetID;
+
+    NSString* _sourceUserIDString;
+    NSUInteger _sourceUserID;
 
     // Content
     NSURL __strong* _mediaURL;
     NSURL __strong* _mediaURLOverSSL;
 
     OTCMediaType _mediaType;
+
+    NSSize _largeSize;
+    NSSize _mediumSize;
+    NSSize _smallSize;
+    NSSize _thumbSize;
     }
 
-#pragma mark Identifier
+#pragma mark Identifiers
 /** The string representation of the unique identifier for media
 
   @discussion Your app should use this rather than the large integer returned by `mediaID`
@@ -65,6 +76,24 @@ typedef NS_ENUM( NSUInteger, OTCMediaType )
               Use `mediaIDString` for fetching the identifier to stay on the safe side.
   */
 @property ( assign, readonly ) NSUInteger mediaID;
+
+/** For Tweets containing media that was originally associated with a different tweet, 
+    this string-based ID points to the original Tweet.
+  */
+@property ( copy, readonly ) NSString* sourceTweetIDString;
+
+/** For Tweets containing media that was originally associated with a different tweet, 
+    this ID points to the original Tweet.
+  */
+@property ( assign, readonly ) NSUInteger sourceTweetID;
+
+/** This string-based ID points to the original author of the Tweet containing the media represented by receiver.
+  */
+@property ( copy, readonly ) NSString* sourceUserIDString;
+
+/** This ID points to the original author of the Tweet containing the media represented by receiver.
+  */
+@property ( assign, readonly ) NSUInteger sourceUserID;
 
 #pragma mark Content
 
@@ -86,7 +115,25 @@ typedef NS_ENUM( NSUInteger, OTCMediaType )
   */
 @property ( strong, readonly ) NSURL* mediaURLOverSSL;
 
+/** Type of uploaded media represented by receiver.
+  */
 @property ( assign, readonly ) OTCMediaType mediaType;
+
+/** Information for a large-sized (in pixels) pversion of the media.
+  */
+@property ( assign, readonly ) NSSize largeSize;
+
+/** Information for a medium-sized (in pixels) pversion of the media.
+  */
+@property ( assign, readonly ) NSSize mediumSize;
+
+/** Information for a small-sized (in pixels) pversion of the media.
+  */
+@property ( assign, readonly ) NSSize smallSize;
+
+/** Information for a thumbnail-sized (in pixels)version of the media.
+  */
+@property ( assign, readonly ) NSSize thumbSize;
 
 #pragma mark Initialization
 + ( instancetype ) mediaWithJSON: ( NSDictionary* )_JSONDict;
