@@ -38,7 +38,7 @@ NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
     {
     NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
     assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( unsignedIntegerValue ) ] );
-    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0;
+    return cocoaNumber ? cocoaNumber.unsignedIntegerValue : 0U;
     }
 
 BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
