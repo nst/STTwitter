@@ -32,6 +32,12 @@
 @synthesize mediaIDString = _mediaIDString;
 @synthesize mediaID = _mediaID;
 
+@synthesize sourceTweetIDString = _sourceTweetIDString;
+@synthesize sourceTweetID = _sourceTweetID;
+
+@synthesize sourceUserIDString = _sourceUserIDString;
+@synthesize sourceUserID = _sourceUserID;
+
 #pragma mark Content
 @synthesize mediaURL = _mediaURL;
 @synthesize mediaURLOverSSL = _mediaURLOverSSL;
@@ -52,6 +58,12 @@
         self->_mediaIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id_str" ) copy ];
         self->_mediaID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id" );
 
+        self->_sourceTweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"source_status_id_str" ) copy ];
+        self->_sourceTweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"source_status_id" );
+
+        self->_sourceUserIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"source_user_id_str" ) copy ];
+        self->_sourceUserID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"source_user_id" );
+
         self->_mediaURL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"media_url" ) ];
         self->_mediaURLOverSSL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"media_url_https" ) ];
 
@@ -62,6 +74,15 @@
             self->_mediaType = OTCMediaTypeVideo;
         else
             self->_mediaType = OTCMediaTypeUnknown;
+
+        NSDictionary* sizesObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"sizes" );
+        if ( sizesObject )
+            {
+            self->_largeSize  = _OTCSizeWhichHasBeenParsedOutOfJSON( sizesObject, @"large" );
+            self->_mediumSize = _OTCSizeWhichHasBeenParsedOutOfJSON( sizesObject, @"medium" );
+            self->_smallSize  = _OTCSizeWhichHasBeenParsedOutOfJSON( sizesObject, @"small" );
+            self->_thumbSize  = _OTCSizeWhichHasBeenParsedOutOfJSON( sizesObject, @"thumb" );
+            }
         }
 
     return self;

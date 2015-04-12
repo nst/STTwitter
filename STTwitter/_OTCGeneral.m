@@ -48,6 +48,18 @@ BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString
     return cocoaBool ? cocoaBool.boolValue : NO;
     }
 
+NSSize _OTCSizeWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+    {
+    NSSize size = NSMakeSize( -1.f, -1.f );
+
+    NSDictionary* JSONObjectDict = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
+    assert( !JSONObjectDict || [ JSONObjectDict respondsToSelector: @selector( valueForKey: ) ] );
+    size.height = [ [ JSONObjectDict valueForKey: @"h" ] doubleValue ];
+    size.width = [ [ JSONObjectDict valueForKey: @"w" ] doubleValue ];
+
+    return size;
+    }
+
 /*=============================================================================================┐
 |                                                                                              |
 |                                   The BSD 3-Clause License                                   |
