@@ -132,11 +132,6 @@
                     kindOfResolvedObject = [ OTCUserMention class ];
                     initMethodOfResolvedObject = @selector( userMentionWithJSON: );
                     }
-                else if ( [ _PropertyKey isEqualToString: @"media" ] )
-                    {
-                    kindOfResolvedObject = [ OTCMedia class ];
-                    initMethodOfResolvedObject = @selector( mediaWithJSON: );
-                    }
 
                 // As a consumers of Tweets,
                 // we should tolerate the addition of new fields and variance in ordering of fields with ease.
@@ -156,7 +151,37 @@
                         self->_financialSymbols = tmp;
                     else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
                         self->_userMentions = tmp;
-                    else if ( [ _PropertyKey isEqualToString: @"media" ] )
+                    }
+                }
+            }
+
+        NSDictionary* extendedEntitiesParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"extended_entities" );
+        for ( NSString* _PropertyKey in extendedEntitiesParsedOutOfJSON )
+            {
+            NSArray* metaDataParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( extendedEntitiesParsedOutOfJSON, _PropertyKey );
+
+            if ( metaDataParsedOutOfJSON.count > 0 )
+                {
+                Class kindOfResolvedObject = nil;
+                SEL initMethodOfResolvedObject = nil;
+
+                if ( [ _PropertyKey isEqualToString: @"media" ] )
+                    {
+                    kindOfResolvedObject = [ OTCMedia class ];
+                    initMethodOfResolvedObject = @selector( mediaWithJSON: );
+                    }
+
+                // As a consumers of Tweets,
+                // we should tolerate the addition of new fields and variance in ordering of fields with ease.
+                // (sigh)
+                if ( kindOfResolvedObject && initMethodOfResolvedObject )
+                    {
+                    NSMutableArray* wrappedEntities = [ NSMutableArray array ];
+                    for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
+                        [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
+
+                    NSArray* tmp = [ wrappedEntities copy ];
+                    if ( [ _PropertyKey isEqualToString: @"media" ] )
                         self->_media = tmp;
                     }
                 }
