@@ -38,18 +38,35 @@
 @synthesize sourceUserIDString = _sourceUserIDString;
 @synthesize sourceUserID = _sourceUserID;
 
-#pragma mark Content
+#pragma mark General Content
 @synthesize mediaURL = _mediaURL;
 @synthesize mediaURLOverSSL = _mediaURLOverSSL;
+
 @synthesize mediaType = _mediaType;
 
-//#pragma mark Overrides
-//- ( NSString* ) description
-//    {
-//    return [ @{ NSLocalizedString( @"Hashtag", nil ) : ( self->_displayText ?: [ NSNull null ] )
-//              , NSLocalizedString( @"Position in the Host Tweet", nil ) : NSStringFromRange( self->_position )
-//              } description ];
-//    }
+@synthesize largeSize = _largeSize;
+@synthesize mediumSize = _mediumSize;
+@synthesize smallSize = _smallSize;
+@synthesize thumbSize = _thumbSize;
+
+@synthesize aspectRatio = _aspectRatio;
+@synthesize duration = _duration;
+@synthesize variants = _variants;
+
+#pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ @{ NSLocalizedString( @"URL", nil ) : [ super description ]
+              , NSLocalizedString( @"Media ID", nil ) : ( self->_mediaIDString ?: [ NSNull null ] )
+              , NSLocalizedString( @"Source Tweet ID", nil ) : ( self->_sourceTweetIDString ?: [ NSNull null ] )
+              , NSLocalizedString( @"Media URL", nil ) : ( self->_mediaURL ?: [ NSNull null ] )
+              , NSLocalizedString( @"Media Type", nil ) : ( self->_mediaType ? @( self->_mediaType ) : [ NSNull null ] )
+              , NSLocalizedString( @"Large Size", nil ) : NSStringFromSize( self->_largeSize )
+              , NSLocalizedString( @"Medium Size", nil ) : NSStringFromSize( self->_mediumSize )
+              , NSLocalizedString( @"Small Size", nil ) : NSStringFromSize( self->_smallSize )
+              , NSLocalizedString( @"Thumbnail Size", nil ) : NSStringFromSize( self->_thumbSize )
+              } description ];
+    }
 
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
@@ -83,6 +100,25 @@
             self->_smallSize  = _OTCSizeWhichHasBeenParsedOutOfJSON( sizesObject, @"small" );
             self->_thumbSize  = _OTCSizeWhichHasBeenParsedOutOfJSON( sizesObject, @"thumb" );
             }
+
+        NSDictionary* videoInfoObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"video_info" );
+        if ( videoInfoObject )
+            {
+            NSArray* aspectRatioObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( videoInfoObject, @"aspect_ratio" );
+            if ( aspectRatioObject )
+                self->_aspectRatio = NSMakeSize( [ aspectRatioObject.firstObject doubleValue ]
+                                               , [ aspectRatioObject.lastObject doubleValue ] );
+
+            self->_duration = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( videoInfoObject, @"duration_millis" );
+
+            NSArray* variantsObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( videoInfoObject, @"variants" );
+            NSMutableArray* wrappedVariants = [ NSMutableArray array ];
+            for ( NSDictionary* variantDict in variantsObject )
+                [ wrappedVariants addObject: [ [ OTCVideoVariant alloc ] initWithJSON: variantDict ] ];
+
+            if ( wrappedVariants.count > 0 )
+                self->_variants = [ wrappedVariants copy ];
+            }
         }
 
     return self;
@@ -95,6 +131,43 @@
     }
 
 @end
+
+#pragma mark OTCVideoVariant class
+@implementation OTCVideoVariant : NSObject
+
+@synthesize JSONObject = _JSONObject;
+@synthesize bitrate = _bitrate;
+@synthesize MIMEType = _MIMEType;
+@synthesize URL = _URL;
+
+#pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ @{ NSLocalizedString( @"Bitrate", nil ) : ( self->_bitrate ? @( self->_bitrate ) : [ NSNull null ] )
+              , NSLocalizedString( @"MIME Type", nil ) : ( self->_MIMEType ?: [ NSNull null ] )
+              , NSLocalizedString( @"Video URL", nil ) : ( self->_URL ?: [ NSNull null ] )
+              } description ];
+    }
+
+#pragma mark Initialization
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( !_JSONDict )
+        return nil;
+
+    if ( self = [ super init ] )
+        {
+        self->_JSONObject = _JSONDict;
+
+        self->_bitrate = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"bitrate" );
+        self->_MIMEType = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"content_type" ) copy ];
+        self->_URL = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" );
+        }
+
+    return self;
+    }
+
+@end // OTCVideoVariant
 
 /*=============================================================================================┐
 |                                                                                              |

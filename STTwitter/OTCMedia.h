@@ -24,6 +24,8 @@
 
 #import "OTCEmbeddedURL.h"
 
+@class OTCVideoVariant;
+
 typedef NS_ENUM( NSUInteger, OTCMediaType )
     {
     /// Unknown
@@ -59,6 +61,10 @@ typedef NS_ENUM( NSUInteger, OTCMediaType )
     NSSize _mediumSize;
     NSSize _smallSize;
     NSSize _thumbSize;
+
+    NSSize _aspectRatio;
+    NSUInteger _duration;
+    NSArray __strong* _variants;
     }
 
 #pragma mark Identifiers
@@ -95,7 +101,7 @@ typedef NS_ENUM( NSUInteger, OTCMediaType )
   */
 @property ( assign, readonly ) NSUInteger sourceUserID;
 
-#pragma mark Content
+#pragma mark General Content
 
 /** An http:// URL pointing directly to the uploaded media file.
 
@@ -135,10 +141,54 @@ typedef NS_ENUM( NSUInteger, OTCMediaType )
   */
 @property ( assign, readonly ) NSSize thumbSize;
 
+#pragma mark Unique to Video
+/** Contains information about aspect ratio. 
+
+  @dicussion The aspect ratio of the video, as a simplified fraction of width and height in an NSSize data structure.
+             Typical values are [4, 3] or [16, 9]. This property is non-nil only when there is a video in the payload.
+  */
+@property ( assign, readonly ) NSSize aspectRatio;
+
+/** The length of the video, in milliseconds. 
+
+  @dicussion This field is non-nil only when there is a video in the payload.
+  */
+@property ( assign, readonly ) NSUInteger duration;
+
+/** Different encodings/streams of the video, which represented by `OTCVideoVariant` objects.
+
+  @discussion At least one variant is returned for each video entry. 
+              Video formats returned via the API are subject to change. 
+              As a best practice, you should scan all returned values and use the most appropriate format 
+              for their given platform. This property is non-nil only when there is a video in the payload.
+  */
+@property ( retain, readonly ) NSArray* variants;
+
 #pragma mark Initialization
 + ( instancetype ) mediaWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
+
+#pragma mark OTCVideoVariant class
+@interface OTCVideoVariant : NSObject
+    {
+@private
+    NSDictionary __strong* _JSONObject;
+
+    NSUInteger _bitrate;
+    NSString* _MIMEType;
+    NSURL __strong* _URL;
+    }
+
+@property ( retain, readonly ) NSDictionary* JSONObject;
+
+@property ( assign, readonly ) NSUInteger bitrate;
+@property ( copy, readonly ) NSString* MIMEType;
+@property ( strong, readonly ) NSURL* URL;
+
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
+
+@end // OTCVideoVariant
 
 /*=============================================================================================┐
 |                                                                                              |
