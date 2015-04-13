@@ -22,8 +22,6 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <objc/message.h>
-
 #import "OTCTweet.h"
 #import "OTCHashtag.h"
 #import "OTCFinancialSymbol.h"
@@ -103,89 +101,14 @@
         self->_replyToTweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id_str" ) copy ];
         self->_replyToTweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id" );
 
-        NSDictionary* entitiesParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
-        for ( NSString* _PropertyKey in entitiesParsedOutOfJSON )
-            {
-            NSArray* metaDataParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesParsedOutOfJSON, _PropertyKey );
+        NSDictionary* entitiesObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
+        self->_embeddedURLs = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"urls", [ OTCEmbeddedURL class ], @selector( embeddedURLWithJSON: ) );
+        self->_hashtags = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"hashtags", [ OTCHashtag class ], @selector( hashtagWithJSON: ) );
+        self->_financialSymbols = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"symbols", [ OTCFinancialSymbol class ], @selector( financialSymbolWithJSON: ) );
+        self->_userMentions = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"user_mentions", [ OTCUserMention class ], @selector( userMentionWithJSON: ) );
 
-            if ( metaDataParsedOutOfJSON.count > 0 )
-                {
-                Class kindOfResolvedObject = nil;
-                SEL initMethodOfResolvedObject = nil;
-                if ( [ _PropertyKey isEqualToString: @"urls" ] )
-                    {
-                    kindOfResolvedObject = [ OTCEmbeddedURL class ];
-                    initMethodOfResolvedObject = @selector( embeddedURLWithJSON: );
-                    }
-                else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
-                    {
-                    kindOfResolvedObject = [ OTCHashtag class ];
-                    initMethodOfResolvedObject = @selector( hashtagWithJSON: );
-                    }
-                else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
-                    {
-                    kindOfResolvedObject = [ OTCFinancialSymbol class ];
-                    initMethodOfResolvedObject = @selector( financialSymbolWithJSON: );
-                    }
-                else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
-                    {
-                    kindOfResolvedObject = [ OTCUserMention class ];
-                    initMethodOfResolvedObject = @selector( userMentionWithJSON: );
-                    }
-
-                // As a consumers of Tweets,
-                // we should tolerate the addition of new fields and variance in ordering of fields with ease.
-                // (sigh)
-                if ( kindOfResolvedObject && initMethodOfResolvedObject )
-                    {
-                    NSMutableArray* wrappedEntities = [ NSMutableArray array ];
-                    for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
-                        [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
-
-                    NSArray* tmp = [ wrappedEntities copy ];
-                    if ( [ _PropertyKey isEqualToString: @"urls" ] )
-                        self->_embeddedURLs = tmp;
-                    else if ( [ _PropertyKey isEqualToString: @"hashtags" ] )
-                        self->_hashtags = tmp;
-                    else if ( [ _PropertyKey isEqualToString: @"symbols" ] )
-                        self->_financialSymbols = tmp;
-                    else if ( [ _PropertyKey isEqualToString: @"user_mentions" ] )
-                        self->_userMentions = tmp;
-                    }
-                }
-            }
-
-        NSDictionary* extendedEntitiesParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"extended_entities" );
-        for ( NSString* _PropertyKey in extendedEntitiesParsedOutOfJSON )
-            {
-            NSArray* metaDataParsedOutOfJSON = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( extendedEntitiesParsedOutOfJSON, _PropertyKey );
-
-            if ( metaDataParsedOutOfJSON.count > 0 )
-                {
-                Class kindOfResolvedObject = nil;
-                SEL initMethodOfResolvedObject = nil;
-
-                if ( [ _PropertyKey isEqualToString: @"media" ] )
-                    {
-                    kindOfResolvedObject = [ OTCMedia class ];
-                    initMethodOfResolvedObject = @selector( mediaWithJSON: );
-                    }
-
-                // As a consumers of Tweets,
-                // we should tolerate the addition of new fields and variance in ordering of fields with ease.
-                // (sigh)
-                if ( kindOfResolvedObject && initMethodOfResolvedObject )
-                    {
-                    NSMutableArray* wrappedEntities = [ NSMutableArray array ];
-                    for ( NSDictionary* _URLObject in metaDataParsedOutOfJSON )
-                        [ wrappedEntities addObject: objc_msgSend( kindOfResolvedObject, initMethodOfResolvedObject, _URLObject ) ];
-
-                    NSArray* tmp = [ wrappedEntities copy ];
-                    if ( [ _PropertyKey isEqualToString: @"media" ] )
-                        self->_media = tmp;
-                    }
-                }
-            }
+        NSDictionary* extendedEntitiesObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"extended_entities" );
+        self->_media = _OTCArrayValueWhichHasBeenParsedOutOfJSON( extendedEntitiesObject, @"media", [ OTCMedia class ], @selector( mediaWithJSON: ) );
         }
 
     return self;

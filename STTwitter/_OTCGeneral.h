@@ -29,6 +29,12 @@ NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
 BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
 NSSize _OTCSizeWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
 
+NSArray* _OTCArrayValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
+                                                  , NSString* _JSONPropertyKey
+                                                  , Class _KindOfElements
+                                                  , SEL _InitMethodsOfElements
+                                                  );
+
 #define __THROW_EXCEPTION__WHEN_INVOKED_PURE_VIRTUAL_METHOD__ \
     @throw [ NSException exceptionWithName: NSGenericException \
                          reason: [ NSString stringWithFormat: @"unimplemented pure virtual method `%@` in `%@` "\
