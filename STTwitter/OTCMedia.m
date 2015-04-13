@@ -111,13 +111,7 @@
 
             self->_duration = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( videoInfoObject, @"duration_millis" );
 
-            NSArray* variantsObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( videoInfoObject, @"variants" );
-            NSMutableArray* wrappedVariants = [ NSMutableArray array ];
-            for ( NSDictionary* variantDict in variantsObject )
-                [ wrappedVariants addObject: [ [ OTCVideoVariant alloc ] initWithJSON: variantDict ] ];
-
-            if ( wrappedVariants.count > 0 )
-                self->_variants = [ wrappedVariants copy ];
+            self->_variants = _OTCArrayValueWhichHasBeenParsedOutOfJSON( videoInfoObject, @"variants", [ OTCVideoVariant class ], @selector( videoVariantWithJSON: ) );
             }
         }
 
@@ -150,6 +144,11 @@
     }
 
 #pragma mark Initialization
++ ( instancetype ) videoVariantWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
+
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
     if ( !_JSONDict )

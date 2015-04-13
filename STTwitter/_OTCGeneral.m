@@ -22,6 +22,8 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
+#import <objc/message.h>
+
 #import "_OTCGeneral.h"
     
 id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
@@ -59,6 +61,29 @@ NSSize _OTCSizeWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString*
 
     return size;
     }
+
+NSArray* _OTCArrayValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
+                                                  , NSString* _JSONPropertyKey
+                                                  , Class _KindOfElements
+                                                  , SEL _InitMethodsOfElements
+                                                  )
+    {
+    NSMutableArray* wrappedObjects = nil;
+
+    NSArray* objects = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
+    if ( objects.count > 0 )
+        {
+        wrappedObjects = [ NSMutableArray array ];
+        for ( NSDictionary* objectElem in objects )
+            @try {
+                [ wrappedObjects addObject: objc_msgSend( _KindOfElements, _InitMethodsOfElements, objectElem ) ];
+                } @catch ( NSException* _Ex )
+                    { NSLog( @"%@", _Ex ); }
+        }
+
+    return wrappedObjects ? [ wrappedObjects copy ] : nil;
+    }
+
 
 /*=============================================================================================┐
 |                                                                                              |

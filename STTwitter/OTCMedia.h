@@ -186,6 +186,7 @@ typedef NS_ENUM( NSUInteger, OTCMediaType )
 @property ( copy, readonly ) NSString* MIMEType;
 @property ( strong, readonly ) NSURL* URL;
 
++ ( instancetype ) videoVariantWithJSON: ( NSDictionary* )_JSONDict;
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
 @end // OTCVideoVariant
