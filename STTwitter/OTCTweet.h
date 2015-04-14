@@ -68,6 +68,9 @@
 
     // Geo
     OTCPlace __strong* _place;
+
+    // Retweeting
+    OTCTweet __strong* _originalTweet;
     }
 
 @property ( retain, readonly ) NSDictionary* JSONArray;
@@ -184,6 +187,16 @@
 
 #pragma mark Geo
 @property ( strong, readonly ) OTCPlace* place;
+
+#pragma mark Retweeting
+/** This property contains a representation of the original Tweet that was retweeted.
+
+  @discussion Users can amplify the broadcast of tweets authored by other users by retweeting.
+              Retweets can be distinguished from typical Tweets by the existence of a `originalTweet` property.
+              Note that retweets of retweets do not show representations of the intermediary retweet, but only the original tweet.
+              (Users can also unretweet a retweet they created by deleting their retweet.)
+  */
+@property ( strong, readonly ) OTCTweet* originalTweet;
 
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict;

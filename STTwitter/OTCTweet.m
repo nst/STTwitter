@@ -67,7 +67,11 @@
 @synthesize userMentions = _userMentions;
 @synthesize media = _media;
 
+#pragma mark Geo
 @synthesize place = _place;
+
+#pragma mark Retweeting
+@synthesize originalTweet = _originalTweet;
 
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
@@ -121,6 +125,9 @@
         NSDictionary* placeObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"place" );
         if ( placeObject )
             self->_place = [ OTCPlace placeWithJSON: placeObject ];
+
+        // Retweeting
+        self->_originalTweet = [ OTCTweet tweetWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweeted_status" ) ];
         }
 
     return self;
