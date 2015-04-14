@@ -179,13 +179,33 @@
 @property ( assign, readonly ) NSUInteger replyToTweetID;
 
 #pragma mark Resolving Tweet
+/** An array of `OTCHashtag` objects which represent an array of hashtags 
+    which have been parsed out of the Tweet text.
+  */
 @property ( strong, readonly ) NSArray* hashtags;
+
+/** An array of `OTCFinancialSymbol` objects which represente an array of financial symbols 
+    starting with the dollar sign extracted from the Tweet text.
+  */
 @property ( strong, readonly ) NSArray* financialSymbols;
+
+/** An array of `OTCEmbeddedURL` objects which represent an array of embedded URLs 
+    included in the text of a Tweet or within textual fields of an `OTCTwitterUser` object.
+  */
 @property ( strong, readonly ) NSArray* embeddedURLs;
+
+/** An array of `OTCUserMention` objects which represent other Twitter users 
+    mentioned in the text of the Tweet.
+  */
 @property ( strong, readonly ) NSArray* userMentions;
+
+/** An array of `OTCMedia` objects which represent media elements uploaded with the Tweet.
+  */
 @property ( strong, readonly ) NSArray* media;
 
 #pragma mark Geo
+/** When present, indicates that the tweet is associated (but not necessarily originating from) a place.
+  */
 @property ( strong, readonly ) OTCPlace* place;
 
 #pragma mark Retweeting
