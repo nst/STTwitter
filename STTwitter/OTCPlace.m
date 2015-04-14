@@ -22,111 +22,57 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import "OTCTweet.h"
-#import "OTCHashtag.h"
-#import "OTCFinancialSymbol.h"
-#import "OTCEmbeddedURL.h"
-#import "OTCUserMention.h"
-#import "OTCMedia.h"
 #import "OTCPlace.h"
-#import "NSDate+WSCCocoaDate.h"
 
 #import "_OTCGeneral.h"
 
-@implementation OTCTweet
+@implementation OTCPlace
 
-@synthesize JSONArray = _JSONDict;
+@synthesize IDString = _IDString;
 
-#pragma mark Identifier
-@synthesize tweetIDString = _tweetIDString;
-@synthesize tweetID = _tweetID;
+@synthesize localizedCountryName = _localizedCountryName;
+@synthesize countryCode = _countryCode;
 
-#pragma mark Actions
-@synthesize isFavoritedByMe = _isFavoritedByMe;
-@synthesize favoriteCount = _favoriteCount;
-@synthesize isRetweetedByMe = _isRetweetedByMe;
-@synthesize retweetCount = _retweetCount;
+@synthesize fullPlaceName = _fullPlaceName;
+@synthesize simplePlaceName = _simplePlaceName;
 
-#pragma mark Content
-@synthesize tweetText = _tweetText;
-@synthesize dateCreated = _dateCreated;
-@synthesize source = _source;
-@synthesize language = _language;
-@synthesize isTruncated = _isTruncated;
-
-@synthesize replyToUserScreenName = _replyToUserScreenName;
-@synthesize replyToUserIDString = _replyToUserIDString;
-@synthesize replyToUserID = _replyToUserID;
-@synthesize replyToTweetIDString = _replyToTweetIDString;
-@synthesize replyToTweetID = _replyToTweetID;
-
-#pragma mark Resolving Tweet
-@synthesize hashtags = _hashtags;
-@synthesize financialSymbols = _financialSymbols;
-@synthesize embeddedURLs = _embeddedURLs;
-@synthesize userMentions = _userMentions;
-@synthesize media = _media;
-
-@synthesize place = _place;
+@synthesize boundingBox = _boundingBox;
+@synthesize additionalMetadata = _additionalMetadata;
 
 #pragma mark Initialization
-+ ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
++ ( instancetype ) placeWithJSON: ( NSDictionary* )_JSONDict
     {
     return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
     }
 
-- ( instancetype ) initWithJSON: ( NSDictionary* )_JSON
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
-    if ( !_JSON )
+    if ( !_JSONDict )
         return nil;
 
     if ( self = [ super init ] )
         {
-        self->_JSONDict = _JSON;
+        self->_JSONObject = _JSONDict;
 
-        // Identifier
-        self->_tweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id_str" ) copy ];
-        self->_tweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
+        self->_IDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id" ) copy ];
 
-        // Actions
-        self->_isFavoritedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorited" );
-        self->_favoriteCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorite_count" );
-        self->_isRetweetedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"retweeted" );
-        self->_retweetCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweet_count" );
+        self->_localizedCountryName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"country" ) copy ];
+        self->_countryCode = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"country_code" ) copy ];
 
-        // Content
-        self->_tweetText = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"text" ) copy ];
-        self->_dateCreated = [ [ NSDate dateWithNaturalLanguageString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) copy ] ] dateWithLocalTimeZone ];
-        self->_source = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"source" ) copy ];
-        self->_language = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"lang" ) copy ];
-        self->_isTruncated = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"truncated" );
+        self->_fullPlaceName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"full_name" ) copy ];
+        self->_simplePlaceName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"name" ) copy ];
 
-        self->_replyToUserScreenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_screen_name" ) copy ];
-        self->_replyToUserIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id_str" ) copy ];
-        self->_replyToUserID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_user_id" );
-        self->_replyToTweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id_str" ) copy ];
-        self->_replyToTweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"in_reply_to_status_id" );
+        NSDictionary* boundingBoxObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"bounding_box" );
+        if ( boundingBoxObject )
+            self->_boundingBox = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( boundingBoxObject, @"coordinates" ) firstObject ];
 
-        // Resolving Tweet
-        NSDictionary* entitiesObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
-        self->_embeddedURLs = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"urls", [ OTCEmbeddedURL class ], @selector( embeddedURLWithJSON: ) );
-        self->_hashtags = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"hashtags", [ OTCHashtag class ], @selector( hashtagWithJSON: ) );
-        self->_financialSymbols = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"symbols", [ OTCFinancialSymbol class ], @selector( financialSymbolWithJSON: ) );
-        self->_userMentions = _OTCArrayValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"user_mentions", [ OTCUserMention class ], @selector( userMentionWithJSON: ) );
-
-        NSDictionary* extendedEntitiesObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"extended_entities" );
-        self->_media = _OTCArrayValueWhichHasBeenParsedOutOfJSON( extendedEntitiesObject, @"media", [ OTCMedia class ], @selector( mediaWithJSON: ) );
-
-        // Geo
-        NSDictionary* placeObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"place" );
-        if ( placeObject )
-            self->_place = [ OTCPlace placeWithJSON: placeObject ];
+        self->_additionalMetadata = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"url" ) ];
         }
 
     return self;
     }
 
-@end // OTCTweet
+@end
 
 /*=============================================================================================┐
 |                                                                                              |
