@@ -24,6 +24,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class OTCPlace;
+
 /** Tweets are the basic atomic building block of all things Twitter. 
 
   @discussion Tweets, also known more generically as “status updates.” 
@@ -63,6 +65,9 @@
     NSArray __strong* _embeddedURLs;
     NSArray __strong* _userMentions;
     NSArray __strong* _media;
+
+    // Geo
+    OTCPlace __strong* _place;
     }
 
 @property ( retain, readonly ) NSDictionary* JSONArray;
@@ -176,6 +181,9 @@
 @property ( strong, readonly ) NSArray* embeddedURLs;
 @property ( strong, readonly ) NSArray* userMentions;
 @property ( strong, readonly ) NSArray* media;
+
+#pragma mark Geo
+@property ( strong, readonly ) OTCPlace* place;
 
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict;
