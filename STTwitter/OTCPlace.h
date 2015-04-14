@@ -24,6 +24,12 @@
 
 #import <Foundation/Foundation.h>
 
+NSString extern* const OTCPlaceTypeOther;
+NSString extern* const OTCPlaceTypeCountry;
+NSString extern* const OTCPlaceTypeAdmin;
+NSString extern* const OTCPlaceTypeCity;
+NSString extern* const OTCPlaceTypeStreet;
+
 @interface OTCPlace : NSObject
     {
 @private
@@ -36,6 +42,8 @@
 
     NSString* _fullPlaceName;
     NSString* _simplePlaceName;
+
+    NSString* _type;
 
     NSArray __strong* _boundingBox;
     NSURL __strong* _additionalMetadata;
@@ -60,6 +68,10 @@
 /** Short human-readable representation of the place’s name.
   */
 @property ( copy, readonly ) NSString* simplePlaceName;
+
+/** The type of location represented by this place.
+  */
+@property ( copy, readonly ) NSString* type;
 
 /** A bounding box of coordinates which encloses this place.
   */

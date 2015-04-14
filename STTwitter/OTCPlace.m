@@ -36,6 +36,8 @@
 @synthesize fullPlaceName = _fullPlaceName;
 @synthesize simplePlaceName = _simplePlaceName;
 
+@synthesize type = _type;
+
 @synthesize boundingBox = _boundingBox;
 @synthesize additionalMetadata = _additionalMetadata;
 
@@ -62,6 +64,8 @@
         self->_fullPlaceName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"full_name" ) copy ];
         self->_simplePlaceName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"name" ) copy ];
 
+        self->_type = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"place_type" ) copy ];
+
         NSDictionary* boundingBoxObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"bounding_box" );
         if ( boundingBoxObject )
             self->_boundingBox = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( boundingBoxObject, @"coordinates" ) firstObject ];
@@ -73,6 +77,11 @@
     }
 
 @end
+
+NSString* const OTCPlaceTypeCountry = @"country";
+NSString* const OTCPlaceTypeAdmin = @"admin";
+NSString* const OTCPlaceTypeCity = @"city";
+NSString* const OTCPlaceTypeStreet = @"street";
 
 /*=============================================================================================┐
 |                                                                                              |
