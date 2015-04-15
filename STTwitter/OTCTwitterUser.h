@@ -347,6 +347,10 @@
   */
 @property ( strong, readonly ) OTCTweet* mostRecentTweet;
 
+#pragma mark Initialization
++ ( instancetype ) userWithJSON: ( NSDictionary* )_JSONDict;
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
+
 @end
 
 /*=============================================================================================┐

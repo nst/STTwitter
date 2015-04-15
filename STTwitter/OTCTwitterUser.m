@@ -26,6 +26,73 @@
 
 @implementation OTCTwitterUser
 
+@synthesize ID = _ID;
+@synthesize IDString = _IDString;
+
+@synthesize displayName = _displayName;
+@synthesize screenName = _screenName;
+
+@synthesize isContributorsEnabled = _isContributorsEnabled;
+@synthesize isProtected = _isProtected;
+@synthesize isVerified = _isVerified;
+
+@synthesize dateCreated = _dateCreated;
+@synthesize usesDefaultTheme = _usesDefaultTheme;
+@synthesize usesDefaultAvatar = _usesDefaultAvatar;
+@synthesize usesBackgroundImage = _usesBackgroundImage;
+
+@synthesize bio = _bio;
+@synthesize URLEmbeddedInBio = _URLEmbeddedInBio;
+@synthesize website = _website;
+@synthesize location = _location;
+
+@synthesize profileBackgroundTile = _profileBackgroundTile;
+@synthesize profileBackgroundColor = _profileBackgroundColor;
+@synthesize profileBackgroundImageURL = _profileBackgroundImageURL;
+@synthesize profileBackgroundImageURLOverSSL = _profileBackgroundImageURLOverSSL;
+@synthesize profileBannerURL = _profileBannerURL;
+@synthesize avatarImageURL = _avatarImageURL;
+@synthesize avatarImageURLOverSSL = _avatarImageURLOverSSL;
+
+@synthesize profileLinkColor = _profileLinkColor;
+@synthesize profileSidebarBorderColor = _profileSidebarBorderColor;
+@synthesize profileSidebarFillColor = _profileSidebarFillColor;
+@synthesize profileTextColor = _profileTextColor;
+
+@synthesize favoritesCount = _favoritesCount;
+@synthesize followersCount = _followersCount;
+@synthesize followingsCount = _followingsCount;
+@synthesize listedCount = _listedCount;
+@synthesize tweetsCount = _tweetsCount;
+
+@synthesize sentFollowRequestByMe = _sentFollowRequestByMe;
+@synthesize isFollowing = _isFollowing;
+
+@synthesize isGeoEnabled = _isGeoEnabled;
+@synthesize language = _language;
+@synthesize timeZone = _timeZone;
+@synthesize UTCOffset = _UTCOffset;
+@synthesize withheldInCountries = _withheldInCountries;
+@synthesize withheldScope = _withheldScope;
+
+@synthesize mostRecentTweet = _mostRecentTweet;
+
+#pragma mark Initialization
++ ( instancetype ) userWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ [ self class ] alloc ] initWithJSON: _JSONDict ];
+    }
+
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
+    {
+    if ( self = [ super init ] )
+        {
+        
+        }
+
+    return self;
+    }
+
 @end
 
 /*=============================================================================================┐
