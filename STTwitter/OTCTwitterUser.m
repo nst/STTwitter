@@ -23,8 +23,14 @@
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
 #import "OTCTwitterUser.h"
+#import "OTCEmbeddedURL.h"
+#import "NSDate+WSCCocoaDate.h"
+
+#import "_OTCGeneral.h"
 
 @implementation OTCTwitterUser
+
+@synthesize JSONObject = _JSONObject;
 
 @synthesize ID = _ID;
 @synthesize IDString = _IDString;
@@ -85,8 +91,49 @@
 
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict
     {
+    if ( !_JSONDict )
+        return nil;
+
     if ( self = [ super init ] )
         {
+        self->_JSONObject = _JSONDict;
+
+        self->_ID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id" );
+        self->_IDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"id_str" ) copy ];
+
+        self->_displayName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"name" ) copy ];
+        self->_screenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"screen_name" ) copy ];
+
+        self->_isContributorsEnabled = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"contributors_enabled" );
+        self->_isProtected = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"protected" );
+        self->_isVerified = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"verified" );
+
+        self->_dateCreated = [ [ NSDate dateWithNaturalLanguageString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"created_at" ) ] dateWithLocalTimeZone ];
+        self->_usesDefaultTheme = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"default_profile" );
+        self->_usesDefaultAvatar = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"default_profile_image" );
+        self->_usesBackgroundImage = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_use_background_image" );
+
+        self->_bio = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"description" ) copy ];
+
+        NSDictionary* entitiesObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"entities" );
+        if ( entitiesObject )
+            {
+            NSDictionary* descriptionObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"description" );
+            self->_URLEmbeddedInBio = [ _OTCArrayValueWhichHasBeenParsedOutOfJSON( descriptionObject, @"urls"
+                                                                                 , [ OTCEmbeddedURL class ]
+                                                                                 , @selector( embeddedURLWithJSON: )
+                                                                                 ) firstObject ];
+
+            NSDictionary* urlObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( entitiesObject, @"url" );
+            self->_website = [ _OTCArrayValueWhichHasBeenParsedOutOfJSON( urlObject, @"urls"
+                                                                        , [ OTCEmbeddedURL class ]
+                                                                        , @selector( embeddedURLWithJSON: )
+                                                                        ) firstObject ];
+            }
+
+        self->_location = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"location" ) copy ];
+
+        self->_profileBackgroundTile = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_background_tile" );
         
         }
 

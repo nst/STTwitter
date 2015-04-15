@@ -33,6 +33,8 @@
 @interface OTCTwitterUser : NSObject
     {
 @private
+    NSDictionary __strong* _JSONObject;
+
     NSUInteger _ID;
     NSString* _IDString;
 
@@ -84,6 +86,8 @@
 
     OTCTweet __strong* _mostRecentTweet;
     }
+
+@property ( strong, readonly ) NSDictionary* JSONObject;
 
 /** The integer representation of the unique identifier for this User. 
 
