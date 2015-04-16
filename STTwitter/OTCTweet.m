@@ -29,6 +29,7 @@
 #import "OTCUserMention.h"
 #import "OTCMedia.h"
 #import "OTCPlace.h"
+#import "OTCTwitterUser.h"
 #import "NSDate+WSCCocoaDate.h"
 
 #import "_OTCGeneral.h"
@@ -72,6 +73,9 @@
 
 #pragma mark Retweeting
 @synthesize originalTweet = _originalTweet;
+
+#pragma mark Author
+@synthesize author = _author;
 
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
@@ -128,6 +132,11 @@
 
         // Retweeting
         self->_originalTweet = [ OTCTweet tweetWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweeted_status" ) ];
+
+        // Author
+        NSDictionary* userObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"user" );
+        if ( userObject )
+            self->_author = [ OTCTwitterUser userWithJSON: userObject ];
         }
 
     return self;

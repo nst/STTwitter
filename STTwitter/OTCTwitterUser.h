@@ -33,6 +33,8 @@
 @interface OTCTwitterUser : NSObject
     {
 @private
+    NSDictionary __strong* _JSONObject;
+
     NSUInteger _ID;
     NSString* _IDString;
 
@@ -42,6 +44,7 @@
     BOOL _isContributorsEnabled;
     BOOL _isProtected;
     BOOL _isVerified;
+    BOOL _isTranslator;
 
     NSDate __strong* _dateCreated;
     BOOL _usesDefaultTheme;
@@ -78,12 +81,15 @@
     BOOL _isGeoEnabled;
     NSString* _language;
     NSTimeZone __strong* _timeZone;
+    NSString* _timeZoneName;
     NSInteger _UTCOffset;
     NSString* _withheldInCountries;
     NSString* _withheldScope;
 
     OTCTweet __strong* _mostRecentTweet;
     }
+
+@property ( strong, readonly ) NSDictionary* JSONObject;
 
 /** The integer representation of the unique identifier for this User. 
 
@@ -137,6 +143,10 @@
               See [Verified Accounts](https://support.twitter.com/articles/119135-faqs-about-verified-accounts).
   */
 @property ( assign, readonly ) BOOL isVerified;
+
+/** When true, indicates that the user is a participant in [Twitter’s translator community](http://translate.twttr.com/).
+  */
+@property ( assign, readonly ) BOOL isTranslator;
 
 /** The UTC datetime that the user account was created on Twitter.
 
@@ -320,6 +330,10 @@
   */
 @property ( strong, readonly ) NSTimeZone* timeZone;
 
+/** A string describing the Time Zone this user declares themselves within.
+  */
+@property ( copy, readonly ) NSString* timeZoneName;
+
 /** The offset from GMT/UTC in seconds.
 
   @discussion Corresponding parameter: utc_offset.
@@ -346,6 +360,10 @@
               See [Why are embedded objects stale or inaccurate?](https://dev.twitter.com/docs/faq/basics/why-are-embedded-objects-stale-or-inaccurate).
   */
 @property ( strong, readonly ) OTCTweet* mostRecentTweet;
+
+#pragma mark Initialization
++ ( instancetype ) userWithJSON: ( NSDictionary* )_JSONDict;
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 

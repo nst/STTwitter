@@ -25,6 +25,7 @@
 #import <Foundation/Foundation.h>
 
 @class OTCPlace;
+@class OTCTwitterUser;
 
 /** Tweets are the basic atomic building block of all things Twitter. 
 
@@ -71,6 +72,9 @@
 
     // Retweeting
     OTCTweet __strong* _originalTweet;
+
+    // Author
+    OTCTwitterUser __strong* _author;
     }
 
 @property ( retain, readonly ) NSDictionary* JSONArray;
@@ -217,6 +221,14 @@
               (Users can also unretweet a retweet they created by deleting their retweet.)
   */
 @property ( strong, readonly ) OTCTweet* originalTweet;
+
+#pragma mark Author
+/** The user who posted this Tweet. 
+
+  @discussion Perspectival attributes embedded within this object are unreliable. 
+              See [Why are embedded objects stale or inaccurate?](https://dev.twitter.com/docs/faq/basics/why-are-embedded-objects-stale-or-inaccurate).
+  */
+@property ( strong, readonly ) OTCTwitterUser* author;
 
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict;
