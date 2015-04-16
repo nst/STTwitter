@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ENUM(NSUInteger, STTwitterHTMLErrorCode) {
-    STTwitterHTMLCannotPostWithoutCredentials
+extern NS_ENUM(NSUInteger, STTwitterHTMLErrorCode) {
+    STTwitterHTMLCannotPostWithoutCredentials = 0
 };
 
 @interface STTwitterHTML : NSObject

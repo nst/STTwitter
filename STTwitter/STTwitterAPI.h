@@ -23,8 +23,8 @@
 #import "STTwitterStreamParser.h"
 #import "STTwitterRequestProtocol.h"
 
-NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
-    STTwitterAPICannotPostEmptyStatus,
+extern NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
+    STTwitterAPICannotPostEmptyStatus = 0,
     STTwitterAPIMediaDataIsEmpty,
     STTwitterAPIEmptyStream
 };
