@@ -20,8 +20,8 @@
  ...
  */
 
-NS_ENUM(NSUInteger, STTwitterOAuthErrorCode) {
-    STTwitterOAuthCannotPostAccessTokenRequestWithoutPIN,
+extern NS_ENUM(NSUInteger, STTwitterOAuthErrorCode) {
+    STTwitterOAuthCannotPostAccessTokenRequestWithoutPIN = 0,
     STTwitterOAuthBadCredentialsOrConsumerTokensNotXAuthEnabled
 };
 
