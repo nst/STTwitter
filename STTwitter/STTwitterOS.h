@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterProtocol.h"
 
-NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
-    STTwitterOSSystemCannotAccessTwitter,
+extern NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
+    STTwitterOSSystemCannotAccessTwitter = 0,
     STTwitterOSCannotFindTwitterAccount,
     STTwitterOSUserDeniedAccessToTheirAccounts,
     STTwitterOSNoTwitterAccountIsAvailable
