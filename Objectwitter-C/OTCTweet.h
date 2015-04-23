@@ -39,7 +39,7 @@
 
     // Identifier
     NSString* _tweetIDString;
-    NSUInteger _tweetID;
+    SInt64 _tweetID;
 
     // Actions
     BOOL _isFavoritedByMe;
@@ -93,7 +93,7 @@
               Using a signed 64 bit integer for storing this identifier is safe.
               Use `tweetIDString` for fetching the identifier to stay on the safe side.
   */
-@property ( assign, readonly ) NSUInteger tweetID;
+@property ( assign, readonly ) SInt64 tweetID;
 
 #pragma mark Actions
 /** Indicates whether this Tweet has been favorited by the authenticating user. */
@@ -233,6 +233,9 @@
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict;
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
+
+#pragma mark Comparing
+- ( BOOL ) isEqualToTweet: ( OTCTweet* )_AnotherTweet;
 
 @end // OTCTweet
 

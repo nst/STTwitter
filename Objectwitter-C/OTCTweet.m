@@ -142,6 +142,26 @@
     return self;
     }
 
+#pragma mark Comparing
+- ( BOOL ) isEqualToTweet: ( OTCTweet* )_AnotherTweet
+    {
+    if ( self == _AnotherTweet )
+        return YES;
+
+    return self.tweetID == _AnotherTweet.tweetID;
+    }
+
+- ( BOOL ) isEqual: ( id )_Object
+    {
+    if ( self == _Object )
+        return YES;
+
+    if ( [ _Object isKindOfClass: [ OTCTweet class ] ] )
+        return [ self isEqualToTweet: ( OTCTweet* )_Object ];
+
+    return [ super isEqual: _Object ];
+    }
+
 @end // OTCTweet
 
 /*=============================================================================================┐
