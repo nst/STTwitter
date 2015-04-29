@@ -61,7 +61,10 @@
 @synthesize profileBackgroundImageURLOverSSL = _profileBackgroundImageURLOverSSL;
 @synthesize profileBannerURL = _profileBannerURL;
 @synthesize avatarImageURL = _avatarImageURL;
-@synthesize avatarImageURLOverSSL = _avatarImageURLOverSSL;
+@synthesize normalAvatarImageURLOverSSL = _normalAvatarImageURLOverSSL;
+@synthesize biggerAvatarImageURLOverSSL = _biggerAvatarImageURLOverSSL;
+@synthesize miniAvatarImageURLOverSSL = _miniAvatarImageURLOverSSL;
+@synthesize originalAvatarImageURLOverSSL = _originalAvatarImageURLOverSSL;
 
 @synthesize profileLinkColor = _profileLinkColor;
 @synthesize profileSidebarBorderColor = _profileSidebarBorderColor;
@@ -144,7 +147,11 @@
         self->_profileBackgroundImageURLOverSSL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_background_image_url_https" ) ];
         self->_profileBannerURL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_banner_url" ) ];
         self->_avatarImageURL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_image_url" ) ];
-        self->_avatarImageURLOverSSL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_image_url_https" ) ];
+        
+        self->_normalAvatarImageURLOverSSL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_image_url_https" ) ];
+        self->_originalAvatarImageURLOverSSL = [ self->_normalAvatarImageURLOverSSL URLByReplacingOccurrencesOfStringInPath: @"_normal" withString: @"" ];
+        self->_biggerAvatarImageURLOverSSL = [ self->_originalAvatarImageURLOverSSL URLByAppendingStringToLastPathComponent: @"_bigger" ];
+        self->_miniAvatarImageURLOverSSL = [ self->_originalAvatarImageURLOverSSL URLByAppendingStringToLastPathComponent: @"_mini" ];
 
         self->_profileLinkColor = [ NSColor colorWithHTMLColor: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_link_color" ) ];
         self->_profileSidebarBorderColor = [ NSColor colorWithHTMLColor: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"profile_sidebar_border_color" ) ];

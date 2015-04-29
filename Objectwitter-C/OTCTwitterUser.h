@@ -62,7 +62,10 @@
     NSURL __strong* _profileBackgroundImageURLOverSSL;
     NSURL __strong* _profileBannerURL;
     NSURL __strong* _avatarImageURL;
-    NSURL __strong* _avatarImageURLOverSSL;
+    NSURL __strong* _normalAvatarImageURLOverSSL;
+    NSURL __strong* _biggerAvatarImageURLOverSSL;
+    NSURL __strong* _miniAvatarImageURLOverSSL;
+    NSURL __strong* _originalAvatarImageURLOverSSL;
 
     NSColor __strong* _profileLinkColor;
     NSColor __strong* _profileSidebarBorderColor;
@@ -238,7 +241,11 @@
   @discussion Corresponding parameter: profile_image_url_https.
               See [User Profile Images and Banners](https://dev.twitter.com/overview/general/user-profile-images-and-banners).
   */
-@property ( strong, readonly ) NSURL* avatarImageURLOverSSL;
+@property ( strong, readonly ) NSURL* normalAvatarImageURLOverSSL;
+
+@property ( strong, readonly ) NSURL* biggerAvatarImageURLOverSSL;
+@property ( strong, readonly ) NSURL* miniAvatarImageURLOverSSL;
+@property ( strong, readonly ) NSURL* originalAvatarImageURLOverSSL;
 
 /** The `NSColor` object which represents the color chosen to display links with in their Twitter UI.
 

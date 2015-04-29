@@ -14,3 +14,4 @@
 
 #import "NSColor+Objectwitter-C.h"
 #import "NSDate+WSCCocoaDate.h"
+#import "NSURL+Objectwitter-C.h"
