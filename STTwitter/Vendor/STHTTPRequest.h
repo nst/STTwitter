@@ -25,10 +25,14 @@ typedef void (^completionBlock_t)(NSDictionary *headers, NSString *body);
 typedef void (^completionDataBlock_t)(NSDictionary *headers, NSData *body);
 typedef void (^errorBlock_t)(NSError *error);
 
-@interface STHTTPRequest : NSObject <NSURLConnectionDelegate>
+typedef enum : NSUInteger {
+    STHTTPRequestCookiesStorageShared = 0,
+    STHTTPRequestCookiesStorageLocal = 1,
+    STHTTPRequestCookiesStorageNoStorage = 2,
+    STHTTPRequestCookiesStorageUndefined = NSUIntegerMax
+} STHTTPRequestCookiesStorage;
 
-//@property (copy) sendRequestBlock_t willSendRequestBlock; // last chance to log and/or congfigure the request
-//@property (copy) sendRequestBlock_t didSendRequestBlock; // called just after the request was actually sent
+@interface STHTTPRequest : NSObject <NSURLConnectionDelegate>
 
 @property (copy) uploadProgressBlock_t uploadProgressBlock;
 @property (copy) downloadProgressBlock_t downloadProgressBlock;
@@ -46,9 +50,10 @@ typedef void (^errorBlock_t)(NSError *error);
 @property (nonatomic) NSTimeInterval timeoutSeconds; // ignored if 0
 @property (nonatomic) BOOL addCredentialsToURL; // default NO
 @property (nonatomic) BOOL encodePOSTDictionary; // default YES
+@property (nonatomic) BOOL encodeGETDictionary; // default YES, set to NO if the parameters are already URL encoded
 @property (nonatomic, strong, readonly) NSURL *url;
-@property (nonatomic) BOOL ignoreSharedCookiesStorage;
 @property (nonatomic) BOOL preventRedirections;
+@property (nonatomic) STHTTPRequestCookiesStorage cookieStoragePolicyForInstance; // overrides globalCookiesStoragePolicy
 
 // response
 @property (nonatomic) NSStringEncoding forcedResponseEncoding;
@@ -84,7 +89,9 @@ typedef void (^errorBlock_t)(NSError *error);
 - (NSArray *)sessionCookies;
 + (NSArray *)sessionCookiesInSharedCookiesStorage;
 + (void)deleteAllCookiesFromSharedCookieStorage;
-- (void)deleteSessionCookies;
++ (void)deleteAllCookiesFromLocalCookieStorage;
+- (void)deleteSessionCookies; // empty the cookie storage that is used
++ (void)setGlobalCookiesStoragePolicy:(STHTTPRequestCookiesStorage)cookieStoragePolicy;
 
 // Credentials
 + (NSURLCredential *)sessionAuthenticationCredentialsForURL:(NSURL *)requestURL;
@@ -121,5 +128,5 @@ typedef void (^errorBlock_t)(NSError *error);
 @end
 
 @interface NSString (STUtilities)
-- (NSString *)st_stringByAppendingGETParameters:(NSDictionary *)parameters;
+- (NSString *)st_stringByAppendingGETParameters:(NSDictionary *)parameters doApplyURLEncoding:(BOOL)doApplyURLEncoding;
 @end
