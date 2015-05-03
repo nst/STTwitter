@@ -1256,7 +1256,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(callback) md[@"callback"] = callback;
     
     // eg. "(from:nst021 OR to:nst021)" -> "%28from%3Anst021%20OR%20to%3Anst021%29"
-    md[@"q"] = [q st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    // md[@"q"] = @"(from:nst021 OR to:nst021)";
+    md[@"q"] = q;
     
     return [self getAPIResource:@"search/tweets.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         
@@ -2561,7 +2562,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
-    md[@"q"] = [query st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    md[@"q"] = query;
     if(page) md[@"page"] = page;
     if(count) md[@"count"] = count;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
@@ -3579,9 +3580,9 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"list_id"] = listID;
-    if(name) md[@"name"] = [name st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if(name) md[@"name"] = name;
     md[@"mode"] = isPrivate ? @"private" : @"public";
-    if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if(description) md[@"description"] = description;
     
     return [self postAPIResource:@"lists/update.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -3606,9 +3607,9 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     md[@"slug"] = slug;
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
-    if(name) md[@"name"] = [name st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if(name) md[@"name"] = name;
     md[@"mode"] = isPrivate ? @"private" : @"public";
-    if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if(description) md[@"description"] = description;
     
     return [self postAPIResource:@"lists/update.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -3628,9 +3629,9 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSParameterAssert(name);
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"name"] = [name st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    md[@"name"] = name;
     md[@"mode"] = isPrivate ? @"private" : @"public";
-    if(description) md[@"description"] = [description st_stringByAddingRFC3986PercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    if(description) md[@"description"] = description;
     
     return [self postAPIResource:@"lists/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);

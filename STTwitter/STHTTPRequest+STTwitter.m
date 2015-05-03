@@ -30,8 +30,8 @@
     __weak STHTTPRequest *wr = r;
     
     r.HTTPMethod = HTTPMethod;
-    
-    r.ignoreSharedCookiesStorage = YES;
+
+    r.cookieStoragePolicyForInstance = STHTTPRequestCookiesStorageNoStorage;
     
     r.timeoutSeconds = timeoutInSeconds;
     
@@ -88,7 +88,8 @@
     
     STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
     
-    r.ignoreSharedCookiesStorage = YES;
+    r.cookieStoragePolicyForInstance = STHTTPRequestCookiesStorageNoStorage;
+
     r.preventRedirections = YES;
     
     r.completionBlock = ^(NSDictionary *responseHeaders, NSString *body) {
