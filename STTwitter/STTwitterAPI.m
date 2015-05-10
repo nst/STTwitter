@@ -1540,38 +1540,63 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
+ - (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                                           includeReplies:(NSNumber *)includeReplies
+                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
+                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                                               tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                              eventBlock:(void(^)(NSDictionary *tweet))eventBlock
+                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
+{
+ return [self getUserStreamStallWarnings:stallWarningBlock ? @YES : @NO
+     includeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
+                          includeReplies:includeReplies
+                         keywordsToTrack:keywordsToTrack
+                   locationBoundingBoxes:locationBoundingBoxes
+                           progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+                               
+                               switch (type) {
+                                   case STTwitterStreamJSONTypeTweet:
+                                       tweetBlock(json);
+                                       break;
+                                   case STTwitterStreamJSONTypeWarning:
+                                       if (stallWarningBlock) {
+                                           stallWarningBlock([json valueForKey:@"code"],
+                                                             [json valueForKey:@"message"],
+                                                             [[json valueForKey:@"percent_full"] integerValue]);
+                                       }
+                                       break;
+                                  case STTwitterStreamJSONTypeEvent:
+                                      if (eventBlock)
+                                          eventBlock(json);
+                                      break;
+                                   default:
+                                       break;
+                               }
+                               
+                          } errorBlock:errorBlock];
+}
+
 - (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                                                                               tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
+                                                                              errorBlock:(void(^)(NSError *error))errorBlock
 {
-    return [self getUserStreamStallWarnings:stallWarningBlock ? @YES : @NO
-        includeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
-                             includeReplies:includeReplies
-                            keywordsToTrack:keywordsToTrack
-                      locationBoundingBoxes:locationBoundingBoxes
-                              progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
-                                  
-                                  switch (type) {
-                                      case STTwitterStreamJSONTypeTweet:
-                                          tweetBlock(json);
-                                          break;
-                                      case STTwitterStreamJSONTypeWarning:
-                                          if (stallWarningBlock) {
-                                              stallWarningBlock([json valueForKey:@"code"],
-                                                                [json valueForKey:@"message"],
-                                                                [[json valueForKey:@"percent_full"] integerValue]);
-                                          }
-                                          break;
-                                      default:
-                                          break;
-                                  }
-                                  
-                              } errorBlock:errorBlock];
+    return [ self getUserStreamIncludeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
+                                                    includeReplies:includeReplies
+                                                   keywordsToTrack:keywordsToTrack
+                                             locationBoundingBoxes:locationBoundingBoxes
+                                                        tweetBlock:tweetBlock
+                                                        eventBlock:nil
+                                                 stallWarningBlock:stallWarningBlock
+                                                        errorBlock:errorBlock ];
+
 }
+
 
 - (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
                                                                           includeReplies:(NSNumber *)includeReplies

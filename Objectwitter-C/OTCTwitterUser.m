@@ -27,6 +27,7 @@
 #import "OTCEmbeddedURL.h"
 #import "NSDate+WSCCocoaDate.h"
 #import "NSColor+Objectwitter-C.h"
+#import "NSURL+Objectwitter-C.h"
 
 #import "_OTCGeneral.h"
 

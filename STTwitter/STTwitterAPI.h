@@ -587,6 +587,15 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                                                                               tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                              eventBlock:(void(^)(NSDictionary *tweet))eventBlock
+                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                                          includeReplies:(NSNumber *)includeReplies
+                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
+                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 

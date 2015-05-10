@@ -1,4 +1,4 @@
-#import "STTwitter/STTwitter.h"
+#import "STTwitter.h"
 
 #import "OTCTweet.h"
 #import "OTCTwitterUser.h"
