@@ -129,7 +129,8 @@ static inline BOOL isDigitsOnlyString(NSString *str) {
             return STTwitterStreamJSONTypeUserWithheld;
         } else if ([json objectForKey:@"control"]) {
             return STTwitterStreamJSONTypeControl;
-        }
+        } else if ([json objectForKey:@"direct_message"])
+            return STTwitterStreamJSONTypeDirectMessages;
     }
     
     return STTwitterStreamJSONTypeUnsupported;

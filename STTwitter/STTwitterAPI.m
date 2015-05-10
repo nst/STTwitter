@@ -1567,9 +1567,29 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                              [[json valueForKey:@"percent_full"] integerValue]);
                                        }
                                        break;
-                                  case STTwitterStreamJSONTypeEvent:
+                                   case STTwitterStreamJSONTypeEvent:
                                       if (eventBlock)
                                           eventBlock(json);
+                                      break;
+
+                                   case STTwitterStreamJSONTypeDirectMessages:
+                                      NSLog( @"%@", json );
+                                      break;
+
+                                   case STTwitterStreamJSONTypeDisconnect:
+                                      NSLog( @"%@", json );
+                                      break;
+
+                                   case STTwitterStreamJSONTypeDelete:
+                                      NSLog( @"%@", json );
+                                      break;
+
+                                   case STTwitterStreamJSONTypeFriendsLists:
+                                      NSLog( @"Friends Lists (%lu) %@", [ ( NSArray* )json[ @"friends" ] count ], json );
+                                      break;
+
+                                   case STTwitterStreamJSONTypeUserWithheld:
+                                      NSLog( @"User Withheld: %@", json );
                                       break;
                                    default:
                                        break;
