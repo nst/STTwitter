@@ -14,6 +14,7 @@
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
 #import "STHTTPRequest+STTwitter.h"
+#import "Objectwitter-C.h"
 
 NSString *kBaseURLStringAPI_1_1 = @"https://api.twitter.com/1.1";
 NSString *kBaseURLStringUpload_1_1 = @"https://upload.twitter.com/1.1";
@@ -1544,8 +1545,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                            includeReplies:(NSNumber *)includeReplies
                                                                           keywordsToTrack:(NSArray *)keywordsToTrack
                                                                     locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                               tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                                              eventBlock:(void(^)(NSDictionary *tweet))eventBlock
+                                                                               tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
+                                                                              eventBlock:(void(^)(NSDictionary *event))eventBlock
                                                                         stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 {
@@ -1558,7 +1559,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                
                                switch (type) {
                                    case STTwitterStreamJSONTypeTweet:
-                                       tweetBlock(json);
+                                       tweetBlock( [ OTCTweet tweetWithJSON: json ] );
                                        break;
                                    case STTwitterStreamJSONTypeWarning:
                                        if (stallWarningBlock) {
@@ -1602,7 +1603,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock
 {
@@ -1622,7 +1623,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock
 {
     return [self getUserStreamIncludeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts

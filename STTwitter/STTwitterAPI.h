@@ -23,6 +23,8 @@
 #import "STTwitterStreamParser.h"
 #import "STTwitterRequestProtocol.h"
 
+@class OTCTweet;
+
 extern NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
     STTwitterAPICannotPostEmptyStatus = 0,
     STTwitterAPIMediaDataIsEmpty,
@@ -586,8 +588,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                                              eventBlock:(void(^)(NSDictionary *tweet))eventBlock
+                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
+                                                                              eventBlock:(void(^)(NSDictionary *event))eventBlock
                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -595,7 +597,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -603,7 +605,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
+                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
