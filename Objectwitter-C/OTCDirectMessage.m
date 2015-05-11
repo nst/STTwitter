@@ -22,21 +22,9 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCDirectMessage.h"
 
-@class STTwitterAPI;
-@class OTCTweet;
-@class OTCStreamingEvent;
-
-@protocol OTCSTTwitterAPIDelegate <NSObject>
-
-@required
-- ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI didReceiveTweet: ( OTCTweet* )_ReceivedTweet;
-- ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI streamingEventHasBeenDetected: ( OTCStreamingEvent* )_DetectedEvent;
-- ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI tweetHasBeenDeleted: ( NSString* )_DeletedTweetID byUser: ( NSString* )_UserID on: ( NSDate* )_DeletionDate;
-- ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI didTriggerStallWarning: ( NSString* )_WarningMessage code: ( NSString* )_Code percentFull: ( NSUInteger )_PercentFull;
-- ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI streaming: ( NSString* )_StreamName wasDisconnectedDueTo: ( NSString* )_Reason code: ( NSString* )_Code;
-- ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI fuckingErrorOccured: ( NSError* )_Error;
+@implementation OTCDirectMessage
 
 @end
 
