@@ -22,6 +22,7 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterStreamParser.h"
 #import "STTwitterRequestProtocol.h"
+#import "OTCSTTwitterAPIDelegate.h"
 
 @class OTCTweet;
 @class OTCStreamingEvent;
@@ -149,6 +150,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
+
+@property ( weak, readwrite ) id <OTCSTTwitterAPIDelegate> delegate;
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
 
@@ -588,13 +591,13 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                              eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
-                                                                      tweetDeletionBlock:(void(^)(NSString *deletedTweetID, NSString *twitterUser, NSDate* deletionDate))tweetDeletionBlock
-                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                                       disconectionBlock:(void(^)(NSString *code, NSString *streamName, NSString *reason))disconectionBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
+                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes;
+//                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
+//                                                                              eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
+//                                                                      tweetDeletionBlock:(void(^)(NSString *deletedTweetID, NSString *twitterUser, NSDate* deletionDate))tweetDeletionBlock
+//                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+//                                                                       disconectionBlock:(void(^)(NSString *code, NSString *streamName, NSString *reason))disconectionBlock
+//                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 /*
  GET    site
  

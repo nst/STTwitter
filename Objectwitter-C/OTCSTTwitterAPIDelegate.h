@@ -28,7 +28,7 @@
 @class OTCTweet;
 @class OTCStreamingEvent;
 
-@protocol OTCSTTwitterAPIDelegate
+@protocol OTCSTTwitterAPIDelegate <NSObject>
 
 @required
 - ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI didReceiveTweet: ( OTCTweet* )_ReceivedTweet;
