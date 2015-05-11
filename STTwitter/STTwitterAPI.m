@@ -1541,14 +1541,16 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
- - (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                           includeReplies:(NSNumber *)includeReplies
-                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                               tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                               eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
-                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                                          includeReplies:(NSNumber *)includeReplies
+                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
+                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
+                                                                              eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
+                                                                      tweetDeletionBlock:(void(^)(NSString *deletedTweetID, NSString *twitterUser, NSDate* deletionDate))tweetDeletionBlock
+                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                                       disconectionBlock:(void(^)(NSString *code, NSString *streamName, NSString *reason))disconectionBlock
+                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 {
  return [self getUserStreamStallWarnings:stallWarningBlock ? @YES : @NO
      includeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
@@ -1561,6 +1563,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    case STTwitterStreamJSONTypeTweet:
                                        tweetBlock( [ OTCTweet tweetWithJSON: json ] );
                                        break;
+
                                    case STTwitterStreamJSONTypeWarning:
                                        if (stallWarningBlock) {
                                            stallWarningBlock([json valueForKey:@"code"],
@@ -1568,6 +1571,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                              [[json valueForKey:@"percent_full"] integerValue]);
                                        }
                                        break;
+
                                    case STTwitterStreamJSONTypeEvent:
                                       if (eventBlock)
                                           eventBlock( [ OTCStreamingEvent eventWithJSON: json ] );
@@ -1578,11 +1582,24 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                       break;
 
                                    case STTwitterStreamJSONTypeDisconnect:
-                                      NSLog( @"%@", json );
+                                        if ( disconectionBlock )
+                                            disconectionBlock( [ json[ @"disconnect" ] valueForKey: @"code" ]
+                                                             , [ json[ @"disconnect" ] valueForKey: @"stream_name" ]
+                                                             , [ json[ @"disconnect" ] valueForKey: @"reason" ]
+                                                             );
                                       break;
 
                                    case STTwitterStreamJSONTypeDelete:
-                                      NSLog( @"%@", json );
+                                        if ( tweetDeletionBlock )
+                                            {
+                                            NSString* IDString = [ json[ @"delete" ][ @"status" ] valueForKey: @"id_str" ];
+                                            NSString* userIDString = [ json[ @"delete" ][ @"status" ] valueForKey: @"user_id_str" ];
+                                            NSString* timestampWithMS = json[ @"delete" ][ @"timestamp_ms" ];
+
+                                            // The last three digit representing milliseconds must be hacked
+                                            NSTimeInterval timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
+                                            tweetDeletionBlock( IDString, userIDString, [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] );
+                                            }
                                       break;
 
                                    case STTwitterStreamJSONTypeFriendsLists:
@@ -1592,47 +1609,12 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    case STTwitterStreamJSONTypeUserWithheld:
                                       NSLog( @"User Withheld: %@", json );
                                       break;
+
                                    default:
                                        break;
                                }
                                
                           } errorBlock:errorBlock];
-}
-
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                          includeReplies:(NSNumber *)includeReplies
-                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock
-{
-    return [ self getUserStreamIncludeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
-                                                    includeReplies:includeReplies
-                                                   keywordsToTrack:keywordsToTrack
-                                             locationBoundingBoxes:locationBoundingBoxes
-                                                        tweetBlock:tweetBlock
-                                                        eventBlock:nil
-                                                 stallWarningBlock:stallWarningBlock
-                                                        errorBlock:errorBlock ];
-
-}
-
-
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                          includeReplies:(NSNumber *)includeReplies
-                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock
-{
-    return [self getUserStreamIncludeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
-                                                   includeReplies:includeReplies
-                                                  keywordsToTrack:keywordsToTrack
-                                            locationBoundingBoxes:locationBoundingBoxes
-                                                       tweetBlock:tweetBlock
-                                                stallWarningBlock:nil
-                                                       errorBlock:errorBlock];
 }
 
 // GET site

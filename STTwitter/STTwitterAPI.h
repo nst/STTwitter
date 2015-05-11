@@ -591,24 +591,10 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                                                                               tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
                                                                               eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
+                                                                      tweetDeletionBlock:(void(^)(NSString *deletedTweetID, NSString *twitterUser, NSDate* deletionDate))tweetDeletionBlock
                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
+                                                                       disconectionBlock:(void(^)(NSString *code, NSString *streamName, NSString *reason))disconectionBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
-
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                          includeReplies:(NSNumber *)includeReplies
-                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
-
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                          includeReplies:(NSNumber *)includeReplies
-                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
-
 /*
  GET    site
  
