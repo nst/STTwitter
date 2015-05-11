@@ -1546,9 +1546,9 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                           keywordsToTrack:(NSArray *)keywordsToTrack
                                                                     locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                                                                                tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                              eventBlock:(void(^)(NSDictionary *event))eventBlock
+                                                                               eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
                                                                         stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
+                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 {
  return [self getUserStreamStallWarnings:stallWarningBlock ? @YES : @NO
      includeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
@@ -1570,7 +1570,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                        break;
                                    case STTwitterStreamJSONTypeEvent:
                                       if (eventBlock)
-                                          eventBlock(json);
+                                          eventBlock( [ OTCStreamingEvent eventWithJSON: json ] );
                                       break;
 
                                    case STTwitterStreamJSONTypeDirectMessages:

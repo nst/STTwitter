@@ -29,6 +29,15 @@
 
 #import "_OTCGeneral.h"
 
+// Private interfaces of OTCStreamingEvent
+@interface OTCStreamingEvent ()
+
+- ( OTCStreamingEventType ) _streamingEventTypeForJSON: ( NSDictionary* )_JSONObject;
+- ( NSString* ) _stringifyEventType: ( OTCStreamingEventType )_EventType;
+
+@end // Private interfaces of OTCStreamingEvent
+
+// OTCStreamingEvent class
 @implementation OTCStreamingEvent
 
 @synthesize JSONDict = _JSONDict;
@@ -40,6 +49,15 @@
 @synthesize sourceUser = _sourceUser;
 
 @synthesize targetObject = _targetObject;
+
+- ( NSString* ) description
+    {
+    return [ @{ @"Event Name" : [ self _stringifyEventType: self->_eventType ] ?: [ NSNull null ]
+              , @"Creation Date" : self->_creationDate ?: [ NSNull null ]
+              , @"Target User Display Name" : self->_targetUser.displayName ?: [ NSNull null ]
+              , @"Source User Display Name" : self->_sourceUser.displayName ?: [ NSNull null ]
+              } description ];
+    }
 
 #pragma mark Initialization
 + ( instancetype ) eventWithJSON: ( NSDictionary* )_JSONObject
@@ -59,13 +77,29 @@
         self->_eventType = [ self _streamingEventTypeForJSON: _JSONObject ];
         self->_creationDate = [ [ NSDate dateWithNaturalLanguageString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) copy ] ] dateWithLocalTimeZone ];
 
-        NSDictionary* targetObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"target" );
+        NSDictionary* targetUserObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"target" );
         NSDictionary* sourceObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"source" );
-        if ( targetObject )
-            self->_targetUser = [ OTCTwitterUser userWithJSON: targetObject ];
+        if ( targetUserObject )
+            self->_targetUser = [ OTCTwitterUser userWithJSON: targetUserObject ];
 
         if ( sourceObject )
             self->_sourceUser = [ OTCTwitterUser userWithJSON: sourceObject ];
+
+        NSDictionary* targetObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"target_object" );
+        if ( targetObject )
+            {
+            switch ( self->_eventType )
+                {
+                case OTCStreamingEventTypeFavorite:
+                case OTCStreamingEventTypeUnfavorite:
+                case OTCStreamingEventTypeFollow:
+                case OTCStreamingEventTypeUnfollow:
+                    self->_targetObject = [ OTCTweet tweetWithJSON: targetObject ];
+                    break;
+
+                default: ; // Do nothing
+                }
+            }
         }
 
     return self;
@@ -128,7 +162,66 @@
     return type;
     }
 
-@end
+- ( NSString* ) _stringifyEventType: ( OTCStreamingEventType )_EventType
+    {
+    NSString* stringRepresentation = nil;
+
+    switch ( _EventType )
+        {
+        case OTCStreamingEventTypeUnknown:
+            stringRepresentation = @"OTCStreamingEventTypeUnknown";
+            break;
+        case OTCStreamingEventTypeAccessRevoked:
+            stringRepresentation = @"OTCStreamingEventTypeAccessRevoked";
+            break;
+        case OTCStreamingEventTypeBlock:
+            stringRepresentation = @"OTCStreamingEventTypeBlock";
+            break;
+        case OTCStreamingEventTypeUnblock:
+            stringRepresentation = @"OTCStreamingEventTypeUnblock";
+            break;
+        case OTCStreamingEventTypeFavorite:
+            stringRepresentation = @"OTCStreamingEventTypeFavorite";
+            break;
+        case OTCStreamingEventTypeUnfavorite:
+            stringRepresentation = @"OTCStreamingEventTypeUnfavorite";
+            break;
+        case OTCStreamingEventTypeFollow:
+            stringRepresentation = @"OTCStreamingEventTypeFollow";
+            break;
+        case OTCStreamingEventTypeUnfollow:
+            stringRepresentation = @"OTCStreamingEventTypeUnfollow";
+            break;
+        case OTCStreamingEventTypeListCreated:
+            stringRepresentation = @"OTCStreamingEventTypeListCreated";
+            break;
+        case OTCStreamingEventTypeListDestroyed:
+            stringRepresentation = @"OTCStreamingEventTypeListDestroyed";
+            break;
+        case OTCStreamingEventTypeListUpdated:
+            stringRepresentation = @"OTCStreamingEventTypeListUpdated";
+            break;
+        case OTCStreamingEventTypeListMemberAdded:
+            stringRepresentation = @"OTCStreamingEventTypeListMemberAdded";
+            break;
+        case OTCStreamingEventTypeListMemberRemoved:
+            stringRepresentation = @"OTCStreamingEventTypeListMemberRemoved";
+            break;
+        case OTCStreamingEventTypeListUserSubscribed:
+            stringRepresentation = @"OTCStreamingEventTypeListUserSubscribed";
+            break;
+        case OTCStreamingEventTypeListUserUnsubscribed:
+            stringRepresentation = @"OTCStreamingEventTypeListUserUnsubscribed";
+            break;
+        case OTCStreamingEventTypeUserUpdate:
+            stringRepresentation = @"OTCStreamingEventTypeUserUpdate";
+            break;
+        }
+
+    return stringRepresentation;
+    }
+
+@end // OTCStreamingEvent class
 
 /*=============================================================================================┐
 |                                                                                              |

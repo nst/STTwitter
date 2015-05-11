@@ -24,6 +24,7 @@
 
 #import <Foundation/Foundation.h>
 
+// Constants
 typedef NS_ENUM( NSInteger, OTCStreamingEventType )
     { OTCStreamingEventTypeUnknown              = -1
     , OTCStreamingEventTypeAccessRevoked        = 0
@@ -39,13 +40,14 @@ typedef NS_ENUM( NSInteger, OTCStreamingEventType )
     , OTCStreamingEventTypeListMemberAdded      = 10
     , OTCStreamingEventTypeListMemberRemoved    = 11
     , OTCStreamingEventTypeListUserSubscribed   = 12
-    , OTCStreamingEventTypeListUserUnsubscribed  = 13
+    , OTCStreamingEventTypeListUserUnsubscribed = 13
     , OTCStreamingEventTypeUserUpdate           = 14
     };
 
 @class OTCTweet;
 @class OTCTwitterUser;
 
+// OTCStreamingEvent class
 @interface OTCStreamingEvent : NSObject
     {
 @private
@@ -74,7 +76,7 @@ typedef NS_ENUM( NSInteger, OTCStreamingEventType )
 + ( instancetype ) eventWithJSON: ( NSDictionary* )_JSONObject;
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONObject;
 
-@end
+@end // OTCStreamingEvent class
 
 /*=============================================================================================┐
 |                                                                                              |

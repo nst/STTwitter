@@ -24,6 +24,7 @@
 #import "STTwitterRequestProtocol.h"
 
 @class OTCTweet;
+@class OTCStreamingEvent;
 
 extern NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
     STTwitterAPICannotPostEmptyStatus = 0,
@@ -589,7 +590,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes
                                                                               tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-                                                                              eventBlock:(void(^)(NSDictionary *event))eventBlock
+                                                                              eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
                                                                        stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
                                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
