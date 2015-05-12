@@ -41,12 +41,13 @@
 #pragma mark Overrides
 - ( NSString* ) description
     {
-    return [ NSString stringWithFormat: @"\n%@ = %@\n"
-                                        @"👳🏻 %@ ➡️ 👷🏻 %@\n\n\n"
-                                      , [ self _stringifyTweetType: self->_type ]
-                                      , self->_tweetText
+    return [ NSString stringWithFormat: @"\n👳🏻 %@ ➜ 👷🏻 %@\n"
+                                        @"%@ %@\n"
+                                        @"\n\n"
                                       , self->_sender ? [ NSString stringWithFormat: @"%@ (%@)", self->_sender.displayName, self->_sender.screenName ] : [ NSNull null ]
                                       , self->_recipient ? [ NSString stringWithFormat: @"%@ (%@)", self->_recipient.displayName, self->_recipient.screenName ] : [ NSNull null ]
+                                      , [ self _stringifyTweetType: self->_type ]
+                                      , self->_tweetText
                                       ];
     }
 

@@ -81,11 +81,11 @@
 #pragma mark Overrides
 - ( NSString* ) description
     {
-    return [ NSString stringWithFormat: @"\n%@ = %@\n"
-                                        @"👳🏻 = %@\n\n\n"
+    return [ NSString stringWithFormat: @"\n👳🏻 %@\n"
+                                        @"%@ %@\n\n\n"
+                                      , self->_author ? [ NSString stringWithFormat: @"%@ (%@)", self->_author.displayName, self->_author.screenName ] : [ NSNull null ]
                                       , [ self _stringifyTweetType: self->_type ]
-                                      , self->_tweetText
-                                      , self->_author ? [ NSString stringWithFormat: @"%@ (%@)", self->_author.displayName, self->_author.screenName ] : [ NSNull null ] ];
+                                      , self->_tweetText ];
     }
 
 #pragma mark Initialization
