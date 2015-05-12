@@ -25,6 +25,17 @@
 #import "OTCTweet.h"
 
 @interface OTCDirectMessage : OTCTweet
+    {
+@private
+    OTCTwitterUser __strong* _recipient;
+    OTCTwitterUser __strong* _sender;
+    }
+
+@property ( strong, readonly ) OTCTwitterUser* recipient;
+@property ( strong, readonly ) OTCTwitterUser* sender;
+
+#pragma mark Initialization
++ ( instancetype ) directMessageWithJSON: ( NSDictionary* )_JSONDict;
 
 @end
 

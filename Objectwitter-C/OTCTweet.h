@@ -34,7 +34,7 @@
   */
 @interface OTCTweet : NSObject
     {
-@private
+@protected
     NSDictionary __strong* _JSONDict;
 
     // Identifier

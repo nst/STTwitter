@@ -1585,7 +1585,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
                 case STTwitterStreamJSONTypeDirectMessages:
                     {
-                    NSLog( @"%@", _JSON );
+                    if ( [ self.delegate respondsToSelector: @selector( twitterAPI:sentOrReceivedDM: ) ] )
+                        [ self.delegate twitterAPI: self sentOrReceivedDM: [ OTCDirectMessage directMessageWithJSON: _JSON ] ];
                     } break;
 
                 case STTwitterStreamJSONTypeDisconnect:

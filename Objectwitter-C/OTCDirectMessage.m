@@ -23,8 +23,40 @@
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
 #import "OTCDirectMessage.h"
+#import "OTCTwitterUser.h"
+
+#import "_OTCGeneral.h"
 
 @implementation OTCDirectMessage
+
+@synthesize recipient = _recipient;
+@synthesize sender = _sender;
+
+#pragma mark Initialization
++ ( instancetype ) directMessageWithJSON: ( NSDictionary* )_JSONDict
+    {
+    return [ [ self alloc ] initWithJSON: _JSONDict ];
+    }
+
+#pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ @{ @"Message" : self->_tweetText ?: [ NSNull null ]
+              , @"Recipient" : self->_recipient ? [ NSString stringWithFormat: @"%@ (%@)", self->_recipient.displayName, self->_recipient.screenName ] : [ NSNull null ]
+              , @"Sender" : self->_sender ? [ NSString stringWithFormat: @"%@ (%@)", self->_sender.displayName, self->_sender.screenName ] : [ NSNull null ]
+              } description ];
+    }
+
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSON
+    {
+    if ( self = [ super initWithJSON: _JSON[ @"direct_message" ] ] )
+        {
+        self->_recipient = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"recipient" ) ];
+        self->_sender = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"sender" ) ];
+        }
+
+    return self;
+    }
 
 @end
 
