@@ -1,7 +1,9 @@
 #import "STTwitter.h"
 
 #import "OTCTweet.h"
+#import "OTCDirectMessage.h"
 #import "OTCTwitterUser.h"
+#import "OTCStreamingEvent.h"
 
 #import "OTCResolvedObject.h"
     #import "OTCUserMention.h"
