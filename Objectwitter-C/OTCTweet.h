@@ -27,6 +27,14 @@
 @class OTCPlace;
 @class OTCTwitterUser;
 
+typedef NS_ENUM( NSUInteger,  OTCTweetType )
+    { OTCTweetTypeUnknown       = 0
+    , OTCTweetTypeNormalTweet   = 1
+    , OTCTweetTypeRetweet       = 2
+    , OTCTweetTypeReply         = 3
+    , OTCTweetTypeDirectMessage = 4
+    };
+
 /** Tweets are the basic atomic building block of all things Twitter. 
 
   @discussion Tweets, also known more generically as “status updates.” 
@@ -48,6 +56,7 @@
     NSUInteger _retweetCount;
 
     // Content
+    OTCTweetType _type;
     NSString* _tweetText;
     NSDate __strong* _dateCreated;
     NSString* _source;
@@ -113,6 +122,10 @@
 @property ( assign, readonly ) NSUInteger retweetCount;
 
 #pragma mark Content
+/** Type of the tweet represented by receiver.
+  */
+@property ( assign, readonly ) OTCTweetType type;
+
 /** The actual UTF-8 text of the status update. 
 
   @discussion See twitter-text for details on what is currently considered valid characters.
@@ -236,6 +249,8 @@
 
 #pragma mark Comparing
 - ( BOOL ) isEqualToTweet: ( OTCTweet* )_AnotherTweet;
+
+- ( NSString* ) _stringifyTweetType: ( OTCTweetType )_TweetType;
 
 @end // OTCTweet
 

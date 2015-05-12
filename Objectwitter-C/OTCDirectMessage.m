@@ -41,10 +41,13 @@
 #pragma mark Overrides
 - ( NSString* ) description
     {
-    return [ @{ @"Message" : self->_tweetText ?: [ NSNull null ]
-              , @"Recipient" : self->_recipient ? [ NSString stringWithFormat: @"%@ (%@)", self->_recipient.displayName, self->_recipient.screenName ] : [ NSNull null ]
-              , @"Sender" : self->_sender ? [ NSString stringWithFormat: @"%@ (%@)", self->_sender.displayName, self->_sender.screenName ] : [ NSNull null ]
-              } description ];
+    return [ NSString stringWithFormat: @"\n%@ = %@\n"
+                                        @"👳🏻 %@ ➡️ 👷🏻 %@\n\n\n"
+                                      , [ self _stringifyTweetType: self->_type ]
+                                      , self->_tweetText
+                                      , self->_sender ? [ NSString stringWithFormat: @"%@ (%@)", self->_sender.displayName, self->_sender.screenName ] : [ NSNull null ]
+                                      , self->_recipient ? [ NSString stringWithFormat: @"%@ (%@)", self->_recipient.displayName, self->_recipient.screenName ] : [ NSNull null ]
+                                      ];
     }
 
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSON
@@ -53,6 +56,7 @@
         {
         self->_recipient = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"recipient" ) ];
         self->_sender = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"sender" ) ];
+        self->_type = OTCTweetTypeDirectMessage;
         }
 
     return self;

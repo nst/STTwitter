@@ -49,6 +49,7 @@
 @synthesize retweetCount = _retweetCount;
 
 #pragma mark Content
+@synthesize type = _type;
 @synthesize tweetText = _tweetText;
 @synthesize dateCreated = _dateCreated;
 @synthesize source = _source;
@@ -76,6 +77,16 @@
 
 #pragma mark Author
 @synthesize author = _author;
+
+#pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ NSString stringWithFormat: @"\n%@ = %@\n"
+                                        @"👳🏻 = %@\n\n\n"
+                                      , [ self _stringifyTweetType: self->_type ]
+                                      , self->_tweetText
+                                      , self->_author ? [ NSString stringWithFormat: @"%@ (%@)", self->_author.displayName, self->_author.screenName ] : [ NSNull null ] ];
+    }
 
 #pragma mark Initialization
 + ( instancetype ) tweetWithJSON: ( NSDictionary* )_JSONDict
@@ -137,6 +148,13 @@
         NSDictionary* userObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"user" );
         if ( userObject )
             self->_author = [ OTCTwitterUser userWithJSON: userObject ];
+
+        if ( self->_originalTweet )
+            self->_type = OTCTweetTypeRetweet;
+        else if ( self->_replyToTweetID )
+            self->_type = OTCTweetTypeReply;
+        else
+            self->_type = OTCTweetTypeNormalTweet;
         }
 
     return self;
@@ -160,6 +178,23 @@
         return [ self isEqualToTweet: ( OTCTweet* )_Object ];
 
     return [ super isEqual: _Object ];
+    }
+
+- ( NSString* ) _stringifyTweetType: ( OTCTweetType )_TweetType
+    {
+    NSString* stringRep = nil;
+
+    switch ( _TweetType )
+        {
+        case OTCTweetTypeNormalTweet:   stringRep = @"📢"; break;
+        case OTCTweetTypeRetweet:       stringRep = @"🔁"; break;
+        case OTCTweetTypeReply:         stringRep = @"⤴️"; break;
+        case OTCTweetTypeDirectMessage: stringRep = @"💬"; break;
+
+        default: stringRep = @"Unknown";
+        }
+
+    return stringRep;
     }
 
 @end // OTCTweet
