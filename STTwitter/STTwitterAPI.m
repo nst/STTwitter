@@ -1550,7 +1550,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     BOOL processStallWarning = [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ];
     BOOL processError = [ self.delegate respondsToSelector: @selector( twitterAPI:fuckingErrorOccured: ) ];
 
-    return [ self getUserStreamStallWarnings: @( processStallWarning )
+    return [ self getUserStreamStallWarnings: [ NSNumber numberWithBool: processStallWarning ]
          includeMessagesFromFollowedAccounts: _IncludeMessagesFromFollowedAccounts
                               includeReplies: _IncludeReplies
                              keywordsToTrack: _KeywordsToTrack

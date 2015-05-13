@@ -24,6 +24,7 @@
 
 #import "OTCDirectMessage.h"
 #import "OTCTwitterUser.h"
+#import "OTCMedia.h"
 
 #import "_OTCGeneral.h"
 
@@ -57,6 +58,10 @@
         {
         self->_recipient = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"recipient" ) ];
         self->_sender = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"sender" ) ];
+
+        NSDictionary* extendedEntitiesObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"entities" );
+        self->_media = _OTCArrayValueWhichHasBeenParsedOutOfJSON( extendedEntitiesObject, @"media", [ OTCMedia class ], @selector( mediaWithJSON: ) );
+
         self->_type = OTCTweetTypeDirectMessage;
         }
 
