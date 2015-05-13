@@ -36,11 +36,11 @@ id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSStrin
     return cocoaValue;
     }
 
-NSUInteger _OTCIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
+NSUInteger _OTCSInt64WhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
     {
     NSNumber* cocoaNumber = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( _JSONObject, _JSONPropertyKey );
     assert( !cocoaNumber || [ cocoaNumber respondsToSelector: @selector( integerValue ) ] );
-    return cocoaNumber ? cocoaNumber.integerValue : 0;
+    return cocoaNumber ? cocoaNumber.longLongValue : 0;
     }
 
 NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey )
