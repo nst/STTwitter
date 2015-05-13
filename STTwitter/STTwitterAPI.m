@@ -1602,13 +1602,29 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                     {
                     if ( [ self.delegate respondsToSelector: @selector( twitterAPI:tweetHasBeenDeleted:byUser:on: ) ] )
                         {
-                        NSString* IDString = [ _JSON[ @"delete" ][ @"status" ] valueForKey: @"id_str" ];
-                        NSString* userIDString = [ _JSON[ @"delete" ][ @"status" ] valueForKey: @"user_id_str" ];
-                        NSString* timestampWithMS = _JSON[ @"delete" ][ @"timestamp_ms" ];
+                        NSString* tweetIDString = nil;
+                        NSString* userIDString = nil;
+                        NSString* timestampWithMS = nil;
+                        NSTimeInterval timestamp = 0.f;
+
+                        NSDictionary* tweetAttrJSON = _JSON[ @"delete" ];
+                        if ( tweetAttrJSON[ @"status" ] )
+                            {
+                            tweetIDString = [ tweetAttrJSON[ @"status" ] valueForKey: @"id_str" ];
+                            userIDString = [ tweetAttrJSON[ @"status" ] valueForKey: @"user_id_str" ];
+                            }
+                        else if ( tweetAttrJSON[ @"direct_message" ] )
+                            {
+                            tweetIDString = [ tweetAttrJSON[ @"direct_message" ] valueForKey: @"id_str" ];
+                            userIDString = [ [ tweetAttrJSON[ @"direct_message" ] valueForKey: @"user_id" ] stringValue ];
+                            }
+
+                        timestampWithMS = tweetAttrJSON[ @"timestamp_ms" ];
 
                         // The last three digit representing milliseconds must be hacked
-                        NSTimeInterval timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
-                        [ self.delegate twitterAPI: self tweetHasBeenDeleted: IDString byUser: userIDString on: [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] ];
+                        timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
+
+                        [ self.delegate twitterAPI: self tweetHasBeenDeleted: tweetIDString byUser: userIDString on: timestampWithMS ? [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] : nil ];
                         }
                     } break;
 
