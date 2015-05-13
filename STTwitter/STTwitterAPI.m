@@ -1604,8 +1604,6 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                         {
                         NSString* tweetIDString = nil;
                         NSString* userIDString = nil;
-                        NSString* timestampWithMS = nil;
-                        NSTimeInterval timestamp = 0.f;
 
                         NSDictionary* tweetAttrJSON = _JSON[ @"delete" ];
                         if ( tweetAttrJSON[ @"status" ] )
@@ -1619,12 +1617,15 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                             userIDString = [ [ tweetAttrJSON[ @"direct_message" ] valueForKey: @"user_id" ] stringValue ];
                             }
 
-                        timestampWithMS = tweetAttrJSON[ @"timestamp_ms" ];
+                        NSString* timestampWithMS = tweetAttrJSON[ @"timestamp_ms" ];
 
                         // The last three digit representing milliseconds must be hacked
-                        timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
+                        NSTimeInterval timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
 
-                        [ self.delegate twitterAPI: self tweetHasBeenDeleted: tweetIDString byUser: userIDString on: timestampWithMS ? [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] : nil ];
+                        [ self.delegate twitterAPI: self
+                               tweetHasBeenDeleted: tweetIDString
+                                            byUser: userIDString
+                                                on: timestampWithMS ? [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] : nil ];
                         }
                     } break;
 
