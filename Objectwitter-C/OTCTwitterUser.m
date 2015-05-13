@@ -173,7 +173,7 @@
         self->_isGeoEnabled = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"geo_enabled" );
         self->_language = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"lang" ) copy ];
 
-        self->_UTCOffset = _OTCIntWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"utc_offset" );
+        self->_UTCOffset = _OTCSInt64WhichHasBeenParsedOutOfJSON( self->_JSONObject, @"utc_offset" );
         self->_timeZone = [ NSTimeZone timeZoneForSecondsFromGMT: self->_UTCOffset ];
         self->_timeZoneName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONObject, @"time_zone" ) copy ];
 

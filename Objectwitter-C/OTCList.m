@@ -22,29 +22,100 @@
   ████████████████████████████████████████████████████████████████████████████████████████████████
   ██████████████████████████████████████████████████████████████████████████████████████████████*/
 
-#import <Foundation/Foundation.h>
+#import "OTCList.h"
+#import "OTCTwitterUser.h"
+#import "NSURL+Objectwitter-C.h"
+#import "NSDate+WSCCocoaDate.h"
 
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-NSUInteger _OTCSInt64WhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-NSSize _OTCSizeWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
+#import "_OTCGeneral.h"
 
-NSArray* _OTCArrayValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
-                                                  , NSString* _JSONPropertyKey
-                                                  , Class _KindOfElements
-                                                  , SEL _InitMethodsOfElements
-                                                  );
+@implementation OTCList
 
-#define __THROW_EXCEPTION__WHEN_INVOKED_PURE_VIRTUAL_METHOD__ \
-    @throw [ NSException exceptionWithName: NSGenericException \
-                         reason: [ NSString stringWithFormat: @"unimplemented pure virtual method `%@` in `%@` "\
-                                                               "from instance: %p (%@)" \
-                                                            , NSStringFromSelector( _cmd ) \
-                                                            , NSStringFromClass( [ self class ] ) \
-                                                            , self \
-                                                            , self ] \
-                         userInfo: nil ]
+@synthesize JSONDict = _JSONDict;
+
+@synthesize ID = _ID;
+@synthesize IDString = _IDString;
+
+@synthesize URI = _URI;
+@synthesize slug = _slug;
+@synthesize shortenName = _shortenName;
+@synthesize fullName = _fullName;
+
+@synthesize subscribedCount = _subscriberCount;
+@synthesize memberCount = _memberCount;
+@synthesize subscribing = _subscribing;
+
+@synthesize isPrivate = _isPrivate;
+@synthesize descriptionSetByCreator = _descriptionSetByCreator;
+@synthesize creationDate = _creationDate;
+@synthesize creator = _creator;
+
+#pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ NSString stringWithFormat: @"\nID = %@\n"
+                                        @"URI = %@\n"
+                                        @"Slug = %@\n"
+                                        @"Shorten Name = %@\n"
+                                        @"Full Name = %@\n"
+                                        @"Subscribed Count = %lu\n"
+                                        @"Member Count = %lu\n"
+                                        @"Is Subcribing? %@\n"
+                                        @"Is Private? %@\n"
+                                        @"Description: %@\n"
+                                        @"Creator: %@\n"
+                                        @"\n\n\n"
+                                      , self->_IDString
+                                      , self->_URI
+                                      , self->_slug
+                                      , self->_shortenName
+                                      , self->_fullName
+                                      , self->_subscriberCount
+                                      , self->_memberCount
+                                      , self->_subscribing ? @"✅" : @"❌"
+                                      , self->_isPrivate ? @"✅" : @"❌"
+                                      , self->_descriptionSetByCreator
+                                      , [ NSString stringWithFormat: @"%@ (%@)", self->_creator.displayName, self->_creator.screenName ]
+                                      ];
+    }
+
+#pragma mark Initialization
++ ( instancetype ) listWithJSON: ( NSDictionary* )_JSONObject
+    {
+    return [ [ self alloc ] initWithJSON: _JSONObject ];
+    }
+
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONObject
+    {
+    if ( !_JSONObject )
+        return nil;
+
+    if ( self = [ super init ] )
+        {
+        self->_JSONDict = _JSONObject;
+
+        self->_ID = _OTCSInt64WhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
+        self->_IDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id_str" ) copy ];
+
+        self->_URI = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"uri" ) copy ];
+        self->_slug = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"slug" ) copy ];
+        self->_shortenName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"name" ) copy ];
+        self->_fullName = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"full_name" ) copy ];
+
+        self->_subscriberCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"subscriber_count" );
+        self->_memberCount = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"member_count" );
+        self->_subscribing = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict,  @"following" );
+
+        self->_isPrivate = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"mode" ) isEqualToString: @"private" ];
+        self->_descriptionSetByCreator = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"description" ) copy ];
+        self->_creationDate = [ [ NSDate dateWithNaturalLanguageString: [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"created_at" ) copy ] ] dateWithLocalTimeZone ];
+        self->_creator = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"user" ) ];
+        }
+
+    return self;
+    }
+
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

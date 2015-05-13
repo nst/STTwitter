@@ -52,7 +52,7 @@
         {
         self->_JSONDict = _JSONObject;
 
-        self->_ID = _OTCIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
+        self->_ID = _OTCSInt64WhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
         self->_name = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"name" ) copy ];
         self->_URL = [ NSURL URLWithString: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"url" ) ];
 

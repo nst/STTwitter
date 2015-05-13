@@ -25,6 +25,7 @@
 #import "NSDate+WSCCocoaDate.h"
 #import "OTCStreamingEvent.h"
 #import "OTCTweet.h"
+#import "OTCList.h"
 #import "OTCTwitterUser.h"
 
 #import "_OTCGeneral.h"
@@ -52,11 +53,18 @@
 
 - ( NSString* ) description
     {
-    return [ @{ @"Event Name" : [ self _stringifyEventType: self->_eventType ] ?: [ NSNull null ]
-              , @"Creation Date" : self->_creationDate ?: [ NSNull null ]
-              , @"Target User Display Name" : self->_targetUser.displayName ?: [ NSNull null ]
-              , @"Source User Display Name" : self->_sourceUser.displayName ?: [ NSNull null ]
-              } description ];
+    return [ NSString stringWithFormat: @"\nEvent Name = %@\n"
+                                        @"Creation Date = %@\n"
+                                        @"Target User Display Name = %@\n"
+                                        @"Source User Display Name = %@\n"
+                                        @"\nTarget Object: %@"
+                                        @"\n"
+                                      , [ self _stringifyEventType: self->_eventType ]
+                                      , self->_creationDate
+                                      , [ NSString stringWithFormat: @"%@ (%@)", self->_targetUser.displayName, self->_targetUser.screenName ]
+                                      , [ NSString stringWithFormat: @"%@ (%@)", self->_sourceUser.displayName, self->_sourceUser.screenName ]
+                                      , self->_targetObject
+                                      ];
     }
 
 #pragma mark Initialization
@@ -95,6 +103,16 @@
                 case OTCStreamingEventTypeFollow:
                 case OTCStreamingEventTypeUnfollow:
                     self->_targetObject = [ OTCTweet tweetWithJSON: targetObject ];
+                    break;
+
+                case OTCStreamingEventTypeListCreated:
+                case OTCStreamingEventTypeListDestroyed:
+                case OTCStreamingEventTypeListUpdated:
+                case OTCStreamingEventTypeListMemberAdded:
+                case OTCStreamingEventTypeListMemberRemoved:
+                case OTCStreamingEventTypeListUserSubscribed:
+                case OTCStreamingEventTypeListUserUnsubscribed:
+                    self->_targetObject = [ OTCList listWithJSON: targetObject ];
                     break;
 
                 default: ; // Do nothing

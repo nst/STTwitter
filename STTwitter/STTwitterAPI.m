@@ -1550,7 +1550,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     BOOL processStallWarning = [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ];
     BOOL processError = [ self.delegate respondsToSelector: @selector( twitterAPI:fuckingErrorOccured: ) ];
 
-    return [ self getUserStreamStallWarnings: @( processStallWarning )
+    return [ self getUserStreamStallWarnings: [ NSNumber numberWithBool: processStallWarning ]
          includeMessagesFromFollowedAccounts: _IncludeMessagesFromFollowedAccounts
                               includeReplies: _IncludeReplies
                              keywordsToTrack: _KeywordsToTrack
@@ -1604,8 +1604,6 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                         {
                         NSString* tweetIDString = nil;
                         NSString* userIDString = nil;
-                        NSString* timestampWithMS = nil;
-                        NSTimeInterval timestamp = 0.f;
 
                         NSDictionary* tweetAttrJSON = _JSON[ @"delete" ];
                         if ( tweetAttrJSON[ @"status" ] )
@@ -1619,22 +1617,33 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                             userIDString = [ [ tweetAttrJSON[ @"direct_message" ] valueForKey: @"user_id" ] stringValue ];
                             }
 
-                        timestampWithMS = tweetAttrJSON[ @"timestamp_ms" ];
+                        NSString* timestampWithMS = tweetAttrJSON[ @"timestamp_ms" ];
 
                         // The last three digit representing milliseconds must be hacked
-                        timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
+                        NSTimeInterval timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
 
-                        [ self.delegate twitterAPI: self tweetHasBeenDeleted: tweetIDString byUser: userIDString on: timestampWithMS ? [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] : nil ];
+                        [ self.delegate twitterAPI: self
+                               tweetHasBeenDeleted: tweetIDString
+                                            byUser: userIDString
+                                                on: timestampWithMS ? [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] : nil ];
                         }
                     } break;
 
                 case STTwitterStreamJSONTypeFriendsLists:
                     {
-                    NSLog( @"Friends Lists (%lu) %@", [ ( NSArray* )_JSON[ @"friends" ] count ], _JSON );
+                    if ( [ self.delegate respondsToSelector: @selector( twitterAPI:didReceiveFriendsLists: ) ] )
+                        [ self.delegate twitterAPI: self didReceiveFriendsLists: _JSON[ @"friends" ] ];
+                    } break;
+
+                case STTwitterStreamJSONTypeCountryWithheld:
+                    {
+                    // TODO: Handling country withheld
+                    NSLog( @"Country Withheld: %@", _JSON );
                     } break;
 
                 case STTwitterStreamJSONTypeUserWithheld:
                     {
+                    // TODO: Handling user withheld
                     NSLog( @"User Withheld: %@", _JSON );
                     } break;
 

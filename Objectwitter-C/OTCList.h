@@ -24,27 +24,55 @@
 
 #import <Foundation/Foundation.h>
 
-id _OTCCocoaValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-NSUInteger _OTCSInt64WhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-NSUInteger _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-BOOL _OTCBooleanWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
-NSSize _OTCSizeWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject, NSString* _JSONPropertyKey );
+@class OTCTwitterUser;
 
-NSArray* _OTCArrayValueWhichHasBeenParsedOutOfJSON( NSDictionary* _JSONObject
-                                                  , NSString* _JSONPropertyKey
-                                                  , Class _KindOfElements
-                                                  , SEL _InitMethodsOfElements
-                                                  );
+@interface OTCList : NSObject
+    {
+@private
+    NSDictionary __strong* _JSONDict;
 
-#define __THROW_EXCEPTION__WHEN_INVOKED_PURE_VIRTUAL_METHOD__ \
-    @throw [ NSException exceptionWithName: NSGenericException \
-                         reason: [ NSString stringWithFormat: @"unimplemented pure virtual method `%@` in `%@` "\
-                                                               "from instance: %p (%@)" \
-                                                            , NSStringFromSelector( _cmd ) \
-                                                            , NSStringFromClass( [ self class ] ) \
-                                                            , self \
-                                                            , self ] \
-                         userInfo: nil ]
+    SInt64 _ID;
+    NSString* _IDString;
+
+    NSString* _URI;             // e.g. /NSTongG/lists/github
+    NSString* _slug;            // e.g. slug
+    NSString* _shortenName;     // e.g. GitHub
+    NSString* _fullName;        // e.g. @NSTongG/github
+
+    NSUInteger _subscriberCount;
+    NSUInteger _memberCount;
+    BOOL _subscribing;
+
+    BOOL _isPrivate;
+    NSString* _descriptionSetByCreator;
+    NSDate __strong* _creationDate;
+    OTCTwitterUser __strong* _creator;
+    }
+
+@property ( strong, readonly ) NSDictionary* JSONDict;
+
+@property ( assign, readonly ) SInt64 ID;
+@property ( copy, readonly ) NSString* IDString;
+
+@property ( copy, readonly ) NSString* URI;
+@property ( copy, readonly ) NSString* slug;
+@property ( copy, readonly ) NSString* shortenName;
+@property ( copy, readonly ) NSString* fullName;
+
+@property ( assign, readonly ) NSUInteger subscribedCount;
+@property ( assign, readonly ) NSUInteger memberCount;
+@property ( assign, readonly ) BOOL subscribing;
+
+@property ( assign, readonly ) BOOL isPrivate;
+@property ( copy, readonly ) NSString* descriptionSetByCreator;
+@property ( strong, readonly ) NSDate* creationDate;
+@property ( strong, readonly ) OTCTwitterUser* creator;
+
+#pragma mark Initialization
++ ( instancetype ) listWithJSON: ( NSDictionary* )_JSONObject;
+- ( instancetype ) initWithJSON: ( NSDictionary* )_JSONObject;
+
+@end
 
 /*=============================================================================================┐
 |                                                                                              |

@@ -105,7 +105,7 @@
 
         // Identifier
         self->_tweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id_str" ) copy ];
-        self->_tweetID = _OTCUnsignedIntWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
+        self->_tweetID = _OTCSInt64WhichHasBeenParsedOutOfJSON( self->_JSONDict, @"id" );
 
         // Actions
         self->_isFavoritedByMe = _OTCBooleanWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"favorited" );
