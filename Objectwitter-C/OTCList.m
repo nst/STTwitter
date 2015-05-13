@@ -50,6 +50,35 @@
 @synthesize creationDate = _creationDate;
 @synthesize creator = _creator;
 
+#pragma mark Overrides
+- ( NSString* ) description
+    {
+    return [ NSString stringWithFormat: @"\nID = %@\n"
+                                        @"URI = %@\n"
+                                        @"Slug = %@\n"
+                                        @"Shorten Name = %@\n"
+                                        @"Full Name = %@\n"
+                                        @"Subscribed Count = %lu\n"
+                                        @"Member Count = %lu\n"
+                                        @"Is Subcribing? %@\n"
+                                        @"Is Private? %@\n"
+                                        @"Description: %@\n"
+                                        @"Creator: %@\n"
+                                        @"\n\n\n"
+                                      , self->_IDString
+                                      , self->_URI
+                                      , self->_slug
+                                      , self->_shortenName
+                                      , self->_fullName
+                                      , self->_subscriberCount
+                                      , self->_memberCount
+                                      , self->_subscribing ? @"✅" : @"❌"
+                                      , self->_isPrivate ? @"✅" : @"❌"
+                                      , self->_descriptionSetByCreator
+                                      , [ NSString stringWithFormat: @"%@ (%@)", self->_creator.displayName, self->_creator.screenName ]
+                                      ];
+    }
+
 #pragma mark Initialization
 + ( instancetype ) listWithJSON: ( NSDictionary* )_JSONObject
     {
