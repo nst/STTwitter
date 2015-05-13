@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, STTwitterStreamJSONType) {
     STTwitterStreamJSONTypeWarning,
     STTwitterStreamJSONTypeEvent,
     STTwitterStreamJSONTypeStatusWithheld,
+    STTwitterStreamJSONTypeCountryWithheld,
     STTwitterStreamJSONTypeUserWithheld,
     STTwitterStreamJSONTypeControl,
     STTwitterStreamJSONTypeDirectMessages,

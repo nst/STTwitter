@@ -1631,11 +1631,19 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
                 case STTwitterStreamJSONTypeFriendsLists:
                     {
-                    NSLog( @"Friends Lists (%lu) %@", [ ( NSArray* )_JSON[ @"friends" ] count ], _JSON );
+                    if ( [ self.delegate respondsToSelector: @selector( twitterAPI:didReceiveFriendsLists: ) ] )
+                        [ self.delegate twitterAPI: self didReceiveFriendsLists: _JSON[ @"friends" ] ];
+                    } break;
+
+                case STTwitterStreamJSONTypeCountryWithheld:
+                    {
+                    // TODO: Handling country withheld
+                    NSLog( @"Country Withheld: %@", _JSON );
                     } break;
 
                 case STTwitterStreamJSONTypeUserWithheld:
                     {
+                    // TODO: Handling user withheld
                     NSLog( @"User Withheld: %@", _JSON );
                     } break;
 
