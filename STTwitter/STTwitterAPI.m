@@ -1540,6 +1540,14 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
        }];
 }
 
+- ( NSInvocation* ) _streamingMessagesInvocationGenerator: ( NSDictionary* )_JSON
+                                              messageType: ( STTwitterStreamJSONType )_MessageType
+    {
+    NSInvocation* invocation = nil;
+
+    return invocation;
+    }
+
 // convenience
 - ( NSObject <STTwitterRequestProtocol>* ) getUserStreamIncludeMessagesFromFollowedAccounts: ( NSNumber* )_IncludeMessagesFromFollowedAccounts
                                                                              includeReplies: ( NSNumber* )_IncludeReplies
