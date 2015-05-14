@@ -1419,8 +1419,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleTweetBlock: ( void (^)( NSDictionary* tweet ) )tweetBlock
-                                                          stallWarning: ( NSNumber* )stallWarnings
+- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleStallWarning: ( NSNumber* )stallWarnings
     {
     return [ self getStatusesSampleStallWarnings: stallWarnings
                                    progressBlock:

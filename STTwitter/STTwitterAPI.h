@@ -548,8 +548,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                errorBlock: ( void (^)( NSError* error ) )errorBlock;
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleTweetBlock: ( void (^)( NSDictionary* tweet ) )tweetBlock
-                                                          stallWarning: ( NSNumber* )stallWarnings;
+- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleStallWarning: ( NSNumber* )stallWarnings;
 
 /*
  GET    statuses/firehose
