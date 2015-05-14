@@ -151,7 +151,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
 
-@property ( weak, readwrite ) id <OTCSTTwitterStreamingAPIDelegate> delegate;
+@property ( weak, readwrite ) NSObject <OTCSTTwitterStreamingAPIDelegate>* delegate;
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
 
