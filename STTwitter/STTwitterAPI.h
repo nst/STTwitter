@@ -22,7 +22,7 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterStreamParser.h"
 #import "STTwitterRequestProtocol.h"
-#import "OTCSTTwitterAPIDelegate.h"
+#import "OTCSTTwitterStreamingAPIDelegate.h"
 
 @class OTCTweet;
 @class OTCStreamingEvent;
@@ -151,7 +151,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
 
-@property ( weak, readwrite ) id <OTCSTTwitterAPIDelegate> delegate;
+@property ( weak, readwrite ) NSObject <OTCSTTwitterStreamingAPIDelegate>* delegate;
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
 
@@ -534,13 +534,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 // convenience
 - (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
-                                                       tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                       errorBlock:(void(^)(NSError *error))errorBlock;
-
-- (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
-                                                       tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                       errorBlock:(void(^)(NSError *error))errorBlock;
+                                                            users:(NSArray *)userIDs
+                                            locationBoundingBoxes:(NSArray *)locationBoundingBoxes;
 
 /*
  GET    statuses/sample
@@ -548,17 +543,13 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  Returns a small random sample of all public statuses. The Tweets returned by the default access level are the same, so if two different clients connect to this endpoint, they will see the same Tweets.
  */
 
-- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleStallWarnings:(NSNumber *)stallWarnings
-                                                         progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
-                                                            errorBlock:(void(^)(NSError *error))errorBlock;
+- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleStallWarnings: ( NSNumber* )stallWarnings
+                                                            progressBlock: ( void (^)( NSDictionary* json, STTwitterStreamJSONType type ) )progressBlock
+                                                               errorBlock: ( void (^)( NSError* error ) )errorBlock;
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleTweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                  stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                         errorBlock:(void(^)(NSError *error))errorBlock;
-
-- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleTweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                         errorBlock:(void(^)(NSError *error))errorBlock;
+- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleTweetBlock: ( void (^)( NSDictionary* tweet ) )tweetBlock
+                                                          stallWarning: ( NSNumber* )stallWarnings;
 
 /*
  GET    statuses/firehose
@@ -572,6 +563,10 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                        stallWarnings:(NSNumber *)stallWarnings
                                                        progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
                                                           errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+- (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count
+                                                       stallWarnings:(NSNumber *)stallWarnings;
 
 /*
  GET    user
@@ -592,12 +587,6 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                           includeReplies:(NSNumber *)includeReplies
                                                                          keywordsToTrack:(NSArray *)keywordsToTrack
                                                                    locationBoundingBoxes:(NSArray *)locationBoundingBoxes;
-//                                                                              tweetBlock:(void(^)(OTCTweet *tweet))tweetBlock
-//                                                                              eventBlock:(void(^)(OTCStreamingEvent *event))eventBlock
-//                                                                      tweetDeletionBlock:(void(^)(NSString *deletedTweetID, NSString *twitterUser, NSDate* deletionDate))tweetDeletionBlock
-//                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-//                                                                       disconectionBlock:(void(^)(NSString *code, NSString *streamName, NSString *reason))disconectionBlock
-//                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 /*
  GET    site
  
@@ -612,6 +601,12 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                   progressBlock:(void(^)(NSDictionary *json, STTwitterStreamJSONType type))progressBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
+// convenience
+- (NSObject<STTwitterRequestProtocol> *)getSiteStreamForUserIDs:(NSArray *)userIDs
+                                                      delimited:(NSNumber *)delimited
+                                                  stallWarnings:(NSNumber *)stallWarnings
+                                         restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                                                 includeReplies:(NSNumber *)includeReplies;
 #pragma mark Direct Messages
 
 /*
