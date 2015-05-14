@@ -548,7 +548,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                errorBlock: ( void (^)( NSError* error ) )errorBlock;
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleStallWarning: ( NSNumber* )stallWarnings;
+- ( NSObject <STTwitterRequestProtocol>* ) fetchStatusesSample;
 
 /*
  GET    statuses/firehose
@@ -564,9 +564,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count
-                                                       stallWarnings:(NSNumber *)stallWarnings;
-
+- (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count;
 /*
  GET    user
  
@@ -603,7 +601,6 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 // convenience
 - (NSObject<STTwitterRequestProtocol> *)getSiteStreamForUserIDs:(NSArray *)userIDs
                                                       delimited:(NSNumber *)delimited
-                                                  stallWarnings:(NSNumber *)stallWarnings
                                          restrictToUserMessages:(NSNumber *)restrictToUserMessages
                                                  includeReplies:(NSNumber *)includeReplies;
 #pragma mark Direct Messages
