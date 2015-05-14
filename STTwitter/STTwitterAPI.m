@@ -1363,18 +1363,16 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) postStatusesFilterKeyword: ( NSString* )keyword
-                                                               users: ( NSArray* )userIDs
-                                               locationBoundingBoxes: ( NSArray* )locationBoundingBoxes
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFilterKeyword:(NSString *)keyword
+                                                             users:(NSArray *)userIDs
+                                             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
     {
     NSParameterAssert( keyword );
-
-    BOOL processStallWarning = [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ];
 
     return [ self postStatusesFilterUserIDs: userIDs
                             keywordsToTrack: @[ keyword ]
                       locationBoundingBoxes: locationBoundingBoxes
-                              stallWarnings: @( processStallWarning )
+                              stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
                               progressBlock:
         ^( NSDictionary* json, STTwitterStreamJSONType type )
             {
@@ -1468,7 +1466,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFirehoseWithCount:(NSString *)count
     {
     return [ self getStatusesFirehoseWithCount: count
                                  stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
@@ -1530,10 +1528,10 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) getUserStreamIncludeMessagesFromFollowedAccounts: ( NSNumber* )_IncludeMessagesFromFollowedAccounts
-                                                                             includeReplies: ( NSNumber* )_IncludeReplies
-                                                                            keywordsToTrack: ( NSArray* )_KeywordsToTrack
-                                                                      locationBoundingBoxes: ( NSArray* )_LocationBoundingBoxes
+- ( NSObject <STTwitterRequestProtocol>* ) fetchUserStreamIncludeMessagesFromFollowedAccounts: ( NSNumber* )_IncludeMessagesFromFollowedAccounts
+                                                                               includeReplies: ( NSNumber* )_IncludeReplies
+                                                                              keywordsToTrack: ( NSArray* )_KeywordsToTrack
+                                                                        locationBoundingBoxes: ( NSArray* )_LocationBoundingBoxes
 
     {
     return [ self getUserStreamStallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
@@ -1595,10 +1593,10 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getSiteStreamForUserIDs:(NSArray *)userIDs
-                                                      delimited:(NSNumber *)delimited
-                                         restrictToUserMessages:(NSNumber *)restrictToUserMessages
-                                                 includeReplies:(NSNumber *)includeReplies
+- (NSObject<STTwitterRequestProtocol> *)fetchSiteStreamForUserIDs:(NSArray *)userIDs
+                                                        delimited:(NSNumber *)delimited
+                                           restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                                                   includeReplies:(NSNumber *)includeReplies
     {
     return [ self getSiteStreamForUserIDs: userIDs
                                 delimited: delimited

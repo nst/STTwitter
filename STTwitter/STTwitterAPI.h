@@ -533,9 +533,9 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
-                                                            users:(NSArray *)userIDs
-                                            locationBoundingBoxes:(NSArray *)locationBoundingBoxes;
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFilterKeyword:(NSString *)keyword
+                                                             users:(NSArray *)userIDs
+                                             locationBoundingBoxes:(NSArray *)locationBoundingBoxes;
 
 /*
  GET    statuses/sample
@@ -564,7 +564,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count;
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFirehoseWithCount:(NSString *)count;
 /*
  GET    user
  
@@ -580,10 +580,10 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                          includeReplies:(NSNumber *)includeReplies
-                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes;
+- (NSObject<STTwitterRequestProtocol> *)fetchUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
+                                                                            includeReplies:(NSNumber *)includeReplies
+                                                                           keywordsToTrack:(NSArray *)keywordsToTrack
+                                                                     locationBoundingBoxes:(NSArray *)locationBoundingBoxes;
 /*
  GET    site
  
@@ -599,10 +599,10 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getSiteStreamForUserIDs:(NSArray *)userIDs
-                                                      delimited:(NSNumber *)delimited
-                                         restrictToUserMessages:(NSNumber *)restrictToUserMessages
-                                                 includeReplies:(NSNumber *)includeReplies;
+- (NSObject<STTwitterRequestProtocol> *)fetchSiteStreamForUserIDs:(NSArray *)userIDs
+                                                        delimited:(NSNumber *)delimited
+                                           restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                                                   includeReplies:(NSNumber *)includeReplies;
 #pragma mark Direct Messages
 
 /*
