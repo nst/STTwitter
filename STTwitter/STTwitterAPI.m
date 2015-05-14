@@ -34,7 +34,6 @@ static NSDateFormatter *dateFormatter = nil;
 
 - ( NSInvocation* ) _streamingAPIDelegateInvocationGenerator: ( NSDictionary* )_JSON
                                                  messageType: ( STTwitterStreamJSONType )_MessageType
-                                   processStreamStallWarning: ( BOOL ) _ProcessStreamStallWarning
                                                  streamError: ( NSError* )_Error;
 
 @end // STTwitterAPI + OTCSTTwitterStreamingAPIDelegate
@@ -1364,25 +1363,23 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) postStatusesFilterKeyword: ( NSString* )keyword
-                                                               users: ( NSArray* )userIDs
-                                               locationBoundingBoxes: ( NSArray* )locationBoundingBoxes
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFilterKeyword:(NSString *)keyword
+                                                             users:(NSArray *)userIDs
+                                             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
     {
     NSParameterAssert( keyword );
-
-    BOOL processStallWarning = [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ];
 
     return [ self postStatusesFilterUserIDs: userIDs
                             keywordsToTrack: @[ keyword ]
                       locationBoundingBoxes: locationBoundingBoxes
-                              stallWarnings: @( processStallWarning )
+                              stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
                               progressBlock:
         ^( NSDictionary* json, STTwitterStreamJSONType type )
             {
-            [ [ self _streamingAPIDelegateInvocationGenerator: json messageType: type processStreamStallWarning: processStallWarning streamError: nil ] invoke ];
+            [ [ self _streamingAPIDelegateInvocationGenerator: json messageType: type streamError: nil ] invoke ];
             } errorBlock: ^( NSError* _Error )
                             {
-                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 processStreamStallWarning: NO streamError: _Error] invoke ];
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
                             } ];
     }
 
@@ -1419,20 +1416,18 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) getStatusesSampleTweetBlock: ( void (^)( NSDictionary* tweet ) )tweetBlock
-                                                          stallWarning: ( NSNumber* )stallWarnings
+- ( NSObject <STTwitterRequestProtocol>* ) fetchStatusesSample
     {
-    return [ self getStatusesSampleStallWarnings: stallWarnings
+    return [ self getStatusesSampleStallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
                                    progressBlock:
         ^( NSDictionary* json, STTwitterStreamJSONType type )
             {
             [ [ self _streamingAPIDelegateInvocationGenerator: json
                                                   messageType: type
-                                    processStreamStallWarning: stallWarnings.boolValue
                                                   streamError: nil ] invoke ];
             } errorBlock: ^( NSError* _Error )
                             {
-                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 processStreamStallWarning: NO streamError: _Error] invoke ];
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
                             } ];
     }
 
@@ -1471,21 +1466,19 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count
-                                                       stallWarnings:(NSNumber *)stallWarnings
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFirehoseWithCount:(NSString *)count
     {
     return [ self getStatusesFirehoseWithCount: count
-                                 stallWarnings: stallWarnings
+                                 stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
                                  progressBlock:
         ^( NSDictionary* _JSON, STTwitterStreamJSONType _Type )
             {
             [ [ self _streamingAPIDelegateInvocationGenerator: _JSON
                                                   messageType: _Type
-                                    processStreamStallWarning: stallWarnings.boolValue
                                                   streamError: nil ] invoke ];
             } errorBlock: ^( NSError* _Error )
                             {
-                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 processStreamStallWarning: NO streamError: _Error] invoke ];
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
                             } ];
     }
 
@@ -1535,15 +1528,13 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- ( NSObject <STTwitterRequestProtocol>* ) getUserStreamIncludeMessagesFromFollowedAccounts: ( NSNumber* )_IncludeMessagesFromFollowedAccounts
-                                                                             includeReplies: ( NSNumber* )_IncludeReplies
-                                                                            keywordsToTrack: ( NSArray* )_KeywordsToTrack
-                                                                      locationBoundingBoxes: ( NSArray* )_LocationBoundingBoxes
+- ( NSObject <STTwitterRequestProtocol>* ) fetchUserStreamIncludeMessagesFromFollowedAccounts: ( NSNumber* )_IncludeMessagesFromFollowedAccounts
+                                                                               includeReplies: ( NSNumber* )_IncludeReplies
+                                                                              keywordsToTrack: ( NSArray* )_KeywordsToTrack
+                                                                        locationBoundingBoxes: ( NSArray* )_LocationBoundingBoxes
 
     {
-    BOOL processStallWarning = [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ];
-
-    return [ self getUserStreamStallWarnings: [ NSNumber numberWithBool: processStallWarning ]
+    return [ self getUserStreamStallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
          includeMessagesFromFollowedAccounts: _IncludeMessagesFromFollowedAccounts
                               includeReplies: _IncludeReplies
                              keywordsToTrack: _KeywordsToTrack
@@ -1553,11 +1544,10 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             {
             [ [ self _streamingAPIDelegateInvocationGenerator: _JSON
                                                   messageType: _Type
-                                    processStreamStallWarning: processStallWarning
                                                   streamError: nil] invoke ];
             } errorBlock: ^( NSError* _Error )
                             {
-                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 processStreamStallWarning: NO streamError: _Error] invoke ];
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
                             } ];
     }
 
@@ -1603,15 +1593,14 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getSiteStreamForUserIDs:(NSArray *)userIDs
-                                                      delimited:(NSNumber *)delimited
-                                                  stallWarnings:(NSNumber *)stallWarnings
-                                         restrictToUserMessages:(NSNumber *)restrictToUserMessages
-                                                 includeReplies:(NSNumber *)includeReplies
+- (NSObject<STTwitterRequestProtocol> *)fetchSiteStreamForUserIDs:(NSArray *)userIDs
+                                                        delimited:(NSNumber *)delimited
+                                           restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                                                   includeReplies:(NSNumber *)includeReplies
     {
     return [ self getSiteStreamForUserIDs: userIDs
                                 delimited: delimited
-                            stallWarnings: stallWarnings
+                            stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
                    restrictToUserMessages: restrictToUserMessages
                            includeReplies: includeReplies
                             progressBlock:
@@ -1619,11 +1608,10 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             {
             [ self _streamingAPIDelegateInvocationGenerator: _JSON
                                                 messageType: _Type
-                                  processStreamStallWarning: stallWarnings.boolValue
                                                 streamError: nil ];
             } errorBlock: ^( NSError* _Error )
                             {
-                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 processStreamStallWarning: NO streamError: _Error] invoke ];
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
                             } ];
     }
 
@@ -4881,7 +4869,6 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - ( NSInvocation* ) _streamingAPIDelegateInvocationGenerator: ( NSDictionary* )_JSON
                                                  messageType: ( STTwitterStreamJSONType )_MessageType
-                                   processStreamStallWarning: ( BOOL ) _ProcessStreamStallWarning
                                                  streamError: ( NSError* )_Error
     {
     NSInvocation* invocation = nil;
@@ -4910,16 +4897,13 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
             case STTwitterStreamJSONTypeWarning:
                 {
-                if ( _ProcessStreamStallWarning )
+                delegateSel = @selector( twitterAPI:didTriggerStallWarning:code:percentFull: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                     {
-                    delegateSel = @selector( twitterAPI:didTriggerStallWarning:code:percentFull: );
-                    if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
-                        {
-                        NSString* msg = [ _JSON valueForKey: @"message" ];
-                        NSString* code = [ _JSON valueForKey: @"code" ];
-                        NSString* percentFull = [ _JSON valueForKey: @"percent_full" ];
-                        [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( msg ), COCOAed_NIL( code ), COCOAed_NIL( percentFull ) ] ];
-                        }
+                    NSString* msg = [ _JSON valueForKey: @"message" ];
+                    NSString* code = [ _JSON valueForKey: @"code" ];
+                    NSString* percentFull = [ _JSON valueForKey: @"percent_full" ];
+                    [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( msg ), COCOAed_NIL( code ), COCOAed_NIL( percentFull ) ] ];
                     }
                 } break;
 
