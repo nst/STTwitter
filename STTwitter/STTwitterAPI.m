@@ -4866,27 +4866,33 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // STTwitterAPI + OTCSTTwitterStreamingAPIDelegate
 @implementation STTwitterAPI ( OTCSTTwitterStreamingAPIDelegate )
 
+#define COCOAed_NIL( _Object ) ( _Object ?: [ NSNull null ] )
+#define UNCOCOAed_NIL( _Object ) ( ( _Object == [ NSNull null ] ) ? nil : _Object )
+
 - ( NSInvocation* ) _streamingAPIDelegateInvocationGenerator: ( NSDictionary* )_JSON
                                                  messageType: ( STTwitterStreamJSONType )_MessageType
                                    processStreamStallWarning: ( BOOL ) _ProcessStreamStallWarning
                                                 processError: ( BOOL )_ProcessError
     {
     NSInvocation* invocation = nil;
+
+    if ( !self.delegate || ![ self.delegate conformsToProtocol: @protocol( OTCSTTwitterStreamingAPIDelegate ) ] )
+        return invocation;
+
     STTwitterAPI __weak* myself = self;
+    BOOL responds = NO;
     SEL delegateSel = nil;
+    NSMutableArray* delegateArgs = [ NSMutableArray array ];
 
     switch ( _MessageType )
         {
         case STTwitterStreamJSONTypeTweet:
             {
             delegateSel = @selector( twitterAPI:didReceiveTweet: );
-            if ( [ self.delegate respondsToSelector: delegateSel ] )
+            if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                 {
                 OTCTweet* tweet = [ OTCTweet tweetWithJSON: _JSON ];
-
-                invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
-
-                [ invocation setArgument: &tweet atIndex: 3 ];
+                [ delegateArgs addObject: COCOAed_NIL( tweet ) ];
                 }
             } break;
 
@@ -4895,16 +4901,12 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             if ( _ProcessStreamStallWarning )
                 {
                 delegateSel = @selector( twitterAPI:didTriggerStallWarning:code:percentFull: );
-                if ( [ self.delegate respondsToSelector: delegateSel ] )
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                     {
                     NSString* msg = [ _JSON valueForKey: @"message" ];
                     NSString* code = [ _JSON valueForKey: @"code" ];
-                    NSInteger percentFull = [ [ _JSON valueForKey: @"percent_full" ] integerValue ];
-
-                    invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
-                    [ invocation setArgument: &msg atIndex: 3 ];
-                    [ invocation setArgument: &code atIndex: 4 ];
-                    [ invocation setArgument: &percentFull atIndex: 5 ];
+                    NSString* percentFull = [ _JSON valueForKey: @"percent_full" ];
+                    [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( msg ), COCOAed_NIL( code ), COCOAed_NIL( percentFull ) ] ];
                     }
                 }
             } break;
@@ -4912,47 +4914,39 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         case STTwitterStreamJSONTypeEvent:
             {
             delegateSel = @selector( twitterAPI:streamingEventHasBeenDetected: );
-            if ( [ self.delegate respondsToSelector: delegateSel ] )
+            if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                 {
                 OTCStreamingEvent* event = [ OTCStreamingEvent eventWithJSON: _JSON ];
-
-                invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
-                [ invocation setArgument: &event atIndex: 3 ];
+                [ delegateArgs addObject: COCOAed_NIL( event ) ];
                 }
             } break;
 
         case STTwitterStreamJSONTypeDirectMessages:
             {
             delegateSel = @selector( twitterAPI:sentOrReceivedDM: );
-            if ( [ self.delegate respondsToSelector: delegateSel ] )
+            if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                 {
                 OTCDirectMessage* dm = [ OTCDirectMessage directMessageWithJSON: _JSON ];
-
-                invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
-                [ invocation setArgument: &dm atIndex: 3 ];
+                [ delegateArgs addObject: COCOAed_NIL( dm ) ];
                 }
             } break;
 
         case STTwitterStreamJSONTypeDisconnect:
             {
             delegateSel = @selector( twitterAPI:streaming:wasDisconnectedDueTo:code: );
-            if ( [ self.delegate respondsToSelector: delegateSel ] )
+            if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                 {
                 NSString* streamName = [ _JSON[ @"disconnect" ] valueForKey: @"stream_name" ];
                 NSString* reason = [ _JSON[ @"disconnect" ] valueForKey: @"reason" ];
                 NSString* code = [ _JSON[ @"disconnect" ] valueForKey: @"code" ];
-
-                invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
-                [ invocation setArgument: &streamName atIndex: 3 ];
-                [ invocation setArgument: &reason atIndex: 4 ];
-                [ invocation setArgument: &code atIndex: 5 ];
+                [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( streamName ), COCOAed_NIL( reason ), COCOAed_NIL( code ) ] ];
                 }
             } break;
 
         case STTwitterStreamJSONTypeDelete:
             {
             delegateSel = @selector( twitterAPI:tweetHasBeenDeleted:byUser:on: );
-            if ( [ self.delegate respondsToSelector: delegateSel ] )
+            if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                 {
                 NSString* tweetIDString = nil;
                 NSString* userIDString = nil;
@@ -4973,46 +4967,51 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
                 // The last three digit representing milliseconds must be hacked
                 NSTimeInterval timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
-
                 NSDate* creationDate = timestampWithMS ? [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] : nil;
-                invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
-                [ invocation setArgument: &tweetIDString atIndex: 3 ];
-                [ invocation setArgument: &userIDString atIndex: 4 ];
-                [ invocation setArgument: &creationDate atIndex: 5 ];
+                [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( tweetIDString ), COCOAed_NIL( userIDString ), COCOAed_NIL( creationDate ) ] ];
                 }
             } break;
 
         case STTwitterStreamJSONTypeFriendsLists:
             {
             delegateSel = @selector( twitterAPI:didReceiveFriendsLists: );
-            if ( [ self.delegate respondsToSelector: delegateSel ] )
+            if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
                 {
                 NSArray* friends = _JSON[ @"friends" ];
-
-                invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
-                [ invocation setArgument: &friends atIndex: 3 ];
+                [ delegateArgs addObject: COCOAed_NIL( friends ) ];
                 }
             } break;
 
-        case STTwitterStreamJSONTypeCountryWithheld:
-            {
-            // TODO: Handling country withheld
-            NSLog( @"Country Withheld: %@", _JSON );
-            } break;
-
-        case STTwitterStreamJSONTypeUserWithheld:
-            {
-            // TODO: Handling user withheld
-            NSLog( @"User Withheld: %@", _JSON );
-            } break;
+//        case STTwitterStreamJSONTypeCountryWithheld:
+//            {
+//            // TODO: Handling country withheld
+//            NSLog( @"Country Withheld: %@", _JSON );
+//            } break;
+//
+//        case STTwitterStreamJSONTypeUserWithheld:
+//            {
+//            // TODO: Handling user withheld
+//            NSLog( @"User Withheld: %@", _JSON );
+//            } break;
 
         default:
            break;
         }
 
-    [ invocation setSelector: delegateSel ];
-    [ invocation setArgument: &myself atIndex: 2 ];
-    [ invocation setTarget: self.delegate ];
+    if ( responds )
+        {
+        invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
+        [ invocation setSelector: delegateSel ];
+        [ invocation setArgument: &myself atIndex: 2 ];
+
+        for ( int _Index = 0; _Index < delegateArgs.count; _Index++ )
+            {
+            id arg = UNCOCOAed_NIL( delegateArgs[ _Index ] );
+            [ invocation setArgument: &arg atIndex: _Index + 3 ];
+            }
+
+        [ invocation setTarget: self.delegate ];
+        }
 
     return invocation;
     }
