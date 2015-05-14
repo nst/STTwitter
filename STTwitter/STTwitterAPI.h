@@ -22,7 +22,7 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterStreamParser.h"
 #import "STTwitterRequestProtocol.h"
-#import "OTCSTTwitterAPIDelegate.h"
+#import "OTCSTTwitterStreamingAPIDelegate.h"
 
 @class OTCTweet;
 @class OTCStreamingEvent;
@@ -151,7 +151,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
 
-@property ( weak, readwrite ) id <OTCSTTwitterAPIDelegate> delegate;
+@property ( weak, readwrite ) id <OTCSTTwitterStreamingAPIDelegate> delegate;
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
 

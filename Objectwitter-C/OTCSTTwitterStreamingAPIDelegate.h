@@ -29,7 +29,7 @@
 @class OTCStreamingEvent;
 @class OTCDirectMessage;
 
-@protocol OTCSTTwitterAPIDelegate <NSObject>
+@protocol OTCSTTwitterStreamingAPIDelegate <NSObject>
 
 @required
 - ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI didReceiveFriendsLists: ( NSArray* )_Friends;
