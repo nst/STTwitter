@@ -31,7 +31,7 @@
 
 @protocol OTCSTTwitterStreamingAPIDelegate <NSObject>
 
-@required
+@optional
 - ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI didReceiveFriendsLists: ( NSArray* )_Friends;
 - ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI didReceiveTweet: ( OTCTweet* )_ReceivedTweet;
 - ( void ) twitterAPI: ( STTwitterAPI* )_TwitterAPI sentOrReceivedDM: ( OTCDirectMessage* )_DirectMessage;
