@@ -54,7 +54,7 @@
 
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSON
     {
-    if ( self = [ super initWithJSON: _JSON[ @"direct_message" ] ] )
+    if ( self = [ super initWithJSON: _JSON[ @"direct_message" ] ?: _JSON ] )
         {
         self->_recipient = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"recipient" ) ];
         self->_sender = [ OTCTwitterUser userWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"sender" ) ];
