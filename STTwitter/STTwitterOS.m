@@ -366,7 +366,7 @@
                
                successBlock(oAuthToken, oAuthTokenSecret, userID, screenName);
            } errorBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-               errorBlock(error);
+               errorBlock(error); // in case of -1012 error, the Twitter account may lack the 'oauth_token' property and need to be setup again in iOS Settings, see http://stackoverflow.com/questions/30307062/access-users-ios-default-twitter-account-ios/30461959#30461959
            }];
 }
 
