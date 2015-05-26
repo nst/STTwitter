@@ -372,6 +372,9 @@
 + ( instancetype ) userWithJSON: ( NSDictionary* )_JSONDict;
 - ( instancetype ) initWithJSON: ( NSDictionary* )_JSONDict;
 
+#pragma mark Comparing
+- ( BOOL ) isEqualToUser: ( OTCTwitterUser* )_AnotherUser;
+
 @end
 
 /*=============================================================================================┐

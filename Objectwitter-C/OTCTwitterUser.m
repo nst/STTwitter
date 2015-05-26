@@ -186,6 +186,26 @@
     return self;
     }
 
+#pragma mark Comparing
+- ( BOOL ) isEqualToUser: ( OTCTwitterUser* )_AnotherUser
+    {
+    if ( self == _AnotherUser )
+        return YES;
+
+    return self.ID == _AnotherUser.ID;
+    }
+
+- ( BOOL ) isEqual: ( id )_Object
+    {
+    if ( self == _Object )
+        return YES;
+
+    if ( [ _Object isKindOfClass: [ OTCTwitterUser class ] ] )
+        return [ self isEqualToUser: ( OTCTwitterUser* )_Object ];
+
+    return [ super isEqual: _Object ];
+    }
+
 @end
 
 /*=============================================================================================┐
