@@ -130,6 +130,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                               successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
+// ensure that the Twitter account is usable by performing local access checks and then an API call
+// this method should typically be called at each launch of a Twitter client
 - (void)verifyCredentialsWithUserSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 

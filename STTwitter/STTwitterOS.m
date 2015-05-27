@@ -11,6 +11,7 @@
 #import "STTwitterOSRequest.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
+#import "NSError+STTwitter.h"
 #if TARGET_OS_IPHONE
 #import <Twitter/Twitter.h> // iOS 5
 #endif
@@ -69,9 +70,45 @@
     return @"System";
 }
 
-- (BOOL)canVerifyCredentials {
-    return YES;
+- (void)verifyCredentialsRemotelyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock {
+    __weak typeof(self) weakSelf = self;
+    
+    [self fetchResource:@"account/verify_credentials.json"
+             HTTPMethod:@"GET"
+          baseURLString:@"https://api.twitter.com/1.1"
+             parameters:nil
+    uploadProgressBlock:nil
+  downloadProgressBlock:nil
+           successBlock:^(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+               
+               if([response isKindOfClass:[NSDictionary class]] == NO) {
+                   NSString *errorDescription = [NSString stringWithFormat:@"Expected dictionary, found %@", response];
+                   NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
+                   errorBlock(error);
+                   return;
+               }
+               
+               typeof(self) strongSelf = weakSelf;
+               if(strongSelf == nil) return;
+
+               NSDictionary *dict = response;
+               successBlock(dict[@"screen_name"], dict[@"id_str"]);
+           } errorBlock:^(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+               
+               // add recovery suggestion if we can
+               if([[error domain] isEqualToString:kSTTwitterTwitterErrorDomain] && ([error code] == 220)) {
+                   NSMutableDictionary *extendedUserInfo = [[error userInfo] mutableCopy];
+                   extendedUserInfo[NSLocalizedRecoverySuggestionErrorKey] = @"Consider entering the Twitter credentials again in OS Settings.";
+                   NSError *extendedError = [NSError errorWithDomain:[error domain] code:[error code] userInfo:extendedUserInfo];
+                   errorBlock(extendedError);
+                   return;
+               }
+               
+               errorBlock(error);
+           }];
 }
+
 
 - (BOOL)hasAccessToTwitter {
     
@@ -92,7 +129,7 @@
 #endif
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsLocallyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     if([self hasAccessToTwitter] == NO) {
         NSString *message = @"This system cannot access Twitter.";
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSSystemCannotAccessTwitter userInfo:@{NSLocalizedDescriptionKey : message}];
@@ -178,29 +215,7 @@
                                             completion:accountStoreRequestCompletionHandler];
 #endif
 }
-/*
-- (NSObject<STTwitterRequestProtocol> *)fetchAPIResource:(NSString *)resource
-                                           baseURLString:(NSString *)baseURLString
-                                              httpMethod:(NSInteger)httpMethod
-                                              parameters:(NSDictionary *)params
-                                     uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                         completionBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
-                                              errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
-    
-    STTwitterOSRequest *r = [[STTwitterOSRequest alloc] initWithAPIResource:resource
-                                                              baseURLString:baseURLString
-                                                                 httpMethod:httpMethod
-                                                                 parameters:params
-                                                                    account:self.account
-                                                           timeoutInSeconds:_timeoutInSeconds
-                                                        uploadProgressBlock:uploadProgressBlock
-                                                            completionBlock:completionBlock
-                                                                 errorBlock:errorBlock];
-    
-    [r startRequest];
-    return r;
-}
-*/
+
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
 
     // https://api.twitter.com/1.1/account/verify_credentials.json
@@ -334,7 +349,7 @@
                                               successBlock:(void(^)(NSString *oAuthToken, NSString *oAuthTokenSecret, NSString *userID, NSString *screenName))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSAssert(self.account, @"no account is set, try to call -verifyCredentialsWithSuccessBlock:errorBlock: first");
+    NSAssert(self.account, @"no account is set, try to call -verifyCredentialsWithUserSuccessBlock:errorBlock: first");
     
     NSParameterAssert(authenticationHeader);
     

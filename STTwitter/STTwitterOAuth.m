@@ -216,19 +216,47 @@
     return oauthSignature;
 }
 
-- (BOOL)canVerifyCredentials {
-    return (_username && _password);
+- (void)verifyCredentialsLocallyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock {
+    successBlock(nil, nil); // no local check
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
-    
-    if(_username == nil || _password == nil) return;
-    
-    [self postXAuthAccessTokenRequestWithUsername:_username password:_password successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
-        successBlock(screenName, userID);
-    } errorBlock:^(NSError *error) {
-        errorBlock(error);
-    }];
+- (void)verifyCredentialsRemotelyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock {
+   
+    if(_username && _password) {
+        
+        [self postXAuthAccessTokenRequestWithUsername:_username password:_password successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
+            successBlock(screenName, userID);
+        } errorBlock:^(NSError *error) {
+            errorBlock(error);
+        }];
+
+    } else {
+        
+        [self fetchResource:@"account/verify_credentials.json"
+                 HTTPMethod:@"GET"
+              baseURLString:@"https://api.twitter.com/1.1"
+                 parameters:nil
+              oauthCallback:nil
+        uploadProgressBlock:nil
+      downloadProgressBlock:nil
+               successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
+
+                   if([response isKindOfClass:[NSDictionary class]] == NO) {
+                       NSString *errorDescription = [NSString stringWithFormat:@"Expected dictionary, found %@", response];
+                       NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
+                       errorBlock(error);
+                       return;
+                   }
+                   
+                   NSDictionary *dict = response;
+                   successBlock(dict[@"screen_name"], dict[@"id_str"]);
+               
+               } errorBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+                   errorBlock(error);
+               }];
+    }
 }
 
 - (NSString *)oauthSignatureMethod {

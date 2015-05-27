@@ -34,8 +34,8 @@
 
 #pragma mark STTwitterOAuthProtocol
 
-- (BOOL)canVerifyCredentials {
-    return YES;
+- (void)verifyCredentialsLocallyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+    successBlock(nil, nil); // local check is not possible
 }
 
 - (NSString *)oauthAccessToken {
@@ -108,11 +108,11 @@
     return [data base64Encoding];
 }
 
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)verifyCredentialsRemotelyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
     __weak typeof(self) weakSelf = self;
-
+    
     [self postResource:@"oauth2/token"
          baseURLString:@"https://api.twitter.com"
             parameters:@{ @"grant_type" : @"client_credentials" }
@@ -124,7 +124,7 @@
               typeof(self) strongSelf = weakSelf;
               
               if(strongSelf == nil) return;
-
+              
               if([json isKindOfClass:[NSDictionary class]] == NO) {
                   NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterAppOnlyCannotFindJSONInResponse userInfo:@{NSLocalizedDescriptionKey : @"Cannot find JSON dictionary in response"}];
                   errorBlock(error);

@@ -15,9 +15,11 @@
 
 @property (nonatomic) NSTimeInterval timeoutInSeconds;
 
-- (BOOL)canVerifyCredentials;
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
-                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)verifyCredentialsLocallyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                                      errorBlock:(void(^)(NSError *error))errorBlock;
+
+- (void)verifyCredentialsRemotelyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
+                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSObject<STTwitterRequestProtocol> *)fetchResource:(NSString *)resource
                                            HTTPMethod:(NSString *)HTTPMethod
