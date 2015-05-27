@@ -73,10 +73,6 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize
 - (void)postReverseOAuthTokenRequest:(void(^)(NSString *authenticationHeader))successBlock
                           errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (BOOL)canVerifyCredentials;
-
-- (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock;
-
 // useful for the so-called 'OAuth Echo' https://dev.twitter.com/twitter-kit/ios/oauth-echo
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;

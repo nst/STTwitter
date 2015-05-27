@@ -223,10 +223,17 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     STTwitterAPI * __weak weakSelf = self;
     
-    if([_oauth canVerifyCredentials]) {
-        [_oauth verifyCredentialsWithSuccessBlock:^(NSString *username, NSString *userID) {
-            typeof(self) strongSelf = weakSelf;
+    [_oauth verifyCredentialsLocallyWithSuccessBlock:^(NSString *username, NSString *userID) {
+
+        typeof(self) strongSelf = weakSelf;
+        if(strongSelf == nil) return;
+        
+        if(username) [strongSelf setUserName:username];
+        if(userID) [strongSelf setUserID:userID];
+        
+        [_oauth verifyCredentialsRemotelyWithSuccessBlock:^(NSString *username, NSString *userID) {
             
+            typeof(self) strongSelf = weakSelf;
             if(strongSelf == nil) return;
             
             [strongSelf setUserName:username];
@@ -236,23 +243,10 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
-    } else {
-        [self getAccountVerifyCredentialsWithSuccessBlock:^(NSDictionary *account) {
-            typeof(self) strongSelf = weakSelf;
-            
-            if(strongSelf == nil) return;
-            
-            NSString *username = account[@"screen_name"];
-            NSString *userID = account[@"id_str"];
-            
-            [strongSelf setUserName:username];
-            [strongSelf setUserID:userID];
-            
-            successBlock(username, userID);
-        } errorBlock:^(NSError *error) {
-            errorBlock(error);
-        }];
-    }
+
+    } errorBlock:^(NSError *error) {
+        errorBlock(error); // early, local detection of account issues, eg. incomplete OS account
+    }];
 }
 
 // deprecated, use verifyCredentialsWithUserSuccessBlock:errorBlock:
