@@ -102,6 +102,7 @@
                 case OTCStreamingEventTypeUnfavorite:
                 case OTCStreamingEventTypeFollow:
                 case OTCStreamingEventTypeUnfollow:
+                case OTCStreamingEventTypeQuotedTweet:
                     self->_targetObject = [ OTCTweet tweetWithJSON: targetObject ];
                     break;
 

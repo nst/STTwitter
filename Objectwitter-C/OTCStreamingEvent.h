@@ -41,7 +41,8 @@ typedef NS_ENUM( NSInteger, OTCStreamingEventType )
     , OTCStreamingEventTypeListMemberRemoved    = 11
     , OTCStreamingEventTypeListUserSubscribed   = 12
     , OTCStreamingEventTypeListUserUnsubscribed = 13
-    , OTCStreamingEventTypeUserUpdate           = 14
+    , OTCStreamingEventTypeQuotedTweet          = 14
+    , OTCStreamingEventTypeUserUpdate           = 15
     };
 
 @class OTCTweet;

@@ -75,6 +75,11 @@
 #pragma mark Retweeting
 @synthesize originalTweet = _originalTweet;
 
+#pragma mark Quotation
+@synthesize quotedTweetID = _quotedTweetID;
+@synthesize quotedTweetIDString = _quotedTweetIDString;
+@synthesize quotedTweet = _quotedTweet;
+
 #pragma mark Author
 @synthesize author = _author;
 
@@ -143,6 +148,11 @@
 
         // Retweeting
         self->_originalTweet = [ OTCTweet tweetWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"retweeted_status" ) ];
+
+        // Quotation
+        self->_quotedTweetID = _OTCSInt64WhichHasBeenParsedOutOfJSON( self->_JSONDict, @"quoted_status_id" );
+        self->_quotedTweetIDString = [ _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"quoted_status_id_str" ) copy ];
+        self->_quotedTweet = [ OTCTweet tweetWithJSON: _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"quoted_status" ) ];
 
         // Author
         NSDictionary* userObject = _OTCCocoaValueWhichHasBeenParsedOutOfJSON( self->_JSONDict, @"user" );

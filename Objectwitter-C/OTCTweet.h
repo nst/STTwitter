@@ -82,6 +82,11 @@ typedef NS_ENUM( NSUInteger,  OTCTweetType )
     // Retweeting
     OTCTweet __strong* _originalTweet;
 
+    // Quotation
+    SInt64 _quotedTweetID;
+    NSString* _quotedTweetIDString;
+    OTCTweet* _quotedTweet;
+
     // Author
     OTCTwitterUser __strong* _author;
     }
@@ -234,6 +239,19 @@ typedef NS_ENUM( NSUInteger,  OTCTweetType )
               (Users can also unretweet a retweet they created by deleting their retweet.)
   */
 @property ( strong, readonly ) OTCTweet* originalTweet;
+
+#pragma mark Quotation
+/** This property is the integer value Tweet ID of the quoted Tweet.
+  */
+@property ( assign, readonly ) SInt64 quotedTweetID;
+
+/** This property is the string representation Tweet ID of the quoted Tweet.
+  */
+@property ( copy, readonly ) NSString* quotedTweetIDString;
+
+/** This property is a representation of the Tweet of the original Tweet that was quoted
+  */
+@property ( strong, readonly ) OTCTweet* quotedTweet;
 
 #pragma mark Author
 /** The user who posted this Tweet. 
