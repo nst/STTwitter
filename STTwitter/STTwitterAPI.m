@@ -14,6 +14,7 @@
 #import <Accounts/Accounts.h>
 #import "STHTTPRequest.h"
 #import "STHTTPRequest+STTwitter.h"
+#import "Objectwitter-C.h"
 
 NSString *kBaseURLStringAPI_1_1 = @"https://api.twitter.com/1.1";
 NSString *kBaseURLStringUpload_1_1 = @"https://upload.twitter.com/1.1";
@@ -27,6 +28,15 @@ static NSDateFormatter *dateFormatter = nil;
 @property (nonatomic, retain) NSObject <STTwitterProtocol> *oauth;
 @property (nonatomic, retain) STTwitterStreamParser *streamParser;
 @end
+
+// STTwitterAPI + OTCSTTwitterStreamingAPIDelegate
+@interface STTwitterAPI ( OTCSTTwitterStreamingAPIDelegate )
+
+- ( NSInvocation* ) _streamingAPIDelegateInvocationGenerator: ( NSDictionary* )_JSON
+                                                 messageType: ( STTwitterStreamJSONType )_MessageType
+                                                 streamError: ( NSError* )_Error;
+
+@end // STTwitterAPI + OTCSTTwitterStreamingAPIDelegate
 
 @implementation STTwitterAPI
 
@@ -1347,46 +1357,25 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
-                                                       tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                       errorBlock:(void(^)(NSError *error))errorBlock
-{
-    NSParameterAssert(keyword);
-    
-    return [self postStatusesFilterUserIDs:nil
-                           keywordsToTrack:@[keyword]
-                     locationBoundingBoxes:nil
-                             stallWarnings:stallWarningBlock ? @YES : @NO
-                             progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
-                                 
-                                 switch (type) {
-                                     case STTwitterStreamJSONTypeTweet:
-                                         tweetBlock(json);
-                                         break;
-                                     case STTwitterStreamJSONTypeWarning:
-                                         if (stallWarningBlock) {
-                                             stallWarningBlock([json valueForKey:@"code"],
-                                                               [json valueForKey:@"message"],
-                                                               [[json valueForKey:@"percent_full"] integerValue]);
-                                         }
-                                         break;
-                                     default:
-                                         break;
-                                 }
-                                 
-                             } errorBlock:errorBlock];
-}
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFilterKeyword:(NSString *)keyword
+                                                             users:(NSArray *)userIDs
+                                             locationBoundingBoxes:(NSArray *)locationBoundingBoxes
+    {
+    NSParameterAssert( keyword );
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusesFilterKeyword:(NSString *)keyword
-                                                       tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                       errorBlock:(void(^)(NSError *error))errorBlock
-{
-    return [self postStatusesFilterKeyword:keyword
-                                tweetBlock:tweetBlock
-                         stallWarningBlock:nil
-                                errorBlock:errorBlock];
-}
+    return [ self postStatusesFilterUserIDs: userIDs
+                            keywordsToTrack: @[ keyword ]
+                      locationBoundingBoxes: locationBoundingBoxes
+                              stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
+                              progressBlock:
+        ^( NSDictionary* json, STTwitterStreamJSONType type )
+            {
+            [ [ self _streamingAPIDelegateInvocationGenerator: json messageType: type streamError: nil ] invoke ];
+            } errorBlock: ^( NSError* _Error )
+                            {
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
+                            } ];
+    }
 
 // GET statuses/sample
 - (NSObject<STTwitterRequestProtocol> *)getStatusesSampleStallWarnings:(NSNumber *)stallWarnings
@@ -1421,38 +1410,20 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleTweetBlock:(void (^)(NSDictionary *))tweetBlock
-                                                  stallWarningBlock:(void (^)(NSString *, NSString *, NSUInteger))stallWarningBlock
-                                                         errorBlock:(void (^)(NSError *))errorBlock
-{
-    return [self getStatusesSampleStallWarnings:stallWarningBlock ? @YES : @NO
-                                  progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
-                                      
-                                      switch (type) {
-                                          case STTwitterStreamJSONTypeTweet:
-                                              tweetBlock(json);
-                                              break;
-                                          case STTwitterStreamJSONTypeWarning:
-                                              if (stallWarningBlock) {
-                                                  stallWarningBlock([json valueForKey:@"code"],
-                                                                    [json valueForKey:@"message"],
-                                                                    [[json valueForKey:@"percent_full"] integerValue]);
-                                              }
-                                              break;
-                                          default:
-                                              break;
-                                      }
-                                      
-                                  } errorBlock:errorBlock];
-}
-
-- (NSObject<STTwitterRequestProtocol> *)getStatusesSampleTweetBlock:(void (^)(NSDictionary *))tweetBlock
-                                                         errorBlock:(void (^)(NSError *))errorBlock
-{
-    return [self getStatusesSampleTweetBlock:tweetBlock
-                           stallWarningBlock:nil
-                                  errorBlock:errorBlock];
-}
+- ( NSObject <STTwitterRequestProtocol>* ) fetchStatusesSample
+    {
+    return [ self getStatusesSampleStallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
+                                   progressBlock:
+        ^( NSDictionary* json, STTwitterStreamJSONType type )
+            {
+            [ [ self _streamingAPIDelegateInvocationGenerator: json
+                                                  messageType: type
+                                                  streamError: nil ] invoke ];
+            } errorBlock: ^( NSError* _Error )
+                            {
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
+                            } ];
+    }
 
 // GET statuses/firehose
 - (NSObject<STTwitterRequestProtocol> *)getStatusesFirehoseWithCount:(NSString *)count
@@ -1487,6 +1458,23 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
            errorBlock(error);
        }];
 }
+
+// convenience
+- (NSObject<STTwitterRequestProtocol> *)fetchStatusesFirehoseWithCount:(NSString *)count
+    {
+    return [ self getStatusesFirehoseWithCount: count
+                                 stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
+                                 progressBlock:
+        ^( NSDictionary* _JSON, STTwitterStreamJSONType _Type )
+            {
+            [ [ self _streamingAPIDelegateInvocationGenerator: _JSON
+                                                  messageType: _Type
+                                                  streamError: nil ] invoke ];
+            } errorBlock: ^( NSError* _Error )
+                            {
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
+                            } ];
+    }
 
 // GET user
 - (NSObject<STTwitterRequestProtocol> *)getUserStreamStallWarnings:(NSNumber *)stallWarnings
@@ -1534,54 +1522,28 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                          includeReplies:(NSNumber *)includeReplies
-                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                                       stallWarningBlock:(void(^)(NSString *code, NSString *message, NSUInteger percentFull))stallWarningBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock;
-{
-    return [self getUserStreamStallWarnings:stallWarningBlock ? @YES : @NO
-        includeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
-                             includeReplies:includeReplies
-                            keywordsToTrack:keywordsToTrack
-                      locationBoundingBoxes:locationBoundingBoxes
-                              progressBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
-                                  
-                                  switch (type) {
-                                      case STTwitterStreamJSONTypeTweet:
-                                          tweetBlock(json);
-                                          break;
-                                      case STTwitterStreamJSONTypeWarning:
-                                          if (stallWarningBlock) {
-                                              stallWarningBlock([json valueForKey:@"code"],
-                                                                [json valueForKey:@"message"],
-                                                                [[json valueForKey:@"percent_full"] integerValue]);
-                                          }
-                                          break;
-                                      default:
-                                          break;
-                                  }
-                                  
-                              } errorBlock:errorBlock];
-}
+- ( NSObject <STTwitterRequestProtocol>* ) fetchUserStreamIncludeMessagesFromFollowedAccounts: ( NSNumber* )_IncludeMessagesFromFollowedAccounts
+                                                                               includeReplies: ( NSNumber* )_IncludeReplies
+                                                                              keywordsToTrack: ( NSArray* )_KeywordsToTrack
+                                                                        locationBoundingBoxes: ( NSArray* )_LocationBoundingBoxes
 
-- (NSObject<STTwitterRequestProtocol> *)getUserStreamIncludeMessagesFromFollowedAccounts:(NSNumber *)includeMessagesFromFollowedAccounts
-                                                                          includeReplies:(NSNumber *)includeReplies
-                                                                         keywordsToTrack:(NSArray *)keywordsToTrack
-                                                                   locationBoundingBoxes:(NSArray *)locationBoundingBoxes
-                                                                              tweetBlock:(void(^)(NSDictionary *tweet))tweetBlock
-                                                                              errorBlock:(void(^)(NSError *error))errorBlock
-{
-    return [self getUserStreamIncludeMessagesFromFollowedAccounts:includeMessagesFromFollowedAccounts
-                                                   includeReplies:includeReplies
-                                                  keywordsToTrack:keywordsToTrack
-                                            locationBoundingBoxes:locationBoundingBoxes
-                                                       tweetBlock:tweetBlock
-                                                stallWarningBlock:nil
-                                                       errorBlock:errorBlock];
-}
+    {
+    return [ self getUserStreamStallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
+         includeMessagesFromFollowedAccounts: _IncludeMessagesFromFollowedAccounts
+                              includeReplies: _IncludeReplies
+                             keywordsToTrack: _KeywordsToTrack
+                       locationBoundingBoxes: _LocationBoundingBoxes
+                               progressBlock:
+        ^( NSDictionary* _JSON, STTwitterStreamJSONType _Type )
+            {
+            [ [ self _streamingAPIDelegateInvocationGenerator: _JSON
+                                                  messageType: _Type
+                                                  streamError: nil] invoke ];
+            } errorBlock: ^( NSError* _Error )
+                            {
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
+                            } ];
+    }
 
 // GET site
 - (NSObject<STTwitterRequestProtocol> *)getSiteStreamForUserIDs:(NSArray *)userIDs
@@ -1623,6 +1585,29 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
            errorBlock(error);
        }];
 }
+
+// convenience
+- (NSObject<STTwitterRequestProtocol> *)fetchSiteStreamForUserIDs:(NSArray *)userIDs
+                                                        delimited:(NSNumber *)delimited
+                                           restrictToUserMessages:(NSNumber *)restrictToUserMessages
+                                                   includeReplies:(NSNumber *)includeReplies
+    {
+    return [ self getSiteStreamForUserIDs: userIDs
+                                delimited: delimited
+                            stallWarnings: @( [ self.delegate respondsToSelector: @selector( twitterAPI:didTriggerStallWarning:code:percentFull: ) ] )
+                   restrictToUserMessages: restrictToUserMessages
+                           includeReplies: includeReplies
+                            progressBlock:
+        ^( NSDictionary* _JSON, STTwitterStreamJSONType _Type )
+            {
+            [ self _streamingAPIDelegateInvocationGenerator: _JSON
+                                                messageType: _Type
+                                                streamError: nil ];
+            } errorBlock: ^( NSError* _Error )
+                            {
+                            [ [ self _streamingAPIDelegateInvocationGenerator: nil messageType: 0 streamError: _Error] invoke ];
+                            } ];
+    }
 
 #pragma mark Direct Messages
 
@@ -4869,3 +4854,164 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 @end
+
+// STTwitterAPI + OTCSTTwitterStreamingAPIDelegate
+@implementation STTwitterAPI ( OTCSTTwitterStreamingAPIDelegate )
+
+#define COCOAed_NIL( _Object ) ( _Object ?: [ NSNull null ] )
+#define UNCOCOAed_NIL( _Object ) ( ( _Object == [ NSNull null ] ) ? nil : _Object )
+
+- ( NSInvocation* ) _streamingAPIDelegateInvocationGenerator: ( NSDictionary* )_JSON
+                                                 messageType: ( STTwitterStreamJSONType )_MessageType
+                                                 streamError: ( NSError* )_Error
+    {
+    NSInvocation* invocation = nil;
+
+    if ( !self.delegate || ![ self.delegate conformsToProtocol: @protocol( OTCSTTwitterStreamingAPIDelegate ) ] )
+        return invocation;
+
+    STTwitterAPI __weak* myself = self;
+    BOOL responds = NO;
+    SEL delegateSel = nil;
+    NSMutableArray* delegateArgs = [ NSMutableArray array ];
+
+    if ( _JSON )
+        {
+        switch ( _MessageType )
+            {
+            case STTwitterStreamJSONTypeTweet:
+                {
+                delegateSel = @selector( twitterAPI:didReceiveTweet: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+                    {
+                    OTCTweet* tweet = [ OTCTweet tweetWithJSON: _JSON ];
+                    [ delegateArgs addObject: COCOAed_NIL( tweet ) ];
+                    }
+                } break;
+
+            case STTwitterStreamJSONTypeWarning:
+                {
+                delegateSel = @selector( twitterAPI:didTriggerStallWarning:code:percentFull: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+                    {
+                    NSString* msg = [ _JSON valueForKey: @"message" ];
+                    NSString* code = [ _JSON valueForKey: @"code" ];
+                    NSString* percentFull = [ _JSON valueForKey: @"percent_full" ];
+                    [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( msg ), COCOAed_NIL( code ), COCOAed_NIL( percentFull ) ] ];
+                    }
+                } break;
+
+            case STTwitterStreamJSONTypeEvent:
+                {
+                delegateSel = @selector( twitterAPI:streamingEventHasBeenDetected: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+                    {
+                    OTCStreamingEvent* event = [ OTCStreamingEvent eventWithJSON: _JSON ];
+                    [ delegateArgs addObject: COCOAed_NIL( event ) ];
+                    }
+                } break;
+
+            case STTwitterStreamJSONTypeDirectMessages:
+                {
+                delegateSel = @selector( twitterAPI:sentOrReceivedDM: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+                    {
+                    OTCDirectMessage* dm = [ OTCDirectMessage directMessageWithJSON: _JSON ];
+                    [ delegateArgs addObject: COCOAed_NIL( dm ) ];
+                    }
+                } break;
+
+            case STTwitterStreamJSONTypeDisconnect:
+                {
+                delegateSel = @selector( twitterAPI:streaming:wasDisconnectedDueTo:code: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+                    {
+                    NSString* streamName = [ _JSON[ @"disconnect" ] valueForKey: @"stream_name" ];
+                    NSString* reason = [ _JSON[ @"disconnect" ] valueForKey: @"reason" ];
+                    NSString* code = [ _JSON[ @"disconnect" ] valueForKey: @"code" ];
+                    [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( streamName ), COCOAed_NIL( reason ), COCOAed_NIL( code ) ] ];
+                    }
+                } break;
+
+            case STTwitterStreamJSONTypeDelete:
+                {
+                delegateSel = @selector( twitterAPI:tweetHasBeenDeleted:byUser:on: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+                    {
+                    NSString* tweetIDString = nil;
+                    NSString* userIDString = nil;
+
+                    NSDictionary* tweetAttrJSON = _JSON[ @"delete" ];
+                    if ( tweetAttrJSON[ @"status" ] )
+                        {
+                        tweetIDString = [ tweetAttrJSON[ @"status" ] valueForKey: @"id_str" ];
+                        userIDString = [ tweetAttrJSON[ @"status" ] valueForKey: @"user_id_str" ];
+                        }
+                    else if ( tweetAttrJSON[ @"direct_message" ] )
+                        {
+                        tweetIDString = [ tweetAttrJSON[ @"direct_message" ] valueForKey: @"id_str" ];
+                        userIDString = [ [ tweetAttrJSON[ @"direct_message" ] valueForKey: @"user_id" ] stringValue ];
+                        }
+
+                    NSString* timestampWithMS = tweetAttrJSON[ @"timestamp_ms" ];
+
+                    // The last three digit representing milliseconds must be hacked
+                    NSTimeInterval timestamp = [ [ timestampWithMS substringWithRange: NSMakeRange( 0, timestampWithMS.length - 3 ) ] doubleValue ];
+                    NSDate* creationDate = timestampWithMS ? [ [ NSDate dateWithTimeIntervalSince1970: timestamp ] dateWithLocalTimeZone ] : nil;
+                    [ delegateArgs addObjectsFromArray: @[ COCOAed_NIL( tweetIDString ), COCOAed_NIL( userIDString ), COCOAed_NIL( creationDate ) ] ];
+                    }
+                } break;
+
+            case STTwitterStreamJSONTypeFriendsLists:
+                {
+                delegateSel = @selector( twitterAPI:didReceiveFriendsLists: );
+                if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+                    {
+                    NSArray* friends = _JSON[ @"friends" ];
+                    [ delegateArgs addObject: COCOAed_NIL( friends ) ];
+                    }
+                } break;
+
+//            case STTwitterStreamJSONTypeCountryWithheld:
+//                {
+//                // TODO: Handling country withheld
+//                NSLog( @"Country Withheld: %@", _JSON );
+//                } break;
+//    
+//            case STTwitterStreamJSONTypeUserWithheld:
+//                {
+//                // TODO: Handling user withheld
+//                NSLog( @"User Withheld: %@", _JSON );
+//                } break;
+
+            default:
+               break;
+            }
+        }
+
+    else if ( !_JSON && _Error )
+        {
+        delegateSel = @selector( twitterAPI:fuckingErrorOccured: );
+        if ( ( responds = [ self.delegate respondsToSelector: delegateSel ] ) )
+            [ delegateArgs addObject: _Error ];
+        }
+
+    if ( responds )
+        {
+        invocation = [ NSInvocation invocationWithMethodSignature: [ self.delegate methodSignatureForSelector: delegateSel ] ];
+        [ invocation setSelector: delegateSel ];
+        [ invocation setArgument: &myself atIndex: 2 ];
+
+        for ( int _Index = 0; _Index < delegateArgs.count; _Index++ )
+            {
+            id arg = UNCOCOAed_NIL( delegateArgs[ _Index ] );
+            [ invocation setArgument: &arg atIndex: _Index + 3 ];
+            }
+
+        [ invocation setTarget: self.delegate ];
+        }
+
+    return invocation;
+    }
+
+@end // STTwitterAPI + OTCSTTwitterStreamingAPIDelegate

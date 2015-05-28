@@ -1,6 +1,6 @@
-## STTwitter
+## Objectwitter-C
 
-_A stable, mature and comprehensive Objective-C library for Twitter REST API 1.1_
+_A stable, mature and comprehensive Objective-C library for Twitter REST API 1.1, based on [STTwitter](https://github.com/nst/STTwitter)_
 
 _Like a FOSS version of Twitter Fabric TwitterKit, without the UI parts but with much more flexibility_
 
