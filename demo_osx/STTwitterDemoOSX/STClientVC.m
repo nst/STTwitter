@@ -159,6 +159,9 @@
 - (IBAction)startStreaming:(id)sender {
     
     self.timelineStatuses = [NSArray array];
+    
+    if(_twitterStreamingKeywordsString == nil) return;
+    
     self.twitterStreamingStatus = @"Streaming started";
     
     self.streamingRequest = [_twitter postStatusesFilterKeyword:_twitterStreamingKeywordsString
