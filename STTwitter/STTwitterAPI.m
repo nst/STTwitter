@@ -4327,7 +4327,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadAPPENDWithVideoURL:(NSURL *)videoMediaURL
                                                                   mediaID:(NSString *)mediaID
                                                       uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                                             successBlock:(void(^)(NSString *mediaID, NSString *expiresAfterSecs))successBlock
+                                                             successBlock:(void(^)(id response))successBlock
                                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/rest/public/uploading-media
@@ -4356,17 +4356,14 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
           uploadProgressBlock:uploadProgressBlock
         downloadProgressBlock:nil
                  successBlock:^(NSDictionary *rateLimits, id response) {
-                     
-                     //NSLog(@"-- %@", response);
-                     
-                     successBlock(@"", @"");
+                     successBlock(response);
                  } errorBlock:^(NSError *error) {
                      errorBlock(error);
                  }];
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
-                                                              successBlock:(void(^)(NSString *mediaID, NSString *expiresAfterSecs))successBlock
+                                                              successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
                                                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/rest/public/uploading-media
@@ -4384,19 +4381,24 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                      
                      //NSLog(@"-- %@", response);
                      
+                     NSString *mediaID = [response valueForKey:@"media_id"];
+                     NSString *expiresAfterSecs = [response valueForKey:@"expires_after_secs"];
+                     NSString *size = [response valueForKey:@"size"];
+                     NSString *videoType = [response valueForKeyPath:@"video.video_type"];
+                     
                      /*
                       {
-                      "media_id": 601413451156586496,
-                      "media_id_string": "601413451156586496",
-                      "size": 4430752,
-                      "expires_after_secs": 3600,
-                      "video": {
-                      "video_type": "video/mp4"
-                      }
+                      "expires_after_secs" = 3600;
+                      "media_id" = 607552320679706624;
+                      "media_id_string" = 607552320679706624;
+                      size = 992496;
+                      video =     {
+                      "video_type" = "video/mp4";
+                      };
                       }
                       */
                      
-                     successBlock(@"", @"");
+                     successBlock(mediaID, size, expiresAfterSecs, videoType);
                  } errorBlock:^(NSError *error) {
                      errorBlock(error);
                  }];
