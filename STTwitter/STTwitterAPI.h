@@ -2002,7 +2002,6 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  */
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadINITWithVideoURL:(NSURL *)videoMediaURL
-                                                    uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
                                                            successBlock:(void(^)(NSString *mediaID, NSString *expiresAfterSecs))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -2015,6 +2014,39 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
                                                               successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
+
+// convenience
+
+//    NSURL *videoURL = [NSURL fileURLWithPath:@"/Users/nst/Desktop/x.mov"];
+//
+//    [_twitter postMediaUploadThreeStepsWithVideoURL:videoURL
+//                                uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
+//                                    NSLog(@"-- %ld", (long)bytesWritten);
+//                                } successBlock:^(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType) {
+//                                    NSLog(@"-- %@", mediaID);
+//
+//                                    [_twitter postStatusUpdate:@"coucou"
+//                                             inReplyToStatusID:nil
+//                                                      mediaIDs:@[mediaID]
+//                                                      latitude:nil
+//                                                     longitude:nil
+//                                                       placeID:nil
+//                                            displayCoordinates:nil
+//                                                      trimUser:nil
+//                                                  successBlock:^(NSDictionary *status) {
+//                                                      NSLog(@"-- %@", status);
+//                                                  } errorBlock:^(NSError *error) {
+//                                                      NSLog(@"-- %@", error);
+//                                                  }];
+//
+//                                } errorBlock:^(NSError *error) {
+//                                    NSLog(@"-- %@", error);
+//                                }];
+
+- (void)postMediaUploadThreeStepsWithVideoURL:(NSURL *)videoURL // local URL
+                          uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                 successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark -
 #pragma mark UNDOCUMENTED APIs

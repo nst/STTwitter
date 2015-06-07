@@ -4279,7 +4279,6 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadINITWithVideoURL:(NSURL *)videoMediaURL
-                                                    uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
                                                            successBlock:(void(^)(NSString *mediaID, NSString *expiresAfterSecs))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -4303,7 +4302,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     return [self postResource:@"media/upload.json"
                 baseURLString:kBaseURLStringUpload_1_1
                    parameters:md
-          uploadProgressBlock:uploadProgressBlock
+          uploadProgressBlock:nil
         downloadProgressBlock:nil
                  successBlock:^(NSDictionary *rateLimits, id response) {
                      
@@ -4402,6 +4401,42 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                  } errorBlock:^(NSError *error) {
                      errorBlock(error);
                  }];
+}
+
+// convenience
+
+- (void)postMediaUploadThreeStepsWithVideoURL:(NSURL *)videoURL // local URL
+                          uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                 successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                   errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [self postMediaUploadINITWithVideoURL:videoURL
+                             successBlock:^(NSString *mediaID, NSString *expiresAfterSecs) {
+                                 
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 if(strongSelf == nil) {
+                                     errorBlock(nil);
+                                     return;
+                                 }
+                                 
+                                 [strongSelf postMediaUploadAPPENDWithVideoURL:videoURL
+                                                                       mediaID:mediaID
+                                                           uploadProgressBlock:uploadProgressBlock
+                                                                  successBlock:^(id response) {
+                                                                      
+                                                                      __strong typeof(self) strongSelf2 = weakSelf;
+                                                                      if(strongSelf2 == nil) {
+                                                                          errorBlock(nil);
+                                                                          return;
+                                                                      }
+                                                                      
+                                                                      [strongSelf2 postMediaUploadFINALIZEWithMediaID:mediaID
+                                                                                                         successBlock:successBlock
+                                                                                                           errorBlock:errorBlock];
+                                                                  } errorBlock:errorBlock];
+                             } errorBlock:errorBlock];
 }
 
 #pragma mark -
