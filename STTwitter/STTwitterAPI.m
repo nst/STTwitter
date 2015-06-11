@@ -4297,7 +4297,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"command"] = @"INIT";
     md[@"media_type"] = @"video/mp4";
-    md[@"total_bytes"] = [NSString stringWithFormat:@"%lu", [data length]];
+    md[@"total_bytes"] = [NSString stringWithFormat:@"%@", @([data length])];
     
     return [self postResource:@"media/upload.json"
                 baseURLString:kBaseURLStringUpload_1_1
