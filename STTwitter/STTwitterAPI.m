@@ -221,20 +221,25 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (void)verifyCredentialsWithUserSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
     
-    STTwitterAPI * __weak weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
     [_oauth verifyCredentialsLocallyWithSuccessBlock:^(NSString *username, NSString *userID) {
         
-        typeof(self) strongSelf = weakSelf;
-        if(strongSelf == nil) return;
+        __strong typeof(self) strongSelf = weakSelf;
+        if(strongSelf == nil) {
+            errorBlock(nil);
+            return;
+        }
         
         if(username) [strongSelf setUserName:username];
         if(userID) [strongSelf setUserID:userID];
         
         [_oauth verifyCredentialsRemotelyWithSuccessBlock:^(NSString *username, NSString *userID) {
-            
-            typeof(self) strongSelf = weakSelf;
-            if(strongSelf == nil) return;
+
+            if(strongSelf == nil) {
+                errorBlock(nil);
+                return;
+            }
             
             [strongSelf setUserName:username];
             [strongSelf setUserID:userID];
