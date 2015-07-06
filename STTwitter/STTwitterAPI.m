@@ -1634,6 +1634,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesSinceID:(NSString *)sinceID
                                                            maxID:(NSString *)maxID
                                                            count:(NSString *)count
+                                                        fullText:(NSNumber *)fullText
                                                  includeEntities:(NSNumber *)includeEntities
                                                       skipStatus:(NSNumber *)skipStatus
                                                     successBlock:(void(^)(NSArray *messages))successBlock
@@ -1643,6 +1644,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(sinceID) [md setObject:sinceID forKey:@"since_id"];
     if(maxID) [md setObject:maxID forKey:@"max_id"];
     if(count) [md setObject:count forKey:@"count"];
+    if(fullText) md[@"full_text"] = [fullText boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
     
@@ -1664,6 +1666,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     return [self getDirectMessagesSinceID:sinceID
                                     maxID:nil
                                     count:countString
+                                 fullText:@(1)
                           includeEntities:nil
                                skipStatus:nil
                              successBlock:^(NSArray *statuses) {
@@ -1676,6 +1679,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesSinceID:(NSString *)sinceID
                                                            maxID:(NSString *)maxID
                                                            count:(NSString *)count
+                                                        fullText:(NSNumber *)fullText
                                                             page:(NSString *)page
                                                  includeEntities:(NSNumber *)includeEntities
                                                     successBlock:(void(^)(NSArray *messages))successBlock
@@ -1685,6 +1689,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(sinceID) [md setObject:sinceID forKey:@"since_id"];
     if(maxID) [md setObject:maxID forKey:@"max_id"];
     if(count) [md setObject:count forKey:@"count"];
+    if(fullText) md[@"full_text"] = [fullText boolValue] ? @"1" : @"0";
     if(page) [md setObject:page forKey:@"page"];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     
@@ -1696,12 +1701,15 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesShowWithID:(NSString *)messageID
+                                                           fullText:(NSNumber *)fullText
                                                        successBlock:(void(^)(NSArray *messages))successBlock
                                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
-    NSDictionary *d = @{@"id" : messageID};
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"id"] = messageID;
+    if(fullText) md[@"full_text"] = [fullText boolValue] ? @"1" : @"0";
     
-    return [self getAPIResource:@"direct_messages/show.json" parameters:d successBlock:^(NSDictionary *rateLimits, id response) {
+    return [self getAPIResource:@"direct_messages/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

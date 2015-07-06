@@ -624,6 +624,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesSinceID:(NSString *)sinceID
                                                            maxID:(NSString *)maxID
                                                            count:(NSString *)count
+                                                        fullText:(NSNumber *)fullText
                                                  includeEntities:(NSNumber *)includeEntities
                                                       skipStatus:(NSNumber *)skipStatus
                                                     successBlock:(void(^)(NSArray *messages))successBlock
@@ -643,6 +644,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesSinceID:(NSString *)sinceID
                                                            maxID:(NSString *)maxID
                                                            count:(NSString *)count
+                                                        fullText:(NSNumber *)fullText
                                                             page:(NSString *)page
                                                  includeEntities:(NSNumber *)includeEntities
                                                     successBlock:(void(^)(NSArray *messages))successBlock
@@ -655,6 +657,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  */
 
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesShowWithID:(NSString *)messageID
+                                                           fullText:(NSNumber *)fullText
                                                        successBlock:(void(^)(NSArray *statuses))successBlock
                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
