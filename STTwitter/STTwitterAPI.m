@@ -3047,12 +3047,28 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // POST lists/members/destroy
 
 - (NSObject<STTwitterRequestProtocol> *)postListsMembersDestroyForListID:(NSString *)listID
+                                                                    slug:(NSString *)slug
+                                                                  userID:(NSString *)userID
+                                                              screenName:(NSString *)screenName
+                                                         ownerScreenName:(NSString *)ownerScreenName
+                                                                 ownerID:(NSString *)ownerID
                                                             successBlock:(void(^)(id response))successBlock
                                                               errorBlock:(void(^)(NSError *error))errorBlock {
+
+    NSAssert((listID || slug), @"missing listID or slug");
     
-    NSDictionary *d = @{ @"list_id" : listID };
+    if(slug) NSAssert((ownerScreenName || ownerID), @"slug requires either ownerScreenName or ownerID");
     
-    return [self postAPIResource:@"lists/members/destroy" parameters:d successBlock:^(NSDictionary *rateLimits, id response) {
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    
+    if(listID) md[@"list_id"] = listID;
+    if(slug) md[@"slug"] = slug;
+    if(userID) md[@"user_id"] = userID;
+    if(screenName) md[@"screen_name"] = screenName;
+    if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
+    if(ownerID) md[@"owner_id"] = ownerID;
+    
+    return [self postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);

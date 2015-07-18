@@ -1382,6 +1382,11 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  */
 
 - (NSObject<STTwitterRequestProtocol> *)postListsMembersDestroyForListID:(NSString *)listID
+                                                                    slug:(NSString *)slug
+                                                                  userID:(NSString *)userID
+                                                              screenName:(NSString *)screenName
+                                                         ownerScreenName:(NSString *)ownerScreenName
+                                                                 ownerID:(NSString *)ownerID
                                                             successBlock:(void(^)(id response))successBlock
                                                               errorBlock:(void(^)(NSError *error))errorBlock;
 
