@@ -4393,8 +4393,16 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         
         //NSLog(@"-- SEGMENT INDEX %lu, SUBDATA %@", segmentIndex, NSStringFromRange(subDataRange));
         
+        __weak typeof(self) weakSelf = self;
+        
         dispatch_group_enter(group);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if(strongSelf == nil) {
+                lastErrorReceived = [NSError errorWithDomain:@"STTwitter" code:9999 userInfo:nil]; // TODO: improve
+                return;
+            }
             
             NSMutableDictionary *md = [NSMutableDictionary dictionary];
             md[@"command"] = @"APPEND";
@@ -4406,7 +4414,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             
             //NSLog(@"-- POST %@", [md valueForKey:@"segment_index"]);
             
-            [self postResource:@"media/upload.json"
+            [strongSelf postResource:@"media/upload.json"
                  baseURLString:kBaseURLStringUpload_1_1
                     parameters:md
            uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
@@ -4435,8 +4443,6 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
             successBlock(lastResponseReceived);
         }
     });
-    
-    dispatch_release(group);
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
