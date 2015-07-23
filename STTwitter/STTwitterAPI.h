@@ -914,6 +914,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)getAccountVerifyCredentialsWithIncludeEntites:(NSNumber *)includeEntities
                                                                            skipStatus:(NSNumber *)skipStatus
+                                                                         includeEmail:(NSNumber *)includeEmail
                                                                          successBlock:(void(^)(NSDictionary *account))successBlock
                                                                            errorBlock:(void(^)(NSError *error))errorBlock;
 

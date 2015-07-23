@@ -2222,12 +2222,14 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // GET account/verify_credentials
 - (NSObject<STTwitterRequestProtocol> *)getAccountVerifyCredentialsWithIncludeEntites:(NSNumber *)includeEntities
                                                                            skipStatus:(NSNumber *)skipStatus
+                                                                         includeEmail:(NSNumber *)includeEmail
                                                                          successBlock:(void(^)(NSDictionary *myInfo))successBlock
                                                                            errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
+    if(includeEmail) md[@"include_email"] = [skipStatus boolValue] ? @"1" : @"0";
     
     return [self getAPIResource:@"account/verify_credentials.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -2238,7 +2240,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)getAccountVerifyCredentialsWithSuccessBlock:(void(^)(NSDictionary *account))successBlock
                                                                          errorBlock:(void(^)(NSError *error))errorBlock {
-    return [self getAccountVerifyCredentialsWithIncludeEntites:nil skipStatus:nil successBlock:^(NSDictionary *account) {
+    return [self getAccountVerifyCredentialsWithIncludeEntites:nil skipStatus:nil includeEmail:nil successBlock:^(NSDictionary *account) {
         successBlock(account);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
