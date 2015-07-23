@@ -2014,11 +2014,11 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                            successBlock:(void(^)(NSString *mediaID, NSString *expiresAfterSecs))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (NSObject<STTwitterRequestProtocol> *)postMediaUploadAPPENDWithVideoURL:(NSURL *)videoMediaURL
-                                                                  mediaID:(NSString *)mediaID
-                                                      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                                             successBlock:(void(^)(id response))successBlock
-                                                               errorBlock:(void(^)(NSError *error))errorBlock;
+- (void)postMediaUploadAPPENDWithVideoURL:(NSURL *)videoMediaURL
+                                  mediaID:(NSString *)mediaID
+                      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                             successBlock:(void(^)(id response))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
                                                               successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock

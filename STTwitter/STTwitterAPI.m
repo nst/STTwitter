@@ -235,7 +235,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         if(userID) [strongSelf setUserID:userID];
         
         [_oauth verifyCredentialsRemotelyWithSuccessBlock:^(NSString *username, NSString *userID) {
-
+            
             if(strongSelf == nil) {
                 errorBlock(nil);
                 return;
@@ -3056,7 +3056,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                  ownerID:(NSString *)ownerID
                                                             successBlock:(void(^)(id response))successBlock
                                                               errorBlock:(void(^)(NSError *error))errorBlock {
-
+    
     NSAssert((listID || slug), @"missing listID or slug");
     
     if(slug) NSAssert((ownerScreenName || ownerID), @"slug requires either ownerScreenName or ownerID");
@@ -4354,42 +4354,89 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                  }];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postMediaUploadAPPENDWithVideoURL:(NSURL *)videoMediaURL
-                                                                  mediaID:(NSString *)mediaID
-                                                      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
-                                                             successBlock:(void(^)(id response))successBlock
-                                                               errorBlock:(void(^)(NSError *error))errorBlock {
+- (void)postMediaUploadAPPENDWithVideoURL:(NSURL *)videoMediaURL
+                                  mediaID:(NSString *)mediaID
+                      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                             successBlock:(void(^)(id response))successBlock
+                               errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/rest/public/uploading-media
+    // https://dev.twitter.com/rest/reference/post/media/upload-chunked
     
     NSData *data = [NSData dataWithContentsOfURL:videoMediaURL];
     
-    if(data == nil) {
-        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPIMediaDataIsEmpty userInfo:@{NSLocalizedDescriptionKey : @"data is nil"}];
+    NSInteger dataLength = [data length];
+    
+    if(dataLength == 0) {
+        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPIMediaDataIsEmpty userInfo:@{NSLocalizedDescriptionKey : @"cannot upload empty data"}];
         errorBlock(error);
-        return nil;
+        return;
     }
     
     NSString *fileName = [videoMediaURL isFileURL] ? [[videoMediaURL path] lastPathComponent] : @"media.jpg";
     
-    NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"command"] = @"APPEND";
-    md[@"media_id"] = mediaID;
-    md[@"segment_index"] = @"0";
-    md[@"media"] = data;
-    md[kSTPOSTDataKey] = @"media";
-    md[kSTPOSTMediaFileNameKey] = fileName;
+    NSUInteger fiveMegaBytes = 5 * (int) pow((double) 2,20);
     
-    return [self postResource:@"media/upload.json"
-                baseURLString:kBaseURLStringUpload_1_1
-                   parameters:md
-          uploadProgressBlock:uploadProgressBlock
-        downloadProgressBlock:nil
-                 successBlock:^(NSDictionary *rateLimits, id response) {
-                     successBlock(response);
-                 } errorBlock:^(NSError *error) {
-                     errorBlock(error);
-                 }];
+    NSUInteger segmentIndex = 0;
+    
+    __block id lastResponseReceived = nil;
+    __block NSError *lastErrorReceived = nil;
+    __block NSUInteger accumulatedBytesWritten = 0;
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    while((segmentIndex * fiveMegaBytes) < dataLength) {
+        
+        NSUInteger subDataLength = MIN(dataLength - segmentIndex * fiveMegaBytes, fiveMegaBytes);
+        NSRange subDataRange = NSMakeRange(segmentIndex * fiveMegaBytes, subDataLength);
+        NSData *subData = [data subdataWithRange:subDataRange];
+        
+        //NSLog(@"-- SEGMENT INDEX %lu, SUBDATA %@", segmentIndex, NSStringFromRange(subDataRange));
+        
+        dispatch_group_enter(group);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            
+            NSMutableDictionary *md = [NSMutableDictionary dictionary];
+            md[@"command"] = @"APPEND";
+            md[@"media_id"] = mediaID;
+            md[@"segment_index"] = [NSString stringWithFormat:@"%lu", (unsigned long)segmentIndex];
+            md[@"media"] = subData;
+            md[kSTPOSTDataKey] = @"media";
+            md[kSTPOSTMediaFileNameKey] = fileName;
+            
+            //NSLog(@"-- POST %@", [md valueForKey:@"segment_index"]);
+            
+            [self postResource:@"media/upload.json"
+                 baseURLString:kBaseURLStringUpload_1_1
+                    parameters:md
+           uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
+               accumulatedBytesWritten += bytesWritten;
+               uploadProgressBlock(bytesWritten, accumulatedBytesWritten, dataLength);
+           } downloadProgressBlock:nil
+                  successBlock:^(NSDictionary *rateLimits, id response) {
+                      //NSLog(@"-- POST OK %@", [md valueForKey:@"segment_index"]);
+                      lastResponseReceived = response;
+                      dispatch_group_leave(group);
+                  } errorBlock:^(NSError *error) {
+                      //NSLog(@"-- POST KO %@", [md valueForKey:@"segment_index"]);
+                      errorBlock(error);
+                      dispatch_group_leave(group);
+                  }];
+        });
+        
+        segmentIndex += 1;
+    }
+    
+    dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSLog(@"finished");
+        if(lastErrorReceived) {
+            errorBlock(lastErrorReceived);
+        } else {
+            successBlock(lastResponseReceived);
+        }
+    });
+    
+    dispatch_release(group);
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
