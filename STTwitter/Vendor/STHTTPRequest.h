@@ -25,12 +25,12 @@ typedef void (^completionBlock_t)(NSDictionary *headers, NSString *body);
 typedef void (^completionDataBlock_t)(NSDictionary *headers, NSData *body);
 typedef void (^errorBlock_t)(NSError *error);
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, STHTTPRequestCookiesStorage) {
     STHTTPRequestCookiesStorageShared = 0,
     STHTTPRequestCookiesStorageLocal = 1,
     STHTTPRequestCookiesStorageNoStorage = 2,
     STHTTPRequestCookiesStorageUndefined = NSUIntegerMax
-} STHTTPRequestCookiesStorage;
+};
 
 @interface STHTTPRequest : NSObject <NSURLConnectionDelegate>
 

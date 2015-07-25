@@ -819,10 +819,9 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     
     if(_connection == nil) {
         NSString *s = @"can't create connection";
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey];
         self.error = [NSError errorWithDomain:NSStringFromClass([self class])
                                          code:0
-                                     userInfo:userInfo];
+                                     userInfo:@{NSLocalizedDescriptionKey: s}];
         
         self.errorBlock(self.error);
     }
@@ -864,10 +863,9 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     [_connection cancel];
     
     NSString *s = @"Connection was cancelled.";
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey];
     self.error = [NSError errorWithDomain:NSStringFromClass([self class])
                                      code:kSTHTTPRequestCancellationError
-                                 userInfo:userInfo];
+                                 userInfo:@{NSLocalizedDescriptionKey: s}];
     
     self.errorBlock(self.error);
 }
