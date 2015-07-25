@@ -46,7 +46,7 @@ extern NSString *kBaseURLStringSiteStream_1_1;
 
 + (NSString *)versionString;
 
-+ (instancetype)twitterAPIOSWithAccount:(ACAccount *) account;
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account;
 + (instancetype)twitterAPIOSWithFirstAccount;
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything

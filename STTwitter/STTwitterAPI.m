@@ -30,7 +30,7 @@ static NSDateFormatter *dateFormatter = nil;
 
 @implementation STTwitterAPI
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     
     STTwitterAPI * __weak weakSelf = self;
