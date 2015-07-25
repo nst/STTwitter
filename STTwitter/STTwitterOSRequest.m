@@ -142,7 +142,7 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
     NSURLRequest *request = [_connection currentRequest];
     
     NSString *s = @"Connection was cancelled.";
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:s forKey:NSLocalizedDescriptionKey];
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: s};
     NSError *error = [NSError errorWithDomain:NSStringFromClass([self class])
                                          code:kSTHTTPRequestCancellationError
                                      userInfo:userInfo];

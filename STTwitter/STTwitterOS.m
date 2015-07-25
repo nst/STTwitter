@@ -27,7 +27,7 @@
 
 @implementation STTwitterOS
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     
     self.accountStore = [[ACAccountStore alloc] init];
