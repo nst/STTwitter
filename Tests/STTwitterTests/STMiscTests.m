@@ -90,6 +90,16 @@
     XCTAssertEqual(140 - c, 15, @"c: %d", c);
 }
 
+- (void)testCharactersCountIssue209 {
+    // https://github.com/nst/STTwitter/issues/209
+    
+    NSString *s = @"http://us1.campaign-archive2.com/?u=d0e55f3197099944345708652&id=5c51c9bebb&e=dff350d017";
+    
+    int c = (int)[s st_numberOfCharactersInATweet];
+    
+    XCTAssertEqual(140 - c, 118, @"c: %d", c);
+}
+
 - (void)testURLWithHyphens {
     // https://github.com/nst/STTwitter/issues/91
     
