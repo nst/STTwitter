@@ -119,6 +119,15 @@
     XCTAssertEqual(c, (int)kSTTwitterDefaultShortURLLengthHTTPS, @"c: %d", (int)c);
 }
 
+- (void)testCharactersCountEmojis {
+    
+    NSString *s = @"\U0001F601";
+    
+    int c = (int)[s st_numberOfCharactersInATweet];
+    
+    XCTAssertEqual(c, 1, @"c: %d", (int)c);
+}
+
 - (void)testParserOK {
     NSString *s1 = @"11\r\n{\"a\":";
     NSString *s2 = @"\"b\"}";
