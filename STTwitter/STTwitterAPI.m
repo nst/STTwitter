@@ -55,7 +55,7 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (NSString *)versionString {
-    return @"0.2.1";
+    return @"0.2.2";
 }
 
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
