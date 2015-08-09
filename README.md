@@ -68,7 +68,9 @@ Then, run the following command to install the STTwitter pod:
 
 STTwitter does not depend on AppKit or UIKit and hence can be used in a command-line Twitter client.
 
-STTwitter requires iOS 5+ or OS X 10.7+.
+STTwitter <= 0.2.2 requires iOS 5+ or OS X 10.7+.
+
+STTwitter >= 0.2.3 requires iOS 7+ or OS X 10.9+.
 
 Vea Software has a great live-demo [tutorial](http://www.veasoftware.com/tutorials/2014/6/17/xcode-5-tutorial-ios-7-app-only-authentication-twitter-api-version-11) about creating a simple iOS app using STTwitter's app only mode.
 

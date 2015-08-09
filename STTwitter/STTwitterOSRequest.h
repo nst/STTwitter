@@ -11,7 +11,7 @@
 
 @class ACAccount;
 
-@interface STTwitterOSRequest : NSObject <NSURLConnectionDelegate, STTwitterRequestProtocol>
+@interface STTwitterOSRequest : NSObject <NSURLSessionDataDelegate, STTwitterRequestProtocol>
 
 - (instancetype)initWithAPIResource:(NSString *)resource
                       baseURLString:(NSString *)baseURLString
@@ -22,7 +22,7 @@
                 uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
                         streamBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSData *data))streamBlock
                     completionBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response))completionBlock
-                         errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock NS_DESIGNATED_INITIALIZER;
+                         errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock;
 
 - (void)startRequest;
 - (NSURLRequest *)preparedURLRequest;

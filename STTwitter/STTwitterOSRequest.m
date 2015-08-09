@@ -9,9 +9,6 @@
 #import "STTwitterOSRequest.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
-#if TARGET_OS_IPHONE
-#import <Twitter/Twitter.h> // iOS 5
-#endif
 #import "STHTTPRequest.h"
 #import "NSString+STTwitter.h"
 #import "NSError+STTwitter.h"
@@ -26,7 +23,7 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
 @property (nonatomic, copy) error_block_t errorBlock;
 @property (nonatomic, copy) upload_progress_block_t uploadProgressBlock;
 @property (nonatomic, copy) stream_block_t streamBlock;
-@property (nonatomic, retain) NSURLConnection *connection;
+@property (nonatomic, retain) NSURLSessionDataTask *task;
 @property (nonatomic, retain) NSHTTPURLResponse *httpURLResponse; // only used with streaming API
 @property (nonatomic, retain) NSMutableData *data; // only used with non-streaming API
 @property (nonatomic, retain) ACAccount *account;
@@ -83,20 +80,10 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
     NSString *urlString = [_baseURLString stringByAppendingString:_resource];
     NSURL *url = [NSURL URLWithString:urlString];
     
-    id request = nil;
-    
-#if TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    
-    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
-        TWRequestMethod method = (_httpMethod == 0) ? TWRequestMethodGET : TWRequestMethodPOST;
-        request = [[TWRequest alloc] initWithURL:url parameters:paramsWithoutMedia requestMethod:method];
-    } else {
-        request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:_httpMethod URL:url parameters:paramsWithoutMedia];
-    }
-    
-#else
-    request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:_httpMethod URL:url parameters:paramsWithoutMedia];
-#endif
+    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter
+                                            requestMethod:_httpMethod
+                                                      URL:url
+                                               parameters:paramsWithoutMedia];
     
     [request setAccount:_account];
     
@@ -105,20 +92,9 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
         [request addMultipartData:mediaData withName:postDataKey type:@"application/octet-stream" filename:filename];
     }
     
-    // we use NSURLConnection because SLRequest doesn't play well with the streaming API
+    // we use NSURLSessionDataTask because SLRequest doesn't play well with the streaming API
     
-    NSURLRequest *preparedURLRequest = nil;
-#if TARGET_OS_IPHONE && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
-        preparedURLRequest = [request signedURLRequest];
-    } else {
-        preparedURLRequest = [request preparedURLRequest];
-    }
-#else
-    preparedURLRequest = [request preparedURLRequest];
-#endif
-    
-    return preparedURLRequest;
+    return [request preparedURLRequest];
 }
 
 - (void)startRequest {
@@ -128,18 +104,26 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
     NSMutableURLRequest *mutablePreparedURLRequest = [preparedURLRequest mutableCopy];
     mutablePreparedURLRequest.timeoutInterval = _timeoutInSeconds;
     
-    if (_connection) {
+    if (_task) {
         [self cancel];
     }
-    _connection = [NSURLConnection connectionWithRequest:mutablePreparedURLRequest delegate:self];
     
-    [_connection start];
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration
+                                                          delegate:self
+                                                     delegateQueue:nil];
+    
+    // TODO: use an uploadDataTask when appropriate, need the file URL
+    self.task = [session dataTaskWithRequest:mutablePreparedURLRequest];
+    
+    [_task resume];
 }
 
 - (void)cancel {
-    [_connection cancel];
+    [_task cancel];
     
-    NSURLRequest *request = [_connection currentRequest];
+    NSURLRequest *request = [_task currentRequest];
     
     NSString *s = @"Connection was cancelled.";
     NSDictionary *userInfo = @{NSLocalizedDescriptionKey: s};
@@ -155,90 +139,124 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
         return [request allHTTPHeaderFields];
     }
     
-#if TARGET_OS_IPHONE &&  (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0)
-    if (floor(NSFoundationVersionNumber) < NSFoundationVersionNumber_iOS_6_0) {
-        return [[request signedURLRequest] allHTTPHeaderFields];
-    } else {
-        return [[request preparedURLRequest] allHTTPHeaderFields];
-    }
-#else
     return [[request preparedURLRequest] allHTTPHeaderFields];
-#endif
 }
 
-#pragma mark NSURLConnectionDataDelegate
+#pragma mark NSURLSessionDataDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+didReceiveResponse:(NSURLResponse *)response
+ completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     
-    if([response isKindOfClass:[NSHTTPURLResponse class]] == NO) return;
+    NSAssert([NSThread currentThread] == [NSThread mainThread], @"not on main thread");
     
-    self.httpURLResponse = (NSHTTPURLResponse *)response;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if([response isKindOfClass:[NSHTTPURLResponse class]] == NO) {
+            // TODO: handle error
+            completionHandler(NSURLSessionResponseCancel);
+            return;
+        }
+        
+        self.httpURLResponse = (NSHTTPURLResponse *)response;
+        
+        self.data = [NSMutableData data];
+        
+        completionHandler(NSURLSessionResponseAllow);
+        
+    });
     
-    self.data = [NSMutableData data];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+    didReceiveData:(NSData *)data {
     
-    BOOL isStreaming = [[[[connection originalRequest] URL] host] rangeOfString:@"stream"].location != NSNotFound;
-    
-    if(isStreaming) {
-        self.streamBlock(self, data);
-    } else {
-        [self.data appendData:data];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        BOOL isStreaming = [[[[dataTask originalRequest] URL] host] rangeOfString:@"stream"].location != NSNotFound;
+        
+        if(isStreaming) {
+            self.streamBlock(self, data);
+        } else {
+            [self.data appendData:data];
+        }
+        
+    });
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+#pragma mark NSURLSessionTaskDelegate
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+   didSendBodyData:(int64_t)bytesSent
+    totalBytesSent:(int64_t)totalBytesSent
+totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
-    NSURLRequest *request = [connection currentRequest];
-    NSDictionary *requestHeaders = [request allHTTPHeaderFields];
-    NSDictionary *responseHeaders = [_httpURLResponse allHeaderFields];
-    
-    self.errorBlock(self, requestHeaders, responseHeaders, error);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if(self.uploadProgressBlock == nil) return;
+        
+        // avoid overcommit while posting big images, like 5+ MB
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            self.uploadProgressBlock(bytesSent, totalBytesSent, totalBytesExpectedToSend);
+        });
+        
+    });
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+didCompleteWithError:(nullable NSError *)error {
     
-    NSURLRequest *request = [connection currentRequest];
+    __weak typeof(self) weakSelf = self;
     
-    if(_data == nil) {
-        self.errorBlock(self, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], nil);
-        return;
-    }
-    
-    NSError *error = [NSError st_twitterErrorFromResponseData:_data responseHeaders:[_httpURLResponse allHeaderFields] underlyingError:nil];
-    
-    if(error) {
-        self.errorBlock(self, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], error);
-        return;
-    }
-    
-    NSError *jsonError = nil;
-    id response = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
-    
-    if(response == nil) {
-        // eg. reverse auth response
-        // oauth_token=xxx&oauth_token_secret=xxx&user_id=xxx&screen_name=xxx
-        response = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
-    }
-    
-    if(response) {
-        self.completionBlock(self, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], response);
-    } else {
-        self.errorBlock(self, [self requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], jsonError);
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection
-   didSendBodyData:(NSInteger)bytesWritten
- totalBytesWritten:(NSInteger)totalBytesWritten
-totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
-    if(self.uploadProgressBlock == nil) return;
-    
-    // avoid overcommit while posting big images, like 5+ MB
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        self.uploadProgressBlock(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        //NSLog(@"-- didCompleteWithError: %@", [error localizedDescription]);
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf == nil) return;
+        
+        if(error) {
+            NSURLRequest *request = [strongSelf.task currentRequest];
+            NSDictionary *requestHeaders = [request allHTTPHeaderFields];
+            NSDictionary *responseHeaders = [strongSelf.httpURLResponse allHeaderFields];
+            
+            self.errorBlock(strongSelf, requestHeaders, responseHeaders, error);
+            return;
+        }
+        
+        NSURLRequest *request = [_task currentRequest];
+        
+        if(_data == nil) {
+            strongSelf.errorBlock(strongSelf, [strongSelf requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], nil);
+            return;
+        }
+        
+        NSError *error = [NSError st_twitterErrorFromResponseData:_data responseHeaders:[_httpURLResponse allHeaderFields] underlyingError:nil];
+        
+        if(error) {
+            strongSelf.errorBlock(strongSelf, [strongSelf requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], error);
+            return;
+        }
+        
+        NSError *jsonError = nil;
+        id response = [NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingAllowFragments error:&jsonError];
+        
+        if(response == nil) {
+            // eg. reverse auth response
+            // oauth_token=xxx&oauth_token_secret=xxx&user_id=xxx&screen_name=xxx
+            response = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+        }
+        
+        if(response) {
+            strongSelf.completionBlock(strongSelf, [strongSelf requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], response);
+        } else {
+            strongSelf.errorBlock(strongSelf, [strongSelf requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], jsonError);
+        }
+        
     });
 }
 
