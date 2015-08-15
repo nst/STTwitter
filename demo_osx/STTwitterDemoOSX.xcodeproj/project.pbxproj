@@ -96,6 +96,7 @@
 		039910E217F371A5005FFFC3 /* JSONSyntaxHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONSyntaxHighlight.m; sourceTree = "<group>"; };
 		03ACFD3718390F68005CEE2A /* NSDateFormatter+STTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+STTwitter.h"; sourceTree = "<group>"; };
 		03ACFD3818390F68005CEE2A /* NSDateFormatter+STTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+STTwitter.m"; sourceTree = "<group>"; };
+		B12BD9281B7F7E8C00FD9632 /* STTwitterAPIDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTwitterAPIDelegate.h; sourceTree = "<group>"; };
 		B894413A1ABF571F00FC5D6F /* STTwitterStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTwitterStreamParser.h; sourceTree = "<group>"; };
 		B894413B1ABF571F00FC5D6F /* STTwitterStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTwitterStreamParser.m; sourceTree = "<group>"; };
 		B8BDD51C1AC12807003672C3 /* STTwitterRequestProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STTwitterRequestProtocol.h; sourceTree = "<group>"; };
@@ -204,6 +205,7 @@
 				03191E8F17BF704C0001C06D /* STTwitter.h */,
 				03191E9017BF704C0001C06D /* STTwitterAPI.h */,
 				03191E9117BF704C0001C06D /* STTwitterAPI.m */,
+				B12BD9281B7F7E8C00FD9632 /* STTwitterAPIDelegate.h */,
 				03191E9217BF704C0001C06D /* STTwitterAppOnly.h */,
 				03191E9317BF704C0001C06D /* STTwitterAppOnly.m */,
 				03191E9417BF704C0001C06D /* STTwitterHTML.h */,

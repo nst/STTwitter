@@ -43,7 +43,14 @@ static NSDateFormatter *dateFormatter = nil;
         typeof(self) strongSelf = weakSelf;
         
         if([strongSelf.oauth isKindOfClass:[STTwitterOS class]]) {
-            strongSelf.oauth = nil;
+			
+			BOOL shouldReset = YES;
+			
+			if ([self.delegate respondsToSelector:@selector(twitterAPI:shouldDisableCurrentOAuth:accountStore:)]) {
+				shouldReset = [self.delegate twitterAPI:self shouldDisableCurrentOAuth:(STTwitterOS*)self.oauth accountStore:note.object];
+			}
+			
+			if (shouldReset) strongSelf.oauth = nil;
         }
     }];
     
@@ -59,13 +66,23 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
+	return [self twitterAPIOSWithAccount:account withDelegate:nil];
+}
+
++ (instancetype)twitterAPIOSWithFirstAccount {
+	return [self twitterAPIOSWithFirstAccountWithDelegate:nil];
+}
+
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account withDelegate:(id<STTwitterAPIDelegate>)delegate {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
+	twitter.delegate = delegate;
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:account];
     return twitter;
 }
 
-+ (instancetype)twitterAPIOSWithFirstAccount {
++ (instancetype)twitterAPIOSWithFirstAccountWithDelegate:(id<STTwitterAPIDelegate>)delegate {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
+	twitter.delegate = delegate;
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:nil];
     return twitter;
 }
