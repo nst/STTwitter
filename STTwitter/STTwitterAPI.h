@@ -439,7 +439,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                       displayCoordinates:(NSNumber *)displayCoordinates
                                      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
                                             successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock;
+                                              errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("use POST statuses/update");
 
 // convenience
 - (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
@@ -450,7 +450,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                longitude:(NSString *)longitude
                                      uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
                                             successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock;
+                                              errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("use POST statuses/update");
 
 /*
  GET    statuses/oembed
