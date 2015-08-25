@@ -32,7 +32,7 @@ typedef NS_ENUM(NSUInteger, STHTTPRequestCookiesStorage) {
     STHTTPRequestCookiesStorageUndefined = NSUIntegerMax
 };
 
-@interface STHTTPRequest : NSObject <NSURLConnectionDelegate>
+@interface STHTTPRequest : NSObject <NSURLSessionDataDelegate>
 
 @property (copy) uploadProgressBlock_t uploadProgressBlock;
 @property (copy) downloadProgressBlock_t downloadProgressBlock;
@@ -55,6 +55,9 @@ typedef NS_ENUM(NSUInteger, STHTTPRequestCookiesStorage) {
 @property (nonatomic) BOOL preventRedirections;
 @property (nonatomic) STHTTPRequestCookiesStorage cookieStoragePolicyForInstance; // overrides globalCookiesStoragePolicy
 
++ (void)setBackgroundCompletionHandler:(void(^)())completionHandler forSessionIdentifier:(NSString *)sessionIdentifier;
+//+ (void(^)())backgroundCompletionHandlerForSessionIdentifier:(NSString *)sessionIdentifier;
+
 // response
 @property (nonatomic) NSStringEncoding forcedResponseEncoding;
 @property (nonatomic, readonly) NSInteger responseStatus;
@@ -68,8 +71,8 @@ typedef NS_ENUM(NSUInteger, STHTTPRequestCookiesStorage) {
 // cache
 @property (nonatomic) BOOL ignoreCache; // requests ignore cached responses and responses don't get cached
 
-+ (STHTTPRequest *)requestWithURL:(NSURL *)url;
-+ (STHTTPRequest *)requestWithURLString:(NSString *)urlString;
++ (instancetype)requestWithURL:(NSURL *)url;
++ (instancetype)requestWithURLString:(NSString *)urlString;
 
 + (void)setGlobalIgnoreCache:(BOOL)ignoreCache; // no cache at all when set, overrides the ignoreCache property
 
