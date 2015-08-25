@@ -208,7 +208,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
-didCompleteWithError:(nullable NSError *)error {
+didCompleteWithError:(NSError *)error {
     
     __weak typeof(self) weakSelf = self;
     

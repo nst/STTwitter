@@ -919,7 +919,7 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
  * invalid because of a systemic error or when it has been
  * explicitly invalidated, in which case the error parameter will be nil.
  */
-- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(nullable NSError *)error {
+- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error {
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if(self.errorBlock) {
@@ -1048,7 +1048,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
  */
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
-didCompleteWithError:(nullable NSError *)error {
+didCompleteWithError:(NSError *)error {
     
     __weak typeof(self) weakSelf = self;
     
