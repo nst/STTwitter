@@ -22,6 +22,7 @@
 #import <Foundation/Foundation.h>
 #import "STTwitterStreamParser.h"
 #import "STTwitterRequestProtocol.h"
+#import "STTwitterAPIDelegate.h"
 
 extern NS_ENUM(NSUInteger, STTwitterAPIErrorCode) {
     STTwitterAPICannotPostEmptyStatus = 0,
@@ -48,6 +49,8 @@ extern NSString *kBaseURLStringSiteStream_1_1;
 
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account;
 + (instancetype)twitterAPIOSWithFirstAccount;
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account withDelegate:(id<STTwitterAPIDelegate>)delegate;
++ (instancetype)twitterAPIOSWithFirstAccountWithDelegate:(id<STTwitterAPIDelegate>)delegate;
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
@@ -148,6 +151,8 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
+
+@property (nonatomic, weak) id<STTwitterAPIDelegate> delegate;
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
 
