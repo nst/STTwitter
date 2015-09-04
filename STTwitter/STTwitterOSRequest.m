@@ -149,10 +149,10 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     
-    NSAssert([NSThread currentThread] == [NSThread mainThread], @"not on main thread");
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        
+
+        NSAssert([NSThread currentThread] == [NSThread mainThread], @"not on main thread");
+
         if([response isKindOfClass:[NSHTTPURLResponse class]] == NO) {
             // TODO: handle error
             completionHandler(NSURLSessionResponseCancel);
