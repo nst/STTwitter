@@ -13,10 +13,13 @@ extern NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
     STTwitterOSSystemCannotAccessTwitter = 0,
     STTwitterOSCannotFindTwitterAccount,
     STTwitterOSUserDeniedAccessToTheirAccounts,
-    STTwitterOSNoTwitterAccountIsAvailable
+    STTwitterOSNoTwitterAccountIsAvailable,
+    STTwitterOSTwitterAccountInvalid
 };
 
 @class ACAccount;
+
+extern const NSString *STTwitterOSInvalidatedAccount;
 
 @interface STTwitterOS : NSObject <STTwitterProtocol>
 

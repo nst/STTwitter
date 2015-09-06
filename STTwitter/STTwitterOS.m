@@ -16,13 +16,15 @@
 #import <Twitter/Twitter.h> // iOS 5
 #endif
 
+const NSString *STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount";
+
 @interface ACAccount (STTwitterOS)
-- (NSString*)st_userID; // private API
+- (NSString *)st_userID; // private API
 @end
 
 @interface STTwitterOS ()
-@property (nonatomic, retain) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
-@property (nonatomic, retain) ACAccount *account; // if nil, will be set to first account available
+@property (nonatomic, strong) ACAccountStore *accountStore; // the ACAccountStore must be kept alive for as long as we need an ACAccount instance, see WWDC 2011 Session 124 for more info
+@property (nonatomic, strong) ACAccount *account; // if nil, will be set to first account available
 @end
 
 @implementation STTwitterOS
@@ -82,15 +84,16 @@
   downloadProgressBlock:nil
            successBlock:^(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                
+               __strong typeof(weakSelf) strongSelf = weakSelf;
+               if(strongSelf == nil) return;
+               
                if([response isKindOfClass:[NSDictionary class]] == NO) {
                    NSString *errorDescription = [NSString stringWithFormat:@"Expected dictionary, found %@", response];
-                   NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
+                   NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
                    errorBlock(error);
                    return;
                }
                
-               typeof(self) strongSelf = weakSelf;
-               if(strongSelf == nil) return;
                
                NSDictionary *dict = response;
                successBlock(dict[@"screen_name"], dict[@"id_str"]);
@@ -130,6 +133,7 @@
 }
 
 - (void)verifyCredentialsLocallyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock errorBlock:(void(^)(NSError *error))errorBlock {
+    
     if([self hasAccessToTwitter] == NO) {
         NSString *message = @"This system cannot access Twitter.";
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterOSSystemCannotAccessTwitter userInfo:@{NSLocalizedDescriptionKey : message}];
@@ -151,7 +155,7 @@
     ACAccountStoreRequestAccessCompletionHandler accountStoreRequestCompletionHandler = ^(BOOL granted, NSError *error) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
-            typeof(self) strongSelf = weakSelf;
+            __strong typeof(self) strongSelf = weakSelf;
             
             if(strongSelf == nil) return;
             
@@ -168,6 +172,7 @@
                 return;
             }
             
+            ACAccount *formerAccount = strongSelf.account;
             NSString *previouslyStoredUsername = strongSelf.account.username;
             
             NSArray *accounts = [strongSelf.accountStore accountsWithAccountType:accountType];
@@ -201,8 +206,10 @@
             
             if(accountFound) return;
             
-            NSString *message = @"Twitter account is not available.";
-            NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
+            NSString *message = [NSString stringWithFormat:@"Twitter account is invalid: %@", previouslyStoredUsername];
+            NSMutableDictionary *userInfo = [ @{NSLocalizedDescriptionKey:message} mutableCopy];
+            if(formerAccount) userInfo[STTwitterOSInvalidatedAccount] = formerAccount;
+            NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterOSTwitterAccountInvalid userInfo:userInfo];
             errorBlock(error);
         }];
     };
@@ -231,7 +238,7 @@
                                                               baseURLString:@"https://api.twitter.com/1.1"
                                                                  httpMethod:SLRequestMethodGET
                                                                  parameters:nil
-                                                                    account:self.account
+                                                                    account:_account
                                                            timeoutInSeconds:0
                                                         uploadProgressBlock:nil
                                                                 streamBlock:nil
@@ -299,7 +306,7 @@
                                                               baseURLString:baseURLStringWithTrailingSlash
                                                                  httpMethod:slRequestMethod
                                                                  parameters:d
-                                                                    account:self.account
+                                                                    account:_account
                                                            timeoutInSeconds:_timeoutInSeconds
                                                         uploadProgressBlock:uploadProgressBlock
                                                                 streamBlock:progressBlock
@@ -379,7 +386,7 @@
   downloadProgressBlock:nil
            successBlock:^(id request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
                
-               NSDictionary *d = [[self class] parametersDictionaryFromAmpersandSeparatedParameterString:response];
+               NSDictionary *d = [STTwitterOS parametersDictionaryFromAmpersandSeparatedParameterString:response];
                
                NSString *oAuthToken = [d valueForKey:@"oauth_token"];
                NSString *oAuthTokenSecret = [d valueForKey:@"oauth_token_secret"];
@@ -396,8 +403,7 @@
 
 @implementation ACAccount (STTwitterOS)
 
-- (NSString*)st_userID
-{
+- (NSString *)st_userID {
     return [self valueForKeyPath:@"properties.user_id"];
 }
 
