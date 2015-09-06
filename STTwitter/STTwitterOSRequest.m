@@ -23,14 +23,14 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
 @property (nonatomic, copy) error_block_t errorBlock;
 @property (nonatomic, copy) upload_progress_block_t uploadProgressBlock;
 @property (nonatomic, copy) stream_block_t streamBlock;
-@property (nonatomic, retain) NSURLSessionDataTask *task;
-@property (nonatomic, retain) NSHTTPURLResponse *httpURLResponse; // only used with streaming API
-@property (nonatomic, retain) NSMutableData *data; // only used with non-streaming API
-@property (nonatomic, retain) ACAccount *account;
+@property (nonatomic, strong) NSURLSessionDataTask *task;
+@property (nonatomic, strong) NSHTTPURLResponse *httpURLResponse; // only used with streaming API
+@property (nonatomic, strong) NSMutableData *data; // only used with non-streaming API
+@property (nonatomic, strong) ACAccount *account;
 @property (nonatomic) NSInteger httpMethod;
-@property (nonatomic, retain) NSDictionary *params;
-@property (nonatomic, retain) NSString *baseURLString;
-@property (nonatomic, retain) NSString *resource;
+@property (nonatomic, strong) NSDictionary *params;
+@property (nonatomic, strong) NSString *baseURLString;
+@property (nonatomic, strong) NSString *resource;
 @property (nonatomic) NSTimeInterval timeoutInSeconds;
 @end
 
@@ -224,7 +224,7 @@ didCompleteWithError:(NSError *)error {
             NSDictionary *requestHeaders = [request allHTTPHeaderFields];
             NSDictionary *responseHeaders = [strongSelf.httpURLResponse allHeaderFields];
             
-            self.errorBlock(strongSelf, requestHeaders, responseHeaders, error);
+            strongSelf.errorBlock(strongSelf, requestHeaders, responseHeaders, error);
             return;
         }
         
