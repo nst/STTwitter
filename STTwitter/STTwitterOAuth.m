@@ -223,7 +223,7 @@
 
 - (void)verifyCredentialsRemotelyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
                                        errorBlock:(void(^)(NSError *error))errorBlock {
-   
+    
     if(_username && _password) {
         
         [self postXAuthAccessTokenRequestWithUsername:_username password:_password successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
@@ -231,7 +231,7 @@
         } errorBlock:^(NSError *error) {
             errorBlock(error);
         }];
-
+        
     } else {
         
         [self fetchResource:@"account/verify_credentials.json"
@@ -242,7 +242,7 @@
         uploadProgressBlock:nil
       downloadProgressBlock:nil
                successBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id response) {
-
+                   
                    if([response isKindOfClass:[NSDictionary class]] == NO) {
                        NSString *errorDescription = [NSString stringWithFormat:@"Expected dictionary, found %@", response];
                        NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:0 userInfo:@{NSLocalizedDescriptionKey : errorDescription}];
@@ -252,7 +252,7 @@
                    
                    NSDictionary *dict = response;
                    successBlock(dict[@"screen_name"], dict[@"id_str"]);
-               
+                   
                } errorBlock:^(STHTTPRequest *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                    errorBlock(error);
                }];
@@ -363,19 +363,19 @@
                         @"x_auth_password" : password,
                         @"x_auth_mode"     : @"client_auth"};
     
-
+    
     __weak typeof(self) weakSelf = self;
-
+    
     [self postResource:@"oauth/access_token"
          baseURLString:@"https://api.twitter.com"
             parameters:d
           successBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSString *body) {
               NSDictionary *dict = [body st_parametersDictionary];
-
+              
               typeof(self) strongSelf = weakSelf;
-
+              
               if(strongSelf == nil) return;
-
+              
               // https://api.twitter.com/oauth/authorize?oauth_token=OAUTH_TOKEN&oauth_token_secret=OAUTH_TOKEN_SECRET&user_id=USER_ID&screen_name=SCREEN_NAME
               
               self.oauthAccessToken = dict[@"oauth_token"];
@@ -383,11 +383,11 @@
               
               successBlock(strongSelf.oauthAccessToken, strongSelf.oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
           } errorBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
-
+              
               typeof(self) strongSelf = weakSelf;
               
               if(strongSelf == nil) return;
-
+              
               if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorUserCancelledAuthentication) {
                   NSError *xAuthNotEnabledError = [NSError errorWithDomain:NSStringFromClass([strongSelf class])
                                                                       code:STTwitterOAuthBadCredentialsOrConsumerTokensNotXAuthEnabled
@@ -414,14 +414,14 @@
     NSDictionary *d = @{@"oauth_verifier" : pin};
     
     __weak typeof(self) weakSelf = self;
-
+    
     [self postResource:@"oauth/access_token"
          baseURLString:@"https://api.twitter.com"
             parameters:d
           successBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSString *body) {
-
+              
               typeof(self) strongSelf = weakSelf;
-
+              
               if(strongSelf == nil) return;
               
               NSDictionary *dict = [body st_parametersDictionary];
