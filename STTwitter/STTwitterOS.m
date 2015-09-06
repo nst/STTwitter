@@ -91,7 +91,7 @@
                
                typeof(self) strongSelf = weakSelf;
                if(strongSelf == nil) return;
-
+               
                NSDictionary *dict = response;
                successBlock(dict[@"screen_name"], dict[@"id_str"]);
            } errorBlock:^(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
@@ -145,14 +145,14 @@
         errorBlock(error);
         return;
     }
-
+    
     __weak typeof(self) weakSelf = self;
-
+    
     ACAccountStoreRequestAccessCompletionHandler accountStoreRequestCompletionHandler = ^(BOOL granted, NSError *error) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
             typeof(self) strongSelf = weakSelf;
-
+            
             if(strongSelf == nil) return;
             
             if(granted == NO) {
@@ -168,35 +168,42 @@
                 return;
             }
             
-            if(strongSelf.account == nil) {
-                NSArray *accounts = [strongSelf.accountStore accountsWithAccountType:accountType];
+            NSString *previouslyStoredUsername = strongSelf.account.username;
+            
+            NSArray *accounts = [strongSelf.accountStore accountsWithAccountType:accountType];
+            
+            if([accounts count] == 0) {
+                NSString *message = @"No Twitter account available.";
+                NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
+                errorBlock(error);
+                return;
+            }
+            
+            __block BOOL accountFound = NO;
+            [accounts enumerateObjectsUsingBlock:^(ACAccount *account, NSUInteger idx, BOOL *stop) {
                 
                 // ignore accounts that have no indentifier
                 // possible workaround for accounts with no password stored
                 // see https://twittercommunity.com/t/ios-6-twitter-accounts-with-no-password-stored/6183
-                NSMutableArray *accountsWithIdentifiers = [NSMutableArray array];
-                [accounts enumerateObjectsUsingBlock:^(ACAccount *account, NSUInteger idx, BOOL *stop) {
-
-                    NSString *accountID = [account identifier];
-                    
-                    if([accountID length] > 0) {
-                        [accountsWithIdentifiers addObject:account];
-                    } else {
-                        NSLog(@"-- ignore account %@ because identifier is empty", account);
-                    }
-                }];
-                
-                if([accountsWithIdentifiers count] == 0) {
-                    NSString *message = @"No Twitter account available.";
-                    NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
-                    errorBlock(error);
+                if([[account identifier] length] == 0) {
+                    NSLog(@"-- ignore account %@ because identifier is empty", account);
                     return;
                 }
                 
-                strongSelf.account = [accountsWithIdentifiers firstObject];
-            }
+                if([account.username isEqualToString:previouslyStoredUsername]) {
+                    strongSelf.account = account;
+                    *stop = YES;
+                    accountFound = YES;
+                    successBlock(strongSelf.account.username, [strongSelf.account st_userID]);
+                    return;
+                }
+            }];
             
-            successBlock(strongSelf.account.username, [strongSelf.account st_userID]);
+            if(accountFound) return;
+            
+            NSString *message = @"Twitter account is not available.";
+            NSError *error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:STTwitterOSNoTwitterAccountIsAvailable userInfo:@{NSLocalizedDescriptionKey : message}];
+            errorBlock(error);
         }];
     };
     
@@ -217,7 +224,7 @@
 }
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials {
-
+    
     // https://api.twitter.com/1.1/account/verify_credentials.json
     
     STTwitterOSRequest *r = [[STTwitterOSRequest alloc] initWithAPIResource:@"/account/verify_credentials.json"
@@ -237,7 +244,7 @@
     NSURLRequest *preparedURLRequest = [r preparedURLRequest];
     
     NSDictionary *headers = [preparedURLRequest allHTTPHeaderFields];
-
+    
     NSString *authorization = [headers valueForKey:@"Authorization"];
     
     if(authorization == nil) return nil;
