@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STTwitter.h"
 
-@interface ViewController : UIViewController <UITableViewDataSource, UIActionSheetDelegate>
+@interface ViewController : UIViewController <UITableViewDataSource, UIActionSheetDelegate, STTwitterAPIOSProtocol>
 
 @property (nonatomic, strong) NSArray *statuses;
 

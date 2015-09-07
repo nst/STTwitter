@@ -67,7 +67,8 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
 
 - (void)loginWithiOSAccount:(ACAccount *)account {
     
-    self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account];
+    self.twitter = nil;
+    self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account delegate:self];
     
     [_twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
         
@@ -161,7 +162,7 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
                 return;
             }
             
-            STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithAccount:account];
+            STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithAccount:account delegate:weakSelf];
             
             [twitterAPIOS verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
                 
@@ -297,6 +298,13 @@ typedef void (^accountChooserBlock_t)(ACAccount *account, NSString *errorMessage
     ACAccount *account = [_iOSAccounts objectAtIndex:accountIndex];
     
     _accountChooserBlock(account, nil);
+}
+
+#pragma mark STTwitterAPIOSProtocol
+
+- (void)twitterAPI:(STTwitterAPI *)twitterAPI accountWasInvalidated:(ACAccount *)invalidatedAccount {
+    if(twitterAPI != _twitter) return;    
+    NSLog(@"-- account was invalidated: %@ | %@", invalidatedAccount, invalidatedAccount.username);
 }
 
 @end

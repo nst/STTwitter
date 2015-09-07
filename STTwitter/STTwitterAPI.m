@@ -24,8 +24,10 @@ NSString *kBaseURLStringSiteStream_1_1 = @"https://sitestream.twitter.com/1.1";
 static NSDateFormatter *dateFormatter = nil;
 
 @interface STTwitterAPI ()
-@property (nonatomic, retain) NSObject <STTwitterProtocol> *oauth;
-@property (nonatomic, retain) STTwitterStreamParser *streamParser;
+@property (nonatomic, strong) NSObject <STTwitterProtocol> *oauth;
+@property (nonatomic, strong) STTwitterStreamParser *streamParser;
+@property (nonatomic, weak) NSObject <STTwitterAPIOSProtocol> *delegate;
+@property (nonatomic, weak) id observer;
 @end
 
 @implementation STTwitterAPI
@@ -33,41 +35,58 @@ static NSDateFormatter *dateFormatter = nil;
 - (instancetype)init {
     self = [super init];
     
-    STTwitterAPI * __weak weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        // account must be considered invalid
+    self.observer = [[NSNotificationCenter defaultCenter] addObserverForName:ACAccountStoreDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         
         if(weakSelf == nil) return;
         
-        typeof(self) strongSelf = weakSelf;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         
         if([strongSelf.oauth isKindOfClass:[STTwitterOS class]]) {
-            strongSelf.oauth = nil;
+
+            STTwitterOS *twitterOS = (STTwitterOS *)[strongSelf oauth];
+            
+            [twitterOS verifyCredentialsLocallyWithSuccessBlock:^(NSString *username, NSString *userID) {
+                NSLog(@"-- account is still valid: %@", username);
+            } errorBlock:^(NSError *error) {
+                
+                if([[error domain] isEqualToString:@"STTwitterOS"]) {
+                    NSString *invalidatedAccount = [error userInfo][STTwitterOSInvalidatedAccount];
+                    [strongSelf.delegate twitterAPI:strongSelf accountWasInvalidated:(ACAccount *)invalidatedAccount];
+                }
+                
+            }];
         }
     }];
+    
+    NSLog(@"-- %@", _observer);
     
     return self;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ACAccountStoreDidChangeNotification object:nil];
+    self.oauth = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:_observer name:ACAccountStoreDidChangeNotification object:nil];
+
+    self.delegate = nil;
+    self.observer = nil;
 }
 
 + (NSString *)versionString {
     return @"0.2.2";
 }
 
-+ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account delegate:(NSObject <STTwitterAPIOSProtocol> *)delegate {
     STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
     twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:account];
+    twitter.delegate = delegate;
     return twitter;
 }
 
-+ (instancetype)twitterAPIOSWithFirstAccount {
-    STTwitterAPI *twitter = [[STTwitterAPI alloc] init];
-    twitter.oauth = [STTwitterOS twitterAPIOSWithAccount:nil];
-    return twitter;
++ (instancetype)twitterAPIOSWithFirstAccountAndDelegate:(NSObject <STTwitterAPIOSProtocol> *)delegate {
+    return [self twitterAPIOSWithAccount:nil delegate:delegate];
 }
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName

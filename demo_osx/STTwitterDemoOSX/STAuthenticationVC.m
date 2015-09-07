@@ -240,7 +240,7 @@ static NSString *kCustomString = @"Custom...";
         return;
     }
     
-    self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account];
+    self.twitter = [STTwitterAPI twitterAPIOSWithAccount:account delegate:self];
     
     self.osxStatus = @"-";
     
@@ -478,6 +478,12 @@ static NSString *kCustomString = @"Custom...";
                            } errorBlock:^(NSError *error) {
                                self.digitsStatus = [error localizedDescription];
                            }];
+}
+
+#pragma mark STTwitterAPIOSProtocol
+
+- (void)twitterAPI:(STTwitterAPI *)twitterAPI accountWasInvalidated:(ACAccount *)invalidatedAccount {
+    NSLog(@"-- invalidatedAccount: %@ | %@", invalidatedAccount, invalidatedAccount.username);
 }
 
 @end

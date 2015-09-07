@@ -34,6 +34,13 @@ extern NSString *kBaseURLStringStream_1_1;
 extern NSString *kBaseURLStringUserStream_1_1;
 extern NSString *kBaseURLStringSiteStream_1_1;
 
+@class STTwitterAPI;
+@class ACAccount;
+
+@protocol STTwitterAPIOSProtocol <NSObject>
+- (void)twitterAPI:(STTwitterAPI *)twitterAPI accountWasInvalidated:(ACAccount *)invalidatedAccount;
+@end
+
 /*
  Tweet fields contents
  https://dev.twitter.com/docs/platform-objects/tweets
@@ -46,8 +53,8 @@ extern NSString *kBaseURLStringSiteStream_1_1;
 
 + (NSString *)versionString;
 
-+ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account;
-+ (instancetype)twitterAPIOSWithFirstAccount;
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account delegate:(NSObject <STTwitterAPIOSProtocol> *)delegate;
++ (instancetype)twitterAPIOSWithFirstAccountAndDelegate:(NSObject <STTwitterAPIOSProtocol> *)delegate;
 
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName // purely informational, can be anything
                                     consumerKey:(NSString *)consumerKey
