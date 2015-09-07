@@ -60,8 +60,8 @@
                           latitude:_twitterPostLatitude
                          longitude:_twitterPostLongitude
          
-               uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
-                   NSLog(@"%lu %lu %lu", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+               uploadProgressBlock:^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+                   NSLog(@"%lld %lld %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
                } successBlock:^(NSDictionary *status) {
                    
                    self.twitterPostTweetText = @"";

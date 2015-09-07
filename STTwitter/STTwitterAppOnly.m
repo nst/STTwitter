@@ -172,7 +172,7 @@
                                                                HTTPMethod:@"GET"
                                                          timeoutInSeconds:_timeoutInSeconds
                                              stTwitterUploadProgressBlock:nil
-                                           stTwitterDownloadProgressBlock:^(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive) {
+                                           stTwitterDownloadProgressBlock:^(NSData *data, int64_t totalBytesReceived, int64_t totalBytesExpectedToReceive) {
                                                if(progressBlock) progressBlock(wr, data);
                                            } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
                                                successBlock(wr, requestHeaders, responseHeaders, json);
@@ -196,7 +196,7 @@
                                            HTTPMethod:(NSString *)HTTPMethod
                                         baseURLString:(NSString *)baseURLString
                                            parameters:(NSDictionary *)params
-                                  uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+                                  uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
                                 downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *r, NSData *data))downloadProgressBlock
                                          successBlock:(void(^)(NSObject<STTwitterRequestProtocol> *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
                                            errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
@@ -234,7 +234,7 @@
                   baseURLString:(NSString *)baseURLString // no trailing slash
                      parameters:(NSDictionary *)params
                    useBasicAuth:(BOOL)useBasicAuth
-            uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+            uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
           downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSData *data))downloadProgressBlock
                    successBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
                      errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
@@ -246,7 +246,7 @@
                                                                HTTPMethod:@"POST"
                                                          timeoutInSeconds:_timeoutInSeconds
                                              stTwitterUploadProgressBlock:nil
-                                           stTwitterDownloadProgressBlock:^(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive) {
+                                           stTwitterDownloadProgressBlock:^(NSData *data, int64_t totalBytesReceived, int64_t totalBytesExpectedToReceive) {
                                                if(downloadProgressBlock) downloadProgressBlock(wr, data);
                                            } stTwitterSuccessBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json) {
                                                successBlock(wr, requestHeaders, responseHeaders, json);
@@ -293,7 +293,7 @@
 - (STHTTPRequest *)postResource:(NSString *)resource
                   baseURLString:(NSString *)baseURLString
                      parameters:(NSDictionary *)params
-            uploadProgressBlock:(void(^)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite))uploadProgressBlock
+            uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
           downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *r, NSData *data))downloadProgressBlock
                    successBlock:(void(^)(NSObject<STTwitterRequestProtocol> *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, id json))successBlock
                      errorBlock:(void(^)(NSObject<STTwitterRequestProtocol> *r, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error))errorBlock {
