@@ -53,6 +53,9 @@ extern NSString *kBaseURLStringSiteStream_1_1;
 
 + (NSString *)versionString;
 
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account __deprecated_msg("use twitterAPIOSWithAccount:delegate:");
++ (instancetype)twitterAPIOSWithFirstAccount __deprecated_msg("use twitterAPIOSWithFirstAccountAndDelegate:");
+
 + (instancetype)twitterAPIOSWithAccount:(ACAccount *)account delegate:(NSObject <STTwitterAPIOSProtocol> *)delegate;
 + (instancetype)twitterAPIOSWithFirstAccountAndDelegate:(NSObject <STTwitterAPIOSProtocol> *)delegate;
 

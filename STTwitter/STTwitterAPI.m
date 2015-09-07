@@ -89,6 +89,16 @@ static NSDateFormatter *dateFormatter = nil;
     return [self twitterAPIOSWithAccount:nil delegate:delegate];
 }
 
+// deprecated
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
+    return [self twitterAPIOSWithAccount:account delegate:nil];
+}
+
+// deprecated
++ (instancetype)twitterAPIOSWithFirstAccount __deprecated_msg("use twitterAPIOSWithFirstAccountAndDelegate:") {
+    return [self twitterAPIOSWithFirstAccountAndDelegate:nil];
+}
+
 + (instancetype)twitterAPIWithOAuthConsumerName:(NSString *)consumerName
                                     consumerKey:(NSString *)consumerKey
                                  consumerSecret:(NSString *)consumerSecret
