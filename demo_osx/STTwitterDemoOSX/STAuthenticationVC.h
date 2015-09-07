@@ -18,7 +18,7 @@
 
 typedef void (^UsernamePasswordBlock_t)(NSString *username, NSString *password);
 
-@interface STAuthenticationVC : NSViewController
+@interface STAuthenticationVC : NSViewController <STTwitterAPIOSProtocol>
 
 @property (nonatomic, assign) id <STAuthenticationVCDelegate> delegate;
 

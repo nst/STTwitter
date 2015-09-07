@@ -74,6 +74,7 @@ const NSString *STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount"
 
 - (void)verifyCredentialsRemotelyWithSuccessBlock:(void(^)(NSString *username, NSString *userID))successBlock
                                        errorBlock:(void(^)(NSError *error))errorBlock {
+    
     __weak typeof(self) weakSelf = self;
     
     [self fetchResource:@"account/verify_credentials.json"
@@ -111,7 +112,6 @@ const NSString *STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount"
                errorBlock(error);
            }];
 }
-
 
 - (BOOL)hasAccessToTwitter {
     
