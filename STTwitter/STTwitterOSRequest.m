@@ -277,6 +277,7 @@ didCompleteWithError:(NSError *)error {
             strongSelf.errorBlock(strongSelf, [strongSelf requestHeadersForRequest:request], [_httpURLResponse allHeaderFields], jsonError);
         }
         
+        [session finishTasksAndInvalidate];
     });
 }
 
