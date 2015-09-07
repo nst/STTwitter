@@ -19,8 +19,8 @@ extern NSUInteger const kSTHTTPRequestDefaultTimeout;
 @class STHTTPRequest;
 
 typedef void (^sendRequestBlock_t)(STHTTPRequest *request);
-typedef void (^uploadProgressBlock_t)(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite);
-typedef void (^downloadProgressBlock_t)(NSData *data, NSUInteger totalBytesReceived, long long totalBytesExpectedToReceive);
+typedef void (^uploadProgressBlock_t)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
+typedef void (^downloadProgressBlock_t)(NSData *data, int64_t totalBytesReceived, int64_t totalBytesExpectedToReceive);
 typedef void (^completionBlock_t)(NSDictionary *headers, NSString *body);
 typedef void (^completionDataBlock_t)(NSDictionary *headers, NSData *body);
 typedef void (^errorBlock_t)(NSError *error);

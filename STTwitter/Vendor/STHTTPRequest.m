@@ -915,32 +915,25 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
 
 #pragma mark NSURLSessionDelegate
 
-/* The last message a session receives.  A session will only become
- * invalid because of a systemic error or when it has been
- * explicitly invalidated, in which case the error parameter will be nil.
- */
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error {
 
+    __weak typeof(self) weakSelf = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(self.errorBlock) {
-            self.errorBlock(error);
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf == nil) return;
+
+        if(strongSelf.errorBlock) {
+            strongSelf.errorBlock(error);
         }
     });
 }
 
-/* If implemented, when a connection level authentication challenge
- * has occurred, this delegate will be given the opportunity to
- * provide authentication credentials to the underlying
- * connection. Some types of authentication will apply to more than
- * one request on a given connection to a server (SSL Server Trust
- * challenges).  If this delegate message is not implemented, the
- * behavior will be to use the default handling, which may involve user
- * interaction.
- */
-// accept self-signed SSL certificates
 #if DEBUG
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
 {
+    // accept self-signed SSL certificates
     if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]){
         NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
         completionHandler(NSURLSessionAuthChallengeUseCredential,credential);
@@ -951,14 +944,6 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
 }
 #endif
 
-/* If an application has received an
- * -application:handleEventsForBackgroundURLSession:completionHandler:
- * message, the session delegate will receive this message to indicate
- * that all messages previously enqueued for this session have been
- * delivered.  At this time it is safe to invoke the previously stored
- * completion handler, or to begin any internal updates that will
- * result in invoking the completion handler.
- */
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session NS_AVAILABLE_IOS(7_0) {
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -975,15 +960,6 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
 
 #pragma mark NSURLSessionTaskDelegate
 
-/* An HTTP request is attempting to perform a redirection to a different
- * URL. You must invoke the completion routine to allow the
- * redirection, allow the redirection with a modified request, or
- * pass nil to the completionHandler to cause the body of the redirection
- * response to be delivered as the payload of this request. The default
- * is to follow redirections.
- *
- * For tasks in background sessions, redirections will always be followed and this method will not be called.
- */
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 willPerformHTTPRedirection:(NSHTTPURLResponse *)response
@@ -1000,30 +976,7 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
         
     });
 }
-//
-///* The task has received a request specific authentication challenge.
-// * If this delegate is not implemented, the session specific authentication challenge
-// * will *NOT* be called and the behavior will be the same as using the default handling
-// * disposition.
-// */
-//- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
-//didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
-// completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * __nullable credential))completionHandler {
-//    NSLog(@"-- 1.2");
-//}
-//
-///* Sent if a task requires a new, unopened body stream.  This may be
-// * necessary when authentication has failed for any request that
-// * involves a body stream.
-// */
-//- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
-// needNewBodyStream:(void (^)(NSInputStream * __nullable bodyStream))completionHandler {
-//    NSLog(@"-- 1.3");
-//}
-//
-/* Sent periodically to notify the delegate of upload progress.  This
- * information is also available as properties of the task.
- */
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
    didSendBodyData:(int64_t)bytesSent
     totalBytesSent:(int64_t)totalBytesSent
@@ -1032,7 +985,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-
+        
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if(strongSelf == nil) return;
         
@@ -1043,9 +996,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     });
 }
 
-/* Sent as the last message related to a specific task.  Error may be
- * nil, which implies that no error occurred and this task is complete.
- */
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
@@ -1054,15 +1004,13 @@ didCompleteWithError:(NSError *)error {
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        //NSLog(@"-- didCompleteWithError: %@", [error localizedDescription]);
-        
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if(strongSelf == nil) return;
         
-        //    NSString *s = [[NSString alloc] initWithData:_responseData encoding:NSUTF8StringEncoding];
-        //
-        //    _completionBlock(_responseHeaders, s);
-        
+        if (error) {
+            strongSelf.errorBlock(error);
+            return;
+        }
         
         if([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *r = (NSHTTPURLResponse *)[task response];
@@ -1071,13 +1019,16 @@ didCompleteWithError:(NSError *)error {
             strongSelf.responseStringEncodingName = [r textEncodingName];
             strongSelf.responseExpectedContentLength = [r expectedContentLength];
             
-            NSArray *responseCookies = [NSHTTPCookie cookiesWithResponseHeaderFields:self.responseHeaders forURL:task.currentRequest.URL];
+            NSArray *responseCookies = [NSHTTPCookie cookiesWithResponseHeaderFields:strongSelf.responseHeaders forURL:task.currentRequest.URL];
             for(NSHTTPCookie *cookie in responseCookies) {
                 //NSLog(@"-- %@", cookie);
                 [strongSelf addCookie:cookie]; // won't store anything when STHTTPRequestCookiesStorageNoStorage
             }
         } else {
-            // TODO: handle error
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad response class: %@", [task.response class]]};
+            NSError *e = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:0 userInfo:userInfo];
+            strongSelf.errorBlock(e);
+            return;
         }
         
         if(strongSelf.HTTPBodyFileURL) {
@@ -1086,11 +1037,6 @@ didCompleteWithError:(NSError *)error {
             if(status == NO) {
                 NSLog(@"-- can't remove %@, %@", strongSelf.HTTPBodyFileURL, [error localizedDescription]);
             }
-        }
-        
-        if (error) {
-            strongSelf.errorBlock(error);
-            return;
         }
         
         if(strongSelf.responseStatus >= 400) {
@@ -1108,19 +1054,13 @@ didCompleteWithError:(NSError *)error {
             NSString *responseString = [strongSelf stringWithData:strongSelf.responseData encodingName:strongSelf.responseStringEncodingName];
             strongSelf.completionBlock(strongSelf.responseHeaders, responseString);
         }
+        
+        [session finishTasksAndInvalidate];
     });
 }
 
 #pragma mark NSURLSessionDataDelegate
 
-/* The task has received a response and no further messages will be
- * received until the completion block is called. The disposition
- * allows you to cancel a request or to turn a data task into a
- * download task. This delegate message is optional - if you do not
- * implement it, you can get the response as a property of the task.
- *
- * This method will not be called for background upload tasks (which cannot be converted to download tasks).
- */
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
@@ -1131,45 +1071,6 @@ didReceiveResponse:(NSURLResponse *)response
     });
 }
 
-/* Notification that a data task has become a download task.  No
- * future messages will be sent to the data task.
- */
-//- (void)URLSession:(NSURLSession *)session
-//          dataTask:(NSURLSessionDataTask *)dataTask
-//didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask {
-//    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        NSAssert([[NSThread currentThread] isMainThread], @"not on main thread");
-//    });
-//}
-
-///*
-// * Notification that a data task has become a bidirectional stream
-// * task.  No future messages will be sent to the data task.  The newly
-// * created streamTask will carry the original request and response as
-// * properties.
-// *
-// * For requests that were pipelined, the stream object will only allow
-// * reading, and the object will immediately issue a
-// * -URLSession:writeClosedForStream:.  Pipelining can be disabled for
-// * all requests in a session, or by the NSURLRequest
-// * HTTPShouldUsePipelining property.
-// *
-// * The underlying connection is no longer considered part of the HTTP
-// * connection cache and won't count against the total number of
-// * connections per host.
-// */
-//- (void)URLSession:(NSURLSession *)session
-//          dataTask:(NSURLSessionDataTask *)dataTask
-//didBecomeStreamTask:(NSURLSessionStreamTask *)streamTask {
-//    NSLog(@"-- 2.3");
-//}
-
-/* Sent when data is available for the delegate to consume.  It is
- * assumed that the delegate will retain and not copy the data.  As
- * the data may be discontiguous, you should use
- * [NSData enumerateByteRangesUsingBlock:] to access it.
- */
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
@@ -1190,12 +1091,6 @@ didReceiveResponse:(NSURLResponse *)response
     });
 }
 
-/* Invoke the completion routine with a valid NSCachedURLResponse to
- * allow the resulting data to be cached, or pass nil to prevent
- * caching. Note that there is no guarantee that caching will be
- * attempted for a given resource, and you should not rely on this
- * message to receive the resource data.
- */
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
  willCacheResponse:(NSCachedURLResponse *)proposedResponse
@@ -1214,78 +1109,6 @@ didReceiveResponse:(NSURLResponse *)response
         
     });
 }
-
-//
-//#pragma mark NSURLSessionDownloadDelegate
-//
-///* Sent when a download task that has completed a download.  The delegate should
-// * copy or move the file at the given location to a new location as it will be
-// * removed when the delegate message returns. URLSession:task:didCompleteWithError: will
-// * still be called.
-// */
-//- (void)URLSession:(NSURLSession *)session
-//      downloadTask:(NSURLSessionDownloadTask *)downloadTask
-//didFinishDownloadingToURL:(NSURL *)location {
-//
-//    NSLog(@"-- 3.1");
-//
-//    NSData *responseData = [[NSFileManager defaultManager] contentsAtPath:[location filePathURL].path];
-//
-//    self.responseData = responseData;
-//
-//    /**/
-//
-//    if([downloadTask.response isKindOfClass:[NSHTTPURLResponse class]] == NO) {
-//        // TODO: handle error
-//        //completionHandler(NSURLSessionResponseCancel);
-//        self.errorBlock(nil);
-//        return;
-//    }
-//
-//    NSHTTPURLResponse *r = (NSHTTPURLResponse *)downloadTask.response;
-//    self.responseHeaders = [r allHeaderFields];
-//    self.responseStatus = [r statusCode];
-//    self.responseStringEncodingName = [r textEncodingName];
-//    self.responseExpectedContentLength = [r expectedContentLength];
-//
-//    NSArray *responseCookies = [NSHTTPCookie cookiesWithResponseHeaderFields:self.responseHeaders forURL:downloadTask.currentRequest.URL];
-//    for(NSHTTPCookie *cookie in responseCookies) {
-//        NSLog(@"-- %@", cookie);
-//        [self addCookie:cookie]; // won't store anything when STHTTPRequestCookiesStorageNoStorage
-//    }
-//
-//
-////    dispatch_async(dispatch_get_main_queue(), ^{
-////        self.completionDataBlock(_responseHeaders, _responseData);
-////    });
-////
-//
-//}
-//
-///* Sent periodically to notify the delegate of download progress. */
-//- (void)URLSession:(NSURLSession *)session
-//      downloadTask:(NSURLSessionDownloadTask *)downloadTask
-//      didWriteData:(int64_t)bytesWritten
-// totalBytesWritten:(int64_t)totalBytesWritten
-//totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-//    NSLog(@"-- 3.2");
-//
-//    NSLog(@"-- percent bytes written: %f", 100.0 * totalBytesWritten / totalBytesExpectedToWrite);
-//
-//}
-//
-///* Sent when a download has been resumed. If a download failed with an
-// * error, the -userInfo dictionary of the error will contain an
-// * NSURLSessionDownloadTaskResumeData key, whose value is the resume
-// * data.
-// */
-//- (void)URLSession:(NSURLSession *)session
-//      downloadTask:(NSURLSessionDownloadTask *)downloadTask
-// didResumeAtOffset:(int64_t)fileOffset
-//expectedTotalBytes:(int64_t)expectedTotalBytes {
-//    NSLog(@"-- 3.3");
-//}
-//
 
 @end
 
@@ -1355,20 +1178,6 @@ didReceiveResponse:(NSURLResponse *)response
 }
 
 @end
-//
-///**/
-//
-//#if DEBUG
-//@implementation NSURLRequest (IgnoreSSLValidation)
-//
-//+ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host {
-//    return NO;
-//}
-//
-//@end
-//#endif
-//
-/**/
 
 @implementation STHTTPRequestFileUpload
 
