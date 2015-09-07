@@ -149,19 +149,26 @@ typedef void (^stream_block_t)(NSObject<STTwitterRequestProtocol> *request, NSDa
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     
+    __weak typeof(self) weakSelf = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
 
-        NSAssert([NSThread currentThread] == [NSThread mainThread], @"not on main thread");
-
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
+        if(strongSelf == nil) {
+            completionHandler(NSURLSessionResponseCancel);
+            return;
+        }
+        
         if([response isKindOfClass:[NSHTTPURLResponse class]] == NO) {
             // TODO: handle error
             completionHandler(NSURLSessionResponseCancel);
             return;
         }
         
-        self.httpURLResponse = (NSHTTPURLResponse *)response;
+        strongSelf.httpURLResponse = (NSHTTPURLResponse *)response;
         
-        self.data = [NSMutableData data];
+        strongSelf.data = [NSMutableData data];
         
         completionHandler(NSURLSessionResponseAllow);
         
@@ -173,14 +180,21 @@ didReceiveResponse:(NSURLResponse *)response
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
     
+    __weak typeof(self) weakSelf = self;
+
     dispatch_async(dispatch_get_main_queue(), ^{
         
         BOOL isStreaming = [[[[dataTask originalRequest] URL] host] rangeOfString:@"stream"].location != NSNotFound;
         
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf == nil) {
+            return;
+        }
+        
         if(isStreaming) {
-            self.streamBlock(self, data);
+            strongSelf.streamBlock(strongSelf, data);
         } else {
-            [self.data appendData:data];
+            [strongSelf.data appendData:data];
         }
         
     });
@@ -193,14 +207,21 @@ didReceiveResponse:(NSURLResponse *)response
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
+    __weak typeof(self) weakSelf = self;
+
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        if(self.uploadProgressBlock == nil) return;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf == nil) {
+            return;
+        }
+        
+        if(strongSelf.uploadProgressBlock == nil) return;
         
         // avoid overcommit while posting big images, like 5+ MB
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            self.uploadProgressBlock(bytesSent, totalBytesSent, totalBytesExpectedToSend);
+            strongSelf.uploadProgressBlock(bytesSent, totalBytesSent, totalBytesExpectedToSend);
         });
         
     });
