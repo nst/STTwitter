@@ -2258,7 +2258,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(skipStatus) md[@"skip_status"] = [skipStatus boolValue] ? @"1" : @"0";
-    if(includeEmail) md[@"include_email"] = [skipStatus boolValue] ? @"1" : @"0";
+    if(includeEmail) md[@"include_email"] = [includeEmail boolValue] ? @"1" : @"0";
     
     return [self getAPIResource:@"account/verify_credentials.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
