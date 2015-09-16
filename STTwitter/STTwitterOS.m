@@ -195,7 +195,7 @@ const NSString *STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount"
                     return;
                 }
                 
-                if([account.username isEqualToString:previouslyStoredUsername]) {
+                if(formerAccount == nil || [account.username isEqualToString:previouslyStoredUsername]) {
                     strongSelf.account = account;
                     *stop = YES;
                     accountFound = YES;
