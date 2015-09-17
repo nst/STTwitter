@@ -793,7 +793,13 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     
     if(useUploadTaskInBackground) {
         NSString *backgroundSessionIdentifier = [[NSProcessInfo processInfo] globallyUniqueString];
-        sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:backgroundSessionIdentifier];
+        if ([[NSURLSessionConfiguration class] respondsToSelector:@selector(backgroundSessionConfigurationWithIdentifier:)]) {
+            // iOS 8+
+            sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:backgroundSessionIdentifier];
+        } else {
+            // iOS 7
+            sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        }
     } else {
         sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     }
