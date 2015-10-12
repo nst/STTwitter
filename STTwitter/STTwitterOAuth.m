@@ -388,14 +388,16 @@
               
               if(strongSelf == nil) return;
               
-              if([[error domain] isEqualToString:NSURLErrorDomain] && [error code] == NSURLErrorUserCancelledAuthentication) {
-                  NSError *xAuthNotEnabledError = [NSError errorWithDomain:NSStringFromClass([strongSelf class])
-                                                                      code:STTwitterOAuthBadCredentialsOrConsumerTokensNotXAuthEnabled
-                                                                  userInfo:@{NSLocalizedDescriptionKey : @"Bad credentials, or tokens not xAuth enabled."}];
-                  errorBlock(xAuthNotEnabledError);
+              // add failure reason if we can
+              if([[error domain] isEqualToString:@"STTwitterTwitterErrorDomain"] && ([error code] == 87)) {
+                  NSMutableDictionary *extendedUserInfo = [[error userInfo] mutableCopy];
+                  extendedUserInfo[NSLocalizedFailureReasonErrorKey] = @"The consumer tokens are probably not xAuth enabled.";
+                  NSError *extendedError = [NSError errorWithDomain:[error domain] code:[error code] userInfo:extendedUserInfo];
+                  NSLog(@"-- %@", extendedError);
+                  errorBlock(extendedError);
                   return;
-              }
-              
+              };
+            
               errorBlock(error);
           }];
 }
