@@ -937,6 +937,8 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
         
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if(strongSelf == nil) return;
+        
+        if(error == nil) return; // normal session invalidation, no error
 
         if(strongSelf.errorBlock) {
             strongSelf.errorBlock(error);
@@ -1023,6 +1025,7 @@ didCompleteWithError:(NSError *)error {
         
         if (error) {
             strongSelf.errorBlock(error);
+            [session finishTasksAndInvalidate];
             return;
         }
         
@@ -1042,6 +1045,7 @@ didCompleteWithError:(NSError *)error {
             NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad response class: %@", [task.response class]]};
             NSError *e = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:0 userInfo:userInfo];
             strongSelf.errorBlock(e);
+            [session finishTasksAndInvalidate];
             return;
         }
         
@@ -1057,6 +1061,7 @@ didCompleteWithError:(NSError *)error {
             NSDictionary *userInfo = [[strongSelf class] userInfoWithErrorDescriptionForHTTPStatus:strongSelf.responseStatus];
             strongSelf.error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:strongSelf.responseStatus userInfo:userInfo];
             strongSelf.errorBlock(strongSelf.error);
+            [session finishTasksAndInvalidate];
             return;
         }
         
