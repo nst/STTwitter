@@ -1085,7 +1085,28 @@ didCompleteWithError:(NSError *)error {
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     
+    __weak typeof(self) weakSelf = self;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf == nil) return;
+        
+        if([dataTask.response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *r = (NSHTTPURLResponse *)[dataTask response];
+            
+            strongSelf.responseHeaders = [r allHeaderFields];
+            strongSelf.responseStatus = [r statusCode];
+            strongSelf.responseStringEncodingName = [r textEncodingName];
+            strongSelf.responseExpectedContentLength = [r expectedContentLength];
+            
+            NSArray *responseCookies = [NSHTTPCookie cookiesWithResponseHeaderFields:strongSelf.responseHeaders forURL:dataTask.currentRequest.URL];
+            for(NSHTTPCookie *cookie in responseCookies) {
+                //NSLog(@"-- %@", cookie);
+                [strongSelf addCookie:cookie]; // won't store anything when STHTTPRequestCookiesStorageNoStorage
+            }
+        }
+        
         completionHandler(NSURLSessionResponseAllow);
     });
 }
