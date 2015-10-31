@@ -90,7 +90,7 @@ static NSDateFormatter *dateFormatter = nil;
 }
 
 // deprecated
-+ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account {
++ (instancetype)twitterAPIOSWithAccount:(ACAccount *)account  __deprecated_msg("use twitterAPIOSWithAccount:delegate:") {
     return [self twitterAPIOSWithAccount:account delegate:nil];
 }
 
