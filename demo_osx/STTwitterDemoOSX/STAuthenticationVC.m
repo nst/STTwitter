@@ -134,7 +134,7 @@ static NSString *kCustomString = @"Custom...";
 - (IBAction)revealConsumerTokensFileAction:(id)sender {
     
     NSString *path = [[self class] twitterClientInApplicationSupportPath];
-
+    
     [[NSWorkspace sharedWorkspace] selectFile:path inFileViewerRootedAtPath:path];
 }
 
@@ -157,7 +157,7 @@ static NSString *kCustomString = @"Custom...";
     [_scrollView setHasHorizontalScroller:NO];
     
     [_scrollView setDocumentView:_contentView];
-        
+    
     NSPoint topScrollOrigin = NSMakePoint(0.0, NSMaxY([[_scrollView documentView] frame]) - NSHeight([[_scrollView contentView] bounds]));
     
     [[_scrollView documentView] scrollPoint:topScrollOrigin];
@@ -165,15 +165,29 @@ static NSString *kCustomString = @"Custom...";
     [self popupMenuDidSelectTwitterClient:self];
     
     /**/
-
+    
     ACAccountType *twitterAccountType = [_accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
-    [_accountStore requestAccessToAccountsWithType:twitterAccountType options:nil completion:^(BOOL granted, NSError *error) {
-        
-        if(granted == NO) return;
-        
-        self.osxAccounts = [_accountStore accountsWithAccountType:twitterAccountType];
-    }];
+    [_accountStore requestAccessToAccountsWithType:twitterAccountType
+                                           options:nil
+                                        completion:^(BOOL granted, NSError *error) {
+                                            
+                                            // bug in OS X 10.11
+                                            // even if the user grants access,
+                                            // granted will be NO and error will be
+                                            // Error Domain=com.apple.accounts
+                                            // Code=1
+                                            // UserInfo={NSLocalizedDescription=Setting TCC failed.}
+                                            
+                                            NSLog(@"-- granded: %d, error: %@", granted, error);
+                                            
+                                            if(granted == NO) {
+                                                NSLog(@"-- %@", error);
+                                                return;
+                                            }
+                                            
+                                            self.osxAccounts = [_accountStore accountsWithAccountType:twitterAccountType];
+                                        }];
 }
 
 - (IBAction)popupMenuDidSelectTwitterClient:(id)sender {
@@ -342,7 +356,7 @@ static NSString *kCustomString = @"Custom...";
                                    self.pinOAuthTokenSecret = oauthTokenSecret;
                                    
                                    [_delegate authenticationVC:self didChangeTwitterObject:_twitter]; // update username
-
+                                   
                                } errorBlock:^(NSError *error) {
                                    self.pinStatus2 = [error localizedDescription];
                                }];
@@ -361,7 +375,7 @@ static NSString *kCustomString = @"Custom...";
     
     NSAssert(_xAuthUsername, @"");
     NSAssert(_xAuthPassword, @"");
-        
+    
     self.twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:[self selectedConsumerName]
                                                      consumerKey:_consumerKeyTextField.stringValue
                                                   consumerSecret:_consumerSecretTextField.stringValue
@@ -424,7 +438,7 @@ static NSString *kCustomString = @"Custom...";
                                                       oauthToken:_oauthToken
                                                 oauthTokenSecret:_oauthTokenSecret];
     
-    [_twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {        
+    [_twitter verifyCredentialsWithUserSuccessBlock:^(NSString *username, NSString *userID) {
         
         self.oauthTokensStatus = [NSString stringWithFormat:@"Access granted for %@", username];
         
@@ -441,7 +455,7 @@ static NSString *kCustomString = @"Custom...";
 
 // Digits
 - (IBAction)fetchGuestToken:(id)sender {
-
+    
     [_twitter _postGuestActivateWithSuccessBlock:^(NSString *guestToken) {
         self.digitsGuestToken = guestToken;
         self.digitsStatus = @"OK";
@@ -451,7 +465,7 @@ static NSString *kCustomString = @"Custom...";
 }
 
 - (IBAction)requestPINCode:(id)sender {
-
+    
     [_twitter _postDeviceRegisterPhoneNumber:_digitsPhoneNumber
                                   guestToken:_digitsGuestToken
                                 successBlock:^(id response) {
@@ -464,7 +478,7 @@ static NSString *kCustomString = @"Custom...";
 }
 
 - (IBAction)sendPINCode:(id)sender {
-
+    
     [_twitter _postSDKAccountNumericPIN:_digitsPINCode
                          forPhoneNumber:_digitsPhoneNumber
                              guestToken:_digitsGuestToken
