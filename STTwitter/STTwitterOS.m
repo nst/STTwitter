@@ -95,7 +95,6 @@ const NSString *STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount"
                    return;
                }
                
-               
                NSDictionary *dict = response;
                successBlock(dict[@"screen_name"], dict[@"id_str"]);
            } errorBlock:^(NSObject<STTwitterRequestProtocol> *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
@@ -195,7 +194,10 @@ const NSString *STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount"
                     return;
                 }
                 
-                if([account.username isEqualToString:previouslyStoredUsername]) {
+                // see https://github.com/nst/STTwitter/issues/228
+                BOOL noAccountWasSetYet = previouslyStoredUsername == NULL;
+                BOOL canUseAccountWithSameUsernameAsBeforeAccountInvalidation = [account.username isEqualToString:previouslyStoredUsername];
+                if(noAccountWasSetYet || canUseAccountWithSameUsernameAsBeforeAccountInvalidation) {
                     strongSelf.account = account;
                     *stop = YES;
                     accountFound = YES;
