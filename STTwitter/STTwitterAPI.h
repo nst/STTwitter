@@ -2005,13 +2005,13 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUpload:(NSURL *)mediaURL
                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSNumber *size))successBlock
                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadData:(NSData *)data
                                                    fileName:(NSString *)fileName
                                         uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSNumber *size))successBlock
                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
@@ -2031,7 +2031,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
-                                                              successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                                              successBlock:(void(^)(NSString *mediaID, NSNumber *size, NSString *expiresAfter, NSString *videoType))successBlock
                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
@@ -2064,7 +2064,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (void)postMediaUploadThreeStepsWithVideoURL:(NSURL *)videoURL // local URL
                           uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                 successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                 successBlock:(void(^)(NSString *mediaID, NSNumber *size, NSString *expiresAfter, NSString *videoType))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 #pragma mark -

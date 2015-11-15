@@ -4288,7 +4288,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUpload:(NSURL *)mediaURL
                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSNumber *size))successBlock
                                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
@@ -4305,7 +4305,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadData:(NSData *)data
                                                    fileName:(NSString *)fileName
                                         uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSNumber *size))successBlock
                                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/docs/api/multiple-media-extended-entities
@@ -4330,7 +4330,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                      
                      NSDictionary *imageDictionary = [response valueForKey:@"image"];
                      NSString *mediaID = [response valueForKey:@"media_id_string"];
-                     NSString *size = [response valueForKey:@"size"];
+                     NSNumber *size = [response valueForKey:@"size"];
                      
                      successBlock(imageDictionary, mediaID, size);
                  } errorBlock:^(NSError *error) {
@@ -4475,7 +4475,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
-                                                              successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                                              successBlock:(void(^)(NSString *mediaID, NSNumber *size, NSString *expiresAfter, NSString *videoType))successBlock
                                                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/rest/public/uploading-media
@@ -4495,7 +4495,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                      
                      NSString *mediaID = [response valueForKey:@"media_id"];
                      NSString *expiresAfterSecs = [response valueForKey:@"expires_after_secs"];
-                     NSString *size = [response valueForKey:@"size"];
+                     NSNumber *size = [response valueForKey:@"size"];
                      NSString *videoType = [response valueForKeyPath:@"video.video_type"];
                      
                      /*
@@ -4520,7 +4520,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (void)postMediaUploadThreeStepsWithVideoURL:(NSURL *)videoURL // local URL
                           uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                 successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                 successBlock:(void(^)(NSString *mediaID, NSNumber *size, NSString *expiresAfter, NSString *videoType))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     __weak typeof(self) weakSelf = self;
