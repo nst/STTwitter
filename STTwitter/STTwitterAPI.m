@@ -4288,7 +4288,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUpload:(NSURL *)mediaURL
                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                           successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSInteger size))successBlock
                                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
@@ -4305,7 +4305,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadData:(NSData *)data
                                                    fileName:(NSString *)fileName
                                         uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSString *size))successBlock
+                                               successBlock:(void(^)(NSDictionary *imageDictionary, NSString *mediaID, NSInteger size))successBlock
                                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/docs/api/multiple-media-extended-entities
@@ -4330,7 +4330,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                      
                      NSDictionary *imageDictionary = [response valueForKey:@"image"];
                      NSString *mediaID = [response valueForKey:@"media_id_string"];
-                     NSString *size = [response valueForKey:@"size"];
+                     NSInteger size = [[response valueForKey:@"size"] integerValue];
                      
                      successBlock(imageDictionary, mediaID, size);
                  } errorBlock:^(NSError *error) {
@@ -4339,7 +4339,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadINITWithVideoURL:(NSURL *)videoMediaURL
-                                                           successBlock:(void(^)(NSString *mediaID, NSString *expiresAfterSecs))successBlock
+                                                           successBlock:(void(^)(NSString *mediaID, NSInteger expiresAfterSecs))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/rest/public/uploading-media
@@ -4370,12 +4370,12 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                       {
                       "expires_after_secs" = 3599;
                       "media_id" = 605333580483575808;
-                      "media_id_string" = 605333580483575808;
+                      "media_id_string" = "605333580483575808";
                       }
                       */
                      
                      NSString *mediaID = [response valueForKey:@"media_id_string"];
-                     NSString *expiresAfterSecs = [response valueForKey:@"expires_after_secs"];
+                     NSInteger expiresAfterSecs = [[response valueForKey:@"expires_after_secs"] integerValue];
                      
                      successBlock(mediaID, expiresAfterSecs);
                  } errorBlock:^(NSError *error) {
@@ -4475,7 +4475,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadFINALIZEWithMediaID:(NSString *)mediaID
-                                                              successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                                              successBlock:(void(^)(NSString *mediaID, NSInteger size, NSInteger expiresAfter, NSString *videoType))successBlock
                                                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
     // https://dev.twitter.com/rest/public/uploading-media
@@ -4493,16 +4493,16 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                      
                      //NSLog(@"-- %@", response);
                      
-                     NSString *mediaID = [response valueForKey:@"media_id"];
-                     NSString *expiresAfterSecs = [response valueForKey:@"expires_after_secs"];
-                     NSString *size = [response valueForKey:@"size"];
+                     NSString *mediaID = [response valueForKey:@"media_id_string"];
+                     NSInteger expiresAfterSecs = [[response valueForKey:@"expires_after_secs"] integerValue];
+                     NSInteger size = [[response valueForKey:@"size"] integerValue];
                      NSString *videoType = [response valueForKeyPath:@"video.video_type"];
                      
                      /*
                       {
                       "expires_after_secs" = 3600;
                       "media_id" = 607552320679706624;
-                      "media_id_string" = 607552320679706624;
+                      "media_id_string" = "607552320679706624";
                       size = 992496;
                       video =     {
                       "video_type" = "video/mp4";
@@ -4520,13 +4520,13 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (void)postMediaUploadThreeStepsWithVideoURL:(NSURL *)videoURL // local URL
                           uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                 successBlock:(void(^)(NSString *mediaID, NSString *size, NSString *expiresAfter, NSString *videoType))successBlock
+                                 successBlock:(void(^)(NSString *mediaID, NSInteger size, NSInteger expiresAfter, NSString *videoType))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
     
     __weak typeof(self) weakSelf = self;
     
     [self postMediaUploadINITWithVideoURL:videoURL
-                             successBlock:^(NSString *mediaID, NSString *expiresAfterSecs) {
+                             successBlock:^(NSString *mediaID, NSInteger expiresAfterSecs) {
                                  
                                  __strong typeof(self) strongSelf = weakSelf;
                                  if(strongSelf == nil) {
@@ -4616,7 +4616,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 // GET statuses/:id/activity/summary.json
 - (NSObject<STTwitterRequestProtocol> *)_getStatusesActivitySummaryForStatusID:(NSString *)statusID
-                                                                  successBlock:(void(^)(NSArray *favoriters, NSArray *repliers, NSArray *retweeters, NSString *favoritersCount, NSString *repliersCount, NSString *retweetersCount))successBlock
+                                                                  successBlock:(void(^)(NSArray *favoriters, NSArray *repliers, NSArray *retweeters, NSInteger favoritersCount, NSInteger repliersCount, NSInteger retweetersCount))successBlock
                                                                     errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSString *resource = [NSString stringWithFormat:@"statuses/%@/activity/summary.json", statusID];
@@ -4626,9 +4626,9 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         NSArray *favoriters = [response valueForKey:@"favoriters"];
         NSArray *repliers = [response valueForKey:@"repliers"];
         NSArray *retweeters = [response valueForKey:@"retweeters"];
-        NSString *favoritersCount = [response valueForKey:@"favoriters_count"];
-        NSString *repliersCount = [response valueForKey:@"repliers_count"];
-        NSString *retweetersCount = [response valueForKey:@"retweeters_count"];
+        NSInteger favoritersCount = [[response valueForKey:@"favoriters_count"] integerValue];
+        NSInteger repliersCount = [[response valueForKey:@"repliers_count"] integerValue];
+        NSInteger retweetersCount = [[response valueForKey:@"retweeters_count"] integerValue];
         
         successBlock(favoriters, repliers, retweeters, favoritersCount, repliersCount, retweetersCount);
     } errorBlock:^(NSError *error) {
