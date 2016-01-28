@@ -1035,12 +1035,6 @@ didCompleteWithError:(NSError *)error {
             strongSelf.responseStatus = [r statusCode];
             strongSelf.responseStringEncodingName = [r textEncodingName];
             strongSelf.responseExpectedContentLength = [r expectedContentLength];
-            
-            NSArray *responseCookies = [NSHTTPCookie cookiesWithResponseHeaderFields:strongSelf.responseHeaders forURL:task.currentRequest.URL];
-            for(NSHTTPCookie *cookie in responseCookies) {
-                //NSLog(@"-- %@", cookie);
-                [strongSelf addCookie:cookie]; // won't store anything when STHTTPRequestCookiesStorageNoStorage
-            }
         } else {
             NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"bad response class: %@", [task.response class]]};
             NSError *e = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:0 userInfo:userInfo];
