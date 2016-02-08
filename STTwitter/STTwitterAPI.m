@@ -4108,7 +4108,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"id"] = WOEID;
-    if(excludeHashtags) md[@"exclude"] = [excludeHashtags boolValue] ? @"1" : @"0";
+    if(excludeHashtags) md[@"exclude"] = [excludeHashtags boolValue] ? @"hashtags" : @"0";
     
     return [self getAPIResource:@"trends/place.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         
