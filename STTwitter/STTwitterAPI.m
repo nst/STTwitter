@@ -3099,7 +3099,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     
-    return [self postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+    return [self postAPIResource:@"lists/members/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3124,7 +3124,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerScreenName) md[@"owner_id"] = ownerID;
     
-    return [self postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+    return [self postAPIResource:@"lists/members/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
