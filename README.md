@@ -6,9 +6,9 @@ _Like a FOSS version of Twitter Fabric TwitterKit, without the UI parts but with
 
 _Also includes a powerful Twitter dev console for OS X_
 
-**[2015-03-28]** Signed build of OS X demo app: [STTwitterDemoOSX.app.zip](http://www.seriot.ch/temp/STTwitterDemoOSX.app.zip)  
+**[2015-03-28]** Signed build of OS X demo app: [STTwitterDemoOSX.app.zip](http://seriot.ch/temp/STTwitterDemoOSX.app.zip)  
 **[2014-06-18]** [Swifter](https://github.com/mattdonnelly/Swifter), A Twitter framework for iOS & OS X written in Swift, by [@MatthewDonnelly](htps://www.twitter.com/MatthewDonnelly/)  
-**[2014-05-31]** Follow STTwitter on Twitter: [@STTLibrary](https://www.twitter.com/STTLibrary/)  
+**[2014-05-31]** Follow STTwitter on Twitter: [@STTLibrary](https://twitter.com/STTLibrary/)  
 **[2014-05-22]** STTwitter was presented at [CocoaHeads Lausanne](https://www.facebook.com/events/732041160150290/) ([slides](http://seriot.ch/resources/abusing_twitter_api/sttwitter_cocoaheads.pdf))  
 **[2013-10-24]** STTwitter was presented at [SoftShake 2013](http://soft-shake.ch) ([slides](http://seriot.ch/resources/abusing_twitter_api/ios_twitter_integration_sos13.pdf)).
 
@@ -72,7 +72,7 @@ STTwitter <= 0.2.2 requires iOS 5+ or OS X 10.7+.
 
 STTwitter >= 0.2.3 requires iOS 7+ or OS X 10.9+.
 
-Vea Software has a great live-demo [tutorial](http://www.veasoftware.com/tutorials/2014/6/17/xcode-5-tutorial-ios-7-app-only-authentication-twitter-api-version-11) about creating a simple iOS app using STTwitter's app only mode.
+Vea Software has a great live-demo [tutorial](https://www.veasoftware.com/tutorials/2014/6/17/xcode-5-tutorial-ios-7-app-only-authentication-twitter-api-version-11) about creating a simple iOS app using STTwitter's app only mode.
 
 ### Code Snippets
 
@@ -184,7 +184,7 @@ You can instantiate `STTwitterAPI` in three ways:
   - set `username` and `password`, get oauth access tokens with XAuth, if the app is entitled to
   - set `oauth token` and `oauth token secret` directly
   - open Safari (or a `UIWebView` instance if you prefer), authenticate on Twitter and receive access tokens in your app through a custom URL scheme
-- use the [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication and get / use a "bearer token"
+- use the [Application Only](https://dev.twitter.com/oauth/application-only) authentication and get / use a "bearer token"
 
 So there are five cases altogether, hence these five methods:
 
@@ -224,7 +224,7 @@ This URL is then overriden by the `oauthCallback ` parameter in:
 
 ##### Reverse Authentication
 
-Reference: [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
+Reference: [https://dev.twitter.com/archive/docs/ios/using-reverse-auth](https://dev.twitter.com/archive/docs/ios/using-reverse-auth)
 
 The most common use case of reverse authentication is letting users register/login to a remote service with their OS X or iOS Twitter account.
 
@@ -275,7 +275,7 @@ Contrary to what can be read here and there, you can perfectly [access direct me
 
 ### Twitter Digits
 
-[https://dev.twitter.com/twitter-kit/ios/digits](https://dev.twitter.com/twitter-kit/ios/digits)
+[https://docs.fabric.io/ios/digits/digits.html](https://docs.fabric.io/ios/digits/digits.html)
 
 In this flow, you start with consumer tokens and app only mode, and end up with access tokens, after verifying a phone number with a PIN sent by SMS.
 
@@ -292,7 +292,7 @@ See a working example in [STAuthenticationVC.m](https://github.com/nst/STTwitter
 
 ### OAuth Consumer Tokens
 
-In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter's website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
+In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter's website: [https://apps.twitter.com/](https://apps.twitter.com/).
 
 STTwitter demo project comes with `TwitterClients.plist` where you can enter your own consumer tokens.
 
@@ -456,7 +456,7 @@ Streaming requests may be lost when your iOS application comes back to foregroun
 
 ##### xAuth
 
-Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So, if you get an error like `The consumer tokens are probably not xAuth enabled.` while accessing `https://api.twitter.com/oauth/access_token`, see Twitter's website [https://dev.twitter.com/docs/oauth/xauth](https://dev.twitter.com/docs/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
+Twitter restricts the xAuth authentication process to xAuth-enabled consumer tokens only. So, if you get an error like `The consumer tokens are probably not xAuth enabled.` while accessing `https://api.twitter.com/oauth/access_token`, see Twitter's website [https://dev.twitter.com/oauth/xauth](https://dev.twitter.com/oauth/xauth) and ask Twitter to enable the xAuth authentication process for your consumer tokens.
 
 ##### Anything Else
 
@@ -525,7 +525,7 @@ downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, id r
 
      * STTwitterAppOnly
         - implements the 'app only' authentication
-        - https://dev.twitter.com/docs/auth/application-only-auth
+        - https://dev.twitter.com/oauth/application-only
 
      * STHTTPRequest
         - block-based wrapper around NSURLConnection
