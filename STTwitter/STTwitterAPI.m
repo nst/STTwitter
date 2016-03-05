@@ -3119,7 +3119,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerID) md[@"owner_id"] = ownerID;
     
-    return [self postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+    return [self postAPIResource:@"lists/members/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -3144,7 +3144,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(ownerScreenName) md[@"owner_screen_name"] = ownerScreenName;
     if(ownerScreenName) md[@"owner_id"] = ownerID;
     
-    return [self postAPIResource:@"lists/members/destroy" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
+    return [self postAPIResource:@"lists/members/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock();
     } errorBlock:^(NSError *error) {
         errorBlock(error);
@@ -4128,7 +4128,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"id"] = WOEID;
-    if(excludeHashtags) md[@"exclude"] = [excludeHashtags boolValue] ? @"1" : @"0";
+    if(excludeHashtags) md[@"exclude"] = [excludeHashtags boolValue] ? @"hashtags" : @"0";
     
     return [self getAPIResource:@"trends/place.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         
