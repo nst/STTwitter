@@ -224,7 +224,7 @@ This URL is then overriden by the `oauthCallback ` parameter in:
 
 ##### Reverse Authentication
 
-Reference: [https://dev.twitter.com/docs/ios/using-reverse-auth](https://dev.twitter.com/docs/ios/using-reverse-auth)
+Reference: [https://dev.twitter.com/docs/ios/using-reverse-auth](https://web.archive.org/web/20131017221058/https://dev.twitter.com/docs/ios/using-reverse-auth)
 
 The most common use case of reverse authentication is letting users register/login to a remote service with their OS X or iOS Twitter account.
 
