@@ -436,6 +436,11 @@
               successBlock(strongSelf.oauthAccessToken, strongSelf.oauthAccessTokenSecret, dict[@"user_id"], dict[@"screen_name"]);
               
           } errorBlock:^(STHTTPRequest *request, NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
+              
+              if (request.responseStatus == 401) {
+                  self.oauthRequestToken = nil;
+              }
+              
               errorBlock(error);
           }];
 }
