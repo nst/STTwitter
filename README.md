@@ -184,7 +184,7 @@ You can instantiate `STTwitterAPI` in three ways:
   - set `username` and `password`, get oauth access tokens with XAuth, if the app is entitled to
   - set `oauth token` and `oauth token secret` directly
   - open Safari (or a `UIWebView` instance if you prefer), authenticate on Twitter and receive access tokens in your app through a custom URL scheme
-- use the [Application Only](https://dev.twitter.com/docs/auth/application-only-auth) authentication and get / use a "bearer token"
+- use the [Application Only](https://dev.twitter.com/oauth/application-only) authentication and get / use a "bearer token"
 
 So there are five cases altogether, hence these five methods:
 
@@ -275,7 +275,7 @@ Contrary to what can be read here and there, you can perfectly [access direct me
 
 ### Twitter Digits
 
-[https://dev.twitter.com/twitter-kit/ios/digits](https://dev.twitter.com/twitter-kit/ios/digits)
+[https://docs.fabric.io/ios/digits/digits.html](https://docs.fabric.io/ios/digits/digits.html)
 
 In this flow, you start with consumer tokens and app only mode, and end up with access tokens, after verifying a phone number with a PIN sent by SMS.
 
@@ -292,7 +292,7 @@ See a working example in [STAuthenticationVC.m](https://github.com/nst/STTwitter
 
 ### OAuth Consumer Tokens
 
-In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter's website: [https://dev.twitter.com/apps](https://dev.twitter.com/apps).
+In Twitter REST API v1.1, each client application must authenticate itself with `consumer key` and `consumer secret` tokens. You can request consumer tokens for your app on Twitter's website: [https://apps.twitter.com/](https://apps.twitter.com/).
 
 STTwitter demo project comes with `TwitterClients.plist` where you can enter your own consumer tokens.
 
@@ -525,7 +525,7 @@ downloadProgressBlock:(void(^)(NSObject<STTwitterRequestProtocol> *request, id r
 
      * STTwitterAppOnly
         - implements the 'app only' authentication
-        - https://dev.twitter.com/docs/auth/application-only-auth
+        - https://dev.twitter.com/oauth/application-only
 
      * STHTTPRequest
         - block-based wrapper around NSURLConnection
