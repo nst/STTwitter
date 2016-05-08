@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, STHTTPRequestCookiesStorage) {
 @property (nonatomic) BOOL encodeGETDictionary; // default YES, set to NO if the parameters are already URL encoded
 @property (nonatomic, strong, readonly) NSURL *url;
 @property (nonatomic) BOOL preventRedirections;
+@property (nonatomic) BOOL useUploadTaskInBackground;
 @property (nonatomic) STHTTPRequestCookiesStorage cookieStoragePolicyForInstance; // overrides globalCookiesStoragePolicy
 
 + (void)setBackgroundCompletionHandler:(void(^)())completionHandler forSessionIdentifier:(NSString *)sessionIdentifier;

@@ -792,11 +792,9 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     
     NSURLRequest *request = [self prepareURLRequest];
     
-    BOOL useUploadTaskInBackground = [request.HTTPMethod isEqualToString:@"POST"] && request.HTTPBody != nil;
-    
     NSURLSessionConfiguration *sessionConfiguration = nil;
     
-    if(useUploadTaskInBackground) {
+    if(_useUploadTaskInBackground) {
         NSString *backgroundSessionIdentifier = [[NSProcessInfo processInfo] globallyUniqueString];
         if ([[NSURLSessionConfiguration class] respondsToSelector:@selector(backgroundSessionConfigurationWithIdentifier:)]) {
             // iOS 8+
@@ -817,7 +815,7 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
                                                           delegate:self
                                                      delegateQueue:nil];
     
-    if(useUploadTaskInBackground) {
+    if(_useUploadTaskInBackground) {
         NSString *fileName = [[NSProcessInfo processInfo] globallyUniqueString];
         self.HTTPBodyFileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
         [request.HTTPBody writeToURL:_HTTPBodyFileURL atomically:YES];
