@@ -565,12 +565,9 @@
                                    } stTwitterErrorBlock:^(NSDictionary *requestHeaders, NSDictionary *responseHeaders, NSError *error) {
                                        errorBlock(wr, requestHeaders, responseHeaders, error);
                                    }];
-    wr = r;
-    
-    r.HTTPMethod = HTTPMethod;
     
     NSString *postKey = [params valueForKey:kSTPOSTDataKey];
-    NSData *postData = [params valueForKey:postKey];;
+    NSData *postData = [params valueForKey:postKey];
     
     if([HTTPMethod isEqualToString:@"GET"]) {
         r.GETDictionary = params;
