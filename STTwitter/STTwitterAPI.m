@@ -1453,18 +1453,18 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     
     self.streamParser = [[STTwitterStreamParser alloc] init];
-    __weak STTwitterStreamParser *streamParser = self.streamParser;
+    __weak STTwitterStreamParser *weakParser = self.streamParser;
     
     return [self getResource:@"statuses/sample.json"
                baseURLString:kBaseURLStringStream_1_1
                   parameters:md
        downloadProgressBlock:^(id response) {
            
-           if (streamParser) {
-               [streamParser parseWithStreamData:response parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
-                   progressBlock(json, type);
-               }];
-           }
+           __strong STTwitterStreamParser *strongParser = weakParser;
+           
+           [strongParser parseWithStreamData:response parsedJSONBlock:^(NSDictionary *json, STTwitterStreamJSONType type) {
+               progressBlock(json, type);
+           }];
            
        } successBlock:^(NSDictionary *rateLimits, id json) {
            // reaching successBlock for a stream request is an error
