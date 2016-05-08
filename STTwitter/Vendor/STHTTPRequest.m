@@ -810,6 +810,8 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     }
     
     sessionConfiguration.allowsCellularAccess = YES;
+
+    sessionConfiguration.sharedContainerIdentifier = [[NSBundle mainBundle] bundleIdentifier];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration
                                                           delegate:self
