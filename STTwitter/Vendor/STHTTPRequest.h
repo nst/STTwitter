@@ -55,6 +55,7 @@ typedef NS_ENUM(NSUInteger, STHTTPRequestCookiesStorage) {
 @property (nonatomic) BOOL preventRedirections;
 @property (nonatomic) BOOL useUploadTaskInBackground;
 @property (nonatomic) STHTTPRequestCookiesStorage cookieStoragePolicyForInstance; // overrides globalCookiesStoragePolicy
+@property (nonatomic) NSString *sharedContainerIdentifier;
 
 + (void)setBackgroundCompletionHandler:(void(^)())completionHandler forSessionIdentifier:(NSString *)sessionIdentifier;
 //+ (void(^)())backgroundCompletionHandlerForSessionIdentifier:(NSString *)sessionIdentifier;

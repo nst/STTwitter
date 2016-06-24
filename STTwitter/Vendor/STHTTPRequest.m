@@ -370,7 +370,7 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     
     NSMutableData *data = [[NSMutableData alloc] init];
     
-    [data appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [data appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSString *fileNameContentDisposition = fileName ? [NSString stringWithFormat:@"filename=\"%@\"", fileName] : @"";
     NSString *contentDisposition = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; %@\r\n", parameterName, fileNameContentDisposition];
@@ -666,12 +666,6 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     return s;
 }
 
-+ (NSDictionary *)userInfoWithErrorDescriptionForHTTPStatus:(NSUInteger)status {
-    NSString *s = [self descriptionForHTTPStatus:status];
-    if(s == nil) return nil;
-    return @{ NSLocalizedDescriptionKey : s };
-}
-
 #pragma mark Descriptions
 
 - (NSString *)curlDescription {
@@ -783,6 +777,18 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     return ms;
 }
 
+- (NSError *)errorDescribingRequestNonfulfillment {
+    if(_responseStatus < 400) return nil;
+    
+    NSDictionary *userInfo = @{
+                               NSLocalizedDescriptionKey : [[self class] descriptionForHTTPStatus:_responseStatus],
+                               @"headers": self.responseHeaders,
+                               @"body": self.responseString
+                               };
+    
+    return [NSError errorWithDomain:NSStringFromClass([self class]) code:_responseStatus userInfo:userInfo];
+}
+
 #pragma mark Start Request
 
 - (void)startAsynchronous {
@@ -808,8 +814,9 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     }
     
     sessionConfiguration.allowsCellularAccess = YES;
-
-    sessionConfiguration.sharedContainerIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    
+    NSString *containerIdentifier = _sharedContainerIdentifier ? _sharedContainerIdentifier : [[NSBundle mainBundle] bundleIdentifier];
+    sessionConfiguration.sharedContainerIdentifier = containerIdentifier;
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration
                                                           delegate:self
@@ -897,8 +904,7 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
     self.responseString = [self stringWithData:_responseData encodingName:_responseStringEncodingName];
     
     if(_responseStatus >= 400) {
-        NSDictionary *userInfo = [[self class] userInfoWithErrorDescriptionForHTTPStatus:_responseStatus];
-        if(e) *e = [NSError errorWithDomain:NSStringFromClass([self class]) code:_responseStatus userInfo:userInfo];
+        if(e) *e = [self errorDescribingRequestNonfulfillment];
     }
     
     return _responseString;
@@ -930,7 +936,7 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
 #pragma mark NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error {
-
+    
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -939,7 +945,7 @@ static STHTTPRequestCookiesStorage globalCookiesStoragePolicy = STHTTPRequestCoo
         if(strongSelf == nil) return;
         
         if(error == nil) return; // normal session invalidation, no error
-
+        
         if(strongSelf.errorBlock) {
             strongSelf.errorBlock(error);
         }
@@ -1052,8 +1058,7 @@ didCompleteWithError:(NSError *)error {
         }
         
         if(strongSelf.responseStatus >= 400) {
-            NSDictionary *userInfo = [[strongSelf class] userInfoWithErrorDescriptionForHTTPStatus:strongSelf.responseStatus];
-            strongSelf.error = [NSError errorWithDomain:NSStringFromClass([strongSelf class]) code:strongSelf.responseStatus userInfo:userInfo];
+            strongSelf.error = [strongSelf errorDescribingRequestNonfulfillment];
             strongSelf.errorBlock(strongSelf.error);
             [session finishTasksAndInvalidate];
             return;
