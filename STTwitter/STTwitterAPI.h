@@ -152,12 +152,14 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (void)setTimeoutInSeconds:(NSTimeInterval)timeoutInSeconds; // optional
 
-@property (nonatomic, retain) NSString *userName; // set after successful connection for STTwitterOAuth
-@property (nonatomic, retain) NSString *userID; // set after successful connection for STTwitterOAuth
+@property (nonatomic, strong) NSString *userName; // set after successful connection for STTwitterOAuth
+@property (nonatomic, strong) NSString *userID; // set after successful connection for STTwitterOAuth
 
 @property (nonatomic, readonly) NSString *oauthAccessToken;
 @property (nonatomic, readonly) NSString *oauthAccessTokenSecret;
 @property (nonatomic, readonly) NSString *bearerToken;
+
+@property (nonatomic, strong) NSString *sharedContainerIdentifier; // common to all STTwitterAPI instances
 
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
 

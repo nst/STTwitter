@@ -194,6 +194,10 @@ static NSDateFormatter *dateFormatter = nil;
     return [self twitterAPIAppOnlyWithConsumerName:nil consumerKey:consumerKey consumerSecret:consumerSecret];
 }
 
+- (void)setSharedContainerIdentifier:(NSString *)s {
+    [[NSUserDefaults standardUserDefaults] setValue:s forKey:@"STTwitterSharedContainerIdentifier"];
+}
+
 - (void)setTimeoutInSeconds:(NSTimeInterval)timeoutInSeconds {
     _oauth.timeoutInSeconds = timeoutInSeconds;
 }
@@ -631,6 +635,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                               NSString *imageURLString = [response objectForKey:@"profile_image_url"];
                               
                               STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
+                              r.sharedContainerIdentifier = [[NSUserDefaults standardUserDefaults] valueForKey:@"STTwitterSharedContainerIdentifier"];
                               __weak STHTTPRequest *wr = r;
                               
                               r.timeoutSeconds = strongSelf.oauth.timeoutInSeconds;

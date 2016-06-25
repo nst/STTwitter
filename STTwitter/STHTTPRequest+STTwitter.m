@@ -29,6 +29,8 @@
     __block STHTTPRequest *r = [self requestWithURLString:urlString];
     __weak STHTTPRequest *wr = r;
     
+    r.sharedContainerIdentifier = [[NSUserDefaults standardUserDefaults] valueForKey:@"STTwitterSharedContainerIdentifier"];
+    
     r.HTTPMethod = HTTPMethod;
 
     r.cookieStoragePolicyForInstance = STHTTPRequestCookiesStorageNoStorage;
@@ -88,6 +90,8 @@
     
     STHTTPRequest *r = [STHTTPRequest requestWithURLString:urlString];
     
+    r.sharedContainerIdentifier = [[NSUserDefaults standardUserDefaults] valueForKey:@"STTwitterSharedContainerIdentifier"];
+
     r.cookieStoragePolicyForInstance = STHTTPRequestCookiesStorageNoStorage;
 
     r.preventRedirections = YES;
