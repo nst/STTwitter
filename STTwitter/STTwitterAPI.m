@@ -947,16 +947,16 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     }];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                mediaIDs:(NSArray *)mediaIDs
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID // wins over lat/lon
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                                trimUser:(NSNumber *)trimUser
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                         inReplyToStatusID:(NSString *)existingStatusID
+                                                  mediaIDs:(NSArray *)mediaIDs
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                                   placeID:(NSString *)placeID // wins over lat/lon
+                                        displayCoordinates:(NSNumber *)displayCoordinates
+                                                  trimUser:(NSNumber *)trimUser
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     if([mediaIDs count] == 0 && status == nil) {
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPICannotPostEmptyStatus userInfo:@{NSLocalizedDescriptionKey : @"cannot post empty status"}];
@@ -991,39 +991,39 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     }];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID // wins over lat/lon
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                                trimUser:(NSNumber *)trimUser
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                         inReplyToStatusID:(NSString *)existingStatusID
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                                   placeID:(NSString *)placeID // wins over lat/lon
+                                        displayCoordinates:(NSNumber *)displayCoordinates
+                                                  trimUser:(NSNumber *)trimUser
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
-    return [self postStatusUpdate:status
-                inReplyToStatusID:existingStatusID
-                         mediaIDs:nil
-                         latitude:latitude
-                        longitude:longitude
-                          placeID:placeID
-               displayCoordinates:displayCoordinates
-                         trimUser:trimUser
-                     successBlock:successBlock
-                       errorBlock:errorBlock];
+    return [self postStatusesUpdate:status
+                  inReplyToStatusID:existingStatusID
+                           mediaIDs:nil
+                           latitude:latitude
+                          longitude:longitude
+                            placeID:placeID
+                 displayCoordinates:displayCoordinates
+                           trimUser:trimUser
+                       successBlock:successBlock
+                         errorBlock:errorBlock];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
-                                       possiblySensitive:(NSNumber *)possiblySensitive
-                                       inReplyToStatusID:(NSString *)inReplyToStatusID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                            mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
+                                         possiblySensitive:(NSNumber *)possiblySensitive
+                                         inReplyToStatusID:(NSString *)inReplyToStatusID
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                                   placeID:(NSString *)placeID
+                                        displayCoordinates:(NSNumber *)displayCoordinates
+                                       uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(status);
     NSAssert([mediaDataArray count] > 0, @"media data array must not be empty");
@@ -1049,15 +1049,15 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                  } errorBlock:errorBlock];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                mediaURL:(NSURL *)mediaURL
-                                                 placeID:(NSString *)placeID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                         inReplyToStatusID:(NSString *)existingStatusID
+                                                  mediaURL:(NSURL *)mediaURL
+                                                   placeID:(NSString *)placeID
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                       uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
     
@@ -1067,20 +1067,20 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         return nil;
     }
     
-    return [self postStatusUpdate:status
-                   mediaDataArray:@[data]
-                possiblySensitive:nil
-                inReplyToStatusID:existingStatusID
-                         latitude:latitude
-                        longitude:longitude
-                          placeID:placeID
-               displayCoordinates:@(YES)
-              uploadProgressBlock:uploadProgressBlock
-                     successBlock:^(NSDictionary *status) {
-                         successBlock(status);
-                     } errorBlock:^(NSError *error) {
-                         errorBlock(error);
-                     }];
+    return [self postStatusesUpdate:status
+                     mediaDataArray:@[data]
+                  possiblySensitive:nil
+                  inReplyToStatusID:existingStatusID
+                           latitude:latitude
+                          longitude:longitude
+                            placeID:placeID
+                 displayCoordinates:@(YES)
+                uploadProgressBlock:uploadProgressBlock
+                       successBlock:^(NSDictionary *status) {
+                           successBlock(status);
+                       } errorBlock:^(NSError *error) {
+                           errorBlock(error);
+                       }];
 }
 
 // GET statuses/oembed
