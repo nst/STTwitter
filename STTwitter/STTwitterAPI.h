@@ -326,6 +326,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetsForID:(NSString *)statusID
                                                            count:(NSString *)count
                                                         trimUser:(NSNumber *)trimUser
+                                            useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -353,6 +354,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                  trimUser:(NSNumber *)trimUser
                                          includeMyRetweet:(NSNumber *)includeMyRetweet
                                           includeEntities:(NSNumber *)includeEntities
+                                     useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                              successBlock:(void(^)(NSDictionary *status))successBlock
                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -364,6 +366,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusesDestroy:(NSString *)statusID
                                                    trimUser:(NSNumber *)trimUser
+                                       useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                successBlock:(void(^)(NSDictionary *status))successBlock
                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -392,12 +395,20 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                    placeID:(NSString *)placeID
                                         displayCoordinates:(NSNumber *)displayCoordinates
                                                   trimUser:(NSNumber *)trimUser
+                                 autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
+                                excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
+                                       attachmentURLString:(NSString *)attachmentURLString // URLs passed to the attachment_url parameter not matching either a Tweet permalink or DM deep link will fail at Tweet creation and cause an exception.
+                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                               successBlock:(void(^)(NSDictionary *status))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
 // starting May 28th, 2014
 // https://dev.twitter.com/notifications/multiple-media-entities-in-tweets
 // https://dev.twitter.com/docs/api/multiple-media-extended-entities
+
+// September 2016: extented Tweets support with new parameters auto_populate_reply_metadata, exclude_reply_user_ids and attachment_url
+// https://dev.twitter.com/overview/api/upcoming-changes-to-tweets
+
 - (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
                                          inReplyToStatusID:(NSString *)existingStatusID
                                                   mediaIDs:(NSArray *)mediaIDs
@@ -406,6 +417,10 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                    placeID:(NSString *)placeID
                                         displayCoordinates:(NSNumber *)displayCoordinates
                                                   trimUser:(NSNumber *)trimUser
+                                 autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
+                                excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
+                                       attachmentURLString:(NSString *)attachmentURLString // URLs passed to the attachment_url parameter not matching either a Tweet permalink or DM deep link will fail at Tweet creation and cause an exception.
+                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                               successBlock:(void(^)(NSDictionary *status))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -423,11 +438,13 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
                                                        trimUser:(NSNumber *)trimUser
+                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
+                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -446,6 +463,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusUnretweetWithID:(NSString *)statusID
                                                          trimUser:(NSNumber *)trimUser
+                                             useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSDictionary *status))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -499,6 +517,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
                                                              related:(NSString *)related // eg. twitterapi,twittermedia,twitter
                                                                 lang:(NSString *)lang
+                                                useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                         successBlock:(void(^)(NSDictionary *status))successBlock
                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 

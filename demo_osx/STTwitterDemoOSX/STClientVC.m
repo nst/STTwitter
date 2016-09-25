@@ -82,7 +82,14 @@
                              placeID:nil
                   displayCoordinates:@(YES)
                             trimUser:nil
+           autoPopulateReplyMetadata:nil
+          excludeReplyUserIDsStrings:nil
+                 attachmentURLString:@"https://twitter.com/angealbertini/status/779980193834364928"
+                useExtentedTweetMode:@(YES)
                         successBlock:^(NSDictionary *status) {
+                            
+                            NSLog(@"-- text: %@", [status valueForKey:@"text"]);
+                            NSLog(@"-- full_text: %@", [status valueForKey:@"full_text"]);
                             
                             self.twitterPostTweetText = @"";
                             self.twitterPostTweetStatus = @"OK";
