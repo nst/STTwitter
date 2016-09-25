@@ -53,25 +53,25 @@
     
     if(_twitterPostMediaURL) {
         
-        [_twitter postStatusesUpdate:_twitterPostTweetText
-                   inReplyToStatusID:nil
-                            mediaURL:_twitterPostMediaURL
-                             placeID:nil
-                            latitude:_twitterPostLatitude
-                           longitude:_twitterPostLongitude
+        [_twitter deprecated_postStatusesUpdate:_twitterPostTweetText
+                              inReplyToStatusID:nil
+                                       mediaURL:_twitterPostMediaURL
+                                        placeID:nil
+                                       latitude:_twitterPostLatitude
+                                      longitude:_twitterPostLongitude
          
-                 uploadProgressBlock:^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-                     NSLog(@"%lld %lld %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-                 } successBlock:^(NSDictionary *status) {
-                     
-                     self.twitterPostTweetText = @"";
-                     self.twitterPostTweetStatus = @"OK";
-                     self.twitterPostLatitude = nil;
-                     self.twitterPostLongitude = nil;
-                     self.twitterPostMediaURL = nil;
-                 } errorBlock:^(NSError *error) {
-                     self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
-                 }];
+                            uploadProgressBlock:^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+                                NSLog(@"%lld %lld %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+                            } successBlock:^(NSDictionary *status) {
+                                
+                                self.twitterPostTweetText = @"";
+                                self.twitterPostTweetStatus = @"OK";
+                                self.twitterPostLatitude = nil;
+                                self.twitterPostLongitude = nil;
+                                self.twitterPostMediaURL = nil;
+                            } errorBlock:^(NSError *error) {
+                                self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
+                            }];
         
     } else {
         

@@ -459,28 +459,28 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  The Tweet text will be rewritten to include the media URL(s), which will reduce the number of characters allowed in the Tweet text. If the URL(s) cannot be appended without text truncation, the tweet will be rejected and this method will return an HTTP 403 error.
  */
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
-                                            mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
-                                         possiblySensitive:(NSNumber *)possiblySensitive
-                                         inReplyToStatusID:(NSString *)inReplyToStatusID
-                                                  latitude:(NSString *)latitude
-                                                 longitude:(NSString *)longitude
-                                                   placeID:(NSString *)placeID
-                                        displayCoordinates:(NSNumber *)displayCoordinates
-                                       uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                              successBlock:(void(^)(NSDictionary *status))successBlock
-                                                errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("POST statuses/update_with_media is deprecated, use POST statuses/update");
+- (NSObject<STTwitterRequestProtocol> *)deprecated_postStatusesUpdate:(NSString *)status
+                                                       mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
+                                                    possiblySensitive:(NSNumber *)possiblySensitive
+                                                    inReplyToStatusID:(NSString *)inReplyToStatusID
+                                                             latitude:(NSString *)latitude
+                                                            longitude:(NSString *)longitude
+                                                              placeID:(NSString *)placeID
+                                                   displayCoordinates:(NSNumber *)displayCoordinates
+                                                  uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                                         successBlock:(void(^)(NSDictionary *status))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("POST statuses/update_with_media is deprecated, use POST statuses/update");
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
-                                         inReplyToStatusID:(NSString *)existingStatusID
-                                                  mediaURL:(NSURL *)mediaURL
-                                                   placeID:(NSString *)placeID
-                                                  latitude:(NSString *)latitude
-                                                 longitude:(NSString *)longitude
-                                       uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                              successBlock:(void(^)(NSDictionary *status))successBlock
-                                                errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("POST statuses/update_with_media is deprecated, use POST statuses/update");
+- (NSObject<STTwitterRequestProtocol> *)deprecated_postStatusesUpdate:(NSString *)status
+                                                    inReplyToStatusID:(NSString *)existingStatusID
+                                                             mediaURL:(NSURL *)mediaURL
+                                                              placeID:(NSString *)placeID
+                                                             latitude:(NSString *)latitude
+                                                            longitude:(NSString *)longitude
+                                                  uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                                         successBlock:(void(^)(NSDictionary *status))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("POST statuses/update_with_media is deprecated, use POST statuses/update");
 
 /*
  GET    statuses/oembed
