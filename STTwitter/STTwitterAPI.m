@@ -672,6 +672,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                    trimUser:(NSNumber *)trimUser
                                                          contributorDetails:(NSNumber *)contributorDetails
                                                             includeEntities:(NSNumber *)includeEntities
+                                                       useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                                successBlock:(void(^)(NSArray *statuses))successBlock
                                                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -683,6 +684,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"statuses/mentions_timeline.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -702,6 +704,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                             trimUser:nil
                                   contributorDetails:nil
                                      includeEntities:nil
+                                useExtendedTweetMode:@(NO)
                                         successBlock:^(NSArray *statuses) {
                                             successBlock(statuses);
                                         } errorBlock:^(NSError *error) {
@@ -720,6 +723,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                           excludeReplies:(NSNumber *)excludeReplies
                                                       contributorDetails:(NSNumber *)contributorDetails
                                                          includeRetweets:(NSNumber *)includeRetweets
+                                                    useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                             successBlock:(void(^)(NSArray *statuses))successBlock
                                                               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -735,6 +739,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(excludeReplies) md[@"exclude_replies"] = [excludeReplies boolValue] ? @"1" : @"0";
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"statuses/user_timeline.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -750,6 +755,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                           excludeReplies:(NSNumber *)excludeReplies
                                                       contributorDetails:(NSNumber *)contributorDetails
                                                          includeEntities:(NSNumber *)includeEntities
+                                                    useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                             successBlock:(void(^)(NSArray *statuses))successBlock
                                                               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -763,6 +769,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(excludeReplies) md[@"exclude_replies"] = [excludeReplies boolValue] ? @"1" : @"0";
     if(contributorDetails) md[@"contributor_details"] = [contributorDetails boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"statuses/home_timeline.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -787,6 +794,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    excludeReplies:nil
                                contributorDetails:nil
                                   includeRetweets:nil
+                             useExtendedTweetMode:@(NO)
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -831,6 +839,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    excludeReplies:nil
                                contributorDetails:nil
                                   includeEntities:nil
+                             useExtendedTweetMode:@(NO)
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -844,6 +853,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                 trimUser:(NSNumber *)trimUser
                                                          includeEntities:(NSNumber *)includeEntities
                                                      includeUserEntities:(NSNumber *)includeUserEntities
+                                                    useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                             successBlock:(void(^)(NSArray *statuses))successBlock
                                                               errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -856,6 +866,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeUserEntities) md[@"include_user_entities"] = [includeUserEntities boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"statuses/retweets_of_me.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -873,6 +884,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                          trimUser:nil
                                   includeEntities:nil
                               includeUserEntities:nil
+                             useExtendedTweetMode:@(NO)
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -885,7 +897,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetsForID:(NSString *)statusID
                                                            count:(NSString *)count
                                                         trimUser:(NSNumber *)trimUser
-                                            useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                            useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -910,7 +922,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                  trimUser:(NSNumber *)trimUser
                                          includeMyRetweet:(NSNumber *)includeMyRetweet
                                           includeEntities:(NSNumber *)includeEntities
-                                     useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                     useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                              successBlock:(void(^)(NSDictionary *status))successBlock
                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -933,7 +945,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusesDestroy:(NSString *)statusID
                                                    trimUser:(NSNumber *)trimUser
-                                       useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                       useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                successBlock:(void(^)(NSDictionary *status))successBlock
                                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -964,7 +976,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                  autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
                                 excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
                                        attachmentURLString:(NSString *)attachmentURLString
-                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                      useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                               successBlock:(void(^)(NSDictionary *status))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1030,7 +1042,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                  autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
                                 excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
                                        attachmentURLString:(NSString *)attachmentURLString
-                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                      useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                               successBlock:(void(^)(NSDictionary *status))successBlock
                                                 errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1045,7 +1057,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
           autoPopulateReplyMetadata:autoPopulateReplyMetadata
          excludeReplyUserIDsStrings:excludeReplyUserIDsString
                 attachmentURLString:attachmentURLString
-               useExtentedTweetMode:useExtendedTweetMode
+               useExtendedTweetMode:useExtendedTweetMode
                        successBlock:successBlock
                          errorBlock:errorBlock];
 }
@@ -1131,7 +1143,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
                                                              related:(NSString *)related // eg. twitterapi,twittermedia,twitter
                                                                 lang:(NSString *)lang
-                                                useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                                useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                         successBlock:(void(^)(NSDictionary *status))successBlock
                                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1171,7 +1183,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // POST	statuses/retweet/:id
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
                                                        trimUser:(NSNumber *)trimUser
-                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                           useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1191,13 +1203,13 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
-                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                           useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     return [self postStatusRetweetWithID:statusID
                                 trimUser:nil
-                    useExtentedTweetMode:useExtendedTweetMode
+                    useExtendedTweetMode:useExtendedTweetMode
                             successBlock:^(NSDictionary *status) {
                                 successBlock(status);
                             } errorBlock:^(NSError *error) {
@@ -1208,7 +1220,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // POST	statuses/unretweet/:id
 - (NSObject<STTwitterRequestProtocol> *)postStatusUnretweetWithID:(NSString *)statusID
                                                          trimUser:(NSNumber *)trimUser
-                                             useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                             useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSDictionary *status))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1336,6 +1348,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                            maxID:(NSString *)maxID // eg. "54321"
                                                  includeEntities:(NSNumber *)includeEntities
                                                         callback:(NSString *)callback // eg. "processTweets"
+                                            useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                     successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1353,6 +1366,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(maxID) md[@"max_id"] = maxID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(callback) md[@"callback"] = callback;
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     // eg. "(from:nst021 OR to:nst021)" -> "%28from%3Anst021%20OR%20to%3Anst021%29"
     // md[@"q"] = @"(from:nst021 OR to:nst021)";
@@ -1384,6 +1398,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                     maxID:nil
                           includeEntities:@(YES)
                                  callback:nil
+                        useExtendedTweetMode:@(NO)
                              successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
                                  successBlock(searchMetadata, statuses);
                              } errorBlock:^(NSError *error) {
@@ -2951,6 +2966,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                            sinceID:(NSString *)sinceID
                                                              maxID:(NSString *)maxID
                                                    includeEntities:(NSNumber *)includeEntities
+                                              useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                       successBlock:(void(^)(NSArray *statuses))successBlock
                                                         errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2961,6 +2977,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(sinceID) md[@"since_id"] = sinceID;
     if(maxID) md[@"max_id"] = maxID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"favorites/list.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -2978,6 +2995,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                     sinceID:nil
                                       maxID:nil
                             includeEntities:nil
+                       useExtendedTweetMode:@(NO)
                                successBlock:^(NSArray *statuses) {
                                    successBlock(statuses);
                                } errorBlock:^(NSError *error) {
@@ -2988,6 +3006,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // POST favorites/destroy
 - (NSObject<STTwitterRequestProtocol> *)postFavoriteDestroyWithStatusID:(NSString *)statusID
                                                         includeEntities:(NSNumber *)includeEntities
+                                                   useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                            successBlock:(void(^)(NSDictionary *status))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -2996,6 +3015,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(statusID) md[@"id"] = statusID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self postAPIResource:@"favorites/destroy.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -3007,6 +3027,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // POST	favorites/create
 - (NSObject<STTwitterRequestProtocol> *)postFavoriteCreateWithStatusID:(NSString *)statusID
                                                        includeEntities:(NSNumber *)includeEntities
+                                                  useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                           successBlock:(void(^)(NSDictionary *status))successBlock
                                                             errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -3015,6 +3036,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(statusID) md[@"id"] = statusID;
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self postAPIResource:@"favorites/create.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -3082,6 +3104,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                             count:(NSString *)count
                                                   includeEntities:(NSNumber *)includeEntities
                                                   includeRetweets:(NSNumber *)includeRetweets
+                                             useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSArray *statuses))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -3096,6 +3119,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = includeRetweets ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"lists/statuses.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         
@@ -3117,6 +3141,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                           count:(NSString *)count
                                                 includeEntities:(NSNumber *)includeEntities
                                                 includeRetweets:(NSNumber *)includeRetweets
+                                           useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSArray *statuses))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -3133,6 +3158,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
     if(includeRetweets) md[@"include_rts"] = [includeRetweets boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
+    
     
     return [self getAPIResource:@"lists/statuses.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         
@@ -4335,6 +4362,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                   includeEntities:(NSNumber *)includeEntities
                                                          trimUser:(NSNumber *)trimUser
                                                               map:(NSNumber *)map
+                                             useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSArray *tweets))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -4347,6 +4375,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"true" : @"false";
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(map) md[@"map"] = [map boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"statuses/lookup.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
