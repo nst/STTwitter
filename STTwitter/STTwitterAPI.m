@@ -704,7 +704,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                             trimUser:nil
                                   contributorDetails:nil
                                      includeEntities:nil
-                                useExtendedTweetMode:@(NO)
+                                useExtendedTweetMode:nil
                                         successBlock:^(NSArray *statuses) {
                                             successBlock(statuses);
                                         } errorBlock:^(NSError *error) {
@@ -794,7 +794,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    excludeReplies:nil
                                contributorDetails:nil
                                   includeRetweets:nil
-                             useExtendedTweetMode:@(NO)
+                             useExtendedTweetMode:nil
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -839,7 +839,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    excludeReplies:nil
                                contributorDetails:nil
                                   includeEntities:nil
-                             useExtendedTweetMode:@(NO)
+                             useExtendedTweetMode:nil
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -884,7 +884,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                          trimUser:nil
                                   includeEntities:nil
                               includeUserEntities:nil
-                             useExtendedTweetMode:@(NO)
+                             useExtendedTweetMode:nil
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -1398,7 +1398,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                     maxID:nil
                           includeEntities:@(YES)
                                  callback:nil
-                        useExtendedTweetMode:@(NO)
+                        useExtendedTweetMode:nil
                              successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
                                  successBlock(searchMetadata, statuses);
                              } errorBlock:^(NSError *error) {
@@ -2995,7 +2995,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                     sinceID:nil
                                       maxID:nil
                             includeEntities:nil
-                       useExtendedTweetMode:@(NO)
+                       useExtendedTweetMode:nil
                                successBlock:^(NSArray *statuses) {
                                    successBlock(statuses);
                                } errorBlock:^(NSError *error) {
