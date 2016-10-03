@@ -885,6 +885,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 - (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetsForID:(NSString *)statusID
                                                            count:(NSString *)count
                                                         trimUser:(NSNumber *)trimUser
+                                            useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -896,7 +897,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     if(count) md[@"count"] = count;
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
-    
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
+
     return [self getAPIResource:resource parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -908,6 +910,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                  trimUser:(NSNumber *)trimUser
                                          includeMyRetweet:(NSNumber *)includeMyRetweet
                                           includeEntities:(NSNumber *)includeEntities
+                                     useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                              successBlock:(void(^)(NSDictionary *status))successBlock
                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -919,6 +922,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     
     return [self getAPIResource:@"statuses/show.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
@@ -929,6 +933,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusesDestroy:(NSString *)statusID
                                                    trimUser:(NSNumber *)trimUser
+                                       useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                successBlock:(void(^)(NSDictionary *status))successBlock
                                                  errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -939,7 +944,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     md[@"id"] = statusID;
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
-    
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
+
     return [self postAPIResource:resource parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -947,16 +953,24 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     }];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                mediaIDs:(NSArray *)mediaIDs
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID // wins over lat/lon
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                                trimUser:(NSNumber *)trimUser
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                         inReplyToStatusID:(NSString *)existingStatusID
+                                                  mediaIDs:(NSArray *)mediaIDs
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                                   placeID:(NSString *)placeID // wins over lat/lon
+                                        displayCoordinates:(NSNumber *)displayCoordinates
+                                                  trimUser:(NSNumber *)trimUser
+                                 autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
+                                excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
+                                       attachmentURLString:(NSString *)attachmentURLString
+                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
+    
+    if([autoPopulateReplyMetadata boolValue]) {
+        NSParameterAssert(existingStatusID);
+    }
     
     if([mediaIDs count] == 0 && status == nil) {
         NSError *error = [NSError errorWithDomain:NSStringFromClass([self class]) code:STTwitterAPICannotPostEmptyStatus userInfo:@{NSLocalizedDescriptionKey : @"cannot post empty status"}];
@@ -967,12 +981,27 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSMutableDictionary *md = [NSMutableDictionary dictionaryWithObject:status forKey:@"status"];
     
     if([mediaIDs count] > 0) {
-        NSString *mediaIDsString = [mediaIDs componentsJoinedByString:@","];
-        md[@"media_ids"] = mediaIDsString;
+        md[@"media_ids"] = [mediaIDs componentsJoinedByString:@","];
+    }
+    
+    if(autoPopulateReplyMetadata) {
+        md[@"auto_populate_reply_metadata"] = [autoPopulateReplyMetadata boolValue] ? @"1" : @"0";
     }
     
     if(existingStatusID) {
         md[@"in_reply_to_status_id"] = existingStatusID;
+    }
+    
+    if(attachmentURLString) {
+        md[@"attachment_url"] = attachmentURLString;
+    }
+    
+    if([excludeReplyUserIDsString count] > 0) {
+        md[@"exclude_reply_user_ids"] = [excludeReplyUserIDsString componentsJoinedByString:@","];
+    }
+    
+    if(useExtendedTweetMode) {
+        md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
     }
     
     if(placeID) {
@@ -991,39 +1020,47 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     }];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID // wins over lat/lon
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                                trimUser:(NSNumber *)trimUser
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                         inReplyToStatusID:(NSString *)existingStatusID
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                                   placeID:(NSString *)placeID // wins over lat/lon
+                                        displayCoordinates:(NSNumber *)displayCoordinates
+                                                  trimUser:(NSNumber *)trimUser
+                                 autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
+                                excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
+                                       attachmentURLString:(NSString *)attachmentURLString
+                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock {
     
-    return [self postStatusUpdate:status
-                inReplyToStatusID:existingStatusID
-                         mediaIDs:nil
-                         latitude:latitude
-                        longitude:longitude
-                          placeID:placeID
-               displayCoordinates:displayCoordinates
-                         trimUser:trimUser
-                     successBlock:successBlock
-                       errorBlock:errorBlock];
+    return [self postStatusesUpdate:status
+                  inReplyToStatusID:existingStatusID
+                           mediaIDs:nil
+                           latitude:latitude
+                          longitude:longitude
+                            placeID:placeID
+                 displayCoordinates:displayCoordinates
+                           trimUser:trimUser
+          autoPopulateReplyMetadata:autoPopulateReplyMetadata
+         excludeReplyUserIDsStrings:excludeReplyUserIDsString
+                attachmentURLString:attachmentURLString
+               useExtentedTweetMode:useExtendedTweetMode
+                       successBlock:successBlock
+                         errorBlock:errorBlock];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
-                                       possiblySensitive:(NSNumber *)possiblySensitive
-                                       inReplyToStatusID:(NSString *)inReplyToStatusID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)deprecated_postStatusesUpdate:(NSString *)status
+                                                       mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
+                                                    possiblySensitive:(NSNumber *)possiblySensitive
+                                                    inReplyToStatusID:(NSString *)inReplyToStatusID
+                                                             latitude:(NSString *)latitude
+                                                            longitude:(NSString *)longitude
+                                                              placeID:(NSString *)placeID
+                                                   displayCoordinates:(NSNumber *)displayCoordinates
+                                                  uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                                         successBlock:(void(^)(NSDictionary *status))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSParameterAssert(status);
     NSAssert([mediaDataArray count] > 0, @"media data array must not be empty");
@@ -1049,15 +1086,15 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                  } errorBlock:errorBlock];
 }
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                mediaURL:(NSURL *)mediaURL
-                                                 placeID:(NSString *)placeID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock {
+- (NSObject<STTwitterRequestProtocol> *)deprecated_postStatusesUpdate:(NSString *)status
+                                                    inReplyToStatusID:(NSString *)existingStatusID
+                                                             mediaURL:(NSURL *)mediaURL
+                                                              placeID:(NSString *)placeID
+                                                             latitude:(NSString *)latitude
+                                                            longitude:(NSString *)longitude
+                                                  uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                                         successBlock:(void(^)(NSDictionary *status))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSData *data = [NSData dataWithContentsOfURL:mediaURL];
     
@@ -1067,20 +1104,20 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
         return nil;
     }
     
-    return [self postStatusUpdate:status
-                   mediaDataArray:@[data]
-                possiblySensitive:nil
-                inReplyToStatusID:existingStatusID
-                         latitude:latitude
-                        longitude:longitude
-                          placeID:placeID
-               displayCoordinates:@(YES)
-              uploadProgressBlock:uploadProgressBlock
-                     successBlock:^(NSDictionary *status) {
-                         successBlock(status);
-                     } errorBlock:^(NSError *error) {
-                         errorBlock(error);
-                     }];
+    return [self deprecated_postStatusesUpdate:status
+                                mediaDataArray:@[data]
+                             possiblySensitive:nil
+                             inReplyToStatusID:existingStatusID
+                                      latitude:latitude
+                                     longitude:longitude
+                                       placeID:placeID
+                            displayCoordinates:@(YES)
+                           uploadProgressBlock:uploadProgressBlock
+                                  successBlock:^(NSDictionary *status) {
+                                      successBlock(status);
+                                  } errorBlock:^(NSError *error) {
+                                      errorBlock(error);
+                                  }];
 }
 
 // GET statuses/oembed
@@ -1094,6 +1131,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                                align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
                                                              related:(NSString *)related // eg. twitterapi,twittermedia,twitter
                                                                 lang:(NSString *)lang
+                                                useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                         successBlock:(void(^)(NSDictionary *status))successBlock
                                                           errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1121,6 +1159,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     if(related) md[@"related"] = related;
     if(lang) md[@"lang"] = lang;
     
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
+
     return [self getAPIResource:@"statuses/oembed.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
         successBlock(response);
     } errorBlock:^(NSError *error) {
@@ -1131,6 +1171,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // POST	statuses/retweet/:id
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
                                                        trimUser:(NSNumber *)trimUser
+                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1138,7 +1179,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
-    
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
+
     NSString *resource = [NSString stringWithFormat:@"statuses/retweet/%@.json", statusID];
     
     return [self postAPIResource:resource parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
@@ -1149,11 +1191,13 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
+                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     return [self postStatusRetweetWithID:statusID
                                 trimUser:nil
+                    useExtentedTweetMode:useExtendedTweetMode
                             successBlock:^(NSDictionary *status) {
                                 successBlock(status);
                             } errorBlock:^(NSError *error) {
@@ -1164,6 +1208,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 // POST	statuses/unretweet/:id
 - (NSObject<STTwitterRequestProtocol> *)postStatusUnretweetWithID:(NSString *)statusID
                                                          trimUser:(NSNumber *)trimUser
+                                             useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSDictionary *status))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -1171,7 +1216,8 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
-    
+    if(useExtendedTweetMode) md[@"tweet_mode"] = [useExtendedTweetMode boolValue] ? @"extended" : @"compat";
+
     NSString *resource = [NSString stringWithFormat:@"statuses/unretweet/%@.json", statusID];
     
     return [self postAPIResource:resource parameters:md successBlock:^(NSDictionary *rateLimits, id response) {

@@ -17,6 +17,7 @@ static NSString *kSTTwitterRateLimitResetDate = @"STTwitterRateLimitResetDate";
 typedef NS_ENUM( NSInteger, STTwitterTwitterErrorCode ) {
     STTwitterTwitterErrorCouldNotAuthenticate = 32, // Your call could not be completed as dialed.
     STTwitterTwitterErrorPageDoesNotExist = 34, // Corresponds with an HTTP 404 - the specified resource was not found.
+    STTwitterTwitterErrorInvalidAttachmentURL = 44, // Corresponds with HTTP 400. The URL value provided is not a URL that can be attached to this Tweet.
     STTwitterTwitterErrorAccountSuspended = 64, // Corresponds with an HTTP 403 — the access token being used belongs to a suspended user and they can't complete the action you're trying to take
     STTwitterTwitterErrorAPIv1Inactive = 68, // Corresponds to a HTTP request to a retired v1-era URL.
     STTwitterTwitterErrorRateLimitExceeded = 88, // The request limit for this resource has been reached for the current rate limit window.
@@ -32,7 +33,9 @@ typedef NS_ENUM( NSInteger, STTwitterTwitterErrorCode ) {
     STTwitterTwitterErrorBadAuthenticationData = 215, // Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid.
     STTwitterTwitterErrorUserMustVerifyLogin = 231, // Returned as a challenge in xAuth when the user has login verification enabled on their account and needs to be directed to twitter.com to generate a temporary password.
     STTwitterTwitterErrorRetiredEndpoint = 251, // Corresponds to a HTTP request to a retired URL.
-    STTwitterTwitterErrorApplicationCannotWrite = 261 // Corresponds with HTTP 403 — thrown when the application is restricted from POST, PUT, or DELETE actions. See How to appeal application suspension and other disciplinary actions.
+    STTwitterTwitterErrorApplicationCannotWrite = 261, // Corresponds with HTTP 403 — thrown when the application is restricted from POST, PUT, or DELETE actions. See How to appeal application suspension and other disciplinary actions.
+    STTwitterTwitterErrorCannotReplyToDeletedOrInvisibleTweet = 385, // Corresponds with HTTP 403. A reply can only be sent with reference to an existing public Tweet.
+    STTwitterTwitterErrorTooManyAttachmentTypes = 386 // Corresponds with HTTP 403. A Tweet is limited to a single attachment resource (media, Quote Tweet, etc.)
 };
 
 @interface NSError (STTwitter)

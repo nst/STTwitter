@@ -48,50 +48,57 @@
     
     [_streamingRequest cancel];
     self.streamingRequest = nil;
-
+    
     self.twitterPostTweetStatus = @"-";
     
     if(_twitterPostMediaURL) {
         
-        [_twitter postStatusUpdate:_twitterPostTweetText
-                 inReplyToStatusID:nil
-                          mediaURL:_twitterPostMediaURL
-                           placeID:nil
-                          latitude:_twitterPostLatitude
-                         longitude:_twitterPostLongitude
+        [_twitter deprecated_postStatusesUpdate:_twitterPostTweetText
+                              inReplyToStatusID:nil
+                                       mediaURL:_twitterPostMediaURL
+                                        placeID:nil
+                                       latitude:_twitterPostLatitude
+                                      longitude:_twitterPostLongitude
          
-               uploadProgressBlock:^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-                   NSLog(@"%lld %lld %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-               } successBlock:^(NSDictionary *status) {
-                   
-                   self.twitterPostTweetText = @"";
-                   self.twitterPostTweetStatus = @"OK";
-                   self.twitterPostLatitude = nil;
-                   self.twitterPostLongitude = nil;
-                   self.twitterPostMediaURL = nil;
-               } errorBlock:^(NSError *error) {
-                   self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
-               }];
+                            uploadProgressBlock:^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
+                                NSLog(@"%lld %lld %lld", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+                            } successBlock:^(NSDictionary *status) {
+                                
+                                self.twitterPostTweetText = @"";
+                                self.twitterPostTweetStatus = @"OK";
+                                self.twitterPostLatitude = nil;
+                                self.twitterPostLongitude = nil;
+                                self.twitterPostMediaURL = nil;
+                            } errorBlock:^(NSError *error) {
+                                self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
+                            }];
         
     } else {
         
-        [_twitter postStatusUpdate:_twitterPostTweetText
-                 inReplyToStatusID:nil
-                          latitude:_twitterPostLatitude
-                         longitude:_twitterPostLongitude
-                           placeID:nil
-                displayCoordinates:@(YES)
-                          trimUser:nil
-                      successBlock:^(NSDictionary *status) {
-                          
-                          self.twitterPostTweetText = @"";
-                          self.twitterPostTweetStatus = @"OK";
-                          self.twitterPostLatitude = nil;
-                          self.twitterPostLongitude = nil;
-                          self.twitterPostMediaURL = nil;
-                      } errorBlock:^(NSError *error) {
-                          self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
-                      }];
+        [_twitter postStatusesUpdate:_twitterPostTweetText
+                   inReplyToStatusID:nil
+                            latitude:_twitterPostLatitude
+                           longitude:_twitterPostLongitude
+                             placeID:nil
+                  displayCoordinates:@(YES)
+                            trimUser:nil
+           autoPopulateReplyMetadata:nil
+          excludeReplyUserIDsStrings:nil
+                 attachmentURLString:@"https://twitter.com/angealbertini/status/779980193834364928"
+                useExtentedTweetMode:@(YES)
+                        successBlock:^(NSDictionary *status) {
+                            
+                            NSLog(@"-- text: %@", [status valueForKey:@"text"]);
+                            NSLog(@"-- full_text: %@", [status valueForKey:@"full_text"]);
+                            
+                            self.twitterPostTweetText = @"";
+                            self.twitterPostTweetStatus = @"OK";
+                            self.twitterPostLatitude = nil;
+                            self.twitterPostLongitude = nil;
+                            self.twitterPostMediaURL = nil;
+                        } errorBlock:^(NSError *error) {
+                            self.twitterPostTweetStatus = error ? [error localizedDescription] : @"Unknown error";
+                        }];
     }
 }
 
@@ -99,7 +106,7 @@
     
     [_streamingRequest cancel];
     self.streamingRequest = nil;
-
+    
     self.twitterGetTimelineStatus = @"-";
     self.timelineStatuses = [NSArray array];
     
@@ -165,11 +172,11 @@
     self.twitterStreamingStatus = @"Streaming started";
     
     self.streamingRequest = [_twitter postStatusesFilterKeyword:_twitterStreamingKeywordsString
-                                                  tweetBlock:^(NSDictionary *tweet) {
-                                                      self.timelineStatuses = [_timelineStatuses arrayByAddingObject:tweet];
-                                                  } errorBlock:^(NSError *error) {
-                                                      self.twitterStreamingStatus = [error localizedDescription];
-                                                  }];
+                                                     tweetBlock:^(NSDictionary *tweet) {
+                                                         self.timelineStatuses = [_timelineStatuses arrayByAddingObject:tweet];
+                                                     } errorBlock:^(NSError *error) {
+                                                         self.twitterStreamingStatus = [error localizedDescription];
+                                                     }];
 }
 
 - (IBAction)stopStreaming:(id)sender {

@@ -326,6 +326,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (NSObject<STTwitterRequestProtocol> *)getStatusesRetweetsForID:(NSString *)statusID
                                                            count:(NSString *)count
                                                         trimUser:(NSNumber *)trimUser
+                                            useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                     successBlock:(void(^)(NSArray *statuses))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -353,6 +354,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                  trimUser:(NSNumber *)trimUser
                                          includeMyRetweet:(NSNumber *)includeMyRetweet
                                           includeEntities:(NSNumber *)includeEntities
+                                     useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                              successBlock:(void(^)(NSDictionary *status))successBlock
                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -364,6 +366,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusesDestroy:(NSString *)statusID
                                                    trimUser:(NSNumber *)trimUser
+                                       useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                successBlock:(void(^)(NSDictionary *status))successBlock
                                                  errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -385,29 +388,41 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  - Users will have the ability, from their settings page, to remove all the geotags from all their tweets en masse. Currently we are not doing any automatic scrubbing nor providing a method to remove geotags from individual tweets.
  */
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                                trimUser:(NSNumber *)trimUser
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock;
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                         inReplyToStatusID:(NSString *)existingStatusID
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                                   placeID:(NSString *)placeID
+                                        displayCoordinates:(NSNumber *)displayCoordinates
+                                                  trimUser:(NSNumber *)trimUser
+                                 autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
+                                excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
+                                       attachmentURLString:(NSString *)attachmentURLString // URLs passed to the attachment_url parameter not matching either a Tweet permalink or DM deep link will fail at Tweet creation and cause an exception.
+                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 // starting May 28th, 2014
 // https://dev.twitter.com/notifications/multiple-media-entities-in-tweets
 // https://dev.twitter.com/docs/api/multiple-media-extended-entities
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                mediaIDs:(NSArray *)mediaIDs
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                                trimUser:(NSNumber *)trimUser
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock;
+
+// September 2016: extented Tweets support with new parameters auto_populate_reply_metadata, exclude_reply_user_ids and attachment_url
+// https://dev.twitter.com/overview/api/upcoming-changes-to-tweets
+
+- (NSObject<STTwitterRequestProtocol> *)postStatusesUpdate:(NSString *)status
+                                         inReplyToStatusID:(NSString *)existingStatusID
+                                                  mediaIDs:(NSArray *)mediaIDs
+                                                  latitude:(NSString *)latitude
+                                                 longitude:(NSString *)longitude
+                                                   placeID:(NSString *)placeID
+                                        displayCoordinates:(NSNumber *)displayCoordinates
+                                                  trimUser:(NSNumber *)trimUser
+                                 autoPopulateReplyMetadata:(NSNumber *)autoPopulateReplyMetadata
+                                excludeReplyUserIDsStrings:(NSArray *)excludeReplyUserIDsString
+                                       attachmentURLString:(NSString *)attachmentURLString // URLs passed to the attachment_url parameter not matching either a Tweet permalink or DM deep link will fail at Tweet creation and cause an exception.
+                                      useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
+                                              successBlock:(void(^)(NSDictionary *status))successBlock
+                                                errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*
  POST	statuses/retweet/:id
@@ -423,11 +438,13 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
                                                        trimUser:(NSNumber *)trimUser
+                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
 // convenience
 - (NSObject<STTwitterRequestProtocol> *)postStatusRetweetWithID:(NSString *)statusID
+                                           useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSDictionary *status))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -446,6 +463,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postStatusUnretweetWithID:(NSString *)statusID
                                                          trimUser:(NSNumber *)trimUser
+                                             useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSDictionary *status))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -459,28 +477,28 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  The Tweet text will be rewritten to include the media URL(s), which will reduce the number of characters allowed in the Tweet text. If the URL(s) cannot be appended without text truncation, the tweet will be rejected and this method will return an HTTP 403 error.
  */
 
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                          mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
-                                       possiblySensitive:(NSNumber *)possiblySensitive
-                                       inReplyToStatusID:(NSString *)inReplyToStatusID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                                 placeID:(NSString *)placeID
-                                      displayCoordinates:(NSNumber *)displayCoordinates
-                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("use POST statuses/update");
+- (NSObject<STTwitterRequestProtocol> *)deprecated_postStatusesUpdate:(NSString *)status
+                                                       mediaDataArray:(NSArray *)mediaDataArray // only one media is currently supported, help/configuration.json returns "max_media_per_upload" = 1
+                                                    possiblySensitive:(NSNumber *)possiblySensitive
+                                                    inReplyToStatusID:(NSString *)inReplyToStatusID
+                                                             latitude:(NSString *)latitude
+                                                            longitude:(NSString *)longitude
+                                                              placeID:(NSString *)placeID
+                                                   displayCoordinates:(NSNumber *)displayCoordinates
+                                                  uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                                         successBlock:(void(^)(NSDictionary *status))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("POST statuses/update_with_media is deprecated, use POST statuses/update");
 
 // convenience
-- (NSObject<STTwitterRequestProtocol> *)postStatusUpdate:(NSString *)status
-                                       inReplyToStatusID:(NSString *)existingStatusID
-                                                mediaURL:(NSURL *)mediaURL
-                                                 placeID:(NSString *)placeID
-                                                latitude:(NSString *)latitude
-                                               longitude:(NSString *)longitude
-                                     uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
-                                            successBlock:(void(^)(NSDictionary *status))successBlock
-                                              errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("use POST statuses/update");
+- (NSObject<STTwitterRequestProtocol> *)deprecated_postStatusesUpdate:(NSString *)status
+                                                    inReplyToStatusID:(NSString *)existingStatusID
+                                                             mediaURL:(NSURL *)mediaURL
+                                                              placeID:(NSString *)placeID
+                                                             latitude:(NSString *)latitude
+                                                            longitude:(NSString *)longitude
+                                                  uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
+                                                         successBlock:(void(^)(NSDictionary *status))successBlock
+                                                           errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("POST statuses/update_with_media is deprecated, use POST statuses/update");
 
 /*
  GET    statuses/oembed
@@ -499,6 +517,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                                align:(NSString *)align // 'left', 'right', 'center' or 'none' (default)
                                                              related:(NSString *)related // eg. twitterapi,twittermedia,twitter
                                                                 lang:(NSString *)lang
+                                                useExtentedTweetMode:(NSNumber *)useExtendedTweetMode
                                                         successBlock:(void(^)(NSDictionary *status))successBlock
                                                           errorBlock:(void(^)(NSError *error))errorBlock;
 

@@ -44,7 +44,7 @@ int main(int argc, const char * argv[])
                                          
                                          NSString *responseText = [NSString stringWithFormat:@"Cocoaheads Yeah! %@", [NSDate date]];
                                          
-                                         [twitter2 postStatusUpdate:responseText inReplyToStatusID:idStr latitude:nil longitude:nil placeID:nil displayCoordinates:nil trimUser:nil successBlock:^(NSDictionary *status) {
+                                         [twitter2 postStatusesUpdate:responseText inReplyToStatusID:idStr latitude:nil longitude:nil placeID:nil displayCoordinates:nil trimUser:nil autoPopulateReplyMetadata:nil excludeReplyUserIDsStrings:nil attachmentURLString:nil useExtentedTweetMode:nil successBlock:^(NSDictionary *status) {
                                              NSLog(@"-- status: %@", status);
                                          } errorBlock:^(NSError *error) {
                                              NSLog(@"-- error: %@", error);
