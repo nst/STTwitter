@@ -552,6 +552,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                            maxID:(NSString *)maxID // eg. "54321"
                                                  includeEntities:(NSNumber *)includeEntities
                                                         callback:(NSString *)callback // eg. "processTweets"
+                                            useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                     successBlock:(void(^)(NSDictionary *searchMetadata, NSArray *statuses))successBlock
                                                       errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1346,6 +1347,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                            sinceID:(NSString *)sinceID
                                                              maxID:(NSString *)maxID
                                                    includeEntities:(NSNumber *)includeEntities
+                                              useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                       successBlock:(void(^)(NSArray *statuses))successBlock
                                                         errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1363,6 +1365,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postFavoriteDestroyWithStatusID:(NSString *)statusID
                                                         includeEntities:(NSNumber *)includeEntities
+                                                   useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                            successBlock:(void(^)(NSDictionary *status))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1376,6 +1379,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)postFavoriteCreateWithStatusID:(NSString *)statusID
                                                        includeEntities:(NSNumber *)includeEntities
+                                                  useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                           successBlock:(void(^)(NSDictionary *status))successBlock
                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1415,6 +1419,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                             count:(NSString *)count
                                                   includeEntities:(NSNumber *)includeEntities
                                                   includeRetweets:(NSNumber *)includeRetweets
+                                             useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSArray *statuses))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -1426,6 +1431,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                           count:(NSString *)count
                                                 includeEntities:(NSNumber *)includeEntities
                                                 includeRetweets:(NSNumber *)includeRetweets
+                                           useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                    successBlock:(void(^)(NSArray *statuses))successBlock
                                                      errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -2035,6 +2041,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                   includeEntities:(NSNumber *)includeEntities
                                                          trimUser:(NSNumber *)trimUser
                                                               map:(NSNumber *)map
+                                             useExtendedTweetMode:(NSNumber *)useExtendedTweetMode
                                                      successBlock:(void(^)(NSArray *tweets))successBlock
                                                        errorBlock:(void(^)(NSError *error))errorBlock;
 
