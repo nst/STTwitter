@@ -704,7 +704,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                             trimUser:nil
                                   contributorDetails:nil
                                      includeEntities:nil
-                                useExtendedTweetMode:@(YES)
+                                useExtendedTweetMode:@(NO)
                                         successBlock:^(NSArray *statuses) {
                                             successBlock(statuses);
                                         } errorBlock:^(NSError *error) {
@@ -794,7 +794,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    excludeReplies:nil
                                contributorDetails:nil
                                   includeRetweets:nil
-                             useExtendedTweetMode:@(YES)
+                             useExtendedTweetMode:@(NO)
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -839,7 +839,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                    excludeReplies:nil
                                contributorDetails:nil
                                   includeEntities:nil
-                             useExtendedTweetMode:@(YES)
+                             useExtendedTweetMode:@(NO)
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
@@ -884,7 +884,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                          trimUser:nil
                                   includeEntities:nil
                               includeUserEntities:nil
-                             useExtendedTweetMode:@(YES)
+                             useExtendedTweetMode:@(NO)
                                      successBlock:^(NSArray *statuses) {
                                          successBlock(statuses);
                                      } errorBlock:^(NSError *error) {
