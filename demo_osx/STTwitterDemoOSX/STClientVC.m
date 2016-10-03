@@ -84,8 +84,8 @@
                             trimUser:nil
            autoPopulateReplyMetadata:nil
           excludeReplyUserIDsStrings:nil
-                 attachmentURLString:@"https://twitter.com/angealbertini/status/779980193834364928"
-                useExtentedTweetMode:@(YES)
+                 attachmentURLString:nil
+                useExtendedTweetMode:@(YES)
                         successBlock:^(NSDictionary *status) {
                             
                             NSLog(@"-- text: %@", [status valueForKey:@"text"]);
