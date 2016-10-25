@@ -1618,7 +1618,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"stringify_friend_ids"] = @"1";
+    md[@"stringify_friend_ids"] = @"true";
     md[@"delimited"] = @"length";
     
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
@@ -1713,7 +1713,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"stringify_friend_ids"] = @"1";
+    md[@"stringify_friend_ids"] = @"true";
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     if(restrictToUserMessages) md[@"with"] = @"user"; // default is 'followings'
