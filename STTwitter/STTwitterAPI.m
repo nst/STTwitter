@@ -632,7 +632,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                               
                               if(strongSelf == nil) return;
                               
-                              NSString *imageURLString = [response objectForKey:@"profile_image_url"];
+                              NSString *imageURLString = [response objectForKey:@"profile_image_url_https"];
                               
                               STHTTPRequest *r = [STHTTPRequest requestWithURLString:imageURLString];
                               r.sharedContainerIdentifier = [[NSUserDefaults standardUserDefaults] valueForKey:@"STTwitterSharedContainerIdentifier"];
