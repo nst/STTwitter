@@ -931,6 +931,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
     
     md[@"id"] = statusID;
+    md[@"tweet_mode"] = @"extended";
     if(trimUser) md[@"trim_user"] = [trimUser boolValue] ? @"1" : @"0";
     if(includeMyRetweet) md[@"include_my_retweet"] = [includeMyRetweet boolValue] ? @"1" : @"0";
     if(includeEntities) md[@"include_entities"] = [includeEntities boolValue] ? @"1" : @"0";
