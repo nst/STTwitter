@@ -2886,7 +2886,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    
+    md[@"stringify_ids"] = @"1";
     if(cursor) md[@"cursor"] = cursor;
     
     return [self getAPIResource:@"mutes/users/ids.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
