@@ -1817,7 +1817,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesShowWithID:(NSString *)messageID
                                                            fullText:(NSNumber *)fullText
-                                                       successBlock:(void(^)(NSArray *messages))successBlock
+                                                       successBlock:(void(^)(NSDictionary *message))successBlock
                                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
