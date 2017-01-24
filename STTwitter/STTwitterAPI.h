@@ -712,7 +712,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesShowWithID:(NSString *)messageID
                                                            fullText:(NSNumber *)fullText
-                                                       successBlock:(void(^)(NSArray *statuses))successBlock
+                                                       successBlock:(void(^)(NSDictionary *message))successBlock
                                                          errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*

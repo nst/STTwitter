@@ -1618,7 +1618,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"stringify_friend_ids"] = @"1";
+    md[@"stringify_friend_ids"] = @"true";
     md[@"delimited"] = @"length";
     
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
@@ -1713,7 +1713,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                      errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    md[@"stringify_friend_ids"] = @"1";
+    md[@"stringify_friend_ids"] = @"true";
     if(delimited) md[@"delimited"] = [delimited boolValue] ? @"1" : @"0";
     if(stallWarnings) md[@"stall_warnings"] = [stallWarnings boolValue] ? @"1" : @"0";
     if(restrictToUserMessages) md[@"with"] = @"user"; // default is 'followings'
@@ -1817,7 +1817,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 
 - (NSObject<STTwitterRequestProtocol> *)getDirectMessagesShowWithID:(NSString *)messageID
                                                            fullText:(NSNumber *)fullText
-                                                       successBlock:(void(^)(NSArray *messages))successBlock
+                                                       successBlock:(void(^)(NSDictionary *message))successBlock
                                                          errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -2886,7 +2886,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                                                         errorBlock:(void(^)(NSError *error))errorBlock {
     
     NSMutableDictionary *md = [NSMutableDictionary dictionary];
-    
+    md[@"stringify_ids"] = @"1";
     if(cursor) md[@"cursor"] = cursor;
     
     return [self getAPIResource:@"mutes/users/ids.json" parameters:md successBlock:^(NSDictionary *rateLimits, id response) {
