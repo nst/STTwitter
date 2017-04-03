@@ -32,6 +32,8 @@ NSString *NSStringFromSTTwitterStreamJSONType(STTwitterStreamJSONType type) {
             return @"STTwitterStreamJSONTypeUserWithheld";
         case STTwitterStreamJSONTypeControl:
             return @"STTwitterStreamJSONTypeControl";
+        case STTwitterStreamJSONTypeDirectMessage:
+            return @"STTwitterStreamJSONTypeDirectMessage";
         default:
         case STTwitterStreamJSONTypeUnsupported:
             return @"STTwitterStreamJSONTypeUnsupported";
@@ -129,6 +131,8 @@ static inline BOOL isDigitsOnlyString(NSString *str) {
             return STTwitterStreamJSONTypeUserWithheld;
         } else if ([json objectForKey:@"control"]) {
             return STTwitterStreamJSONTypeControl;
+        } else if ([json objectForKey:@"direct_message"]) {
+            return STTwitterStreamJSONTypeDirectMessage;
         }
     }
     
