@@ -397,7 +397,7 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
 `STTwitterAPI+MyApp.h`
 
 ```Objective-C
-# import "STTwitterAPI.h"
+#import "STTwitterAPI.h"
 
 @interface STTwitterAPI (MyApp)
 
@@ -411,7 +411,7 @@ STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST AP
 `STTwitterAPI+MyApp.m`
 
 ```Objective-C
-# import "STTwitterAPI+MyApp.h"
+#import "STTwitterAPI+MyApp.h"
 
 @implementation STTwitterAPI (MyApp)
 
