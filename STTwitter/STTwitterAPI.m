@@ -4439,6 +4439,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
 }
 
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadINITWithVideoURL:(NSURL *)videoMediaURL
+                                                          mediaCategory:(NSString *)mediaCategory // optional: tweet_video, tweet_gif
                                                            successBlock:(void(^)(NSString *mediaID, NSInteger expiresAfterSecs))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock {
     
@@ -4458,6 +4459,10 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     md[@"command"] = @"INIT";
     md[@"media_type"] = @"video/mp4";
     md[@"total_bytes"] = [NSString stringWithFormat:@"%@", @([data length])];
+
+    if(mediaCategory) {
+        md[@"media_category"] = mediaCategory;
+    }
     
     return [self postResource:@"media/upload.json"
                 baseURLString:kBaseURLStringUpload_1_1
@@ -4616,9 +4621,37 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
                  }];
 }
 
+- (NSObject<STTwitterRequestProtocol> *)getMediaUploadSTATUSWithMediaID:(NSString *)mediaID
+                                                           successBlock:(void(^)(NSString *mediaID, NSString *state, NSInteger checkAfterSecs, NSDictionary *response))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock {
+
+    // https://dev.twitter.com/rest/reference/get/media/upload-status
+
+    NSMutableDictionary *md = [NSMutableDictionary dictionary];
+    md[@"command"] = @"STATUS";
+    md[@"media_id"] = mediaID;
+
+    return [self getResource:@"media/upload.json"
+               baseURLString:kBaseURLStringUpload_1_1
+                  parameters:md
+       downloadProgressBlock:nil
+                successBlock:^(NSDictionary *rateLimits, id response) {
+
+                    NSString *mediaID = [response valueForKey:@"media_id_string"];
+                    NSInteger checkAfterSecs = [[response valueForKeyPath:@"processing_info.check_after_secs"] integerValue];
+
+                    // in_progress, failed or succeeded.
+                    NSString *state = [response valueForKeyPath:@"processing_info.state"];
+
+                    successBlock(mediaID, state, checkAfterSecs, response);
+                    
+                } errorBlock:errorBlock];
+}
+
 // convenience
 
 - (void)postMediaUploadThreeStepsWithVideoURL:(NSURL *)videoURL // local URL
+                                mediaCategory:(NSString *)mediaCategory // optional: tweet_video, tweet_gif
                           uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
                                  successBlock:(void(^)(NSString *mediaID, NSInteger size, NSInteger expiresAfter, NSString *videoType))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock {
@@ -4626,6 +4659,7 @@ authenticateInsteadOfAuthorize:authenticateInsteadOfAuthorize
     __weak typeof(self) weakSelf = self;
     
     [self postMediaUploadINITWithVideoURL:videoURL
+                            mediaCategory:mediaCategory
                              successBlock:^(NSString *mediaID, NSInteger expiresAfterSecs) {
                                  
                                  __strong typeof(self) strongSelf = weakSelf;

@@ -2068,9 +2068,12 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
  The maximum file size is 15MB and is checked during the upload process
  The maximum length is 30 seconds and is checked when Tweeting with a video media_id
  One video (or animated GIF) media_id can be added to a Tweet. Photos are the only media type that can be added up to four times.
- */
 
+ The mediaCategory is optional parameter for large video (140 sec, 512 MB) or Animated GIF.
+
+ */
 - (NSObject<STTwitterRequestProtocol> *)postMediaUploadINITWithVideoURL:(NSURL *)videoMediaURL
+                                                          mediaCategory:(NSString *)mediaCategory // optional: tweet_video, tweet_gif
                                                            successBlock:(void(^)(NSString *mediaID, NSInteger expiresAfterSecs))successBlock
                                                              errorBlock:(void(^)(NSError *error))errorBlock;
 
@@ -2084,11 +2087,16 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                               successBlock:(void(^)(NSString *mediaID, NSInteger size, NSInteger expiresAfter, NSString *videoType))successBlock
                                                                 errorBlock:(void(^)(NSError *error))errorBlock;
 
+- (NSObject<STTwitterRequestProtocol> *)getMediaUploadSTATUSWithMediaID:(NSString *)mediaID
+                                                           successBlock:(void(^)(NSString *mediaID, NSString *state, NSInteger checkAfterSecs, NSDictionary *response))successBlock
+                                                             errorBlock:(void(^)(NSError *error))errorBlock;
+
 // convenience
 
 //    NSURL *videoURL = [NSURL fileURLWithPath:@"/Users/nst/Desktop/x.mov"];
 //
 //    [_twitter postMediaUploadThreeStepsWithVideoURL:videoURL
+//                                      mediaCategory:nil
 //                                uploadProgressBlock:^(NSInteger bytesWritten, NSInteger totalBytesWritten, NSInteger totalBytesExpectedToWrite) {
 //                                    NSLog(@"-- %ld", (long)bytesWritten);
 //                                } successBlock:^(NSString *mediaID, NSInteger size, NSInteger expiresAfter, NSString *videoType) {
@@ -2113,6 +2121,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 //                                }];
 
 - (void)postMediaUploadThreeStepsWithVideoURL:(NSURL *)videoURL // local URL
+                                mediaCategory:(NSString *)mediaCategory
                           uploadProgressBlock:(void(^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))uploadProgressBlock
                                  successBlock:(void(^)(NSString *mediaID, NSInteger size, NSInteger expiresAfter, NSString *videoType))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
