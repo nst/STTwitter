@@ -19,7 +19,7 @@ extern NS_ENUM(NSUInteger, STTwitterOSErrorCode) {
 
 @class ACAccount;
 
-extern const NSString *STTwitterOSInvalidatedAccount;
+extern NSString * const STTwitterOSInvalidatedAccount;
 
 @interface STTwitterOS : NSObject <STTwitterProtocol>
 
