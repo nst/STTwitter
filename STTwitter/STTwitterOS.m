@@ -16,7 +16,7 @@
 #import <Twitter/Twitter.h> // iOS 5
 #endif
 
-const NSString *STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount";
+NSString * const STTwitterOSInvalidatedAccount = @"STTwitterOSInvalidatedAccount";
 
 @interface ACAccount (STTwitterOS)
 - (NSString *)st_userID; // private API
