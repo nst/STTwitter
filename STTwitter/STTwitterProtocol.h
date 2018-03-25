@@ -46,7 +46,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize
                          successBlock:(void(^)(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName))successBlock
                            errorBlock:(void(^)(NSError *error))errorBlock;
 
-- (void)invalidateBearerTokenWithSuccessBlock:(void(^)(id response))successBlock
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)(void))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 // access tokens are available only with plain OAuth authentication
