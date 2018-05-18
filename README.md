@@ -392,7 +392,7 @@ There are a lot of optional parameters in Twitter API. In STTwitter, you can ign
 
 ##### Long Methods
 
-STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST API. It often results in long methd names with many parameters. In your application, you may want to add your own, simplified methods on top of STTwitterAPI. A good idea is to create an Objective-C category for your application, such as in the following code.
+STTwitter provides a full, "one-to-one" Objective-C front-end to Twitter REST API. It often results in long method names with many parameters. In your application, you may want to add your own, simplified methods on top of STTwitterAPI. A good idea is to create an Objective-C category for your application, such as in the following code.
 
 `STTwitterAPI+MyApp.h`
 
