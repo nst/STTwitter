@@ -145,7 +145,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
 - (void)verifyCredentialsWithSuccessBlock:(void(^)(NSString *username))successBlock
                                errorBlock:(void(^)(NSError *error))errorBlock __deprecated_msg("use verifyCredentialsWithUserSuccessBlock:errorBlock: instead");
 
-- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)(void))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 - (NSString *)prettyDescription;
@@ -1455,7 +1455,7 @@ authenticateInsteadOfAuthorize:(BOOL)authenticateInsteadOfAuthorize // use NO if
                                                             screenName:(NSString *)screenName
                                                        ownerScreenName:(NSString *)ownerScreenName
                                                                ownerID:(NSString *)ownerID
-                                                          successBlock:(void(^)())successBlock
+                                                          successBlock:(void(^)(void))successBlock
                                                             errorBlock:(void(^)(NSError *error))errorBlock;
 
 /*

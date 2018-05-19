@@ -36,7 +36,7 @@ extern NS_ENUM(NSUInteger, STTwitterAppOnlyErrorCode) {
 
 + (NSString *)base64EncodedBearerTokenCredentialsWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
 
-- (void)invalidateBearerTokenWithSuccessBlock:(void(^)())successBlock
+- (void)invalidateBearerTokenWithSuccessBlock:(void(^)(id response))successBlock
                                    errorBlock:(void(^)(NSError *error))errorBlock;
 
 @end
