@@ -16,7 +16,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '7.0'
   s.osx.deployment_target = '10.7'
 
-  s.source_files = 'STTwitter/*.{h,m}', 'STTwitter/Vendor/*.{h,m}'
+
+  s.source_files = 'STTwitter/*.m', 'STTwitter/Vendor/*.m', 'STTwitter/include/*.h'
 
   s.ios.frameworks  = 'CoreGraphics', 'Foundation', 'QuartzCore', 'UIKit', 'Accounts', 'Twitter'
   s.ios.weak_frameworks = 'Social'
